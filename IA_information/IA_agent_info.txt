@@ -410,4 +410,17 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 3. `git init` + `.gitignore` + build de producción documentado
 4. Despliegue
 
+## 36. BLOQUE P2-A COMPLETADO — Email + Git + docs de producción
+- **Email (Resend vía REST, sin dependencias npm)**: `apps/web/lib/email/resend.ts` con `sendEmail` (fallback a consola en dev sin API key) + `sendPasswordResetEmail` con plantilla HTML/plain-text
+- **Recuperación de contraseña conectada**: `forgotPasswordAction` ahora envía el email vía Resend (o muestra el enlace en consola en dev); `resetPasswordAction` validaba el token con hash SHA-256 + expiración (ya existía)
+- **Git inicializado**: repo `master` con commit inicial (8147804, 567 archivos); `.gitignore` cubre node_modules, .next, .pglite, uploads, test-results, playwright-report, .dev-server logs
+- **Docs producción**: `docs/ops/build.md` (env vars, pasos de build, worker, despliegue, nota de no build+dev simultáneos)
+- Validación: typecheck 9/9, lint 0, unit 15/2, E2E 11/11 + smoke reset 1/1 (forgot → success, reset token inválido → error)
+
+## PRÓXIMOS PASOS (P2-B)
+1. Stripe: checkout (sesión de pago) + webhook real en `/api/webhooks`
+2. Verificación de email (`emailVerified` + flujo verify-email)
+3. CI/CD: revisar `.github/workflows` existentes y ejecutar build de producción documentado
+4. Despliegue
+
 
