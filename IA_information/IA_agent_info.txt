@@ -449,6 +449,13 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 - **Fix lint**: `resendVerificationEmailAction` sin params (evita warnings de args no usados con `useActionState`)
 - Validación final: typecheck 9/9, lint 0, test **33/2**, build 3/3 (1m5s), E2E 11/11 (1.2m)
 
+## 40. BLOQUE P2-E COMPLETADO — Checkout real de membresía, comunicaciones de agente, SEO sitemap
+- **Membresía con pago real**: `startCheckoutAction` (reemplaza el pago simulado como vía principal): con `STRIPE_SECRET_KEY` crea Checkout Session y redirige a Stripe; sin clave hace fallback al pago simulado (dev). Precios alineados con `MEMBERSHIP_TIERS` (99/199/499 €) en el form
+- **Comunicaciones del agente reales**: `agent/communications/page.tsx` lista las conversaciones donde participa el agente (hilo con burbujas + formulario de respuesta vía `sendMessageAction` que valida la pertenencia a la conversación). Seed: el agente demo ahora participa en la conversación demo
+- **SEO**: `sitemap.ts` dinámico (jugadores/clubs/oportunidades/entrenamiento + estáticas) con `force-dynamic` (PGlite no soporta prerender) y `robots.ts` con sitemap
+- **Limpieza**: eliminados los `apps/web/lib` vacíos (analytics, auth, database, matching, permissions, security, storage, utils, video) — quedan `api`, `email`, `notifications`, `payments` con contenido real
+- Validación final: typecheck 9/9, lint 0, test 33/2, build 3/3 (53s), E2E 11/11 + smoke P2-E 2/2 (agente hilo+respuesta, upgrade membresía simulado)
+
 ## 37. BLOQUE P2-B COMPLETADO — CI/CD real + build de producción validado
 - **Bug de CI corregido**: `pnpm test` (turbo) ejecutaba vitest en web/worker sin tests → fallaba con "No test files found". Ahora: root `test: vitest run` (config ampliada con `packages/**/src/**/*.test.ts`), eliminado `test` de web, worker con `--passWithNoTests`, turbo test con `dependsOn: ^typecheck` (antes `^build`). Resultado: **21 passed | 2 skipped** (incluye 6 tests del motor de matching)
 - **Build de producción OK**: 3 tareas turbo (database → prisma generate, worker → tsc, web → next build). `pnpm build` completo en ~50s

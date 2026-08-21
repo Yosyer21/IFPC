@@ -711,6 +711,7 @@ export async function main() {
         create: [
           { userId: clubUser.id, role: 'OWNER' },
           { userId: admin.id, role: 'OWNER' },
+          { userId: agentUser.id, role: 'MEMBER' },
         ],
       },
       messages: {

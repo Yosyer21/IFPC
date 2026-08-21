@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { upgradeMembershipAction } from '@/app/actions/membership';
+import { startCheckoutAction } from '@/app/actions/membership';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@future-buller/ui';
 import type { MembershipTier } from '@future-buller/types';
 
@@ -20,25 +20,25 @@ const PLANS: {
   {
     tier: 'PREMIUM',
     label: 'Premium',
-    price: '59,99 €/año',
+    price: '99 €/año',
     features: ['Perfil destacado', 'Vídeos ilimitados', 'Estadísticas de desarrollo', 'Insignia verificada'],
   },
   {
     tier: 'SCOUT',
     label: 'Scout',
-    price: '149,99 €/año',
+    price: '199 €/año',
     features: ['Acceso a informes de scouting', 'Búsqueda avanzada de jugadores', 'Guardar jugadores'],
   },
   {
     tier: 'CLUB',
     label: 'Club',
-    price: '299,99 €/año',
+    price: '499 €/año',
     features: ['Publicar oportunidades', 'Requisitos de jugadores', 'Acceso completo al matching'],
   },
 ];
 
 export function MembershipUpgradeForm({ currentTier }: { currentTier: string }) {
-  const [state, formAction, pending] = useActionState(upgradeMembershipAction, {});
+  const [state, formAction, pending] = useActionState(startCheckoutAction, {});
 
   return (
     <div>
@@ -70,8 +70,8 @@ export function MembershipUpgradeForm({ currentTier }: { currentTier: string }) 
         ))}
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        Los pagos se registran como simulados en esta fase. La integración con Stripe llegará en
-        próximas iteraciones.
+        Con Stripe configurado se redirige al pago seguro. En desarrollo sin clave, el pago se
+        registra como simulado.
       </p>
     </div>
   );

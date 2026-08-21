@@ -3,16 +3,23 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@future-buller/auth';
 import { prisma } from '@future-buller/database';
+import { createCheckoutSession } from '@/lib/payments/stripe';
 import type { MembershipTier } from '@future-buller/types';
 import type { ActionState } from './auth';
 
+// Precios alineados con lib/payments/stripe.ts (MEMBERSHIP_TIERS).
 const PLANS: Record<string, { price: number; months: number }> = {
-  PREMIUM: { price: 5999, months: 12 },
-  SCOUT: { price: 14999, months: 12 },
-  CLUB: { price: 29999, months: 12 },
+  PREMIUM: { price: 9900, months: 12 },
+  SCOUT: { price: 19900, months: 12 },
+  CLUB: { price: 49900, months: 12 },
 };
 
-export async function upgradeMembershipAction(
+/**
+ * Inicia el pago de una membresía:
+ * 1) Con STRIPE_SECRET_KEY → crea Checkout Session y redirige a Stripe.
+ * 2) Sin Stripe (dev) → pago simulado local.
+ */
+export async function startCheckoutAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
@@ -26,6 +33,21 @@ export async function upgradeMembershipAction(
     return { error: 'Plan no válido.' };
   }
 
+  try {
+    const checkout = await createCheckoutSession({
+      tier: tier as 'PREMIUM' | 'SCOUT' | 'CLUB',
+      userId: session.user.id,
+      userEmail: session.user.email ?? '',
+    });
+    if (checkout?.url) {
+      redirect(checkout.url);
+    }
+  } catch (error) {
+    console.error('[membership] error iniciando checkout:', error);
+    return { error: 'No se pudo iniciar el pago con Stripe.' };
+  }
+
+  // Fallback de desarrollo: pago simulado (Stripe no configurado).
   const endsAt = new Date();
   endsAt.setMonth(endsAt.getMonth() + plan.months);
 
@@ -53,7 +75,7 @@ export async function upgradeMembershipAction(
           amount: plan.price,
           currency: 'EUR',
           status: 'PAID',
-          description: `Membresía ${tier} (${plan.months} meses)`,
+          description: `Membresía ${tier} (${plan.months} meses, simulada)`,
         },
       }),
     ]);

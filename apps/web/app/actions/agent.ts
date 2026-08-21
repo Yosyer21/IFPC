@@ -16,6 +16,27 @@ async function getAgent() {
   return prisma.agent.findUnique({ where: { userId: session.user.id } });
 }
 
+/** Envía un mensaje a una conversación en la que el agente participa. */
+export async function sendMessageAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const conversationId = str(formData, 'conversationId');
+  const body = str(formData, 'body');
+  if (!conversationId || !body) return;
+
+  const participant = await prisma.conversationParticipant.findUnique({
+    where: {
+      conversationId_userId: { conversationId, userId: session.user.id },
+    },
+  });
+  if (!participant) return;
+
+  await prisma.message.create({
+    data: { conversationId, senderId: session.user.id, body },
+  });
+  redirect('/dashboard/agent/communications');
+}
+
 export async function addPlayerAction(
   _prev: ActionState,
   formData: FormData
