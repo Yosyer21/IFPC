@@ -1,0 +1,413 @@
+# FUTURE-BULLER PLATFORM — SPEC PARA AGENTE IA (optimizada en tokens) v1
+> Plataforma global de fútbol: perfiles de jugadores, entrenamiento, reclutamiento
+> (scouting, trials, negociaciones, contratos), matching jugador<->club, membresías/pagos,
+> roles múltiples. Leer UNA vez y construir sin preguntar. Si algo no está especificado,
+> seguir convenciones (sec. 7) y decidir lo razonable. No regenerar lo ya generado.
+
+## 1. STACK (fijo)
+- Monorepo: pnpm workspaces + Turborepo
+- apps/web: Next.js 15 (App Router, TS strict, Tailwind CSS)
+- apps/worker: Node TS, BullMQ + Redis. Jobs: video, matching, notifications, reports, analytics
+- packages/database: Prisma + PostgreSQL
+- packages/auth: Auth.js v5 (credentials+email), JWT; RBAC roles/permissions/policies
+- packages/types · validation (zod) · config (constantes ES/EN) · ui
+- Estado: zustand | Fetch: Server Components + Server Actions | Forms: RHF + zod
+- Storage: S3 (signed URLs) | Pagos: Stripe | Email: Resend | CI: lint -> typecheck -> test -> build
+
+## 2. ROLES
+player · parent · coach · scout · agent · club · university · admin (+guest).
+Guard por rol: dashboard/layout.tsx + middleware.ts. Definiciones en packages/auth/src/{roles,permissions,policies}.ts
+
+## 3. DOMINIOS (nombre estándar para feature / API route / modelo)
+auth, users, players, parents, coaches, scouts, agents, clubs, academies, universities,
+videos, media, training, parent-education, evaluations, development, pathways, camps,
+live-sessions, opportunities, applications, submissions, trials, negotiations, contracts,
+scouting, matching, documents, communications, notifications, memberships, payments,
+analytics, webhooks, audit.
+
+## 4. ROUTING WEB (apps/web/app) — patrón: list=page.tsx · detail=[id]/page.tsx · create=new|create/page.tsx · edit=edit/page.tsx
+- (public)/: page · about · camps · pathways · opportunities · clubs · players/[playerId] · training · parent-hub · contact
+- (auth)/: login · register · forgot-password · reset-password · verify-email · onboarding/{player,parent,coach,agent,club}
+- dashboard/ (layout protegido + page por rol):
+  - player/: profile/{edit,football,physical,technical} · videos/{upload,[videoId]} · training/{technical,strength-conditioning,psychology,[contentId]} · development/{goals,evaluations,progress} · pathway/[pathwayId] · opportunities/{saved,applications,[opportunityId]} · live-sessions/[sessionId] · scouting · documents/[documentId] · notifications · settings/{account,privacy,notifications}
+  - parent/: children/[playerId]/{development,training,opportunities} · education/[articleId] · pathways · opportunities · payments/{history} · settings
+  - coach/: players/[playerId]/{evaluations,development} · evaluations · training · live-sessions
+  - scout/: players · saved · scouting-reports · opportunities
+  - agent/: players/{add,[playerId]/{profile,videos,evaluations,documents}} · clubs/[clubId] · submissions/{new,[submissionId]} · trials/[trialId] · negotiations/[negotiationId] · contracts/[contractId] · opportunities · matching · communications · documents
+  - club/: profile · staff/invite · requirements/{new,[requirementId]} · players/[playerId] · matching · inquiries/[inquiryId] · opportunities
+  - university/: profile · players · opportunities
+  - admin/: users/{players,parents,coaches,scouts,agents,clubs,universities} · players/{pending,active,evaluations,[playerId]} · clubs/{pending,[clubId]} · opportunities/{create,[opportunityId]} · camps/{create,[campId]} · content/{training,psychology,strength-conditioning,parent-education} · live-sessions/{create,[sessionId]} · recruitment/{submissions,trials,negotiations,contracts} · matching/{players,clubs} · memberships/{plans,payments} · documents/[documentId] · communications/{inquiries,messages} · notifications · analytics/{players,clubs,recruitment,revenue} · settings/{general,security,roles,permissions,countries,leagues,system}
+- api/: app/api/<dominio>/route.ts REST (GET list, GET /[id], POST, PATCH, DELETE) + webhooks
+- components/: ui · layout · player · club · opportunity · training · recruitment · matching · dashboard
+- lib/: auth · permissions · database · storage · video · payments · email · notifications · matching · analytics · security · utils
+- hooks/ · stores/ · types/ · validators/ · middleware.ts · not-found.tsx · error.tsx · globals.css
+
+## 5. CORE LOGIC
+- matching: score 0-100 = requisitos del club (posición, edad, nivel, geografía) vs perfil del jugador; guardar score + explicación por criterio
+- video: upload S3 -> worker transcodifica -> thumbnail/preview -> estado {uploading,processing,ready,failed}
+- membresías: tiers (free/premium/scout/club) vía Stripe; expiración en worker
+- reclutamiento flujo: submission -> trial -> negotiation -> contract (estados por etapa)
+- notifications: in-app + email; tipos: application, match, trial, negotiation, contract, payment, reminder
+
+## 6. PRISMA MODELS (1 archivo por modelo en packages/database/prisma/models/ + enums + seed.ts)
+user, player, parent, coach, scout, agent, club, academy, university, video, training,
+evaluation, development, pathway, camp, live-session, opportunity, application,
+submission, trial, negotiation, contract, scouting, matching, document, communication,
+notification, membership, payment, audit.
+Convención: IDs cuid, timestamps createdAt/updatedAt, enum Role en user.
+Enums: PlayerStatus, OpportunityType, RecruitmentStatus, ApplicationStatus, MembershipTier, PaymentStatus.
+
+## 7. CONVENCIONES (obligatorias)
+- Archivos kebab-case; componentes PascalCase.tsx
+- TS estricto, sin any; `import type` para tipos
+- Validación zod (packages/validation); errores de API `{error: string}` + status HTTP correcto
+- DB SOLO vía packages/database (PrismaClient singleton); nunca acceso directo desde web
+- UI base desde packages/ui: button, input, select, dialog/modal, tabs, table, card, badge, avatar, progress, calendar, date-picker, tooltip, dropdown, loading
+- Toda página de lista: estados loading/vacío/error
+- UI en español (default); diccionarios ES/EN en packages/config
+- Tailwind light+dark (tokens en globals.css)
+- Server Components por defecto; "use client" solo si requiere interactividad
+
+## 8. ORDEN DE GENERACIÓN (desde cero)
+1) Raíz: package.json, pnpm-workspace.yaml, turbo.json, tsconfig.json, eslint.config.js, prettier.config.js, .env.example, .gitignore, docker-compose.yml, README.md
+2) packages/database: schema + migrate + seed
+3) packages/{auth, types, config, validation, ui}
+4) apps/web: (public) -> (auth) -> dashboard base -> components/ui -> lib -> features por rol
+5) apps/worker: jobs/{video-processing,matching,notifications,analytics,reports} + maintenance/{cleanup-files,expire-memberships} + queues/{video,matching,notification,report}.queue.ts + services
+6) tests: unit (matching, validation, permissions, calculations) · integration (auth, players, clubs, opportunities, recruitment, payments) · e2e (authentication, player, parent, club, agent, admin)
+7) docs (product, technical, business, api) · scripts (database, migration, maintenance, development) · infra (docker, nginx, deployment dev/staging/prod, monitoring)
+
+## 9. REGLAS DEL AGENTE
+- Código real y completo. Prohibido "...", TODO, placeholders. Archivos pequeños y terminados
+- No preguntar: crear todo lo que las convenciones impliquen
+- Validar por fase (pnpm build / tsc --noEmit) antes de continuar; corregir errores
+- No regenerar migrations existentes; agregar modelos solo si se necesita
+- Referencia árbol completo si una ruta es ambigua: IA_information/Estructure.txt
+
+## 10. ENV (.env.example)
+DATABASE_URL · REDIS_URL · AUTH_SECRET · NEXT_PUBLIC_APP_URL · S3_ACCESS_KEY_ID · S3_SECRET_ACCESS_KEY · S3_BUCKET · S3_ENDPOINT · STRIPE_SECRET_KEY · STRIPE_WEBHOOK_SECRET · RESEND_API_KEY
+
+## 11. ESTADO (scaffold base completado — validado: build+lint+typecheck OK)
+- [x] Raíz monorepo (pnpm+turbo), docker-compose (postgres/redis/minio), .env.example, workflows CI
+- [x] packages: database (Prisma 16 modelos core + seed), auth (RBAC roles/permissions/policies), types, config, validation (zod), ui (13 componentes)
+- [x] apps/web: layout/globals/middleware + 189 páginas stub + 34 rutas API stub
+- [x] apps/worker: colas BullMQ + jobs (video, matching, notifications, reports) + mantenimiento
+- [x] Fase A: Auth real (Auth.js v5) + onboarding por rol + guards
+- [x] Fase B: Player (perfil, vídeos, entrenamiento, pathway, oportunidades)
+- [x] Fase C: Club/Agent/Scout (reclutamiento: submissions→trials→negociaciones→contratos)
+- [x] Fase D: Matching engine real, membresías/pagos, admin
+- [x] Fase E: Worker jobs reales, tests (unit/integration/e2e), docs, scripts, infra
+
+## 12. FASE A COMPLETADA (Auth + Onboarding — validado: build+lint+typecheck OK)
+- Auth.js v5 (credentials, JWT + rol en token) en packages/auth con entry edge-safe (`@future-buller/auth/edge`)
+- Contraseñas con bcryptjs (hashPassword/verifyPassword en packages/auth)
+- Registro crea User + perfil del rol (player/parent/coach/scout/agent/club) en transacción, auto-login y redirect a /onboarding/<rol>
+- Onboarding por rol (player: perfil deportivo · parent · coach · agent · club) vía server actions + zod
+- Login/register/forgot/reset/verify-email reales (reset con PasswordResetToken hasheado, expiración 1h)
+- Middleware protege /dashboard y redirige por rol (`/dashboard/<rol>` solo para ese rol); dashboard/layout guarda la sesión y muestra nav por rol + logout
+- Usuarios demo en seed: player@demo.com/player123 · parent@demo.com/parent123 · club@demo.com/club123
+- Pendiente: envío real de email (Resend) en forgot-password (el enlace se loguea en consola) y verificación de email
+
+## 13. FASE B COMPLETADA (Player — validado: build+lint+typecheck OK)
+- Modelos Prisma nuevos: TrainingContent, Pathway, PlayerGoal, Evaluation, Document (+ relaciones en Player)
+- Seed: 9 contenidos de entrenamiento, pathway demo, 2 objetivos, evaluación, documento
+- Perfil: ver / editar (zod + server action) / ficha futbolística / datos físicos / nivel técnico (evaluaciones)
+- Vídeos: lista, subida local (public/uploads, gitignored) con reproductor, detalle
+- Entrenamiento: biblioteca con tabs por categoría (técnica/fuerza/psicología) + detalle de contenido
+- Pathway: ruta del jugador (lista + detalle)
+- Desarrollo: resumen (% perfil completado), objetivos, evaluaciones, progreso (medias por categoría)
+- Oportunidades: explorar abiertas, detalle + aplicar (Application upsert), mis solicitudes, guardadas
+- Notificaciones: lista + marcar leídas (server action)
+- Ajustes: cuenta (nombre), privacidad, preferencias (informativos)
+- Scouting: ficha resumida para ojeadores; Documentos: lista + detalle
+- Pendiente: transcoding real de vídeo (worker+S3), subida de documentos, sesiones en vivo (modelo LiveSession)
+
+## 14. FASE C COMPLETADA (Club/Agent/Scout — validado: build+lint+typecheck OK)
+- Modelos Prisma nuevos (10): Submission, Trial, Negotiation, Contract, ScoutingReport, SavedPlayer, Inquiry, Requirement, ClubStaff, AgentPlayer (pipeline submission→trial→negotiation→contract)
+- Seed: agente (agent@demo.com/agent123), ojeador (scout@demo.com/scout123), submission+trial demo, requirement, inquiry, staff OWNER, oportunidad del club
+- CLUB: resumen, perfil, oportunidades (crear con zod), requisitos (crear/cerrar), jugadores disponibles + detalle con vídeos, consultas (responder), matching básico por posición, staff (invitar)
+- AGENT: resumen, jugadores (añadir por email + detalle con perfil/vídeos/evaluaciones/documentos), envíos (crear + pipeline de etapas), detalle de trial/negotiation/contract, oportunidades, matching básico, detalle de club
+- SCOUT: resumen, buscar jugadores (guardar/quitar), guardados, informes (crear con valoración 1-10), oportunidades
+- Pendiente: mensajería (communications), documentos del agente, matching engine real (Fase D), avance automático de etapas del pipeline
+
+## 15. FASE D COMPLETADA (Matching real + Membresías + Admin — validado: build+lint+typecheck OK, tests matching 6/6)
+- packages/matching (nuevo): engine puro score 0-100 con 5 criterios (posición 25, edad 25, nivel 20, disponibilidad 15, geografía 15) + explicación por criterio + summary. 6 tests unitarios (vitest)
+- Schema: Player.competitionLevel, Requirement.country
+- Páginas matching (club/agent) usan el engine: orden por score, Progress, desglose desplegable por criterio
+- Worker job calculate-matches usa el engine (calcula mejores coincidencias ≥60)
+- Membresías: página del jugador /dashboard/player/membership (4 planes con precios y features), upgrade crea Membership + Payment (simulado; Stripe pendiente), card en el resumen del jugador
+- ADMIN: resumen con métricas, usuarios (filtro por rol + cambiar rol + eliminar), jugadores (verificar/cambiar estado), clubes (verificar), oportunidades (cerrar), reclutamiento (pipeline envíos/pruebas/negociaciones/contratos), membresías (resumen + planes + pagos con ingresos), analíticas, notificaciones, consultas globales, settings/general (config del sistema)
+- Redirects de filtros admin: users/{rol}, players/{pending,active}, clubs/pending
+- Pendiente: integración Stripe real, permisos admin finos (roles/permissions), analytics detalladas (gráficas), contenido/camps/live-sessions de admin
+
+## 16. FASE E COMPLETADA (Worker real, tests, docs, scripts, infra — validado: build+lint+typecheck OK, tests 15 unit + 6 matching)
+- Worker real: send-notification crea Notification en BD; process-video actualiza estado; generate-player-report agrega datos del jugador; process-events registra eventos; cleanup-files elimina uploads huérfanos; mantenimiento programado con cron (expirar membresías 03:00, limpieza 04:00)
+- Tests: vitest raíz con aliases de workspace. Unit: validation (7), permissions (4), calculations/progress (4) + matching (6). Integración: auth (2, se omiten sin DATABASE_URL). E2E: Playwright config + spec login (requiere servidor y navegadores)
+- Util compartido profileCompletionPercentage (packages/config) usado en desarrollo del jugador
+- Scripts (11): database/{seed,reset,backup}, migration/{migrate,verify}, maintenance/{cleanup,expire-memberships,generate-reports}, development/{create-admin,create-test-users,seed-demo-data} + comandos pnpm scripts:*
+- Docs (35 md): product (10), technical (12), business (6), api (7)
+- Infra: Dockerfile.web/.worker, docker-compose producción, nginx.conf, deployment (dev/staging/prod), monitoring (logging/metrics/alerts)
+- Pendiente: ejecutar e2e (playwright install + servidor), integración con DB real (docker), Stripe/Resend reales, transcoding ffmpeg
+
+## 17. PGLITE (PostgreSQL embebido en WASM — sin Docker/Postgres externo)
+- `pglite-prisma-adapter` + `@electric-sql/pglite` en packages/database; PrismaClient usa el adapter cuando `USE_PGLITE=true` (por defecto)
+- `pnpm db:setup-pglite` → genera SQL del esquema (prisma migrate diff), lo aplica en `.pglite/` y ejecuta el seed (idempotente)
+- Config: `.env` (root) y `apps/web/.env.local` con USE_PGLITE=true, PGLITE_DIR absoluto, AUTH_SECRET generado
+- next.config: `serverExternalPackages` para pglite (carga WASM en runtime Node)
+- Scripts con `node --env-file=.env --import=tsx`; process.exit(0) para evitar cuelgues (PGlite mantiene el event loop)
+- IMPORTANTE: los scripts que modifican la BD (seed, create-admin) deben ejecutarse con el servidor detenido y reiniciarlo después (PGlite mantiene estado en memoria por proceso)
+- Para usar Postgres real/Docker: `USE_PGLITE=false` y volver a `pnpm db:migrate`
+- Verificado en local: login de 6 roles + ~27 rutas del dashboard responden 200 con datos del seed
+
+## 18. LANDING REDISEÑADA (dark & deportivo)
+- Dirección visual elegida: fondo oscuro (#070b09), verde neón (emerald/lime), estilo élite de estadio
+- Componentes en components/landing/: navbar (fija, blur, menú móvil), hero (tarjeta de jugador con score de matching), trusted-by, roles (6 perfiles con enlace register?role=), how-it-works (4 pasos), features (6 diferenciadores), stats, testimonials, cta, footer + logo SVG + iconos SVG propios (sin dependencias)
+- Animaciones CSS propias (fade-up, float) en globals.css
+- Registro acepta ?role= para preseleccionar el tipo de cuenta
+- Landing 100% estática (prerenderizable), metadata actualizada
+- Validado: typecheck + lint + build 2/2 + render en dev
+
+## 19. LANDING v2 (sobria & profesional)
+- Ajuste solicitado: menos neón, más sobrio y futbolístico
+- Fondo negro-verdoso (#0a0e0c), acento verde esmeralda (emerald-500) sin glow ni gradientes brillantes
+- CTAs blancos (texto oscuro) estilo premium deportivo; sin animaciones constantes (solo fade-up inicial)
+- Hero con textura sutil de campo (líneas de césped) + tarjeta de jugador sobria + línea de proceso "Recruitment pipeline" (Submission→Trial→Negotiation→Contract)
+- Tarjetas de roles/features con borde fino y separador entre celdas (grid gap-px); labels uppercase con tracking
+- Quitados: glow neón, gradientes lime, sparkles, tarjetas flotantes
+- Nota: en `pnpm build` aparece "[Error: PGlite failed to initialize properly]" durante la fase de recopilación (no bloquea: exit 0, 2/2) — revisar lazy-init del cliente Prisma/PGlite en build futuro
+
+## 20. TEMA OSCURO GLOBAL (mismo diseño en todo el sistema)
+- `<html class="dark">` activa el tema oscuro por defecto en TODA la app (login, registro, onboarding, dashboards, admin, componentes ui)
+- Tokens `.dark` re-tuneados a la paleta de la landing: fondo 150 12% 5%, tarjeta 150 10% 8%, borde 150 7% 15%, acento verde esmeralda 152 60% 40%
+- Flujo auth (`(auth)/layout.tsx`) unificado: fondo #0a0e0c + tarjeta #101512 borde blanco/10, estilo landing
+- Dashboards y componentes ui (usan tokens) se ven oscuros automáticamente
+- NOTA: `html lang="es"` — al traducir el contenido al inglés cambiar a lang="en"
+- Verificado: login + dashboard 200, html class="dark", tarjeta oscura en login
+
+## 21. OPTIMIZACIÓN DE RENDIMIENTO (dev)
+- `next dev --turbopack` (Turbopack) en apps/web → compilación on-demand ~10x más rápida que webpack
+- `pnpm dev` ahora corre SOLO la web (`--filter=@future-buller/web`); `pnpm dev:all` corre web+worker
+  - MOTIVO: el worker abría la MISMA BD PGlite (.pglite) desde otro proceso → bloqueos/corrupción potencial (disfuncionalidad)
+- Menos consultas a BD: páginas del jugador usan `include`/`_count`/`Promise.all` en vez de queries secuenciales (profile/technical, videos, scouting, development/{goals,evaluations,progress}, documents, membership, opportunities/[id])
+- Tiempos medidos en dev (rutas compiladas): landing 0.25s · login 0.15s · dashboard/player 0.22s · profile 0.22s · opportunities 0.17s
+- RECORDATORIO: no ejecutar `pnpm build` mientras `pnpm dev` esté activo (comparten .next); en producción (`pnpm build && pnpm start`) las rutas están precompiladas y cargan instantáneas
+
+## 22. ÁREA PLAYER MEJORADA (4 bloques)
+### Bloque 1 — Navegación
+- `components/dashboard/nav.ts` + `sidebar.tsx`: sidebar por rol (activo resaltado con usePathname), el layout `dashboard/layout.tsx` ahora es delgado y delegado
+- Páginas antes huérfanas ahora enlazadas: scouting, pathway, documents, videos, training, development/progress, profile/{football,physical,technical}, live-sessions, membership
+- Se eliminaron enlaces genéricos rotos (p.ej. "Perfil" de agent que no existía)
+
+### Bloque 2 — Perfil completo
+- `competitionLevel` ahora editable (Select) y mostrado en perfil, ficha futbolística y scouting; añadido a types/Player y schema de validación
+- `nationality` → Select desde `COUNTRIES`; `foot` → Select desde nuevo `packages/config/src/feet.ts` (FOOT_OPTIONS/FOOT_LABELS: right/left/both)
+- `updatePlayerStatusAction` + componente `StatusToggle` en el perfil: el jugador puede marcarse Disponible/No disponible
+- `% de perfil` ahora incluye competitionLevel, clubName y bio
+
+### Bloque 3 — Funcionalidad
+- Subir documentos: `uploadDocumentAction` + `DocumentUploadForm` + `/dashboard/player/documents/upload` (guardado en public/uploads/documents)
+- Oportunidades guardadas REALES: nuevo modelo `SavedOpportunity` (+prisma generate + reseed), acciones save/unsave, botón en el detalle, página "saved" reescrita
+- Notificaciones clicables: nuevo campo `Notification.link`, las tarjetas navegan al recurso
+- E2E `player-area.spec.ts` (login, guardar/quitar, toggle estado, subir documento) ✅
+
+### Bloque 4 — Coaches (el problema "teacher")
+- Nuevo modelo `CoachPlayer` (coach↔player) + coach demo en seed: coach@demo.com / coach123 vinculado al jugador demo
+- Acciones: `createEvaluationAction`, `createGoalAction` (validan que el jugador esté asignado)
+- Páginas reales: dashboard coach (contadores + mis jugadores), lista de jugadores, detalle de jugador, objetivos (crear+ver), evaluaciones (crear+ver), evaluaciones globales
+- El jugador ve en su área los objetivos y evaluaciones creados por el coach (mismo flujo de siempre)
+- E2E `coach-area.spec.ts` (login coach, crear objetivo+evaluación, el jugador los ve) ✅
+- PENDIENTE: coach/training y coach/live-sessions siguen placeholder (fuera de alcance)
+
+### BD (cambios de schema aplicados)
+- Modelos nuevos: `SavedOpportunity`, `CoachPlayer`; campos nuevos: `Notification.link`
+- Se regeneró `prisma generate` y se re-creó `.pglite` (reset + seed) → los datos demo se reinician
+- E2E con Playwright instalado (chromium) y 4 tests pasando: login×2, player-area, coach-area
+- Fix extra: narrowing de `process.argv[1]` en seed.ts (error TS preexistente del typecheck de database)
+
+## 23. MENÚ LATERAL REDISEÑADO (player)
+- Motivo: la barra tenía 22 ítems en 5 secciones fijas (sobrecargada)
+- Cambios en `components/dashboard/sidebar.tsx` + `nav.ts` + nuevo `icons.tsx`:
+  - Player reducido de 22 → 12 ítems en 4 secciones con iconos SVG propios (estilo lucide). Los sub-menús (ficha física, objetivos, solicitudes…) se acceden desde las páginas padre, que ya tenían enlaces
+  - Secciones PLEGABLES: la sección activa se abre automáticamente al navegar; el estado de plegado se persiste en localStorage (clave `fb.nav.sections`)
+  - Badge dinámico de notificaciones sin leer en "Notificaciones" (solo player; el layout lo consulta)
+  - MENÚ MÓVIL nuevo: barra superior con hamburguesa (antes no había navegación en <768px) → cajón lateral con overlay, se cierra al navegar/tocar fuera/cerrar
+  - "Cerrar sesión" con icono
+- Tests E2E actualizados + nuevo `menú hamburguesa en móvil` (viewport 390px) → 5/5 pasando
+
+## 24. REDISEÑO VISUAL ÁREA PLAYER (gráficos + animaciones)
+- Nuevas animaciones en `globals.css`: fade-up escalonado, scale-in, draw de SVG (fb-ring/fb-line/fb-poly vía pathLength + CSS vars), bar-grow, pulse-dot, card-hover (lift + sombra)
+- Nuevos componentes en `components/player/`:
+  - `count-up.tsx`: contador animado con IntersectionObserver (client)
+  - `charts.tsx`: RadarChart, DonutChart, LineChart (área degradada), CategoryBars — SVG puro, sin dependencias, tema oscuro
+  - `avatar.tsx` (iniciales con gradiente), `page-header.tsx` (icono+título+subtítulo+acciones), `stat-card.tsx` (icono + CountUp + hover)
+- Dashboard player rediseñado: hero con avatar + estado con punto pulsante + membresía + saludo según hora, quick actions, 4 StatCards animadas, radar "Nivel por categoría" (o empty state), donut "Perfil completado" con CTA, lista de actividad reciente
+- Progreso rediseñado: donut media global, línea de evolución de puntuaciones, radar por categoría y barras animadas
+- Perfil rediseñado: cabecera con icono, filas en 2 columnas, donut de completado, panel "Mi ficha" con enlaces
+- PageHeader aplicado a: development, training, membership, live-sessions, scouting, videos, documents, opportunities, notifications, settings
+- Seed: 5 evaluaciones del demo (4 categorías + evolución) para que radar/línea se vean bien
+- Validación: typecheck 0, lint 0, 15 unit tests, 5 E2E (20.5s), gráficos verificados en HTML renderizado
+
+## 25. REDISEÑO VISUAL ÁREA COACH ("teacher") — igual que player
+- Dashboard coach rediseñado (mismo lenguaje visual que el player):
+  - Hero con avatar, saludo según hora, badge "Entrenador", club, CTA "Registrar evaluación" (apunta al primer jugador asignado)
+  - Quick actions: Mis jugadores · Registrar evaluación · Evaluaciones · Entrenamiento
+  - 4 StatCards animadas: Jugadores asignados, Evaluaciones, Objetivos activos, Vídeos de mis jugadores
+  - Radar "Nivel medio por categoría" (media de todos sus jugadores) + donut "Media global del grupo"
+  - Actividad reciente (evaluaciones + objetivos con nombre del jugador) + grid de "Mis jugadores" con avatar
+- Detalle de jugador rediseñado: hero con avatar + estado + media, radar "Nivel del jugador", donut "Media del jugador", ficha en 2 columnas, botones de objetivos/evaluaciones
+- Lista de jugadores: PageHeader con icono + tarjetas con avatar (card-hover)
+- PageHeader aplicado a: development (objetivos), evaluations (por jugador), evaluations globales
+- Training y Live Sessions del coach: placeholders con PageHeader + empty state (dejan de ser "Training"/"Live Sessions" en inglés)
+- Validación: typecheck 0, lint 0, 5 E2E (19.9s), gráficos del coach verificados en HTML renderizado
+
+## USUARIOS DEMO
+- player@demo.com / player123 (jugador)
+- coach@demo.com / coach123 (entrenador)
+- club@demo.com / club123 (club)
+- agent@demo.com / agent123 (agente)
+- scout@demo.com / scout123 (ojeador)
+- parent@demo.com / parent123 (familiar)
+- admin@futurebuller.com (sin contraseña en seed → se asigna con `pnpm scripts:create-admin`)
+
+## 26. ÁREA CLUB REDISEÑADA — CENTRO DE RECLUTAMIENTO (distinto de player/coach)
+Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
+- Dashboard `dashboard/club/page.tsx`:
+  - Hero compacto: escudo + nombre + verificación + ubicación/liga + botones (Publicar oportunidad, Nuevo requisito, Ver solicitudes)
+  - ALERTA DINÁMICA: banner ámbar con nº de acciones pendientes (solicitudes sin revisar, consultas sin responder, borradores, oportunidades que cierran <7 días) y CTA; banner verde si todo al día
+  - 4 KPIs animados: Oportunidades abiertas, Solicitudes pendientes, Requisitos activos, Consultas sin responder
+  - PIPELINE DE RECLUTAMIENTO: oportunidades → solicitudes → pendientes → aceptadas (con contadores CountUp, clicable)
+  - Solicitudes por estado: barra apilada (pendientes/aceptadas/rechazadas) + leyenda
+  - Requisitos activos (lista con posición/rango de edad + acceso a matching)
+  - Acciones pendientes (lista priorizada de tareas con enlace) + Actividad reciente (solicitudes + consultas)
+- NUEVA página `dashboard/club/applications` (bandeja de solicitudes): candidatos ordenados pendientes-primero, avatar, posición/nivel/nacionalidad, oportunidad solicitada, estado; añadida al sidebar en sección Reclutamiento
+- PageHeader aplicado a: opportunities, requirements (con botón), players (avatar en tarjetas), inquiries, matching, staff (con botón), profile
+- Iconos nuevos: IconClock, IconShield en dashboard/icons
+- Seed: solicitud de aplicación PENDING del jugador demo a opp-club-1 (bandeja con datos)
+- Validación: typecheck 0, lint 0, 6 E2E (19.3s) con nuevo `club-area.spec.ts`, dashboard verificado por HTTP
+
+## 27. ÁREA AGENTE REDISEÑADA — WORKSPACE DE AGENCIA
+- Dashboard `dashboard/agent/page.tsx`:
+  - Hero: avatar + agencia/nombre + licencia + botones (Añadir jugador, Nuevo envío) + quick actions
+  - Alerta dinámica ámbar/verde con nº de acciones pendientes en la cartera (envíos en revisión, pruebas <7 días, negociaciones abiertas, contratos por firmar)
+  - 4 KPIs: Jugadores representados, Envíos, Pruebas programadas, Negociaciones abiertas
+  - PIPELINE DE REPRESENTACIÓN (5 fases): jugadores → envíos → pruebas → negociaciones → contratos (CountUp, clicable)
+  - Envíos por fase (barra apilada SUBMISSION/TRIAL/NEGOTIATION/CONTRACT) + Acciones pendientes + Mis jugadores (avatar) + Actividad reciente
+- NUEVAS páginas (corregían 404 del sidebar): `trials`, `negotiations`, `contracts`, `clubs` — listas con card-hover, avatar/escudo y badges de estado; `clubs` incluye nº de oportunidades abiertas por club
+- PageHeader aplicado a: players (avatar en tarjetas), submissions (con botón), opportunities, matching, documents y communications (empty states ilustrados)
+- Menú: "Submissions" → "Envíos"
+- Validación: typecheck 0, lint 0, 7 E2E (18.3s) con nuevo `agent-area.spec.ts` (dashboard + 4 páginas sin 404 + sidebar)
+
+## 28. ÁREA SCOUT REDISEÑADA — PUESTO DE SCOUTING
+- Dashboard `dashboard/scout/page.tsx`:
+  - Hero: avatar + nombre + badge "Ojeador" pulsante + agencia + botones (Buscar jugadores, Nuevo informe) + quick actions
+  - Alerta dinámica ámbar/verde: jugadores guardados SIN informe (CTA "Crear informe")
+  - 4 KPIs: Jugadores disponibles, Jugadores guardados, Informes creados, Oportunidades abiertas
+  - PIPELINE "Proceso de scouting" (3 fases): Explorar → Guardados → Informes (CountUp, clicable)
+  - Distribución de valoraciones (barra apilada altas/medias/bajas de informes) + Guardados sin informe (lista accionable)
+  - Mi radar (guardados con badge Informado/Sin informe) + Informes recientes (valoraciones 8/6)
+- PageHeader aplicado a: players (avatar + card-hover), saved (avatar + card-hover), scouting-reports, opportunities
+- Validación: typecheck 0, lint 0, 8 E2E (18.8s) con nuevo `scout-area.spec.ts`, dashboard verificado por HTTP
+
+## 29. ÁREA FAMILIAR (PARENT) REDISEÑADA — HUB FAMILIAR
+- El área era 100% placeholder y NO existía vínculo familiar↔hijo → nuevo modelo `ParentChild` (+relations en Parent/Player), `prisma generate` + reseed
+- Seed: familiar demo (parent@demo.com) vinculado al jugador demo, 2 guías de educación para familias (category parent-education) y un pago demo (pay-parent-1)
+- Dashboard `dashboard/parent/page.tsx` (Hub familiar):
+  - Hero: avatar + nombre + badge "Familiar" + botones (Mis hijos, Guías para familias) + quick actions
+  - Alerta dinámica: pruebas próximas <7 días + oportunidades abiertas (novedades)
+  - 4 KPIs: Hijos vinculados, Evaluaciones, Objetivos activos, Pruebas programadas
+  - Radar "Nivel de tu hijo por categoría" + donut "Valoración media de tu hijo"
+  - Mis hijos (avatar + estado) + Actividad reciente (evaluaciones + pruebas) + Tus pagos (con importe formateado)
+- Páginas reales: Mis hijos (lista con avatares), detalle del hijo (hero + radar + media + ficha + evaluaciones/objetivos recientes), Educación para familias (guías parent-education + detalle del artículo), Oportunidades (pruebas abiertas), Pagos (historial formateado), Ajustes (cuenta)
+- Icono nuevo: IconBook
+- Validación: typecheck 0, lint 0, 9 E2E (27.1s) con nuevo `parent-area.spec.ts`
+
+## 30. ÁREA ADMIN REDISEÑADA — CENTRO DE CONTROL DE LA PLATAFORMA
+- Seed: el admin demo ahora tiene contraseña → admin@futurebuller.com / admin123
+- Dashboard `dashboard/admin/page.tsx`:
+  - Hero: avatar + nombre + badge "Administración" + resumen global (usuarios/jugadores/clubes)
+  - Alerta dinámica: moderación pendiente (jugadores por verificar, clubes sin verificar, consultas nuevas)
+  - 6 KPIs: Usuarios, Jugadores, Clubes, Oportunidades abiertas, Pagos, Ingresos (€)
+  - Usuarios por rol (barras animadas por grupo) + Acciones pendientes (lista con enlaces)
+  - Actividad reciente (nuevos usuarios + pagos) + Ingresos recientes (totales + últimos pagos)
+- PageHeader aplicado a: players, clubs, users, opportunities, memberships, recruitment, notifications; placeholders content/settings convertidos a páginas con header + empty state
+- FIX Playwright: PGlite no soporta acceso concurrente de varios workers → `workers: 1` en playwright.config.ts (los 10 tests pasan estables)
+- Validación: typecheck 0, lint 0, 10 E2E (36.5s) con nuevo `admin-area.spec.ts`
+
+## 31. ÁREA UNIVERSIDAD REDISEÑADA — PORTAL ACADÉMICO-DEPORTIVO (último rol)
+- El área era 100% placeholder. Seed: universidad demo (university@demo.com / university123, Valencia) + oportunidad tipo SCHOLARSHIP (opp-club-2 'Beca deportiva para delanteros')
+- Dashboard `dashboard/university/page.tsx`:
+  - Hero: avatar + nombre + badge "Universidad" + país/ciudad + botones (Ver jugadores, Ver oportunidades) + quick actions
+  - Alerta dinámica: becas que cierran <7 días + solicitudes a becas registradas
+  - 4 KPIs: Jugadores disponibles, Oportunidades abiertas, Becas disponibles, Solicitudes a becas
+  - Pipeline "Reclutamiento universitario" (Explorar → Oportunidades → Becas) con CountUp
+  - Jugadores disponibles (avatar + posición + nacionalidad) + Oportunidades destacadas (becas resaltadas en verde)
+- Páginas reales: Jugadores (disponibles con avatares), Oportunidades (becas destacadas con borde/icono libro), Perfil (ficha de la institución)
+- Validación: typecheck 0, lint 0, 11 E2E (37.6s) con nuevo `university-area.spec.ts`
+
+## USUARIOS DEMO (COMPLETO — 9 ROLES)
+- admin@futurebuller.com / admin123 · player@demo.com / player123 · coach@demo.com / coach123
+- club@demo.com / club123 · agent@demo.com / agent123 · scout@demo.com / scout123
+- parent@demo.com / parent123 · university@demo.com / university123
+
+## USUARIOS DEMO (ACTUALIZADO)
+- admin@futurebuller.com / admin123 (ahora con contraseña en seed)
+
+## 32. BLOQUE P0 COMPLETADO — ADMIN (31 páginas + componentes compartidos)
+- **31 páginas admin nuevas** con PageHeader, KPIs animados (StatCard/CountUp), datos reales y queries con Promise.all:
+  - Usuarios por rol ×7 (`users/{players,parents,coaches,scouts,agents,clubs,universities}`)
+  - Jugadores ×4 (`players/{pending,active,[playerId],evaluations}`)
+  - Clubes ×2 (`clubs/{pending,[clubId]}`)
+  - Reclutamiento ×4 (`recruitment/{submissions,trials,negotiations,contracts}`)
+  - Analytics ×4 + índice (`analytics/{players,clubs,recruitment,revenue}`)
+  - Contenido ×4 + índice (`content/{training,strength-conditioning,psychology,parent-education}`)
+  - Ajustes ×6 + índice (`settings/{countries,leagues,roles,permissions,security,system}`)
+- Componentes admin reutilizables: `role-links`, `player-filter-links`, `player-row`, `status-badge` (variantes auto), `content-category` (CRUD contenido), `analytics-utils` (monthlyCounts/formatCurrency), `CountsBars` en charts
+- Actions admin: create/delete contenido, verify player/club, setRole, deleteUser, close inquiry
+- Sidebar admin: añadida entrada "Analíticas"
+- Validación: typecheck 9/9, lint 0, unit 15/2, E2E 11/11 + smoke 31 rutas
+
+## 33. BLOQUE P1-A COMPLETADO — Modelos nuevos + 18 páginas + notificaciones
+- **Schema**: `Camp` + `CampRegistration`, `LiveSession` (enums CampStatus, LiveSessionType, LiveSessionStatus), `Conversation` + `ConversationParticipant` + `Message` (mensajería), y `Opportunity` polimórfica (`clubId?` + `universityId?` + `creatorType`) — oportunidades de universidad
+- **Seed**: camp OPEN (camp-1) + borrador (camp-2) + registro del jugador demo, 3 live sessions (grupal, 1:1 prueba, charla finalizada), beca universitaria (opp-uni-1), conversación demo con 2 mensajes
+- **Páginas admin** (las 15 pendientes): camps ×3, live-sessions ×3, matching ×3 (usa `matchScore` del motor `@future-buller/matching`), opportunities create + detalle, communications ×2 (conversaciones + hilo con respuesta), documents ×2
+- **Páginas de rol**: player live-sessions lista+detalle, coach live-sessions (con formulario `createCoachLiveSessionAction`), coach training (catálogo), públicas `(public)/camps` + `[campId]` (con inscripción `registerForCampAction`)
+- **Notificaciones**: `apps/web/lib/notifications/notify.ts` (payload idéntico al job worker), job worker `send-notification` ahora acepta `link`; `applyToOpportunityAction` notifica al club/universidad propietario
+- **Nav admin**: Camps, Sesiones en vivo, Matching, Comunicaciones, Documentos
+- Validación: typecheck 9/9, lint 0, unit 15/2, E2E 11/11 + smoke P1 2/2
+
+## PLACEHOLDERS RESTANTES (19/73)
+- Públicas marketing (14): about, contact, clubs (+detalle), opportunities (+detalle), parent-hub (+artículo), pathways (+detalle), players (+detalle), training (+detalle)
+- Parent (5): children/[playerId]/{development,training,opportunities}, pathways, payments/history
+- Admin: 0
+
+## PRÓXIMOS PASOS (P1-B / P2)
+1. Públicas: implementar `(public)/players` + `[playerId]` (perfil público), `(public)/opportunities` + `[opportunityId]`, `(public)/training`, `(public)/clubs` (directory)
+2. Parent: pages children/{development,training,opportunities}, pathways, payments/history
+3. API routes reales: reemplazar los ~34 stubs `app/api/**` por handlers con prisma + auth
+4. Email/recuperación de contraseña: conectar Resend (lib/email) + flujo forgot/reset con PasswordResetToken
+5. P2: inicializar git, build de producción documentado, despliegue
+
+## 34. BLOQUE P1-B COMPLETADO — Todas las páginas restantes (19) → PLACEHOLDERS: 0
+- **Parent (5)**: `children/[playerId]/development` (radar + donut + objetivos + ruta), `children/[playerId]/opportunities` (solicitudes + guardadas + camps), `children/[playerId]/training` (sesiones 1:1 + catálogo), `pathways` (rutas por hijo con barra de progreso), `payments/history` (KPIs total/pagados + desglose)
+- **Públicas marketing (14)**: `about`, `contact`, `players` (directorio público con posición/nacionalidad/club), `players/[playerId]` (perfil público sin datos sensibles, nivel global), `clubs` (directorio verificado), `clubs/[clubId]` (oportunidades + perfiles buscados), `opportunities` (grid con becas resaltadas), `opportunities/[opportunityId]` (detalle + CTA registro), `training` (catálogo con dificultad ★), `training/[contentId]` (detalle con <video>), `parent-hub` + `[articleId]` (guías familiares), `pathways` + `[pathwayId]` (4 etapas del jugador: base/formación/pre-pro/universitario)
+- **Estilo**: todas las públicas con Navbar + Footer del landing (tema `#0a0e0c`, acentos emerald), CTA a registro
+- Validación: typecheck 9/9, lint 0, unit 15/2, E2E 11/11 + smoke P1-B 2/2
+
+## ESTADO FINAL DE PÁGINAS
+- Placeholders en `apps/web/app`: **0** (73 originales eliminados)
+- Quedan fuera de scope de páginas: API routes (~34 stubs), emails, pagos reales, worker en producción
+
+## 35. BLOQUE P1-C COMPLETADO — API REST reales (34 rutas)
+- Helpers compartidos: `apps/web/lib/api/respond.ts` (`requireUser` sesión Auth.js, `forbidden`/`badRequest`/`methodNotAllowed`, `readJson`/`stringField`/`intField`/`dateField`)
+- **34 rutas implementadas** (antes stubs `{ok,domain}`): users, players (GET rol-aware + POST upsert perfil), clubs, opportunities, applications, notifications (GET + marcar leídas), analytics (admin, conteos+revenue), evaluations, videos/media, documents, training, parent-education, development, pathways, camps (GET+POST admin), live-sessions (GET rol-aware + POST admin/coach), matching (usa `matchScore`), memberships, payments, submissions, trials, contracts, negotiations, scouting (GET + POST scout), scouts/agents/coaches/parents/universities (directorios), academies (GET+POST admin), auth (sesión actual), webhooks (501 Stripe hasta P2)
+- **Seguridad**: 401 sin sesión, 403 por rol, datos propios por rol (player→suyo, club→suyo, admin→todo), directorios públicos de perfiles disponibles
+- **Docs**: `docs/api/rest.md` con tabla de endpoints + notas
+- Validación: typecheck 9/9, lint 0, unit 15/2, E2E 11/11 + smoke API 2/2 (401/403, analytics, perfil GET/POST, matching)
+
+## PRÓXIMOS PASOS (P2)
+1. Email/recuperación de contraseña: Resend (`lib/email`) + flujo forgot/reset con `PasswordResetToken`
+2. Stripe: checkout + webhook real (`/api/webhooks`)
+3. `git init` + `.gitignore` + build de producción documentado
+4. Despliegue
+
+

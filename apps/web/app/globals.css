@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
+    --border: 240 6% 90%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 142 71% 45%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 150 12% 5%;
+    --foreground: 0 0% 97%;
+    --card: 150 10% 8%;
+    --card-foreground: 0 0% 97%;
+    --border: 150 7% 15%;
+    --primary: 152 60% 40%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 150 8% 10%;
+    --muted-foreground: 150 5% 64%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 152 60% 40%;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-up {
+    animation: fb-fade-up 0.6s ease-out both;
+  }
+
+  .animate-fade-up-slow {
+    animation: fb-fade-up 0.9s ease-out 0.1s both;
+  }
+
+  .animate-scale-in {
+    animation: fb-scale-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-pulse-dot {
+    animation: fb-pulse 2s ease-in-out infinite;
+  }
+
+  .card-hover {
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.25s,
+      background-color 0.25s,
+      box-shadow 0.25s;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-3px);
+    border-color: hsl(var(--primary) / 0.5);
+    box-shadow: 0 16px 40px -18px rgb(0 0 0 / 0.6);
+  }
+
+  .fb-ring {
+    stroke-dasharray: var(--ring-max);
+    animation: fb-ring-draw 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  }
+
+  .fb-line {
+    stroke-dasharray: 100;
+    animation: fb-line-draw 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  }
+
+  .fb-poly {
+    stroke-dasharray: 100;
+    animation: fb-line-draw 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  }
+
+  .fb-bar {
+    animation: fb-bar-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  }
+
+  @keyframes fb-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fb-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fb-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes fb-ring-draw {
+    from {
+      stroke-dashoffset: var(--ring-max);
+    }
+    to {
+      stroke-dashoffset: var(--ring-target);
+    }
+  }
+
+  @keyframes fb-line-draw {
+    from {
+      stroke-dashoffset: 100;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes fb-bar-grow {
+    from {
+      width: 0;
+    }
+    to {
+      width: var(--bar-target);
+    }
+  }
+}

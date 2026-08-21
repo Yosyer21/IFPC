@@ -1,0 +1,913 @@
+future-buller-platform/
+│
+├── apps/
+│   │
+│   ├── web/
+│   │   │
+│   │   ├── app/
+│   │   │   │
+│   │   │   ├── (public)/
+│   │   │   │   ├── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── about/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── camps/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [campId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── pathways/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [pathwayId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── opportunities/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [opportunityId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── clubs/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [clubId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── players/
+│   │   │   │   │   └── [playerId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── training/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [contentId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── parent-hub/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [articleId]/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   └── contact/
+│   │   │   │       └── page.tsx
+│   │   │   │
+│   │   │   │
+│   │   │   ├── (auth)/
+│   │   │   │   │
+│   │   │   │   ├── login/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── register/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── forgot-password/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── reset-password/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   │
+│   │   │   │   ├── verify-email/
+│   │   │   │   │   └── page.tsx
+│   │   │   │   │
+│   │   │   │   └── onboarding/
+│   │   │   │       ├── page.tsx
+│   │   │   │       ├── player/
+│   │   │   │       ├── parent/
+│   │   │   │       ├── coach/
+│   │   │   │       ├── agent/
+│   │   │   │       └── club/
+│   │   │   │
+│   │   │   │
+│   │   │   ├── dashboard/
+│   │   │   │   │
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── player/
+│   │   │   │   │   │
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── profile/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── edit/
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── football/
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── physical/
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── technical/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── videos/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── upload/
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   └── [videoId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── training/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── technical/
+│   │   │   │   │   │   ├── strength-conditioning/
+│   │   │   │   │   │   ├── psychology/
+│   │   │   │   │   │   └── [contentId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── development/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── goals/
+│   │   │   │   │   │   ├── evaluations/
+│   │   │   │   │   │   └── progress/
+│   │   │   │   │   │
+│   │   │   │   │   ├── pathway/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [pathwayId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── opportunities/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── saved/
+│   │   │   │   │   │   ├── applications/
+│   │   │   │   │   │   └── [opportunityId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── live-sessions/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [sessionId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── scouting/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── documents/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [documentId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── notifications/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   └── settings/
+│   │   │   │   │       ├── page.tsx
+│   │   │   │   │       ├── account/
+│   │   │   │   │       ├── privacy/
+│   │   │   │   │       └── notifications/
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── parent/
+│   │   │   │   │   │
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   ├── children/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [playerId]/
+│   │   │   │   │   │       ├── page.tsx
+│   │   │   │   │   │       ├── development/
+│   │   │   │   │   │       ├── training/
+│   │   │   │   │   │       └── opportunities/
+│   │   │   │   │   │
+│   │   │   │   │   ├── education/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [articleId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── pathways/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── opportunities/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── payments/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── history/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   └── settings/
+│   │   │   │   │       └── page.tsx
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── coach/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   ├── players/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [playerId]/
+│   │   │   │   │   │       ├── page.tsx
+│   │   │   │   │   │       ├── evaluations/
+│   │   │   │   │   │       └── development/
+│   │   │   │   │   ├── evaluations/
+│   │   │   │   │   ├── training/
+│   │   │   │   │   └── live-sessions/
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── scout/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   ├── players/
+│   │   │   │   │   ├── saved/
+│   │   │   │   │   ├── scouting-reports/
+│   │   │   │   │   └── opportunities/
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── agent/
+│   │   │   │   │   │
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── players/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── add/
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   └── [playerId]/
+│   │   │   │   │   │       ├── page.tsx
+│   │   │   │   │   │       ├── profile/
+│   │   │   │   │   │       ├── videos/
+│   │   │   │   │   │       ├── evaluations/
+│   │   │   │   │   │       └── documents/
+│   │   │   │   │   │
+│   │   │   │   │   ├── clubs/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [clubId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── submissions/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── new/
+│   │   │   │   │   │   └── [submissionId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── trials/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [trialId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── negotiations/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [negotiationId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── contracts/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [contractId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── opportunities/
+│   │   │   │   │   ├── matching/
+│   │   │   │   │   ├── communications/
+│   │   │   │   │   └── documents/
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── club/
+│   │   │   │   │   │
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── profile/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── staff/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── invite/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── requirements/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   ├── new/
+│   │   │   │   │   │   └── [requirementId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── players/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [playerId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── matching/
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   ├── inquiries/
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── [inquiryId]/
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │
+│   │   │   │   │   └── opportunities/
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   ├── university/
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   ├── profile/
+│   │   │   │   │   ├── players/
+│   │   │   │   │   └── opportunities/
+│   │   │   │   │
+│   │   │   │   │
+│   │   │   │   └── admin/
+│   │   │   │       │
+│   │   │   │       ├── page.tsx
+│   │   │   │       │
+│   │   │   │       ├── users/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── players/
+│   │   │   │       │   ├── parents/
+│   │   │   │       │   ├── coaches/
+│   │   │   │       │   ├── scouts/
+│   │   │   │       │   ├── agents/
+│   │   │   │       │   ├── clubs/
+│   │   │   │       │   └── universities/
+│   │   │   │       │
+│   │   │   │       ├── players/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── pending/
+│   │   │   │       │   ├── active/
+│   │   │   │       │   ├── evaluations/
+│   │   │   │       │   └── [playerId]/
+│   │   │   │       │
+│   │   │   │       ├── clubs/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── pending/
+│   │   │   │       │   └── [clubId]/
+│   │   │   │       │
+│   │   │   │       ├── opportunities/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── create/
+│   │   │   │       │   └── [opportunityId]/
+│   │   │   │       │
+│   │   │   │       ├── camps/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── create/
+│   │   │   │       │   └── [campId]/
+│   │   │   │       │
+│   │   │   │       ├── content/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── training/
+│   │   │   │       │   ├── psychology/
+│   │   │   │       │   ├── strength-conditioning/
+│   │   │   │       │   └── parent-education/
+│   │   │   │       │
+│   │   │   │       ├── live-sessions/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── create/
+│   │   │   │       │   └── [sessionId]/
+│   │   │   │       │
+│   │   │   │       ├── recruitment/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── submissions/
+│   │   │   │       │   ├── trials/
+│   │   │   │       │   ├── negotiations/
+│   │   │   │       │   └── contracts/
+│   │   │   │       │
+│   │   │   │       ├── matching/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── players/
+│   │   │   │       │   └── clubs/
+│   │   │   │       │
+│   │   │   │       ├── memberships/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── plans/
+│   │   │   │       │   └── payments/
+│   │   │   │       │
+│   │   │   │       ├── documents/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   └── [documentId]/
+│   │   │   │       │
+│   │   │   │       ├── communications/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── inquiries/
+│   │   │   │       │   └── messages/
+│   │   │   │       │
+│   │   │   │       ├── notifications/
+│   │   │   │       │   └── page.tsx
+│   │   │   │       │
+│   │   │   │       ├── analytics/
+│   │   │   │       │   ├── page.tsx
+│   │   │   │       │   ├── players/
+│   │   │   │       │   ├── clubs/
+│   │   │   │       │   ├── recruitment/
+│   │   │   │       │   └── revenue/
+│   │   │   │       │
+│   │   │   │       └── settings/
+│   │   │   │           ├── general/
+│   │   │   │           ├── security/
+│   │   │   │           ├── roles/
+│   │   │   │           ├── permissions/
+│   │   │   │           ├── countries/
+│   │   │   │           ├── leagues/
+│   │   │   │           └── system/
+│   │   │   │
+│   │   │   │
+│   │   │   ├── api/
+│   │   │   │   │
+│   │   │   │   ├── auth/
+│   │   │   │   ├── users/
+│   │   │   │   ├── players/
+│   │   │   │   ├── parents/
+│   │   │   │   ├── coaches/
+│   │   │   │   ├── scouts/
+│   │   │   │   ├── agents/
+│   │   │   │   ├── clubs/
+│   │   │   │   ├── academies/
+│   │   │   │   ├── universities/
+│   │   │   │   ├── videos/
+│   │   │   │   ├── media/
+│   │   │   │   ├── training/
+│   │   │   │   ├── parent-education/
+│   │   │   │   ├── evaluations/
+│   │   │   │   ├── development/
+│   │   │   │   ├── pathways/
+│   │   │   │   ├── camps/
+│   │   │   │   ├── live-sessions/
+│   │   │   │   ├── opportunities/
+│   │   │   │   ├── applications/
+│   │   │   │   ├── submissions/
+│   │   │   │   ├── trials/
+│   │   │   │   ├── negotiations/
+│   │   │   │   ├── contracts/
+│   │   │   │   ├── scouting/
+│   │   │   │   ├── matching/
+│   │   │   │   ├── documents/
+│   │   │   │   ├── communications/
+│   │   │   │   ├── notifications/
+│   │   │   │   ├── memberships/
+│   │   │   │   ├── payments/
+│   │   │   │   ├── analytics/
+│   │   │   │   └── webhooks/
+│   │   │   │
+│   │   │   ├── components/
+│   │   │   │   │
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── button.tsx
+│   │   │   │   │   ├── input.tsx
+│   │   │   │   │   ├── select.tsx
+│   │   │   │   │   ├── dialog.tsx
+│   │   │   │   │   ├── modal.tsx
+│   │   │   │   │   ├── dropdown.tsx
+│   │   │   │   │   ├── tabs.tsx
+│   │   │   │   │   ├── table.tsx
+│   │   │   │   │   ├── card.tsx
+│   │   │   │   │   ├── badge.tsx
+│   │   │   │   │   ├── avatar.tsx
+│   │   │   │   │   ├── progress.tsx
+│   │   │   │   │   ├── calendar.tsx
+│   │   │   │   │   ├── date-picker.tsx
+│   │   │   │   │   ├── tooltip.tsx
+│   │   │   │   │   └── loading.tsx
+│   │   │   │   │
+│   │   │   │   ├── layout/
+│   │   │   │   │   ├── sidebar.tsx
+│   │   │   │   │   ├── header.tsx
+│   │   │   │   │   ├── footer.tsx
+│   │   │   │   │   ├── breadcrumbs.tsx
+│   │   │   │   │   └── mobile-navigation.tsx
+│   │   │   │   │
+│   │   │   │   ├── player/
+│   │   │   │   │   ├── player-card.tsx
+│   │   │   │   │   ├── player-profile.tsx
+│   │   │   │   │   ├── player-header.tsx
+│   │   │   │   │   ├── player-stats.tsx
+│   │   │   │   │   ├── player-videos.tsx
+│   │   │   │   │   ├── player-evaluation.tsx
+│   │   │   │   │   ├── player-status.tsx
+│   │   │   │   │   └── player-pathway.tsx
+│   │   │   │   │
+│   │   │   │   ├── club/
+│   │   │   │   │   ├── club-card.tsx
+│   │   │   │   │   ├── club-profile.tsx
+│   │   │   │   │   ├── club-header.tsx
+│   │   │   │   │   ├── club-requirements.tsx
+│   │   │   │   │   └── club-staff.tsx
+│   │   │   │   │
+│   │   │   │   ├── opportunity/
+│   │   │   │   │   ├── opportunity-card.tsx
+│   │   │   │   │   ├── opportunity-details.tsx
+│   │   │   │   │   ├── opportunity-filters.tsx
+│   │   │   │   │   └── opportunity-status.tsx
+│   │   │   │   │
+│   │   │   │   ├── training/
+│   │   │   │   │   ├── training-card.tsx
+│   │   │   │   │   ├── video-player.tsx
+│   │   │   │   │   ├── training-progress.tsx
+│   │   │   │   │   └── training-library.tsx
+│   │   │   │   │
+│   │   │   │   ├── recruitment/
+│   │   │   │   │   ├── recruitment-pipeline.tsx
+│   │   │   │   │   ├── submission-card.tsx
+│   │   │   │   │   ├── trial-card.tsx
+│   │   │   │   │   ├── negotiation-card.tsx
+│   │   │   │   │   └── contract-card.tsx
+│   │   │   │   │
+│   │   │   │   ├── matching/
+│   │   │   │   │   ├── match-card.tsx
+│   │   │   │   │   ├── match-score.tsx
+│   │   │   │   │   ├── match-filters.tsx
+│   │   │   │   │   └── match-explanation.tsx
+│   │   │   │   │
+│   │   │   │   └── dashboard/
+│   │   │   │       ├── stat-card.tsx
+│   │   │   │       ├── activity-feed.tsx
+│   │   │   │       ├── recent-items.tsx
+│   │   │   │       └── dashboard-chart.tsx
+│   │   │   │
+│   │   │   │
+│   │   │   ├── lib/
+│   │   │   │   │
+│   │   │   │   ├── auth/
+│   │   │   │   │   ├── auth.ts
+│   │   │   │   │   ├── session.ts
+│   │   │   │   │   └── guards.ts
+│   │   │   │   │
+│   │   │   │   ├── permissions/
+│   │   │   │   │   ├── roles.ts
+│   │   │   │   │   ├── permissions.ts
+│   │   │   │   │   └── authorization.ts
+│   │   │   │   │
+│   │   │   │   ├── database/
+│   │   │   │   │   └── client.ts
+│   │   │   │   │
+│   │   │   │   ├── storage/
+│   │   │   │   │   ├── storage.ts
+│   │   │   │   │   ├── uploads.ts
+│   │   │   │   │   └── signed-urls.ts
+│   │   │   │   │
+│   │   │   │   ├── video/
+│   │   │   │   │   ├── video-service.ts
+│   │   │   │   │   ├── thumbnails.ts
+│   │   │   │   │   └── transcoding.ts
+│   │   │   │   │
+│   │   │   │   ├── payments/
+│   │   │   │   │   ├── payment-service.ts
+│   │   │   │   │   ├── subscriptions.ts
+│   │   │   │   │   └── invoices.ts
+│   │   │   │   │
+│   │   │   │   ├── email/
+│   │   │   │   │   ├── email-service.ts
+│   │   │   │   │   └── templates/
+│   │   │   │   │
+│   │   │   │   ├── notifications/
+│   │   │   │   │   ├── notification-service.ts
+│   │   │   │   │   └── notification-types.ts
+│   │   │   │   │
+│   │   │   │   ├── matching/
+│   │   │   │   │   ├── matching-engine.ts
+│   │   │   │   │   ├── scoring.ts
+│   │   │   │   │   └── requirements.ts
+│   │   │   │   │
+│   │   │   │   ├── analytics/
+│   │   │   │   │   ├── analytics.ts
+│   │   │   │   │   └── events.ts
+│   │   │   │   │
+│   │   │   │   ├── security/
+│   │   │   │   │   ├── encryption.ts
+│   │   │   │   │   ├── audit.ts
+│   │   │   │   │   └── rate-limit.ts
+│   │   │   │   │
+│   │   │   │   └── utils/
+│   │   │   │       ├── dates.ts
+│   │   │   │       ├── formatting.ts
+│   │   │   │       ├── validation.ts
+│   │   │   │       └── constants.ts
+│   │   │   │
+│   │   │   ├── hooks/
+│   │   │   │   ├── use-auth.ts
+│   │   │   ├── use-player.ts
+│   │   │   ├── use-club.ts
+│   │   │   ├── use-opportunity.ts
+│   │   │   ├── use-matching.ts
+│   │   │   ├── use-notifications.ts
+│   │   │   └── use-upload.ts
+│   │   │
+│   │   ├── stores/
+│   │   │   ├── auth-store.ts
+│   │   │   ├── player-store.ts
+│   │   │   ├── dashboard-store.ts
+│   │   │   └── notification-store.ts
+│   │   │
+│   │   ├── types/
+│   │   │   ├── auth.ts
+│   │   │   ├── player.ts
+│   │   │   ├── parent.ts
+│   │   │   ├── coach.ts
+│   │   │   ├── scout.ts
+│   │   │   ├── agent.ts
+│   │   │   ├── club.ts
+│   │   │   ├── academy.ts
+│   │   │   ├── university.ts
+│   │   │   ├── opportunity.ts
+│   │   │   ├── recruitment.ts
+│   │   │   ├── matching.ts
+│   │   │   ├── training.ts
+│   │   │   ├── video.ts
+│   │   │   ├── document.ts
+│   │   │   └── notification.ts
+│   │   │
+│   │   ├── validators/
+│   │   │   ├── auth.ts
+│   │   │   ├── player.ts
+│   │   │   ├── club.ts
+│   │   │   ├── opportunity.ts
+│   │   │   ├── recruitment.ts
+│   │   │   └── documents.ts
+│   │   │
+│   │   ├── middleware.ts
+│   │   ├── not-found.tsx
+│   │   ├── error.tsx
+│   │   ├── layout.tsx
+│   │   └── globals.css
+│   │
+│   │
+│   └── worker/
+│       │
+│       ├── src/
+│       │   ├── index.ts
+│       │   │
+│       │   ├── jobs/
+│       │   │   ├── video-processing/
+│       │   │   │   ├── process-video.ts
+│       │   │   │   ├── generate-thumbnail.ts
+│       │   │   │   └── generate-preview.ts
+│       │   │   │
+│       │   │   ├── matching/
+│       │   │   │   ├── calculate-matches.ts
+│       │   │   │   └── update-match-index.ts
+│       │   │   │
+│       │   │   ├── notifications/
+│       │   │   │   ├── send-notification.ts
+│       │   │   │   ├── send-email.ts
+│       │   │   │   └── send-reminder.ts
+│       │   │   │
+│       │   │   ├── analytics/
+│       │   │   │   └── process-events.ts
+│       │   │   │
+│       │   │   ├── reports/
+│       │   │   │   ├── generate-player-report.ts
+│       │   │   │   └── generate-scouting-report.ts
+│       │   │   │
+│       │   │   └── maintenance/
+│       │   │       ├── cleanup-files.ts
+│       │   │       └── expire-memberships.ts
+│       │   │
+│       │   ├── queues/
+│       │   │   ├── video.queue.ts
+│       │   │   ├── matching.queue.ts
+│       │   │   ├── notification.queue.ts
+│       │   │   └── report.queue.ts
+│       │   │
+│       │   └── services/
+│       │       ├── queue-service.ts
+│       │       └── worker-service.ts
+│       │
+│       └── package.json
+│
+│
+├── packages/
+│   │
+│   ├── database/
+│   │   │
+│   │   ├── prisma/
+│   │   │   ├── schema.prisma
+│   │   │   │
+│   │   │   ├── models/
+│   │   │   │   ├── user.prisma
+│   │   │   │   ├── player.prisma
+│   │   │   │   ├── parent.prisma
+│   │   │   │   ├── coach.prisma
+│   │   │   │   ├── scout.prisma
+│   │   │   │   ├── agent.prisma
+│   │   │   │   ├── club.prisma
+│   │   │   │   ├── academy.prisma
+│   │   │   │   ├── university.prisma
+│   │   │   │   ├── video.prisma
+│   │   │   │   ├── training.prisma
+│   │   │   │   ├── evaluation.prisma
+│   │   │   │   ├── development.prisma
+│   │   │   │   ├── pathway.prisma
+│   │   │   │   ├── camp.prisma
+│   │   │   │   ├── live-session.prisma
+│   │   │   │   ├── opportunity.prisma
+│   │   │   │   ├── application.prisma
+│   │   │   │   ├── submission.prisma
+│   │   │   │   ├── trial.prisma
+│   │   │   │   ├── negotiation.prisma
+│   │   │   │   ├── contract.prisma
+│   │   │   │   ├── scouting.prisma
+│   │   │   │   ├── matching.prisma
+│   │   │   │   ├── document.prisma
+│   │   │   │   ├── communication.prisma
+│   │   │   │   ├── notification.prisma
+│   │   │   │   ├── membership.prisma
+│   │   │   │   ├── payment.prisma
+│   │   │   │   └── audit.prisma
+│   │   │   │
+│   │   │   ├── migrations/
+│   │   │   │
+│   │   │   └── seed.ts
+│   │   │
+│   │   └── src/
+│   │       ├── client.ts
+│   │       └── index.ts
+│   │
+│   │
+│   ├── auth/
+│   │   └── src/
+│   │       ├── roles.ts
+│   │       ├── permissions.ts
+│   │       ├── policies.ts
+│   │       ├── session.ts
+│   │       └── index.ts
+│   │
+│   ├── types/
+│   │   └── src/
+│   │       ├── user.ts
+│   │       ├── player.ts
+│   │       ├── parent.ts
+│   │       ├── coach.ts
+│   │       ├── scout.ts
+│   │       ├── agent.ts
+│   │       ├── club.ts
+│   │       ├── academy.ts
+│   │       ├── university.ts
+│   │       ├── training.ts
+│   │       ├── opportunity.ts
+│   │       ├── recruitment.ts
+│   │       ├── matching.ts
+│   │       ├── payment.ts
+│   │       └── index.ts
+│   │
+│   │
+│   ├── config/
+│   │   └── src/
+│   │       ├── countries.ts
+│   │       ├── currencies.ts
+│   │       ├── languages.ts
+│   │       ├── positions.ts
+│   │       ├── leagues.ts
+│   │       ├── competition-levels.ts
+│   │       ├── player-status.ts
+│   │       ├── opportunity-types.ts
+│   │       ├── recruitment-status.ts
+│   │       └── index.ts
+│   │
+│   │
+│   ├── validation/
+│   │   └── src/
+│   │       ├── user.ts
+│   │       ├── player.ts
+│   │       ├── club.ts
+│   │       ├── opportunity.ts
+│   │       ├── recruitment.ts
+│   │       └── index.ts
+│   │
+│   │
+│   └── ui/
+│       └── src/
+│           ├── button.tsx
+│           ├── input.tsx
+│           ├── modal.tsx
+│           ├── table.tsx
+│           ├── card.tsx
+│           ├── badge.tsx
+│           ├── avatar.tsx
+│           ├── tabs.tsx
+│           ├── dropdown.tsx
+│           ├── calendar.tsx
+│           └── index.ts
+│
+│
+├── docs/
+│   │
+│   ├── product/
+│   │   ├── platform-overview.md
+│   │   ├── product-specification.md
+│   │   ├── user-roles.md
+│   │   ├── player-journey.md
+│   │   ├── parent-journey.md
+│   │   ├── club-journey.md
+│   │   ├── agent-journey.md
+│   │   ├── coach-journey.md
+│   │   ├── opportunity-system.md
+│   │   └── membership-model.md
+│   │
+│   ├── technical/
+│   │   ├── architecture.md
+│   │   ├── database.md
+│   │   ├── api.md
+│   │   ├── authentication.md
+│   │   ├── authorization.md
+│   │   ├── storage.md
+│   │   ├── video-processing.md
+│   │   ├── notifications.md
+│   │   ├── payments.md
+│   │   ├── matching-engine.md
+│   │   ├── security.md
+│   │   └── deployment.md
+│   │
+│   ├── business/
+│   │   ├── business-model.md
+│   │   ├── revenue-model.md
+│   │   ├── membership.md
+│   │   ├── international-markets.md
+│   │   ├── club-partnerships.md
+│   │   └── player-representation.md
+│   │
+│   └── api/
+│       ├── authentication.md
+│       ├── players.md
+│       ├── clubs.md
+│       ├── opportunities.md
+│       ├── recruitment.md
+│       ├── matching.md
+│       └── webhooks.md
+│
+│
+├── infrastructure/
+│   │
+│   ├── docker/
+│   │   ├── Dockerfile.web
+│   │   ├── Dockerfile.worker
+│   │   └── docker-compose.yml
+│   │
+│   ├── nginx/
+│   │   └── nginx.conf
+│   │
+│   ├── deployment/
+│   │   ├── development/
+│   │   ├── staging/
+│   │   └── production/
+│   │
+│   └── monitoring/
+│       ├── logging/
+│       ├── metrics/
+│       └── alerts/
+│
+│
+├── scripts/
+│   │
+│   ├── database/
+│   │   ├── seed.ts
+│   │   ├── reset.ts
+│   │   └── backup.ts
+│   │
+│   ├── migration/
+│   │   ├── migrate.ts
+│   │   └── verify.ts
+│   │
+│   ├── maintenance/
+│   │   ├── cleanup.ts
+│   │   ├── expire-memberships.ts
+│   │   └── generate-reports.ts
+│   │
+│   └── development/
+│       ├── create-admin.ts
+│       ├── create-test-users.ts
+│       └── seed-demo-data.ts
+│
+│
+├── tests/
+│   │
+│   ├── unit/
+│   │   ├── matching/
+│   │   ├── validation/
+│   │   ├── permissions/
+│   │   └── calculations/
+│   │
+│   ├── integration/
+│   │   ├── auth/
+│   │   ├── players/
+│   │   ├── clubs/
+│   │   ├── opportunities/
+│   │   ├── recruitment/
+│   │   └── payments/
+│   │
+│   ├── e2e/
+│   │   ├── authentication/
+│   │   ├── player/
+│   │   ├── parent/
+│   │   ├── club/
+│   │   ├── agent/
+│   │   └── admin/
+│   │
+│   └── fixtures/
+│       ├── players/
+│       ├── clubs/
+│       ├── opportunities/
+│       └── users/
+│
+│
+├── public/
+│   ├── images/
+│   ├── icons/
+│   ├── logos/
+│   └── fonts/
+│
+│
+├── .github/
+│   └── workflows/
+│       ├── ci.yml
+│       ├── tests.yml
+│       ├── build.yml
+│       └── deploy.yml
+│
+│
+├── .env.example
+├── .gitignore
+├── .dockerignore
+├── docker-compose.yml
+├── package.json
+├── pnpm-workspace.yaml
+├── turbo.json
+├── tsconfig.json
+├── eslint.config.js
+├── prettier.config.js
+├── README.md
+└── LICENSE

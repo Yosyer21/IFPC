@@ -1,0 +1,745 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PLAYER
+  PARENT
+  COACH
+  SCOUT
+  AGENT
+  CLUB
+  UNIVERSITY
+  ADMIN
+}
+
+enum PlayerStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  AVAILABLE
+  INACTIVE
+}
+
+enum OpportunityType {
+  TRIAL
+  SCOUTING
+  CONTRACT
+  SCHOLARSHIP
+  ACADEMY
+}
+
+enum OpportunityStatus {
+  DRAFT
+  OPEN
+  CLOSED
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum MembershipTier {
+  FREE
+  PREMIUM
+  SCOUT
+  CLUB
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum CampStatus {
+  DRAFT
+  OPEN
+  FULL
+  CANCELLED
+  FINISHED
+}
+
+enum LiveSessionType {
+  TRAINING
+  LECTURE
+  Q_AND_A
+  TRIAL
+}
+
+enum LiveSessionStatus {
+  SCHEDULED
+  LIVE
+  ENDED
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String?
+  name          String
+  role          Role      @default(PLAYER)
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  player        Player?
+  parent        Parent?
+  coach         Coach?
+  scout         Scout?
+  agent         Agent?
+  club          Club?
+  university    University?
+  memberships   Membership[]
+  payments      Payment[]
+  notifications Notification[]
+  passwordResetTokens PasswordResetToken[]
+  staffMemberships ClubStaff[]
+  conversations     ConversationParticipant[]
+  messagesSent      Message[]
+
+  @@index([role])
+}
+
+model Player {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName    String
+  lastName     String
+  dateOfBirth  DateTime?
+  nationality  String?
+  position     String?
+  foot         String?
+  heightCm     Int?
+  weightKg     Int?
+  status       PlayerStatus @default(PENDING_VERIFICATION)
+  competitionLevel String?
+  bio          String?
+  clubName     String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  videos        Video[]
+  applications  Application[]
+  savedOpportunities SavedOpportunity[]
+  goals         PlayerGoal[]
+  evaluations   Evaluation[]
+  documents     Document[]
+  pathway       Pathway?
+  submissions   Submission[]
+  trials        Trial[]
+  negotiations  Negotiation[]
+  contracts     Contract[]
+  scoutingReports ScoutingReport[]
+  savedBy       SavedPlayer[]
+  agents        AgentPlayer[]
+  coaches       CoachPlayer[]
+  parents       ParentChild[]
+  liveSessions  LiveSession[]
+  campRegistrations CampRegistration[]
+
+  @@index([status])
+  @@index([position])
+}
+
+model Parent {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  children ParentChild[]
+}
+
+model ParentChild {
+  id        String   @id @default(cuid())
+  parentId  String
+  parent    Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  since     DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@unique([parentId, playerId])
+  @@index([playerId])
+}
+
+model Coach {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clubName  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  players CoachPlayer[]
+  camps   Camp[]
+  liveSessions LiveSession[]
+}
+
+model CoachPlayer {
+  id        String   @id @default(cuid())
+  coachId   String
+  coach     Coach    @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  since     DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@unique([coachId, playerId])
+  @@index([playerId])
+}
+
+model Scout {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agency    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  scoutingReports ScoutingReport[]
+  savedPlayers    SavedPlayer[]
+}
+
+model Agent {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  agency    String?
+  license   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  players     AgentPlayer[]
+  submissions Submission[]
+}
+
+model Club {
+  id          String   @id @default(cuid())
+  userId      String?  @unique
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  email       String   @unique
+  name        String
+  country     String
+  city        String?
+  league      String?
+  logoUrl     String?
+  verified    Boolean  @default(false)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  opportunities Opportunity[]
+  submissions   Submission[]
+  trials        Trial[]
+  negotiations  Negotiation[]
+  contracts     Contract[]
+  inquiries     Inquiry[]
+  requirements  Requirement[]
+  staff         ClubStaff[]
+  camps         Camp[]
+
+  @@index([country])
+}
+
+model Academy {
+  id          String   @id @default(cuid())
+  name        String
+  clubId      String?
+  country     String
+  city        String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model University {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  country   String
+  city      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  opportunities Opportunity[]
+}
+
+model Opportunity {
+  id          String            @id @default(cuid())
+  clubId      String?
+  club        Club?             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  universityId String?
+  university  University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  creatorType String            @default("CLUB") // CLUB | UNIVERSITY
+  title       String
+  type        OpportunityType
+  status      OpportunityStatus @default(OPEN)
+  position    String?
+  ageMin      Int?
+  ageMax      Int?
+  location    String?
+  description String?
+  closesAt    DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  applications Application[]
+
+  savedBy SavedOpportunity[]
+
+  @@index([status, type])
+}
+
+model Application {
+  id            String            @id @default(cuid())
+  playerId      String
+  player        Player            @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  opportunityId String
+  opportunity   Opportunity       @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  status        ApplicationStatus @default(PENDING)
+  message       String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@unique([playerId, opportunityId])
+}
+
+model SavedOpportunity {
+  id            String       @id @default(cuid())
+  playerId      String
+  player        Player       @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  opportunityId String
+  opportunity   Opportunity  @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
+
+  @@unique([playerId, opportunityId])
+}
+
+model Video {
+  id           String   @id @default(cuid())
+  playerId     String
+  player       Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  title        String
+  url          String
+  thumbnailUrl String?
+  duration     Int?
+  status       String   @default("uploading") // uploading | processing | ready | failed
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([playerId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String?
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
+
+model Membership {
+  id                   String         @id @default(cuid())
+  userId               String         @unique
+  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tier                 MembershipTier @default(FREE)
+  startsAt             DateTime       @default(now())
+  endsAt               DateTime?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  status               PaymentStatus  @default(PENDING)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  userId                String
+  user                  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount                Int
+  currency              String        @default("usd")
+  status                PaymentStatus @default(PENDING)
+  stripePaymentIntentId String?       @unique
+  description           String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model TrainingContent {
+  id              String   @id @default(cuid())
+  title           String
+  category        String // technical | strength-conditioning | psychology | parent-education
+  description     String?
+  videoUrl        String?
+  thumbnailUrl    String?
+  durationMinutes Int?
+  difficulty      Int? // 1-5
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+}
+
+model Pathway {
+  id          String    @id @default(cuid())
+  playerId    String?   @unique
+  player      Player?   @relation(fields: [playerId], references: [id], onDelete: SetNull)
+  title       String
+  description String?
+  level       String?
+  focus       String?
+  goals       String?
+  startsAt    DateTime?
+  endsAt      DateTime?
+  status      String    @default("active") // active | completed | paused
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model PlayerGoal {
+  id          String   @id @default(cuid())
+  playerId    String
+  player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  dueDate     DateTime?
+  status      String   @default("pending") // pending | in_progress | completed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([playerId, status])
+}
+
+model Evaluation {
+  id          String   @id @default(cuid())
+  playerId    String
+  player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  category    String // technical | physical | tactical | psychological
+  score       Int // 1-10
+  notes       String?
+  evaluatedBy String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([playerId, category])
+}
+
+model Submission {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  clubId    String
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  agentId   String?
+  agent     Agent?   @relation(fields: [agentId], references: [id], onDelete: SetNull)
+  stage     String   @default("SUBMISSION") // SUBMISSION | TRIAL | NEGOTIATION | CONTRACT
+  status    String   @default("PENDING") // PENDING | IN_REVIEW | ACCEPTED | REJECTED | WITHDRAWN
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trial       Trial?
+  negotiation Negotiation?
+  contract    Contract?
+
+  @@index([playerId])
+  @@index([clubId])
+  @@index([status])
+}
+
+model Trial {
+  id           String      @id @default(cuid())
+  submissionId String?     @unique
+  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  clubId       String
+  club         Club        @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  playerId     String
+  player       Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  startsAt     DateTime
+  endsAt       DateTime?
+  location     String?
+  status       String      @default("SCHEDULED") // SCHEDULED | COMPLETED | CANCELLED | NO_SHOW
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([clubId])
+  @@index([playerId])
+}
+
+model Negotiation {
+  id           String      @id @default(cuid())
+  submissionId String?     @unique
+  submission   Submission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  clubId       String
+  club         Club        @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  playerId     String
+  player       Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  status       String      @default("OPEN") // OPEN | ONGOING | ACCEPTED | REJECTED | CLOSED
+  offerAmount  Int?
+  currency     String      @default("EUR")
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  contract Contract?
+
+  @@index([clubId])
+}
+
+model Contract {
+  id            String      @id @default(cuid())
+  negotiationId String?     @unique
+  negotiation   Negotiation? @relation(fields: [negotiationId], references: [id], onDelete: SetNull)
+  submissionId  String?     @unique
+  submission    Submission? @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  clubId        String
+  club          Club        @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  playerId      String
+  player        Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  startsAt      DateTime
+  endsAt        DateTime?
+  salary        Int?
+  currency      String      @default("EUR")
+  status        String      @default("PENDING_SIGNATURE") // PENDING_SIGNATURE | SIGNED | ACTIVE | EXPIRED | TERMINATED
+  signedAt      DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([clubId])
+  @@index([playerId])
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  title     String
+  url       String
+  type      String   @default("other") // passport | contract | medical | other
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([playerId])
+}
+
+model ScoutingReport {
+  id         String   @id @default(cuid())
+  scoutId    String
+  scout      Scout    @relation(fields: [scoutId], references: [id], onDelete: Cascade)
+  playerId   String
+  player     Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  rating     Int // 1-10
+  strengths  String?
+  weaknesses String?
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([scoutId])
+  @@index([playerId])
+}
+
+model SavedPlayer {
+  id        String   @id @default(cuid())
+  scoutId   String
+  scout     Scout    @relation(fields: [scoutId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([scoutId, playerId])
+}
+
+model Inquiry {
+  id          String    @id @default(cuid())
+  clubId      String
+  club        Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  name        String
+  email       String
+  subject     String?
+  message     String
+  status      String    @default("NEW") // NEW | IN_PROGRESS | CLOSED
+  response    String?
+  respondedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([clubId, status])
+}
+
+model Requirement {
+  id          String   @id @default(cuid())
+  clubId      String
+  club        Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  title       String
+  position    String?
+  ageMin      Int?
+  ageMax      Int?
+  level       String?
+  country     String?
+  description String?
+  status      String   @default("OPEN") // OPEN | FILLED | CLOSED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([clubId, status])
+}
+
+model ClubStaff {
+  id        String   @id @default(cuid())
+  clubId    String
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String   @default("STAFF") // OWNER | MANAGER | COACH | SCOUT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([clubId, userId])
+}
+
+model AgentPlayer {
+  id        String   @id @default(cuid())
+  agentId   String
+  agent     Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  since     DateTime @default(now())
+  status    String   @default("ACTIVE") // ACTIVE | INACTIVE
+  createdAt DateTime @default(now())
+
+  @@unique([agentId, playerId])
+}
+
+model Camp {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  country     String?
+  city        String?
+  startsAt    DateTime
+  endsAt      DateTime?
+  capacity    Int?
+  price       Int? // en céntimos (29900 = 299,00 €)
+  currency    String     @default("EUR")
+  status      CampStatus @default(DRAFT)
+  coverUrl    String?
+  coachId     String?
+  coach       Coach?     @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  clubId      String?
+  club        Club?      @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  registrations CampRegistration[]
+
+  @@index([status])
+  @@index([startsAt])
+}
+
+model CampRegistration {
+  id        String   @id @default(cuid())
+  campId    String
+  camp      Camp     @relation(fields: [campId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  status    String   @default("PENDING") // PENDING | CONFIRMED | CANCELLED
+  createdAt DateTime @default(now())
+
+  @@unique([playerId, campId])
+  @@index([campId, status])
+}
+
+model LiveSession {
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  type        LiveSessionType   @default(TRAINING)
+  status      LiveSessionStatus @default(SCHEDULED)
+  startsAt    DateTime
+  endsAt      DateTime?
+  meetingUrl  String?
+  coachId     String?
+  coach       Coach?            @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  playerId    String?
+  player      Player?           @relation(fields: [playerId], references: [id], onDelete: SetNull)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([status])
+  @@index([startsAt])
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  subject   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("MEMBER") // OWNER | MEMBER
+  createdAt      DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+

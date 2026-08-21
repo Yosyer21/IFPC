@@ -1,0 +1,1793 @@
+# Future Buller International Football Platform
+
+## Product & Technical Specification — Version 1.0
+
+---
+
+## 1. Executive Summary
+
+Future Buller International Football Platform será un ecosistema digital de desarrollo, educación, representación y oportunidades para futbolistas, inicialmente con un fuerte enfoque en fútbol femenino y con capacidad de operar posteriormente tanto en fútbol femenino como masculino.
+
+La plataforma combinará cuatro elementos principales:
+
+1. **Player Development**
+2. **Parent Education**
+3. **International Player Pathways**
+4. **Player Representation & Club Recruitment**
+
+El objetivo no es crear simplemente una biblioteca de videos ni una base de datos de jugadores.
+
+La plataforma debe convertirse en un sistema centralizado donde jugadores, familias, representantes, clubes, academias, scouts y organizaciones de fútbol puedan interactuar dentro de un mismo ecosistema.
+
+El concepto central es:
+
+> **CONNECTING TALENT WITH OPPORTUNITY.**
+
+Y operacionalmente:
+
+> **RIGHT PLAYER. RIGHT CLUB. RIGHT OPPORTUNITY.**
+
+La plataforma debe reducir la dependencia de WhatsApp, emails, hojas de cálculo y bases de datos separadas, centralizando información de jugadores, clubes, oportunidades, comunicaciones y procesos de reclutamiento.
+
+---
+
+# 2. Product Vision
+
+La visión a largo plazo es construir una plataforma internacional que acompañe al jugador durante diferentes etapas de su carrera.
+
+El recorrido ideal será:
+
+**Camp → Player Profile → Development → Education → Evaluation → Pathway → Opportunity → Trial → Contract → International Career**
+
+Un jugador puede conocer Future Buller en un campamento, posteriormente convertirse en miembro de la plataforma, entrenar durante todo el año, recibir contenido educativo, participar en sesiones en vivo, construir su perfil profesional y eventualmente acceder a oportunidades internacionales.
+
+La plataforma evolucionará progresivamente desde un sistema de desarrollo hacia un ecosistema internacional de fútbol.
+
+---
+
+# 3. Platform Ecosystem
+
+La plataforma estará compuesta por dos grandes áreas.
+
+## 3.1 Future Buller Development Platform
+
+Orientada principalmente a:
+
+* Jugadoras jóvenes
+* Padres
+* Jugadores registrados
+* Coaches
+* Desarrollo futbolístico
+
+Incluye:
+
+* Camps
+* Training library
+* Strength & conditioning
+* Sports psychology
+* Parent education
+* Monthly live sessions
+* Player pathways
+* Future Buller opportunities
+
+---
+
+## 3.2 International Football Platform
+
+Orientada principalmente a:
+
+* Players
+* Agents
+* Representatives
+* Clubs
+* Academies
+* Scouts
+* Universities
+* Football organizations
+
+Incluye:
+
+* Professional player profiles
+* Player videos
+* Club database
+* Club recruitment requirements
+* Player-club matching
+* Opportunities
+* Trials
+* Recruitment management
+* Communication
+* Documents
+* Contracts
+* International pathways
+
+El documento original contempla que esta plataforma pueda operar tanto en fútbol masculino como femenino.
+
+---
+
+# 4. User Types
+
+La plataforma deberá utilizar un sistema de roles y permisos.
+
+## 4.1 Player
+
+Puede:
+
+* Crear su perfil
+* Completar información personal
+* Añadir información futbolística
+* Subir videos
+* Consultar contenido de entrenamiento
+* Consultar oportunidades
+* Participar en sesiones en vivo
+* Ver pathway information
+* Recibir alertas
+* Gestionar objetivos profesionales
+
+---
+
+## 4.2 Parent / Guardian
+
+Especialmente importante para jugadores menores de edad.
+
+Puede:
+
+* Gestionar la cuenta del jugador
+* Consultar contenido educativo
+* Consultar pathways
+* Ver oportunidades
+* Gestionar consentimiento
+* Recibir comunicaciones
+* Gestionar pagos/membresía
+* Participar en contenidos para padres
+
+El acceso de padres debe estar separado del perfil deportivo del jugador.
+
+---
+
+## 4.3 Coach
+
+Puede:
+
+* Consultar jugadores autorizados
+* Añadir evaluaciones
+* Subir contenido
+* Gestionar sesiones
+* Añadir observaciones técnicas
+* Participar en programas de desarrollo
+
+---
+
+## 4.4 Scout
+
+Puede:
+
+* Buscar jugadores autorizados
+* Filtrar perfiles
+* Consultar videos autorizados
+* Crear scouting reports
+* Guardar jugadores
+* Recibir alertas
+
+---
+
+## 4.5 Agent / Representative
+
+Puede:
+
+* Gestionar jugadores representados
+* Crear y modificar perfiles
+* Gestionar oportunidades
+* Contactar clubes
+* Gestionar submissions
+* Gestionar trials
+* Registrar negociaciones
+* Gestionar documentación
+
+El sistema debe mantener un historial completo del proceso de cada jugador.
+
+---
+
+## 4.6 Club
+
+Puede:
+
+* Crear perfil de club
+* Añadir staff
+* Publicar necesidades de recruitment
+* Buscar jugadores
+* Filtrar perfiles
+* Guardar jugadores
+* Solicitar información
+* Expresar interés
+* Contactar al representante
+
+---
+
+## 4.7 Academy
+
+Similar al club, pero orientado a:
+
+* Youth development
+* Academy recruitment
+* Trials
+* Development programs
+
+---
+
+## 4.8 University
+
+Especialmente importante para pathways femeninos.
+
+Puede:
+
+* Publicar oportunidades
+* Buscar jugadores
+* Consultar perfiles autorizados
+* Contactar representantes
+
+---
+
+## 4.9 Platform Administrator
+
+Control total de:
+
+* Usuarios
+* Roles
+* Contenido
+* Jugadores
+* Clubes
+* Oportunidades
+* Pagos
+* Comunicaciones
+* Moderación
+* Configuración
+
+---
+
+# 5. Player Account
+
+Cada jugador tendrá una cuenta única.
+
+La cuenta tendrá dos niveles:
+
+### Basic Account
+
+Información mínima necesaria para registrarse.
+
+### Professional Player Profile
+
+Perfil utilizado para desarrollo, scouting y oportunidades.
+
+Esto permite que un jugador pueda comenzar dentro de Future Buller sin necesariamente estar inmediatamente representado internacionalmente.
+
+---
+
+# 6. Player Profile
+
+Cada jugador tendrá un perfil digital profesional.
+
+## Personal Information
+
+* Full name
+* Date of birth
+* Age
+* Gender
+* Nationality
+* Country of residence
+* Profile photo
+
+## Passport & Eligibility
+
+* Passport country
+* Additional passports
+* Visa status
+* Work eligibility
+* International eligibility
+
+El documento internacional contempla específicamente información de pasaporte y visa.
+
+## Football Information
+
+* Current club
+* Previous clubs
+* Position
+* Secondary positions
+* Preferred foot
+* Height
+* Competition level
+* Playing style
+
+## Athletic Information
+
+* Speed
+* Acceleration
+* Agility
+* Strength
+* Endurance
+* Mobility
+* Physical characteristics
+
+## Technical Profile
+
+* Ball mastery
+* First touch
+* Passing
+* Dribbling
+* Finishing
+* 1v1
+* Crossing
+* Shooting
+* Position-specific abilities
+
+## Tactical Profile
+
+* Tactical understanding
+* Decision making
+* Positioning
+* Game intelligence
+* Defensive understanding
+* Offensive understanding
+
+## Mental Profile
+
+* Confidence
+* Resilience
+* Motivation
+* Pressure management
+* Professional habits
+* Mental preparation
+
+## Career Information
+
+* Career objectives
+* Preferred countries
+* Preferred leagues
+* Preferred clubs
+* Availability
+* Contract status
+* Salary expectations
+* Transfer requirements
+
+El perfil internacional propuesto ya contempla objetivos de carrera, países y ligas preferidas, disponibilidad y situación contractual.
+
+---
+
+# 7. Player Media
+
+Cada jugador tendrá una sección multimedia.
+
+## Video Types
+
+* Highlight videos
+* Full-match footage
+* Training videos
+* Position-specific videos
+* Skills videos
+* Goals
+* Assists
+* Goalkeeping footage
+* Physical performance videos
+
+Los jugadores podrán actualizar sus videos sin crear nuevamente su perfil.
+
+## Video Metadata
+
+Cada video podrá incluir:
+
+* Title
+* Description
+* Category
+* Date
+* Match
+* Competition
+* Opponent
+* Position
+* Visibility
+* Upload date
+
+## Visibility
+
+Cada recurso deberá poder marcarse como:
+
+* Private
+* Player only
+* Parent/Guardian
+* Future Buller team
+* Representative team
+* Selected clubs
+* Public
+
+---
+
+# 8. Future Buller Training Library
+
+La plataforma tendrá una biblioteca de desarrollo.
+
+## Technical Development
+
+Contenido sobre:
+
+* Ball mastery
+* First touch
+* Passing
+* Dribbling
+* Finishing
+* 1v1
+* Position-specific training
+
+## Strength & Conditioning
+
+* Football-specific strength
+* Speed
+* Acceleration
+* Agility
+* Coordination
+* Mobility
+* Injury-prevention principles
+* Football physical preparation
+
+## Sports Psychology
+
+* Confidence
+* Mental preparation
+* Mistake management
+* Competition mindset
+* Motivation
+* Resilience
+* Pressure management
+* Professional habits
+
+Cada contenido deberá tener:
+
+* Title
+* Description
+* Category
+* Difficulty
+* Age recommendation
+* Position
+* Duration
+* Video
+* Related exercises
+* Completion status
+
+---
+
+# 9. Player Development System
+
+La plataforma podrá registrar la evolución del jugador.
+
+Cada jugador podrá tener:
+
+**Development Plan**
+
+con:
+
+* Current level
+* Development goals
+* Areas of strength
+* Areas for improvement
+* Recommended training
+* Progress
+* Evaluations
+* Coach feedback
+
+Ejemplo:
+
+**Goal:** Improve first touch
+
+**Current Level:** Intermediate
+
+**Recommended Content:**
+
+* First Touch Fundamentals
+* First Touch Under Pressure
+* Receiving on the Half Turn
+
+**Progress:** 72%
+
+Esto convierte la plataforma de una biblioteca pasiva en una herramienta activa de desarrollo.
+
+---
+
+# 10. Monthly Live Player Session
+
+Cada mes se realizará una sesión grupal online.
+
+Participantes:
+
+* Emily Gielnik
+* Chloe Logarzo
+* Luis Ruiz
+
+La sesión podrá cubrir:
+
+* Football development
+* Professional experience
+* Mentality
+* Training
+* Pathways
+* International football
+* Player questions
+
+Los jugadores registrados tendrán acceso a estas sesiones como parte de su membresía.
+
+## Live Session Features
+
+* Event scheduling
+* Registration
+* Video conference integration
+* Attendance tracking
+* Questions
+* Moderation
+* Recording
+* Replay
+* Notifications
+
+---
+
+# 11. Parent Education Hub
+
+El Parent Hub será una parte diferenciadora del producto.
+
+Contenido:
+
+* Player development
+* Football pathways
+* Academy environments
+* International opportunities
+* Player development outside the club
+* Training expectations
+* Competition
+* Mentality
+* Long-term development
+* Understanding recruitment
+* Scholarships
+* International football
+
+El objetivo es ayudar a los padres a tomar mejores decisiones sobre el desarrollo futbolístico de sus hijos.
+
+---
+
+# 12. Player Pathway System
+
+La plataforma deberá representar visualmente el desarrollo de un jugador.
+
+### Example Pathway
+
+**Local Football**
+
+↓
+
+**Academy Development**
+
+↓
+
+**Elite Football**
+
+↓
+
+**NPL / Professional Opportunities**
+
+↓
+
+**International Opportunities**
+
+↓
+
+**University / Scholarship**
+
+No todos los jugadores seguirán el mismo camino.
+
+Por ello, el sistema debe permitir múltiples pathways.
+
+Ejemplo:
+
+**Australia Pathway**
+
+Local Club → Academy → NPL → Professional
+
+**USA Pathway**
+
+Academy → Showcase → University → College Soccer
+
+**International Pathway**
+
+Local Club → Development → Trial → International Club
+
+---
+
+# 13. Opportunities Marketplace
+
+La plataforma tendrá un módulo de oportunidades.
+
+Tipos:
+
+* Professional trials
+* Club trials
+* Professional contracts
+* Semi-professional contracts
+* Academy opportunities
+* Scholarships
+* International transfers
+* Development programs
+* Showcases
+* Tournaments
+* Women's football opportunities
+
+El documento contempla expresamente este tipo de oportunidades y permite que algunas sean privadas y solamente visibles para jugadores seleccionados.
+
+## Opportunity Fields
+
+* Title
+* Organization
+* Country
+* City
+* Competition
+* Gender
+* Age range
+* Position
+* Level
+* Contract type
+* Salary
+* Accommodation
+* Visa requirements
+* Application deadline
+* Trial date
+* Description
+* Requirements
+* Visibility
+
+---
+
+# 14. Club Database
+
+Cada club tendrá un perfil.
+
+## Club Information
+
+* Club name
+* Country
+* League
+* Competition level
+* Gender
+* Age groups
+* Professional status
+
+## Staff
+
+* Sporting Director
+* Technical Director
+* Head Coach
+* Recruitment staff
+
+## Recruitment
+
+* Positions needed
+* Budget
+* Salary range
+* Contract opportunities
+* Accommodation
+* Visa support
+
+Estos campos están contemplados en la especificación internacional original.
+
+---
+
+# 15. Club Recruitment Requirements
+
+Los clubes podrán publicar qué están buscando.
+
+Ejemplo:
+
+**Position:** Centre Back
+**Age:** 18–24
+**Level:** Professional / Semi-Professional
+**Nationality:** Open
+**Preferred Foot:** Right
+**Physical Profile:** Fast and strong
+**Location:** Spain
+**Contract:** Professional
+**Visa:** Required
+
+El sistema utilizará esta información para identificar jugadores compatibles.
+
+---
+
+# 16. Player–Club Matching Engine
+
+Uno de los módulos principales será el sistema de matching.
+
+El sistema comparará:
+
+### Player
+
+* Age
+* Position
+* Foot
+* Nationality
+* Passport
+* Visa
+* Level
+* Physical profile
+* Technical profile
+* Preferred country
+* Preferred league
+* Availability
+* Contract status
+
+contra:
+
+### Club
+
+* Position required
+* Age range
+* Competition
+* Nationality requirements
+* Physical requirements
+* Technical requirements
+* Location
+* Contract
+* Visa requirements
+* Budget
+
+---
+
+# 17. Matching Score
+
+El sistema podrá producir un porcentaje de compatibilidad.
+
+Ejemplo:
+
+**Player A**
+
+Club requirement match:
+
+* Position: 100%
+* Age: 100%
+* Foot: 100%
+* Level: 90%
+* Physical profile: 85%
+* Nationality: 100%
+* Availability: 100%
+
+### Overall Match
+
+**94%**
+
+El score será una herramienta de apoyo, no una decisión automática de contratación.
+
+---
+
+# 18. Future AI Matching
+
+En una fase posterior, el sistema podrá incorporar inteligencia artificial.
+
+La IA podría:
+
+* Analizar player profiles
+* Analizar club requirements
+* Identificar matches
+* Priorizar oportunidades
+* Detectar perfiles similares
+* Recomendar clubes
+* Recomendar oportunidades
+
+La documentación original contempla AI Player Matching como una futura evolución.
+
+---
+
+# 19. Club Interest
+
+Cada perfil autorizado podrá mostrar:
+
+**INTERESTED IN THIS PLAYER**
+
+Al hacer clic, el club deberá proporcionar:
+
+* Club name
+* Contact person
+* Position required
+* Contract opportunity
+* Salary/budget
+* Proposed dates
+* Trial information
+* Additional information
+
+La solicitud será recibida por el equipo correspondiente y no necesariamente directamente por el jugador.
+
+---
+
+# 20. Recruitment CRM
+
+La plataforma deberá incluir un CRM interno.
+
+Cada oportunidad tendrá un pipeline.
+
+### Example
+
+**Player**
+
+↓
+
+**Club Submitted**
+
+↓
+
+**Interested**
+
+↓
+
+**Trial**
+
+↓
+
+**Negotiation**
+
+↓
+
+**Contract**
+
+↓
+
+**Signed**
+
+Este flujo ya está definido conceptualmente en el documento original.
+
+---
+
+# 21. Recruitment Record
+
+Cada proceso deberá guardar:
+
+* Player
+* Club
+* Representative
+* Opportunity
+* Submission date
+* Communication
+* Trial
+* Feedback
+* Negotiation
+* Contract
+* Final result
+
+Esto permitirá conservar el historial completo de cada jugador.
+
+---
+
+# 22. Communication System
+
+La plataforma podrá centralizar comunicaciones.
+
+Tipos:
+
+* Internal messages
+* Club inquiries
+* Player messages
+* Agent communications
+* Opportunity notifications
+* System notifications
+
+El objetivo es reducir la dependencia de conversaciones dispersas en WhatsApp, emails y otros sistemas.
+
+---
+
+# 23. Documents
+
+Cada jugador podrá tener una sección de documentos.
+
+Ejemplos:
+
+* Passport
+* Visa documents
+* Contracts
+* Player agreements
+* Medical documents
+* Registration documents
+* Certificates
+* Scouting reports
+
+Los documentos deben utilizar permisos estrictos.
+
+Un jugador no debería poder acceder automáticamente a documentos internos de representación.
+
+---
+
+# 24. Scouting Reports
+
+El equipo podrá crear reportes profesionales.
+
+## Sections
+
+### Technical
+
+* First touch
+* Passing
+* Dribbling
+* Finishing
+* 1v1
+
+### Tactical
+
+* Positioning
+* Decision making
+* Game understanding
+
+### Physical
+
+* Speed
+* Strength
+* Agility
+* Endurance
+
+### Mental
+
+* Confidence
+* Resilience
+* Discipline
+* Professionalism
+
+### Overall
+
+* Strengths
+* Weaknesses
+* Potential
+* Recommended level
+* Recommended markets
+
+La especificación original contempla scouting reports estandarizados como una evolución futura.
+
+---
+
+# 25. Search & Filtering
+
+La plataforma deberá disponer de búsqueda avanzada.
+
+## Player Filters
+
+* Country
+* League
+* Position
+* Age
+* Gender
+* Competition level
+* Nationality
+* Passport
+* Visa
+* Preferred country
+* Availability
+* Contract status
+* Technical profile
+* Physical profile
+* Playing style
+
+Estos filtros están definidos en el documento internacional.
+
+## Club Filters
+
+* Country
+* League
+* Gender
+* Competition level
+* Age groups
+* Professional status
+* Position requirements
+* Budget
+* Visa support
+* Accommodation
+
+---
+
+# 26. Notifications
+
+El sistema tendrá notificaciones.
+
+## Player Notifications
+
+* New opportunity
+* Club interest
+* Trial invitation
+* Live session
+* New training content
+* Development update
+
+## Club Notifications
+
+* New matching player
+* Player profile update
+* New opportunity
+* Submission response
+
+## Admin Notifications
+
+* New registration
+* Club inquiry
+* Trial
+* Contract status change
+* New opportunity
+
+La evolución futura contempla alertas automáticas para clubes y jugadores según coincidencias.
+
+---
+
+# 27. Membership System
+
+Future Buller podrá operar con una membresía anual.
+
+### Annual Membership
+
+**AUD $100 / player / year**
+
+Incluye:
+
+* Online platform
+* Training library
+* Parent education
+* Player development resources
+* Monthly live session
+* Pathway education
+* Future Buller updates
+* Selected opportunities
+
+La distribución planteada actualmente es:
+
+**85% — Future Buller**
+
+**15% — Joshua Ruiz**
+
+La estructura comercial y legal definitiva deberá formalizarse antes del lanzamiento.
+
+---
+
+# 28. Commercial Model
+
+A largo plazo, la plataforma podrá tener diferentes fuentes de ingresos.
+
+## Future Buller
+
+* Annual memberships
+* Camps
+* Clinics
+* Programs
+* International camps
+
+## International Platform
+
+* Player representation
+* Club recruitment
+* Scouting services
+* Club memberships
+* Recruitment subscriptions
+* Premium player profiles
+* Trial opportunities
+* Showcase events
+* Transfers
+* Scholarship placement
+* Sponsorship
+* Advertising
+* International recruitment partnerships
+
+Estas fuentes de ingresos están contempladas en el documento original.
+
+---
+
+# 29. Admin Dashboard
+
+El dashboard interno será el centro operativo de la plataforma.
+
+### Overview
+
+* Total players
+* Active players
+* Clubs
+* Opportunities
+* Trials
+* Active negotiations
+* Contracts
+* Membership revenue
+* Upcoming sessions
+
+### Player Management
+
+* Search
+* Profiles
+* Videos
+* Evaluations
+* Documents
+* Opportunities
+* Status
+
+### Club Management
+
+* Clubs
+* Contacts
+* Requirements
+* Opportunities
+* Relationships
+
+### Recruitment
+
+* Submissions
+* Trials
+* Negotiations
+* Contracts
+
+### Content
+
+* Videos
+* Training
+* Parent education
+* Live sessions
+
+### Finance
+
+* Memberships
+* Payments
+* Revenue
+* Subscriptions
+* Transactions
+
+---
+
+# 30. Role-Based Permissions
+
+La seguridad de la plataforma debe estar basada en roles.
+
+Ejemplo:
+
+| Feature         |  Player |  Parent |    Coach |    Agent |     Club | Admin |
+| --------------- | ------: | ------: | -------: | -------: | -------: | ----: |
+| Own profile     |       ✓ | Limited |  Limited |        ✓ |        ✓ |     ✓ |
+| Training        |       ✓ |       ✓ |        ✓ | Optional | Optional |     ✓ |
+| Player database |     Own |   Child | Assigned | Assigned |   Search |     ✓ |
+| Club database   | Limited | Limited |  Limited |        ✓ |        ✓ |     ✓ |
+| Opportunities   |       ✓ |       ✓ |        ✓ |        ✓ |        ✓ |     ✓ |
+| Recruitment CRM |       — |       — |        — |        ✓ |  Limited |     ✓ |
+| Documents       |     Own |   Child |  Limited |        ✓ |  Limited |     ✓ |
+| Payments        |       ✓ |       ✓ |        — |        — |        — |     ✓ |
+
+Los permisos exactos deberán definirse antes de desarrollo.
+
+---
+
+# 31. Privacy & Child Protection
+
+Debido a que la plataforma puede manejar jugadores menores de edad, la privacidad debe ser un requisito fundamental.
+
+El sistema deberá contemplar:
+
+* Parent/guardian accounts
+* Consent management
+* Private profiles
+* Restricted videos
+* Restricted documents
+* Role-based access
+* Audit logs
+* Data deletion
+* Data export
+* Secure authentication
+* Secure media storage
+
+La información de menores nunca debe quedar públicamente disponible por defecto.
+
+---
+
+# 32. International Markets
+
+Los mercados iniciales identificados en el proyecto internacional son:
+
+* Australia
+* South Korea
+* United States
+* Japan
+* Thailand
+* England
+* Italy
+* Spain
+
+La arquitectura debe permitir agregar países posteriormente sin modificar el sistema central.
+
+---
+
+# 33. Internationalization
+
+La plataforma deberá diseñarse desde el principio para soportar:
+
+* Multiple languages
+* Multiple currencies
+* Multiple countries
+* Time zones
+* International phone numbers
+* International addresses
+* Passport information
+* Visa requirements
+
+Idioma inicial recomendado:
+
+**English**
+
+Posteriormente:
+
+* Spanish
+* Korean
+* Japanese
+* Other languages
+
+---
+
+# 34. Core Data Model
+
+Las entidades principales serán:
+
+```text
+User
+ ├── Player
+ ├── Parent
+ ├── Coach
+ ├── Scout
+ ├── Agent
+ ├── ClubUser
+ └── Administrator
+
+Player
+ ├── Profile
+ ├── Videos
+ ├── Evaluations
+ ├── Documents
+ ├── Opportunities
+ ├── Applications
+ └── Development Plans
+
+Club
+ ├── Staff
+ ├── Requirements
+ ├── Opportunities
+ └── Inquiries
+
+Opportunity
+ ├── Requirements
+ ├── Applications
+ ├── Trials
+ └── Status
+
+Recruitment
+ ├── Player
+ ├── Club
+ ├── Submission
+ ├── Trial
+ ├── Negotiation
+ └── Contract
+
+Content
+ ├── Training
+ ├── Psychology
+ ├── S&C
+ └── Parent Education
+```
+
+---
+
+# 35. Recommended Technical Architecture
+
+La plataforma debería construirse como una aplicación web moderna.
+
+## Frontend
+
+Opciones recomendadas:
+
+* Next.js
+* React
+* TypeScript
+
+## Backend
+
+Opciones:
+
+* Node.js
+* NestJS / Express
+* TypeScript
+
+## Database
+
+Recomendación:
+
+**PostgreSQL**
+
+Por la cantidad de relaciones entre:
+
+* Players
+* Clubs
+* Opportunities
+* Users
+* Applications
+* Recruitment
+* Content
+
+---
+
+# 36. Storage
+
+Los videos y documentos no deberían almacenarse directamente dentro de PostgreSQL.
+
+Se recomienda:
+
+**Object Storage**
+
+para:
+
+* Player videos
+* Training videos
+* Documents
+* Images
+
+La base de datos solamente almacenaría metadata y referencias.
+
+---
+
+# 37. Authentication
+
+El sistema deberá soportar:
+
+* Email/password
+* OAuth
+* Password reset
+* Email verification
+* Multi-factor authentication
+* Role-based access
+
+Para cuentas administrativas se recomienda MFA obligatorio.
+
+---
+
+# 38. Video Architecture
+
+Debido al volumen potencial de videos, el sistema deberá utilizar procesamiento de video.
+
+Pipeline:
+
+```text
+Upload
+   ↓
+Validation
+   ↓
+Storage
+   ↓
+Video Processing
+   ↓
+Thumbnail Generation
+   ↓
+Multiple Resolutions
+   ↓
+Streaming
+```
+
+El jugador podrá subir un video una vez y el sistema generará las versiones necesarias para diferentes dispositivos.
+
+---
+
+# 39. Audit System
+
+Todas las acciones importantes deberían registrarse.
+
+Ejemplo:
+
+```text
+User
+Action
+Object
+Timestamp
+IP
+Previous Value
+New Value
+```
+
+Especialmente:
+
+* Profile changes
+* Document access
+* Contract changes
+* Opportunity changes
+* Permissions
+* Financial actions
+
+---
+
+# 40. Platform Status System
+
+Los jugadores deberán tener un estado dentro de la plataforma.
+
+Ejemplo:
+
+```text
+Registered
+↓
+Active
+↓
+Evaluated
+↓
+Development
+↓
+Opportunity Eligible
+↓
+Submitted
+↓
+Trial
+↓
+Negotiation
+↓
+Signed
+```
+
+Esto permitirá al equipo conocer rápidamente la situación de cada jugador.
+
+---
+
+# 41. Future AI & Analytics
+
+En fases posteriores se podrán añadir:
+
+### AI Player Matching
+
+Match automático jugador-club.
+
+### Player Recommendations
+
+"Players you may be interested in."
+
+### Opportunity Recommendations
+
+"Opportunities that match your profile."
+
+### Club Alerts
+
+Notificar cuando aparece un jugador compatible.
+
+### Player Alerts
+
+Notificar cuando aparece una oportunidad compatible.
+
+### Performance Analytics
+
+Seguimiento de:
+
+* Development
+* Training
+* Evaluations
+* Match statistics
+
+---
+
+# 42. MVP — Phase 1
+
+La primera versión NO debería intentar implementar todo.
+
+El MVP debe concentrarse en:
+
+### Authentication
+
+* Login
+* Registration
+* Roles
+
+### Player
+
+* Player profile
+* Videos
+* Basic football information
+
+### Future Buller
+
+* Training library
+* Parent education
+* Live session management
+
+### Admin
+
+* Player management
+* Content management
+* Membership management
+
+### Opportunities
+
+* Opportunity listings
+* Player applications
+
+### Club
+
+* Basic club profiles
+* Club requirements
+
+---
+
+# 43. Phase 2 — International Recruitment
+
+Agregar:
+
+* Advanced player profiles
+* Club database
+* Recruitment requirements
+* Advanced search
+* Player submissions
+* Club inquiries
+* Trials
+* Recruitment CRM
+* Documents
+* Scouting reports
+
+---
+
+# 44. Phase 3 — Matching
+
+Agregar:
+
+* Matching engine
+* Compatibility score
+* Club alerts
+* Player alerts
+* Recommendations
+* Advanced filters
+
+---
+
+# 45. Phase 4 — International Marketplace
+
+Agregar:
+
+* Club accounts
+* Scout accounts
+* Academy accounts
+* University accounts
+* Premium profiles
+* Club subscriptions
+* Recruitment subscriptions
+* International opportunities
+
+---
+
+# 46. Phase 5 — AI & Analytics
+
+Agregar:
+
+* AI player matching
+* AI opportunity recommendations
+* Player analytics
+* Performance analytics
+* Automated scouting assistance
+* Predictive recommendations
+
+---
+
+# 47. Initial User Journey
+
+## Player
+
+```text
+Register
+↓
+Parent/Guardian Consent
+↓
+Create Profile
+↓
+Join Future Buller
+↓
+Access Training
+↓
+Attend Monthly Session
+↓
+Complete Development Activities
+↓
+Build Professional Profile
+↓
+Upload Videos
+↓
+Receive Evaluation
+↓
+Become Opportunity Eligible
+↓
+International Opportunity
+```
+
+---
+
+# 48. Club User Journey
+
+```text
+Register
+↓
+Club Verification
+↓
+Create Club Profile
+↓
+Define Recruitment Requirements
+↓
+Search Players
+↓
+View Matches
+↓
+Review Player
+↓
+Express Interest
+↓
+Contact Representative
+↓
+Trial
+↓
+Negotiation
+↓
+Contract
+```
+
+---
+
+# 49. Representative Journey
+
+```text
+Add Player
+↓
+Build Profile
+↓
+Evaluate Player
+↓
+Define Career Objectives
+↓
+Search Clubs
+↓
+Review Matches
+↓
+Submit Player
+↓
+Track Interest
+↓
+Manage Trial
+↓
+Manage Negotiation
+↓
+Contract
+↓
+Update Player Status
+```
+
+---
+
+# 50. Key Product Principle
+
+La plataforma debe mantener una separación clara entre:
+
+### Development
+
+"How do we make the player better?"
+
+y
+
+### Opportunity
+
+"Where can this player go next?"
+
+Y finalmente:
+
+### Representation
+
+"How do we help the player reach that opportunity?"
+
+Esto permite que Future Buller acompañe al jugador incluso cuando todavía no está preparado para una oportunidad profesional.
+
+---
+
+# 51. Strategic Advantage
+
+El principal diferenciador del proyecto no será únicamente la tecnología.
+
+Será la combinación de:
+
+**Professional Players**
+
+*
+
+**Football Development**
+
+*
+
+**Parent Education**
+
+*
+
+**International Network**
+
+*
+
+**Player Representation**
+
+*
+
+**Club Relationships**
+
+*
+
+**Digital Infrastructure**
+
+La plataforma se convierte así en la infraestructura que conecta todas esas partes.
+
+---
+
+# 52. Final Product Structure
+
+La estructura final puede resumirse así:
+
+```text
+                    FUTURE BULLER
+                         │
+              PLAYER DEVELOPMENT
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+      Camps          Online Training   Parent Hub
+        │                │                │
+        └────────────────┼────────────────┘
+                         │
+                         ▼
+                  PLAYER PROFILE
+                         │
+             ┌───────────┴───────────┐
+             │                       │
+       DEVELOPMENT              PATHWAYS
+             │                       │
+             └───────────┬───────────┘
+                         │
+                         ▼
+              INTERNATIONAL PLATFORM
+                         │
+       ┌─────────────────┼─────────────────┐
+       │                 │                 │
+     Players           Clubs          Opportunities
+       │                 │                 │
+       └─────────────────┼─────────────────┘
+                         │
+                         ▼
+                  MATCHING ENGINE
+                         │
+                         ▼
+                  RECRUITMENT CRM
+                         │
+                ┌────────┼────────┐
+                │        │        │
+              Trial  Negotiation Contract
+                                  │
+                                  ▼
+                         INTERNATIONAL CAREER
+```
+
+---
+
+# 53. Ultimate Vision
+
+El objetivo final es que un jugador pueda permanecer dentro del ecosistema durante años.
+
+Puede comenzar como:
+
+**Young Player**
+
+y evolucionar hacia:
+
+**Developing Player**
+
+→ **Elite Player**
+
+→ **International Prospect**
+
+→ **Professional Player**
+
+→ **International Professional**
+
+La plataforma acompaña ese recorrido mediante desarrollo, educación, datos, oportunidades y representación.
+
+El resultado final sería una infraestructura digital capaz de conectar:
+
+**Players → Families → Coaches → Agents → Scouts → Clubs → Academies → Universities → Football Organizations**
+
+con una única fuente centralizada de información y oportunidades.
+
+**Future Buller International Football Platform**
+
+> **CONNECTING TALENT WITH OPPORTUNITY.**
+
+> **RIGHT PLAYER. RIGHT CLUB. RIGHT OPPORTUNITY.**

@@ -1,0 +1,49 @@
+{
+  "name": "future-buller-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma global de fútbol: desarrollo de jugadores y reclutamiento profesional",
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev --filter=@future-buller/web",
+    "dev:all": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:unit": "vitest run",
+    "e2e": "playwright test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md,yaml,yml}\"",
+    "db:generate": "pnpm --filter @future-buller/database db:generate",
+    "db:migrate": "pnpm --filter @future-buller/database db:migrate",
+    "db:seed": "pnpm --filter @future-buller/database db:seed",
+    "scripts:seed": "node --env-file=.env --import=tsx scripts/database/seed.ts",
+    "scripts:reset": "node --env-file=.env --import=tsx scripts/database/reset.ts",
+    "scripts:backup": "node --env-file=.env --import=tsx scripts/database/backup.ts",
+    "scripts:migrate": "node --env-file=.env --import=tsx scripts/migration/migrate.ts",
+    "scripts:verify": "node --env-file=.env --import=tsx scripts/migration/verify.ts",
+    "scripts:cleanup": "node --env-file=.env --import=tsx scripts/maintenance/cleanup.ts",
+    "scripts:expire-memberships": "node --env-file=.env --import=tsx scripts/maintenance/expire-memberships.ts",
+    "scripts:reports": "node --env-file=.env --import=tsx scripts/maintenance/generate-reports.ts",
+    "scripts:create-admin": "node --env-file=.env --import=tsx scripts/development/create-admin.ts",
+    "scripts:create-test-users": "node --env-file=.env --import=tsx scripts/development/create-test-users.ts",
+    "scripts:seed-demo": "node --env-file=.env --import=tsx scripts/development/seed-demo-data.ts",
+    "db:setup-pglite": "node --env-file=.env --import=tsx scripts/development/setup-pglite.ts"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.5",
+    "@future-buller/auth": "workspace:*",
+    "@future-buller/database": "workspace:*",
+    "@playwright/test": "^1.49.1",
+    "bcryptjs": "^2.4.3",
+    "pglite-prisma-adapter": "^0.7.2",
+    "prettier": "^3.4.2",
+    "tsx": "^4.19.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

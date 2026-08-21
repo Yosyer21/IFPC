@@ -1,0 +1,49 @@
+# Dependencias
+node_modules/
+
+# Builds y caches
+.next/
+dist/
+build/
+.turbo/
+coverage/
+*.tsbuildinfo
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Next.js
+out/
+next-env.d.ts
+
+# Uploads locales (fase B)
+apps/web/public/uploads/
+
+# Base de datos embebida PGlite
+.pglite/
+apps/web/.pglite/
+
+# Logs del servidor de desarrollo
+.dev-server*.log
+
+# Prisma
+packages/database/prisma/dev.db
+packages/database/prisma/dev.db-journal
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
