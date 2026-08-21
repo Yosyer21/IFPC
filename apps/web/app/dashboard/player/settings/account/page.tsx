@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { auth } from '@future-buller/auth';
 import { prisma } from '@future-buller/database';
 import { AccountForm } from '@/components/player/account-form';
+import { VerifyEmailBanner } from '@/components/player/verify-email-banner';
 
 export const metadata: Metadata = { title: 'Cuenta' };
 
@@ -24,6 +25,7 @@ export default async function PlayerAccountSettingsPage() {
           ← Ajustes
         </Link>
       </div>
+      {!user.emailVerified ? <VerifyEmailBanner /> : null}
       <AccountForm name={user.name} email={user.email} />
     </div>
   );

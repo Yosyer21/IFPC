@@ -37,6 +37,7 @@ Códigos: `401` sin sesión · `403` rol sin permiso · `400` body inválido · 
 | GET | `/api/matching` | rol-aware | Scores del motor `@future-buller/matching` |
 | GET | `/api/memberships` | autenticado | Membresía + pagos propios |
 | GET | `/api/payments` | autenticado | Pagos propios |
+| POST | `/api/payments/checkout` | autenticado | Crea Checkout Session de Stripe para una membresía (`tier: PREMIUM\|SCOUT\|CLUB`) → `{ url }`. 503 si Stripe no configurado |
 | GET | `/api/submissions` | agente → suyos · club → suyos · admin → todos | Envíos |
 | GET | `/api/trials` | club → suyas · jugador → suyas · admin → todas | Pruebas |
 | GET | `/api/contracts` | club → suyos · admin → todos | Contratos |
@@ -45,7 +46,7 @@ Códigos: `401` sin sesión · `403` rol sin permiso · `400` body inválido · 
 | POST | `/api/scouting` | scout | Crea informe (rating 1-10) |
 | GET | `/api/scouts` · `/api/agents` · `/api/coaches` · `/api/parents` · `/api/universities` · `/api/academies` | autenticado | Directorios |
 | POST | `/api/academies` | admin | Crea academia |
-| POST | `/api/webhooks` | público | Stripe (501 hasta P2) |
+| POST | `/api/webhooks` | público | Webhooks Stripe: verifica firma `Stripe-Signature` y procesa `checkout.session.completed` (Payment + Membership). 400 sin firma válida |
 
 Helpers compartidos: `apps/web/lib/api/respond.ts` (`requireUser`, `forbidden`, `badRequest`,
 `methodNotAllowed`, `readJson`, `stringField`, `intField`, `dateField`).

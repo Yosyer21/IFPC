@@ -101,3 +101,48 @@ export async function sendPasswordResetEmail(
   const { html, text } = resetPasswordTemplate(resetUrl);
   return sendEmail({ to, subject: 'Recupera tu contraseña — Future Buller', html, text });
 }
+
+function verificationTemplate(verifyUrl: string): { html: string; text: string } {
+  const text = `Confirma tu email en Future Buller
+
+Abre este enlace para verificar tu dirección de email (válido durante 24 horas):
+${verifyUrl}
+
+Si no has creado una cuenta en Future Buller, ignora este email.`;
+
+  const html = `<!doctype html>
+<html lang="es">
+  <body style="margin:0;background:#0a0e0c;padding:24px;font-family:Arial,sans-serif">
+    <div style="max-width:480px;margin:0 auto;background:#111814;border:1px solid #2a332d;border-radius:16px;padding:32px">
+      <div style="font-size:18px;font-weight:700;color:#34d399">Future Buller</div>
+      <h1 style="color:#ffffff;font-size:22px;margin:20px 0 8px">Confirma tu email</h1>
+      <p style="color:#9ca3af;font-size:14px;line-height:1.6">
+        Gracias por crear tu cuenta. Verifica tu dirección de email para desbloquear todas las
+        funciones de la plataforma. El enlace es válido durante
+        <strong style="color:#e5e7eb">24 horas</strong>.
+      </p>
+      <p style="margin:24px 0">
+        <a href="${verifyUrl}"
+           style="display:inline-block;background:#34d399;color:#022c22;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:10px">
+          Verificar email
+        </a>
+      </p>
+      <p style="color:#6b7280;font-size:12px;line-height:1.6">
+        Si el botón no funciona, copia y pega este enlace en tu navegador:<br/>
+        <span style="color:#9ca3af;word-break:break-all">${verifyUrl}</span>
+      </p>
+    </div>
+  </body>
+</html>`;
+
+  return { html, text };
+}
+
+/** Email de verificación de cuenta. */
+export async function sendVerificationEmail(
+  to: string,
+  verifyUrl: string
+): Promise<SendEmailResult> {
+  const { html, text } = verificationTemplate(verifyUrl);
+  return sendEmail({ to, subject: 'Confirma tu email — Future Buller', html, text });
+}

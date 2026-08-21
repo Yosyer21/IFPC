@@ -21,6 +21,7 @@ async function main() {
     prisma.campRegistration.deleteMany(),
     prisma.camp.deleteMany(),
     prisma.liveSession.deleteMany(),
+    prisma.emailVerificationToken.deleteMany(),
     prisma.document.deleteMany(),
     prisma.evaluation.deleteMany(),
     prisma.playerGoal.deleteMany(),

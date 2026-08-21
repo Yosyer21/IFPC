@@ -13,7 +13,7 @@ import {
 } from '@future-buller/validation';
 import type { Role } from '@future-buller/types';
 import { createHash, randomBytes } from 'node:crypto';
-import { sendPasswordResetEmail } from '@/lib/email/resend';
+import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/email/resend';
 
 export interface ActionState {
   error?: string;
@@ -73,8 +73,9 @@ export async function registerAction(
   const email = parsed.data.email.toLowerCase();
   const country = ((formData.get('country') as string) ?? '').trim() || 'Sin especificar';
 
+  let userId: string | null = null;
   try {
-    await prisma.$transaction(async (tx) => {
+    userId = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
         data: { name: parsed.data.name, email, role, passwordHash },
       });
@@ -104,9 +105,33 @@ export async function registerAction(
         default:
           break;
       }
+      return user.id;
     });
   } catch {
     return { error: 'El email ya está registrado.' };
+  }
+
+  // Email de verificación (no bloquea el registro; en dev el enlace se loguea).
+  if (userId) {
+    try {
+      const token = randomBytes(32).toString('hex');
+      const tokenHash = createHash('sha256').update(token).digest('hex');
+      await prisma.emailVerificationToken.create({
+        data: {
+          userId,
+          tokenHash,
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
+      });
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+      const verifyUrl = `${appUrl}/verify-email?token=${token}`;
+      const result = await sendVerificationEmail(email, verifyUrl);
+      if (!result.ok) {
+        console.log(`[auth] enlace de verificación: ${verifyUrl}`);
+      }
+    } catch (error) {
+      console.error('[auth] no se pudo crear el token de verificación', error);
+    }
   }
 
   try {
@@ -272,6 +297,39 @@ export async function resetPasswordAction(
   ]);
 
   return { success: 'Contraseña actualizada. Ya puedes iniciar sesión.' };
+}
+
+/** Reenvía el email de verificación al usuario autenticado. */
+export async function resendVerificationEmailAction(
+  _prev: ActionState,
+  _formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Sesión no válida.' };
+  }
+
+  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  if (!user) return { error: 'Usuario no encontrado.' };
+  if (user.emailVerified) return { success: 'Tu email ya está verificado.' };
+
+  const token = randomBytes(32).toString('hex');
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+  await prisma.emailVerificationToken.create({
+    data: { userId: user.id, tokenHash, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) },
+  });
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  const verifyUrl = `${appUrl}/verify-email?token=${token}`;
+  const result = await sendVerificationEmail(user.email, verifyUrl);
+  if (result.ok) {
+    return { success: 'Te hemos enviado un nuevo enlace de verificación a tu email.' };
+  }
+
+  console.log(`[auth] enlace de verificación: ${verifyUrl}`);
+  return {
+    success: `Revisa tu email. (En desarrollo sin Resend configurado, enlace: ${verifyUrl})`,
+  };
 }
 
 export async function signOutAction() {

@@ -423,6 +423,20 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 3. CI/CD: revisar `.github/workflows` existentes y ejecutar build de producción documentado
 4. Despliegue
 
+## 38. BLOQUE P2-C COMPLETADO — Verificación de email + Stripe (checkout + webhook)
+- **Verificación de email real**:
+  - Nuevo modelo `EmailVerificationToken` (hash SHA-256, expira 24h, uso único) + reset script actualizado
+  - `registerAction` crea el token y envía el email (vía `sendVerificationEmail` en Resend; en dev loguea el enlace)
+  - `(auth)/verify-email/page.tsx` reescrita: valida token → `user.emailVerified` + marca usado; muestra éxito/error (incluye «ya utilizado»)
+  - `resendVerificationEmailAction` + `VerifyEmailBanner` en `player/settings/account` (en dev el mensaje incluye el enlace → testable)
+  - Demo: los logins NO se bloquean (compatibilidad con usuarios demo)
+- **Stripe (REST, sin dependencias npm)**:
+  - `lib/payments/stripe.ts`: `MEMBERSHIP_TIERS` (PREMIUM 99€/SCOUT 199€/CLUB 499€), `createCheckoutSession` (Checkout Sessions), `verifyWebhookSignature` (HMAC-SHA256 de `Stripe-Signature` con `timingSafeEqual`)
+  - `POST /api/payments/checkout`: crea la sesión y devuelve `{ url }`; 503 sin `STRIPE_SECRET_KEY` válida
+  - `POST /api/webhooks` real: verifica firma → `checkout.session.completed` → transacción `Payment` (PAID) + `Membership` (upsert, +1 año); 400 sin firma válida
+- **CI**: silenciado el warning de turbo para `database#build` (turbo.json local con `outputs: []`)
+- Validación: typecheck 9/9, lint 0, test 21/2, build 3/3 (57.9s), E2E 11/11 + smoke verificación 1/1 + smoke Stripe 2/2 (webhook 400, checkout 503)
+
 ## 37. BLOQUE P2-B COMPLETADO — CI/CD real + build de producción validado
 - **Bug de CI corregido**: `pnpm test` (turbo) ejecutaba vitest en web/worker sin tests → fallaba con "No test files found". Ahora: root `test: vitest run` (config ampliada con `packages/**/src/**/*.test.ts`), eliminado `test` de web, worker con `--passWithNoTests`, turbo test con `dependsOn: ^typecheck` (antes `^build`). Resultado: **21 passed | 2 skipped** (incluye 6 tests del motor de matching)
 - **Build de producción OK**: 3 tareas turbo (database → prisma generate, worker → tsc, web → next build). `pnpm build` completo en ~50s
