@@ -5,7 +5,7 @@ import { prisma } from '@future-buller/database';
 import { Card, CardContent } from '@future-buller/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { createLiveSessionAction } from '@/app/actions/admin';
-import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '../page';
+import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Nueva sesión en vivo' };
 

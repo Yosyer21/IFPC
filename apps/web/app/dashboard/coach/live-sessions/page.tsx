@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@future-buller/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { createCoachLiveSessionAction } from '@/app/actions/coach';
-import { SESSION_TYPE_LABELS } from '@/app/dashboard/player/live-sessions/page';
+import { SESSION_TYPE_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Sesiones en vivo' };
 

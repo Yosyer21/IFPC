@@ -6,7 +6,7 @@ import { prisma } from '@future-buller/database';
 import { Badge, Card, CardContent } from '@future-buller/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
-import { SESSION_TYPE_LABELS } from '../page';
+import { SESSION_TYPE_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Sesión en vivo' };
 

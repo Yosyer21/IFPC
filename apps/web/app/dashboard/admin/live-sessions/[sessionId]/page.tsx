@@ -7,7 +7,7 @@ import { Card, CardContent } from '@future-buller/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { changeLiveSessionStatusAction } from '@/app/actions/admin';
-import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '../page';
+import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Sesión en vivo' };
 

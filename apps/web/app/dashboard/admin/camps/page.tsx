@@ -13,16 +13,9 @@ import {
   IconUsers,
 } from '@/components/dashboard/icons';
 import { changeCampStatusAction, deleteCampAction } from '@/app/actions/admin';
+import { CAMP_STATUS_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Camps' };
-
-export const CAMP_STATUS_LABELS: Record<string, string> = {
-  DRAFT: 'Borrador',
-  OPEN: 'Abierto',
-  FULL: 'Completo',
-  CANCELLED: 'Cancelado',
-  FINISHED: 'Finalizado',
-};
 
 export default async function AdminCampsPage() {
   const session = await auth();

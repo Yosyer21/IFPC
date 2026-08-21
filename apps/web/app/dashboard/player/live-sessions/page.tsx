@@ -6,15 +6,9 @@ import { prisma } from '@future-buller/database';
 import { Badge, Card, CardContent } from '@future-buller/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
+import { SESSION_TYPE_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Sesiones en vivo' };
-
-export const SESSION_TYPE_LABELS: Record<string, string> = {
-  TRAINING: 'Entrenamiento',
-  LECTURE: 'Charla',
-  Q_AND_A: 'Preguntas y respuestas',
-  TRIAL: 'Prueba',
-};
 
 export default async function PlayerLiveSessionsPage() {
   const session = await auth();

@@ -5,7 +5,7 @@ import { prisma } from '@future-buller/database';
 import { Card, CardContent } from '@future-buller/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { createCampAction } from '@/app/actions/admin';
-import { CAMP_STATUS_LABELS } from '../page';
+import { CAMP_STATUS_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Nuevo camp' };
 

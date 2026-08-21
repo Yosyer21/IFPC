@@ -8,22 +8,9 @@ import { StatCard } from '@/components/player/stat-card';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { IconCalendar, IconClock, IconLive, IconVideo } from '@/components/dashboard/icons';
 import { changeLiveSessionStatusAction, deleteLiveSessionAction } from '@/app/actions/admin';
+import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Sesiones en vivo' };
-
-export const LIVE_SESSION_TYPE_LABELS: Record<string, string> = {
-  TRAINING: 'Entrenamiento',
-  LECTURE: 'Charla',
-  Q_AND_A: 'Preguntas y respuestas',
-  TRIAL: 'Prueba',
-};
-
-export const LIVE_SESSION_STATUS_LABELS: Record<string, string> = {
-  SCHEDULED: 'Programada',
-  LIVE: 'En directo',
-  ENDED: 'Finalizada',
-  CANCELLED: 'Cancelada',
-};
 
 export default async function AdminLiveSessionsPage() {
   const session = await auth();

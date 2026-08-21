@@ -11,7 +11,12 @@ export default defineConfig({
     })),
   },
   test: {
-    include: ['tests/unit/**/*.test.ts', 'tests/integration/**/*.test.ts'],
+    include: [
+      'tests/unit/**/*.test.ts',
+      'tests/integration/**/*.test.ts',
+      'packages/**/src/**/*.test.ts',
+      'apps/**/src/**/*.test.ts',
+    ],
     testTimeout: 30000,
   },
 });

@@ -40,6 +40,10 @@ pnpm build
 
 > ⚠️ No ejecutar `pnpm build` mientras `pnpm dev` esté activo: comparten `.next` y el
 > cliente Prisma puede fallar por locks de archivo en Windows.
+>
+> ⚠️ Las páginas públicas son `force-dynamic` (layout `(public)`): consultan la base de datos
+> en cada request y no deben prerenderizarse en build time (PGlite/WASM aborta). Si el build
+> llegara a corromper `.pglite`, reset: `Remove-Item .pglite` + `pnpm db:setup-pglite`.
 
 ## Worker (jobs en segundo plano)
 

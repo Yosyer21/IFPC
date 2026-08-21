@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { IconUsers } from '@/components/dashboard/icons';
 import { changeCampStatusAction } from '@/app/actions/admin';
-import { CAMP_STATUS_LABELS } from '../page';
+import { CAMP_STATUS_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Detalle del camp' };
 
