@@ -29,4 +29,10 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Generar cliente Prisma
+        run: pnpm --filter database exec prisma generate
+      - name: Aplicar esquema a la base de test
+        run: pnpm --filter database exec prisma db push --skip-generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
       - run: pnpm test

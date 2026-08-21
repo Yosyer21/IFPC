@@ -300,10 +300,7 @@ export async function resetPasswordAction(
 }
 
 /** Reenvía el email de verificación al usuario autenticado. */
-export async function resendVerificationEmailAction(
-  _prev: ActionState,
-  _formData: FormData
-): Promise<ActionState> {
+export async function resendVerificationEmailAction(): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
     return { error: 'Sesión no válida.' };

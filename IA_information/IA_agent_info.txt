@@ -437,6 +437,18 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 - **CI**: silenciado el warning de turbo para `database#build` (turbo.json local con `outputs: []`)
 - Validación: typecheck 9/9, lint 0, test 21/2, build 3/3 (57.9s), E2E 11/11 + smoke verificación 1/1 + smoke Stripe 2/2 (webhook 400, checkout 503)
 
+## 39. BLOQUE P2-D COMPLETADO — CI workflows reales, SEO/OG y tests unitarios
+- **CI workflows listos para GitHub Actions**:
+  - `ci.yml` (lint + typecheck): añadido paso `prisma generate` (cliente necesario en checkout limpio)
+  - `tests.yml`: añadidos `prisma generate` + `prisma db push --skip-generate` contra el servicio Postgres → los 2 tests de integración de auth corren de verdad en CI
+  - `packages/database/turbo.json`: añadido `"extends": ["//"]` (turbo 2.10 lo exige en configs por paquete)
+- **SEO/Open Graph**: `app/layout.tsx` con `metadataBase`, keywords, `openGraph` (es_ES, siteName, url) y `twitter` card
+- **Tests unitarios nuevos (12)**:
+  - `tests/unit/payments/stripe.test.ts` (8): `stripeConfigured`, `MEMBERSHIP_TIERS`, `verifyWebhookSignature` (válida / body alterado / sin cabecera / secreto distinto / sin secreto)
+  - `tests/unit/email/resend.test.ts` (4): sin key no hace fetch y avisa; con key real llama a Resend (mock de fetch)
+- **Fix lint**: `resendVerificationEmailAction` sin params (evita warnings de args no usados con `useActionState`)
+- Validación final: typecheck 9/9, lint 0, test **33/2**, build 3/3 (1m5s), E2E 11/11 (1.2m)
+
 ## 37. BLOQUE P2-B COMPLETADO — CI/CD real + build de producción validado
 - **Bug de CI corregido**: `pnpm test` (turbo) ejecutaba vitest en web/worker sin tests → fallaba con "No test files found". Ahora: root `test: vitest run` (config ampliada con `packages/**/src/**/*.test.ts`), eliminado `test` de web, worker con `--passWithNoTests`, turbo test con `dependsOn: ^typecheck` (antes `^build`). Resultado: **21 passed | 2 skipped** (incluye 6 tests del motor de matching)
 - **Build de producción OK**: 3 tareas turbo (database → prisma generate, worker → tsc, web → next build). `pnpm build` completo en ~50s
