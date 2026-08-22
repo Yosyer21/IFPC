@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { resetPasswordAction, type ActionState } from '@/app/actions/auth';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(

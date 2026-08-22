@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { auth } from '@future-buller/auth';
-import { Badge, Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
 export const metadata: Metadata = { title: 'Seguridad · Ajustes' };

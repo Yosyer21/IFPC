@@ -1,10 +1,10 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { isRole } from '@future-buller/auth';
-import type { PlayerStatus, Role } from '@future-buller/types';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { isRole } from '@ifpc/auth';
+import type { PlayerStatus, Role } from '@ifpc/types';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);

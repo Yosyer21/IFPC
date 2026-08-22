@@ -1,8 +1,8 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { auth, signIn, signOut, isRole, hashPassword, AuthError } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
+import { auth, signIn, signOut, isRole, hashPassword, AuthError } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
 import {
   loginSchema,
   registerSchema,
@@ -10,8 +10,8 @@ import {
   coachOnboardingSchema,
   agentOnboardingSchema,
   clubOnboardingSchema,
-} from '@future-buller/validation';
-import type { Role } from '@future-buller/types';
+} from '@ifpc/validation';
+import type { Role } from '@ifpc/types';
 import { createHash, randomBytes } from 'node:crypto';
 import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/email/resend';
 

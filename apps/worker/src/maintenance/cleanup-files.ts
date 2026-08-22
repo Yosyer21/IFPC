@@ -1,7 +1,7 @@
 import { readdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import type { Job } from 'bullmq';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 /** Elimina archivos de uploads locales que no estén referenciados por ningún vídeo. */
 export async function cleanupFiles(job: Job) {

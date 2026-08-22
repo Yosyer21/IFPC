@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Badge, Card, CardContent } from '@future-buller/ui';
-import type { TrainingContent } from '@future-buller/types';
+import { Badge, Card, CardContent } from '@ifpc/ui';
+import type { TrainingContent } from '@ifpc/types';
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Técnica',

@@ -1,6 +1,6 @@
 import { readdir, unlink } from 'node:fs/promises';
 import path from 'node:path';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 async function main() {
   const uploadsDir = process.env.UPLOAD_DIR ?? path.resolve('apps', 'web', 'public', 'uploads');

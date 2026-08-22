@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createOpportunityAction } from '@/app/actions/club';
-import { Button, Input, Select } from '@future-buller/ui';
+import { Button, Input, Select } from '@ifpc/ui';
 
 const TYPES = [
   { value: 'TRIAL', label: 'Prueba' },

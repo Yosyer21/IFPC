@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 // Consulta la DB en cada petición (PGlite/WASM no es compatible con el prerender estático).
 export const dynamic = 'force-dynamic';

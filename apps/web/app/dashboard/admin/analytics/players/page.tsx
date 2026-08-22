@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Card, CardContent } from '@future-buller/ui';
-import { PLAYER_STATUSES, PLAYER_STATUS_LABELS, POSITIONS, POSITION_LABELS } from '@future-buller/config';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Card, CardContent } from '@ifpc/ui';
+import { PLAYER_STATUSES, PLAYER_STATUS_LABELS, POSITIONS, POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
 import { CountsBars } from '@/components/player/charts';

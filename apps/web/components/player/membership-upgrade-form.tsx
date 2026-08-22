@@ -2,8 +2,8 @@
 
 import { useActionState } from 'react';
 import { startCheckoutAction } from '@/app/actions/membership';
-import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@future-buller/ui';
-import type { MembershipTier } from '@future-buller/types';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
+import type { MembershipTier } from '@ifpc/types';
 
 const PLANS: {
   tier: MembershipTier;

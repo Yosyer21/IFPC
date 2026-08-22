@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { uploadVideoAction } from '@/app/actions/player';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function VideoUploadForm() {
   const [state, formAction, pending] = useActionState(uploadVideoAction, {});

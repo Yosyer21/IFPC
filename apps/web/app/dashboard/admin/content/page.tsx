@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, CardContent } from '@future-buller/ui';
+import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
 export const metadata: Metadata = { title: 'Contenido' };

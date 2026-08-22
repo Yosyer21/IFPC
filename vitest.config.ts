@@ -6,7 +6,7 @@ const packages = ['auth', 'config', 'database', 'matching', 'types', 'validation
 export default defineConfig({
   resolve: {
     alias: packages.map((name) => ({
-      find: `@future-buller/${name}`,
+      find: `@ifpc/${name}`,
       replacement: fileURLToPath(new URL(`./packages/${name}/src/index.ts`, import.meta.url)),
     })),
   },

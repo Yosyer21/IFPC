@@ -1,4 +1,4 @@
-import { getToken } from '@future-buller/auth/edge';
+import { getToken } from '@ifpc/auth/edge';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {

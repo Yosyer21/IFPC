@@ -1,4 +1,4 @@
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 async function main() {
   const counts = {

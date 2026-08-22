@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createRequirementAction } from '@/app/actions/club';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function CreateRequirementForm() {
   const [state, formAction, pending] = useActionState(createRequirementAction, {});

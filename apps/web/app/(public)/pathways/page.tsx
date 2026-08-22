@@ -4,7 +4,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Rutas de desarrollo — Future Buller',
+  title: 'Rutas de desarrollo — IFPC',
   description: 'El camino del jugador: de categoría base a profesional y universitario.',
 };
 
@@ -46,7 +46,7 @@ export default function PathwaysPage() {
           </p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">El camino del jugador</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Cada jugador avanza por etapas. Future Buller estructura ese recorrido con evaluaciones,
+            Cada jugador avanza por etapas. IFPC estructura ese recorrido con evaluaciones,
             objetivos y oportunidades: desde la primera escuela de fútbol hasta la beca universitaria
             o el contrato profesional.
           </p>

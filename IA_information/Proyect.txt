@@ -1,4 +1,4 @@
-# Future Buller International Football Platform
+# IFPC International Football Platform
 
 ## Product & Technical Specification — Version 1.0
 
@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary
 
-Future Buller International Football Platform será un ecosistema digital de desarrollo, educación, representación y oportunidades para futbolistas, inicialmente con un fuerte enfoque en fútbol femenino y con capacidad de operar posteriormente tanto en fútbol femenino como masculino.
+IFPC International Football Platform será un ecosistema digital de desarrollo, educación, representación y oportunidades para futbolistas, inicialmente con un fuerte enfoque en fútbol femenino y con capacidad de operar posteriormente tanto en fútbol femenino como masculino.
 
 La plataforma combinará cuatro elementos principales:
 
@@ -39,7 +39,7 @@ El recorrido ideal será:
 
 **Camp → Player Profile → Development → Education → Evaluation → Pathway → Opportunity → Trial → Contract → International Career**
 
-Un jugador puede conocer Future Buller en un campamento, posteriormente convertirse en miembro de la plataforma, entrenar durante todo el año, recibir contenido educativo, participar en sesiones en vivo, construir su perfil profesional y eventualmente acceder a oportunidades internacionales.
+Un jugador puede conocer IFPC en un campamento, posteriormente convertirse en miembro de la plataforma, entrenar durante todo el año, recibir contenido educativo, participar en sesiones en vivo, construir su perfil profesional y eventualmente acceder a oportunidades internacionales.
 
 La plataforma evolucionará progresivamente desde un sistema de desarrollo hacia un ecosistema internacional de fútbol.
 
@@ -49,7 +49,7 @@ La plataforma evolucionará progresivamente desde un sistema de desarrollo hacia
 
 La plataforma estará compuesta por dos grandes áreas.
 
-## 3.1 Future Buller Development Platform
+## 3.1 IFPC Development Platform
 
 Orientada principalmente a:
 
@@ -68,7 +68,7 @@ Incluye:
 * Parent education
 * Monthly live sessions
 * Player pathways
-* Future Buller opportunities
+* IFPC opportunities
 
 ---
 
@@ -258,7 +258,7 @@ Información mínima necesaria para registrarse.
 
 Perfil utilizado para desarrollo, scouting y oportunidades.
 
-Esto permite que un jugador pueda comenzar dentro de Future Buller sin necesariamente estar inmediatamente representado internacionalmente.
+Esto permite que un jugador pueda comenzar dentro de IFPC sin necesariamente estar inmediatamente representado internacionalmente.
 
 ---
 
@@ -392,14 +392,14 @@ Cada recurso deberá poder marcarse como:
 * Private
 * Player only
 * Parent/Guardian
-* Future Buller team
+* IFPC team
 * Representative team
 * Selected clubs
 * Public
 
 ---
 
-# 8. Future Buller Training Library
+# 8. IFPC Training Library
 
 La plataforma tendrá una biblioteca de desarrollo.
 
@@ -1012,7 +1012,7 @@ La evolución futura contempla alertas automáticas para clubes y jugadores seg�
 
 # 27. Membership System
 
-Future Buller podrá operar con una membresía anual.
+IFPC podrá operar con una membresía anual.
 
 ### Annual Membership
 
@@ -1026,12 +1026,12 @@ Incluye:
 * Player development resources
 * Monthly live session
 * Pathway education
-* Future Buller updates
+* IFPC updates
 * Selected opportunities
 
 La distribución planteada actualmente es:
 
-**85% — Future Buller**
+**85% — IFPC**
 
 **15% — Joshua Ruiz**
 
@@ -1043,7 +1043,7 @@ La estructura comercial y legal definitiva deberá formalizarse antes del lanzam
 
 A largo plazo, la plataforma podrá tener diferentes fuentes de ingresos.
 
-## Future Buller
+## IFPC
 
 * Annual memberships
 * Camps
@@ -1475,7 +1475,7 @@ El MVP debe concentrarse en:
 * Videos
 * Basic football information
 
-### Future Buller
+### IFPC
 
 * Training library
 * Parent education
@@ -1568,7 +1568,7 @@ Parent/Guardian Consent
 ↓
 Create Profile
 ↓
-Join Future Buller
+Join IFPC
 ↓
 Access Training
 ↓
@@ -1669,7 +1669,7 @@ Y finalmente:
 
 "How do we help the player reach that opportunity?"
 
-Esto permite que Future Buller acompañe al jugador incluso cuando todavía no está preparado para una oportunidad profesional.
+Esto permite que IFPC acompañe al jugador incluso cuando todavía no está preparado para una oportunidad profesional.
 
 ---
 
@@ -1714,7 +1714,7 @@ La plataforma se convierte así en la infraestructura que conecta todas esas par
 La estructura final puede resumirse así:
 
 ```text
-                    FUTURE BULLER
+                    IFPC
                          │
               PLAYER DEVELOPMENT
                          │
@@ -1786,7 +1786,7 @@ El resultado final sería una infraestructura digital capaz de conectar:
 
 con una única fuente centralizada de información y oportunidades.
 
-**Future Buller International Football Platform**
+**IFPC International Football Platform**
 
 > **CONNECTING TALENT WITH OPPORTUNITY.**
 

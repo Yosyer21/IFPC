@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
 import { CreateSubmissionForm } from '@/components/agent/create-submission-form';
 
 export const metadata: Metadata = { title: 'Nuevo envío' };

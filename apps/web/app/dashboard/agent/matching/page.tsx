@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { matchScore } from '@future-buller/matching';
-import { Badge, Card, CardContent, Progress } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { matchScore } from '@ifpc/matching';
+import { Badge, Card, CardContent, Progress } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
 export const metadata: Metadata = { title: 'Matching' };

@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
-const email = process.env.ADMIN_EMAIL ?? 'admin@futurebuller.com';
+const email = process.env.ADMIN_EMAIL ?? 'admin@ifpc.com';
 const password = process.env.ADMIN_PASSWORD ?? 'admin123';
 
 async function main() {

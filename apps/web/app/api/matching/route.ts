@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@future-buller/database';
-import { matchScore } from '@future-buller/matching';
+import { prisma } from '@ifpc/database';
+import { matchScore } from '@ifpc/matching';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
 /**

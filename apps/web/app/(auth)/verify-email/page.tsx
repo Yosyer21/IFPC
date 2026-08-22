@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { createHash } from 'node:crypto';
-import { prisma } from '@future-buller/database';
-import { Badge } from '@future-buller/ui';
+import { prisma } from '@ifpc/database';
+import { Badge } from '@ifpc/ui';
 
 export const metadata: Metadata = { title: 'Verifica tu email' };
 
@@ -48,7 +48,7 @@ export default async function VerifyEmailPage({
           <Badge variant="success">Email verificado</Badge>
           <h1 className="mb-4 mt-4 text-2xl font-bold">¡Tu email está confirmado!</h1>
           <p className="mb-6 text-muted-foreground">
-            Ya puedes usar todas las funciones de Future Buller.
+            Ya puedes usar todas las funciones de IFPC.
           </p>
           <Link
             href="/dashboard"

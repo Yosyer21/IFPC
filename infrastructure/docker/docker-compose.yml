@@ -1,4 +1,4 @@
-# Compose de producción para Future Buller Platform.
+# Compose de producción para IFPC Platform.
 # Los archivos Dockerfile se construyen desde la raíz del monorepo.
 services:
   postgres:
@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: future_buller
+      POSTGRES_DB: ifpc
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
@@ -31,7 +31,7 @@ services:
       dockerfile: infrastructure/docker/Dockerfile.web
     env_file: ../../.env
     environment:
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/future_buller
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/ifpc
       REDIS_URL: redis://redis:6379
     ports:
       - '3000:3000'
@@ -47,7 +47,7 @@ services:
       dockerfile: infrastructure/docker/Dockerfile.worker
     env_file: ../../.env
     environment:
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/future_buller
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@postgres:5432/ifpc
       REDIS_URL: redis://redis:6379
     depends_on:
       postgres:

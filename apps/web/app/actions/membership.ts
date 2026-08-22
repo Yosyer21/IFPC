@@ -1,10 +1,10 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
 import { createCheckoutSession } from '@/lib/payments/stripe';
-import type { MembershipTier } from '@future-buller/types';
+import type { MembershipTier } from '@ifpc/types';
 import type { ActionState } from './auth';
 
 // Precios alineados con lib/payments/stripe.ts (MEMBERSHIP_TIERS).

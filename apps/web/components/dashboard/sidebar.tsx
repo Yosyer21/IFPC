@@ -157,7 +157,7 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
           <IconMenu className="h-5 w-5" />
         </button>
         <Link href="/" className="text-base font-bold">
-          Future Buller
+          IFPC
         </Link>
         <span className="w-9" />
       </header>
@@ -173,7 +173,7 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
           <aside className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-border bg-card p-4">
             <div className="mb-4 flex items-center justify-between">
               <Link href="/" className="text-lg font-bold">
-                Future Buller
+                IFPC
               </Link>
               <button
                 type="button"
@@ -192,7 +192,7 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
       {/* Sidebar de escritorio */}
       <aside className="hidden w-64 shrink-0 overflow-y-auto border-r border-border bg-card p-4 md:flex md:flex-col">
         <Link href="/" className="mb-6 block text-lg font-bold">
-          Future Buller
+          IFPC
         </Link>
         <SidebarContent sections={sections} pathname={pathname} unreadCount={unreadCount} />
       </aside>

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Card, CardContent } from '@future-buller/ui';
+import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { IconFile } from '@/components/dashboard/icons';
 

@@ -1,3 +1,3 @@
-import { handlers } from '@future-buller/auth';
+import { handlers } from '@ifpc/auth';
 
 export const { GET, POST } = handlers;

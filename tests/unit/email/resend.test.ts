@@ -17,7 +17,7 @@ describe('lib/email/resend', () => {
   it('sendEmail sin API key configurada no hace fetch y avisa', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     const result = await email.sendEmail({
-      to: 'test@futurebuller.com',
+      to: 'test@ifpc.com',
       subject: 'Test',
       html: '<p>hola</p>',
       text: 'hola',
@@ -29,7 +29,7 @@ describe('lib/email/resend', () => {
 
   it('sendPasswordResetEmail devuelve el mismo aviso en dev', async () => {
     const result = await email.sendPasswordResetEmail(
-      'test@futurebuller.com',
+      'test@ifpc.com',
       'http://localhost:3000/reset-password?token=abc'
     );
     expect(result.ok).toBe(false);
@@ -37,7 +37,7 @@ describe('lib/email/resend', () => {
 
   it('sendVerificationEmail devuelve el mismo aviso en dev', async () => {
     const result = await email.sendVerificationEmail(
-      'test@futurebuller.com',
+      'test@ifpc.com',
       'http://localhost:3000/verify-email?token=abc'
     );
     expect(result.ok).toBe(false);
@@ -54,7 +54,7 @@ describe('lib/email/resend', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     const result = await fresh.sendEmail({
-      to: 'test@futurebuller.com',
+      to: 'test@ifpc.com',
       subject: 'Test',
       html: '<p>hola</p>',
     });

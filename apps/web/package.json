@@ -1,5 +1,5 @@
 {
-  "name": "@future-buller/web",
+  "name": "@ifpc/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,13 +10,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@future-buller/auth": "workspace:*",
-    "@future-buller/config": "workspace:*",
-    "@future-buller/database": "workspace:*",
-    "@future-buller/matching": "workspace:*",
-    "@future-buller/types": "workspace:*",
-    "@future-buller/ui": "workspace:*",
-    "@future-buller/validation": "workspace:*",
+    "@ifpc/auth": "workspace:*",
+    "@ifpc/config": "workspace:*",
+    "@ifpc/database": "workspace:*",
+    "@ifpc/matching": "workspace:*",
+    "@ifpc/types": "workspace:*",
+    "@ifpc/ui": "workspace:*",
+    "@ifpc/validation": "workspace:*",
     "next": "^15.1.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

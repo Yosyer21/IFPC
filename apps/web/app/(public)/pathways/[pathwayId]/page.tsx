@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Ruta — Future Buller' };
+export const metadata: Metadata = { title: 'Ruta — IFPC' };
 
 const STAGES: Record<string, { title: string; age: string; focus: string; goals: string[] }> = {
   base: {

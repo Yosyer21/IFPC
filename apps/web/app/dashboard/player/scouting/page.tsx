@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Card, CardContent } from '@future-buller/ui';
-import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@future-buller/config';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Card, CardContent } from '@ifpc/ui';
+import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 
 export const metadata: Metadata = { title: 'Mi perfil de scouting' };

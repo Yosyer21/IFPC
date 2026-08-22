@@ -2,9 +2,9 @@
 
 import { useActionState } from 'react';
 import { updatePlayerProfileAction } from '@/app/actions/player';
-import { Button, Input, Select } from '@future-buller/ui';
-import { COMPETITION_LEVEL_LABELS, COUNTRIES, FOOT_LABELS, POSITION_LABELS } from '@future-buller/config';
-import type { Player } from '@future-buller/types';
+import { Button, Input, Select } from '@ifpc/ui';
+import { COMPETITION_LEVEL_LABELS, COUNTRIES, FOOT_LABELS, POSITION_LABELS } from '@ifpc/config';
+import type { Player } from '@ifpc/types';
 
 export function ProfileEditForm({ player }: { player: Player }) {
   const [state, formAction, pending] = useActionState(updatePlayerProfileAction, {});

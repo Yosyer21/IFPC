@@ -4,7 +4,7 @@ const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 
 async function loginAsAdmin(page: import('@playwright/test').Page) {
   await page.goto(`${BASE}/login`);
-  await page.getByLabel('Email').fill('admin@futurebuller.com');
+  await page.getByLabel('Email').fill('admin@ifpc.com');
   await page.getByLabel('Contraseña').fill('admin123');
   await page.getByRole('button', { name: /iniciar sesión/i }).click();
   await page.waitForURL('**/dashboard/**', { timeout: 15_000 });

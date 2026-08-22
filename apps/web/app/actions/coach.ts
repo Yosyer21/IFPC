@@ -1,8 +1,8 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
 import type { ActionState } from './auth';
 
 const str = (formData: FormData, key: string): string | null => {

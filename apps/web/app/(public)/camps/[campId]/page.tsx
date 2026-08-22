@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { prisma } from '@future-buller/database';
-import { auth } from '@future-buller/auth';
-import { Badge } from '@future-buller/ui';
+import { prisma } from '@ifpc/database';
+import { auth } from '@ifpc/auth';
+import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 import { registerForCampAction } from '@/app/actions/player';
 
-export const metadata: Metadata = { title: 'Camp — Future Buller' };
+export const metadata: Metadata = { title: 'Camp — IFPC' };
 
 export default async function PublicCampDetailPage({
   params,
@@ -85,7 +85,7 @@ export default async function PublicCampDetailPage({
             <div className="rounded-xl border border-border/60 p-4">
               <div className="text-xs text-muted-foreground">Organiza</div>
               <div className="mt-1 text-sm font-semibold">
-                {camp.club?.name ?? camp.coach?.user?.name ?? 'Future Buller'}
+                {camp.club?.name ?? camp.coach?.user?.name ?? 'IFPC'}
               </div>
             </div>
           </div>

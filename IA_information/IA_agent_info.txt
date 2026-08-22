@@ -1,4 +1,4 @@
-# FUTURE-BULLER PLATFORM — SPEC PARA AGENTE IA (optimizada en tokens) v1
+# IFPC PLATFORM — SPEC PARA AGENTE IA (optimizada en tokens) v1
 > Plataforma global de fútbol: perfiles de jugadores, entrenamiento, reclutamiento
 > (scouting, trials, negociaciones, contratos), matching jugador<->club, membresías/pagos,
 > roles múltiples. Leer UNA vez y construir sin preguntar. Si algo no está especificado,
@@ -99,7 +99,7 @@ DATABASE_URL · REDIS_URL · AUTH_SECRET · NEXT_PUBLIC_APP_URL · S3_ACCESS_KEY
 - [x] Fase E: Worker jobs reales, tests (unit/integration/e2e), docs, scripts, infra
 
 ## 12. FASE A COMPLETADA (Auth + Onboarding — validado: build+lint+typecheck OK)
-- Auth.js v5 (credentials, JWT + rol en token) en packages/auth con entry edge-safe (`@future-buller/auth/edge`)
+- Auth.js v5 (credentials, JWT + rol en token) en packages/auth con entry edge-safe (`@ifpc/auth/edge`)
 - Contraseñas con bcryptjs (hashPassword/verifyPassword en packages/auth)
 - Registro crea User + perfil del rol (player/parent/coach/scout/agent/club) en transacción, auto-login y redirect a /onboarding/<rol>
 - Onboarding por rol (player: perfil deportivo · parent · coach · agent · club) vía server actions + zod
@@ -186,7 +186,7 @@ DATABASE_URL · REDIS_URL · AUTH_SECRET · NEXT_PUBLIC_APP_URL · S3_ACCESS_KEY
 
 ## 21. OPTIMIZACIÓN DE RENDIMIENTO (dev)
 - `next dev --turbopack` (Turbopack) en apps/web → compilación on-demand ~10x más rápida que webpack
-- `pnpm dev` ahora corre SOLO la web (`--filter=@future-buller/web`); `pnpm dev:all` corre web+worker
+- `pnpm dev` ahora corre SOLO la web (`--filter=@ifpc/web`); `pnpm dev:all` corre web+worker
   - MOTIVO: el worker abría la MISMA BD PGlite (.pglite) desde otro proceso → bloqueos/corrupción potencial (disfuncionalidad)
 - Menos consultas a BD: páginas del jugador usan `include`/`_count`/`Promise.all` en vez de queries secuenciales (profile/technical, videos, scouting, development/{goals,evaluations,progress}, documents, membership, opportunities/[id])
 - Tiempos medidos en dev (rutas compiladas): landing 0.25s · login 0.15s · dashboard/player 0.22s · profile 0.22s · opportunities 0.17s
@@ -267,7 +267,7 @@ DATABASE_URL · REDIS_URL · AUTH_SECRET · NEXT_PUBLIC_APP_URL · S3_ACCESS_KEY
 - agent@demo.com / agent123 (agente)
 - scout@demo.com / scout123 (ojeador)
 - parent@demo.com / parent123 (familiar)
-- admin@futurebuller.com (sin contraseña en seed → se asigna con `pnpm scripts:create-admin`)
+- admin@ifpc.com (sin contraseña en seed → se asigna con `pnpm scripts:create-admin`)
 
 ## 26. ÁREA CLUB REDISEÑADA — CENTRO DE RECLUTAMIENTO (distinto de player/coach)
 Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
@@ -322,7 +322,7 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 - Validación: typecheck 0, lint 0, 9 E2E (27.1s) con nuevo `parent-area.spec.ts`
 
 ## 30. ÁREA ADMIN REDISEÑADA — CENTRO DE CONTROL DE LA PLATAFORMA
-- Seed: el admin demo ahora tiene contraseña → admin@futurebuller.com / admin123
+- Seed: el admin demo ahora tiene contraseña → admin@ifpc.com / admin123
 - Dashboard `dashboard/admin/page.tsx`:
   - Hero: avatar + nombre + badge "Administración" + resumen global (usuarios/jugadores/clubes)
   - Alerta dinámica: moderación pendiente (jugadores por verificar, clubes sin verificar, consultas nuevas)
@@ -345,12 +345,12 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 - Validación: typecheck 0, lint 0, 11 E2E (37.6s) con nuevo `university-area.spec.ts`
 
 ## USUARIOS DEMO (COMPLETO — 9 ROLES)
-- admin@futurebuller.com / admin123 · player@demo.com / player123 · coach@demo.com / coach123
+- admin@ifpc.com / admin123 · player@demo.com / player123 · coach@demo.com / coach123
 - club@demo.com / club123 · agent@demo.com / agent123 · scout@demo.com / scout123
 - parent@demo.com / parent123 · university@demo.com / university123
 
 ## USUARIOS DEMO (ACTUALIZADO)
-- admin@futurebuller.com / admin123 (ahora con contraseña en seed)
+- admin@ifpc.com / admin123 (ahora con contraseña en seed)
 
 ## 32. BLOQUE P0 COMPLETADO — ADMIN (31 páginas + componentes compartidos)
 - **31 páginas admin nuevas** con PageHeader, KPIs animados (StatCard/CountUp), datos reales y queries con Promise.all:
@@ -369,7 +369,7 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 ## 33. BLOQUE P1-A COMPLETADO — Modelos nuevos + 18 páginas + notificaciones
 - **Schema**: `Camp` + `CampRegistration`, `LiveSession` (enums CampStatus, LiveSessionType, LiveSessionStatus), `Conversation` + `ConversationParticipant` + `Message` (mensajería), y `Opportunity` polimórfica (`clubId?` + `universityId?` + `creatorType`) — oportunidades de universidad
 - **Seed**: camp OPEN (camp-1) + borrador (camp-2) + registro del jugador demo, 3 live sessions (grupal, 1:1 prueba, charla finalizada), beca universitaria (opp-uni-1), conversación demo con 2 mensajes
-- **Páginas admin** (las 15 pendientes): camps ×3, live-sessions ×3, matching ×3 (usa `matchScore` del motor `@future-buller/matching`), opportunities create + detalle, communications ×2 (conversaciones + hilo con respuesta), documents ×2
+- **Páginas admin** (las 15 pendientes): camps ×3, live-sessions ×3, matching ×3 (usa `matchScore` del motor `@ifpc/matching`), opportunities create + detalle, communications ×2 (conversaciones + hilo con respuesta), documents ×2
 - **Páginas de rol**: player live-sessions lista+detalle, coach live-sessions (con formulario `createCoachLiveSessionAction`), coach training (catálogo), públicas `(public)/camps` + `[campId]` (con inscripción `registerForCampAction`)
 - **Notificaciones**: `apps/web/lib/notifications/notify.ts` (payload idéntico al job worker), job worker `send-notification` ahora acepta `link`; `applyToOpportunityAction` notifica al club/universidad propietario
 - **Nav admin**: Camps, Sesiones en vivo, Matching, Comunicaciones, Documentos
@@ -448,6 +448,14 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
   - `tests/unit/email/resend.test.ts` (4): sin key no hace fetch y avisa; con key real llama a Resend (mock de fetch)
 - **Fix lint**: `resendVerificationEmailAction` sin params (evita warnings de args no usados con `useActionState`)
 - Validación final: typecheck 9/9, lint 0, test **33/2**, build 3/3 (1m5s), E2E 11/11 (1.2m)
+
+## 41. REBRANDING COMPLETO — Future Buller → IFPC (International Football Players & Clubs)
+- **Marca**: todo el texto visible ahora es «IFPC» (titles, metadata, landing, emails, footer, login, docs). Nombre completo «International Football Players & Clubs» en descriptions/OG
+- **Paquetes**: scope npm renombrado `@future-buller/*` → `@ifpc/*` (package.json, imports, tsconfig, vitest aliases, next.config transpilePackages, turbo, Dockerfiles). `pnpm install` relinkó node_modules y el lockfile; `--frozen-lockfile` verificado
+- **Env/infra**: `DATABASE_URL` → DB `ifpc`, `S3_BUCKET=ifpc`, nginx upstream `ifpc_web` + dominio `ifpc.example.com`, Dockerfiles con filtros `@ifpc/*`
+- **Emails demo**: `admin@ifpc.com` (el resto ya eran `@demo.com`); seed + E2E sincronizados
+- **Incidente corregido**: `.env.example` y `apps/web/.env.local` aparecieron corruptos (sustitución `i→f`, `f→u`, e.g. `PGLITE_DIR=.../.pglfte` y `C:/Users/rufs/...`) → los logins E2E fallaban con `ENOENT mkdir .../.pglfte`. Restaurados: `.env.example` desde git + re-brand, `.env.local` reconstruido
+- **Verificación final**: 0 ocurrencias de `future*buller` en el repo (sin node_modules/.next), typecheck 9/9, lint 0, test 33/2, build 3/3 (1m12s), E2E 11/11 (1.2m)
 
 ## 40. BLOQUE P2-E COMPLETADO — Checkout real de membresía, comunicaciones de agente, SEO sitemap
 - **Membresía con pago real**: `startCheckoutAction` (reemplaza el pago simulado como vía principal): con `STRIPE_SECRET_KEY` crea Checkout Session y redirige a Stripe; sin clave hace fallback al pago simulado (dev). Precios alineados con `MEMBERSHIP_TIERS` (99/199/499 €) en el form

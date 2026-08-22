@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createSubmissionAction } from '@/app/actions/agent';
-import { Button, Select } from '@future-buller/ui';
+import { Button, Select } from '@ifpc/ui';
 
 export function CreateSubmissionForm({
   players,

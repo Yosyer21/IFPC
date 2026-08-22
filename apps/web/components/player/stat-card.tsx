@@ -1,6 +1,6 @@
 import type { ComponentType, SVGProps } from 'react';
 import Link from 'next/link';
-import { Card, CardContent } from '@future-buller/ui';
+import { Card, CardContent } from '@ifpc/ui';
 import { CountUp } from './count-up';
 
 export function StatCard({

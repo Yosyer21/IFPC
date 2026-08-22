@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { completeOnboardingAction, type ActionState } from '@/app/actions/auth';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export interface OnboardingField {
   name: string;

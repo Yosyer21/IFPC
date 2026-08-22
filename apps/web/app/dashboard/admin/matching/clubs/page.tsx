@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
-import { matchScore } from '@future-buller/matching';
+import { matchScore } from '@ifpc/matching';
 import { IconBriefcase } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'Matching · Clubs' };

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
-import { ROLES } from '@future-buller/auth';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
+import { ROLES } from '@ifpc/auth';
 import { setUserRoleAction, deleteUserAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';

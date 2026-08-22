@@ -2,8 +2,8 @@
 
 import { useActionState, useState } from 'react';
 import { registerAction, type ActionState } from '@/app/actions/auth';
-import { Button, Input } from '@future-buller/ui';
-import type { Role } from '@future-buller/types';
+import { Button, Input } from '@ifpc/ui';
+import type { Role } from '@ifpc/types';
 
 const ROLES: { value: Role; label: string; description: string }[] = [
   { value: 'PLAYER', label: 'Jugador/a', description: 'Soy futbolista' },

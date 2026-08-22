@@ -11,7 +11,7 @@ import { Cta } from '@/components/landing/cta';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Future Buller — Where talent finds its future',
+  title: 'IFPC — Where talent finds its future',
   description:
     'The global football platform: player development, professional recruitment and matching with clubs, scouts and agents.',
 };

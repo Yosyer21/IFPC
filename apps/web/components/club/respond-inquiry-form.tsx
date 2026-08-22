@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { respondInquiryAction } from '@/app/actions/club';
-import { Button } from '@future-buller/ui';
+import { Button } from '@ifpc/ui';
 
 export function RespondInquiryForm({ inquiryId }: { inquiryId: string }) {
   const [state, formAction, pending] = useActionState(respondInquiryAction, {});

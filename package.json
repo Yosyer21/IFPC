@@ -1,5 +1,5 @@
 {
-  "name": "future-buller-platform",
+  "name": "ifpc-platform",
   "version": "0.1.0",
   "private": true,
   "description": "Plataforma global de fútbol: desarrollo de jugadores y reclutamiento profesional",
@@ -8,7 +8,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "turbo run dev --filter=@future-buller/web",
+    "dev": "turbo run dev --filter=@ifpc/web",
     "dev:all": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
@@ -17,9 +17,9 @@
     "test:unit": "vitest run",
     "e2e": "playwright test",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md,yaml,yml}\"",
-    "db:generate": "pnpm --filter @future-buller/database db:generate",
-    "db:migrate": "pnpm --filter @future-buller/database db:migrate",
-    "db:seed": "pnpm --filter @future-buller/database db:seed",
+    "db:generate": "pnpm --filter @ifpc/database db:generate",
+    "db:migrate": "pnpm --filter @ifpc/database db:migrate",
+    "db:seed": "pnpm --filter @ifpc/database db:seed",
     "scripts:seed": "node --env-file=.env --import=tsx scripts/database/seed.ts",
     "scripts:reset": "node --env-file=.env --import=tsx scripts/database/reset.ts",
     "scripts:backup": "node --env-file=.env --import=tsx scripts/database/backup.ts",
@@ -35,8 +35,8 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.5",
-    "@future-buller/auth": "workspace:*",
-    "@future-buller/database": "workspace:*",
+    "@ifpc/auth": "workspace:*",
+    "@ifpc/database": "workspace:*",
     "@playwright/test": "^1.49.1",
     "bcryptjs": "^2.4.3",
     "pglite-prisma-adapter": "^0.7.2",

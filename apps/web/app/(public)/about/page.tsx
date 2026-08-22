@@ -4,9 +4,9 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'About — Future Buller',
+  title: 'About — IFPC',
   description:
-    'Future Buller conecta talento con oportunidades: desarrollo, scouting y reclutamiento en un solo lugar.',
+    'IFPC conecta talento con oportunidades: desarrollo, scouting y reclutamiento en un solo lugar.',
 };
 
 const VALUES = [
@@ -38,7 +38,7 @@ export default function AboutPage() {
             Donde el talento encuentra su futuro
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Future Buller es una plataforma global de fútbol que une a jugadores, familias,
+            IFPC es una plataforma global de fútbol que une a jugadores, familias,
             entrenadores, clubes, agentes, ojeadores y universidades. Perfil deportivo, plan de
             desarrollo, pruebas, becas y contratos: todo el recorrido profesional del jugador en un
             solo ecosistema.

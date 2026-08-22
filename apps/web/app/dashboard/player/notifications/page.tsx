@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
 import { markNotificationsReadAction } from '@/app/actions/player';
 import { PageHeader } from '@/components/player/page-header';
 

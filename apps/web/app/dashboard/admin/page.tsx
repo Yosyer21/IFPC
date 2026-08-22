@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
 import { StatCard } from '@/components/player/stat-card';
 import { PlayerAvatar } from '@/components/player/avatar';
 import {

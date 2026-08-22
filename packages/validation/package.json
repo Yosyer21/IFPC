@@ -1,5 +1,5 @@
 {
-  "name": "@future-buller/validation",
+  "name": "@ifpc/validation",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",

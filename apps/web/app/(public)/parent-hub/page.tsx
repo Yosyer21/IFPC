@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { prisma } from '@future-buller/database';
-import { Badge } from '@future-buller/ui';
+import { prisma } from '@ifpc/database';
+import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Parent Hub — Future Buller',
+  title: 'Parent Hub — IFPC',
   description: 'Guías y recursos para acompañar la carrera futbolística de tu hijo.',
 };
 

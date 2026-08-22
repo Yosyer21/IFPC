@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { profileCompletionPercentage } from '@future-buller/config';
+import { profileCompletionPercentage } from '@ifpc/config';
 
 describe('profileCompletionPercentage', () => {
   it('devuelve 100% cuando todos los campos están completos', () => {

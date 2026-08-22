@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createGoalAction } from '@/app/actions/coach';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function CreateGoalForm({ playerId }: { playerId: string }) {
   const [state, formAction, pending] = useActionState(createGoalAction, {});

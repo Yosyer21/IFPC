@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { prisma } from '@future-buller/database';
-import { Badge } from '@future-buller/ui';
-import { OPPORTUNITY_TYPE_LABELS } from '@future-buller/config';
+import { prisma } from '@ifpc/database';
+import { Badge } from '@ifpc/ui';
+import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Oportunidades — Future Buller',
+  title: 'Oportunidades — IFPC',
   description: 'Pruebas, becas y convocatorias abiertas de clubes y universidades.',
 };
 

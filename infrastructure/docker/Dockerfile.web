@@ -7,13 +7,13 @@ FROM base AS deps
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages ./packages
 COPY apps ./apps
-RUN pnpm install --frozen-lockfile --filter @future-buller/web... --filter @future-buller/database
+RUN pnpm install --frozen-lockfile --filter @ifpc/web... --filter @ifpc/database
 
 FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/apps ./apps
-RUN pnpm --filter @future-buller/database db:generate && pnpm --filter @future-buller/web build
+RUN pnpm --filter @ifpc/database db:generate && pnpm --filter @ifpc/web build
 
 FROM base AS runner
 ENV NODE_ENV=production

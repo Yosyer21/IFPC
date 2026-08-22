@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
 /** GET /api/memberships — membresías y pagos del usuario autenticado. */

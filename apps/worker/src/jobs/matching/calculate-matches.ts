@@ -1,6 +1,6 @@
 import type { Job } from 'bullmq';
-import { prisma } from '@future-buller/database';
-import { matchScore } from '@future-buller/matching';
+import { prisma } from '@ifpc/database';
+import { matchScore } from '@ifpc/matching';
 
 export interface CalculateMatchesJobData {
   playerId?: string;

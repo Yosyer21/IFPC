@@ -11,10 +11,10 @@ importers:
       '@electric-sql/pglite':
         specifier: ^0.5.5
         version: 0.5.5
-      '@future-buller/auth':
+      '@ifpc/auth':
         specifier: workspace:*
         version: link:packages/auth
-      '@future-buller/database':
+      '@ifpc/database':
         specifier: workspace:*
         version: link:packages/database
       '@playwright/test':
@@ -44,25 +44,25 @@ importers:
 
   apps/web:
     dependencies:
-      '@future-buller/auth':
+      '@ifpc/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@future-buller/config':
+      '@ifpc/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@future-buller/database':
+      '@ifpc/database':
         specifier: workspace:*
         version: link:../../packages/database
-      '@future-buller/matching':
+      '@ifpc/matching':
         specifier: workspace:*
         version: link:../../packages/matching
-      '@future-buller/types':
+      '@ifpc/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@future-buller/ui':
+      '@ifpc/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@future-buller/validation':
+      '@ifpc/validation':
         specifier: workspace:*
         version: link:../../packages/validation
       next:
@@ -117,13 +117,13 @@ importers:
 
   apps/worker:
     dependencies:
-      '@future-buller/database':
+      '@ifpc/database':
         specifier: workspace:*
         version: link:../../packages/database
-      '@future-buller/matching':
+      '@ifpc/matching':
         specifier: workspace:*
         version: link:../../packages/matching
-      '@future-buller/types':
+      '@ifpc/types':
         specifier: workspace:*
         version: link:../../packages/types
       bullmq:
@@ -148,13 +148,13 @@ importers:
 
   packages/auth:
     dependencies:
-      '@future-buller/database':
+      '@ifpc/database':
         specifier: workspace:*
         version: link:../database
-      '@future-buller/types':
+      '@ifpc/types':
         specifier: workspace:*
         version: link:../types
-      '@future-buller/validation':
+      '@ifpc/validation':
         specifier: workspace:*
         version: link:../validation
       bcryptjs:

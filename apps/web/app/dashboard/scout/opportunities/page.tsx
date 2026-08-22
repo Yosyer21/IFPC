@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
-import { OPPORTUNITY_TYPE_LABELS } from '@future-buller/config';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
+import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 
 export const metadata: Metadata = { title: 'Oportunidades' };

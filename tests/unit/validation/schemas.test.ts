@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { registerSchema, loginSchema, playerProfileSchema } from '@future-buller/validation';
+import { registerSchema, loginSchema, playerProfileSchema } from '@ifpc/validation';
 
 describe('registerSchema', () => {
   it('acepta datos válidos', () => {

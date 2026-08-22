@@ -1,5 +1,5 @@
 {
-  "name": "@future-buller/worker",
+  "name": "@ifpc/worker",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,9 +10,9 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@future-buller/database": "workspace:*",
-    "@future-buller/matching": "workspace:*",
-    "@future-buller/types": "workspace:*",
+    "@ifpc/database": "workspace:*",
+    "@ifpc/matching": "workspace:*",
+    "@ifpc/types": "workspace:*",
     "bullmq": "^5.34.0",
     "ioredis": "^5.4.2"
   },

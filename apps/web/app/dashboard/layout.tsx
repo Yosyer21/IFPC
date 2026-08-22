@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
 import { DashboardSidebar } from '@/components/dashboard/sidebar';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {

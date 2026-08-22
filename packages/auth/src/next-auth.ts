@@ -1,5 +1,5 @@
 import type { DefaultSession } from 'next-auth';
-import type { Role } from '@future-buller/types';
+import type { Role } from '@ifpc/types';
 
 declare module 'next-auth' {
   interface Session {

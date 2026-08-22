@@ -1,6 +1,6 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL ?? 'Future Buller <no-reply@futurebuller.com>';
+  process.env.RESEND_FROM_EMAIL ?? 'IFPC <no-reply@ifpc.com>';
 
 export interface EmailMessage {
   to: string;
@@ -56,7 +56,7 @@ export async function sendEmail(message: EmailMessage): Promise<SendEmailResult>
 }
 
 function resetPasswordTemplate(resetUrl: string): { html: string; text: string } {
-  const text = `Recupera tu contraseña de Future Buller
+  const text = `Recupera tu contraseña de IFPC
 
 Abre este enlace para elegir una nueva contraseña (válido durante 1 hora):
 ${resetUrl}
@@ -67,7 +67,7 @@ Si no has solicitado este cambio, puedes ignorar este email y tu contraseña seg
 <html lang="es">
   <body style="margin:0;background:#0a0e0c;padding:24px;font-family:Arial,sans-serif">
     <div style="max-width:480px;margin:0 auto;background:#111814;border:1px solid #2a332d;border-radius:16px;padding:32px">
-      <div style="font-size:18px;font-weight:700;color:#34d399">Future Buller</div>
+      <div style="font-size:18px;font-weight:700;color:#34d399">IFPC</div>
       <h1 style="color:#ffffff;font-size:22px;margin:20px 0 8px">Recupera tu contraseña</h1>
       <p style="color:#9ca3af;font-size:14px;line-height:1.6">
         Recibimos una solicitud para restablecer tu contraseña. El enlace es válido durante
@@ -99,22 +99,22 @@ export async function sendPasswordResetEmail(
   resetUrl: string
 ): Promise<SendEmailResult> {
   const { html, text } = resetPasswordTemplate(resetUrl);
-  return sendEmail({ to, subject: 'Recupera tu contraseña — Future Buller', html, text });
+  return sendEmail({ to, subject: 'Recupera tu contraseña — IFPC', html, text });
 }
 
 function verificationTemplate(verifyUrl: string): { html: string; text: string } {
-  const text = `Confirma tu email en Future Buller
+  const text = `Confirma tu email en IFPC
 
 Abre este enlace para verificar tu dirección de email (válido durante 24 horas):
 ${verifyUrl}
 
-Si no has creado una cuenta en Future Buller, ignora este email.`;
+Si no has creado una cuenta en IFPC, ignora este email.`;
 
   const html = `<!doctype html>
 <html lang="es">
   <body style="margin:0;background:#0a0e0c;padding:24px;font-family:Arial,sans-serif">
     <div style="max-width:480px;margin:0 auto;background:#111814;border:1px solid #2a332d;border-radius:16px;padding:32px">
-      <div style="font-size:18px;font-weight:700;color:#34d399">Future Buller</div>
+      <div style="font-size:18px;font-weight:700;color:#34d399">IFPC</div>
       <h1 style="color:#ffffff;font-size:22px;margin:20px 0 8px">Confirma tu email</h1>
       <p style="color:#9ca3af;font-size:14px;line-height:1.6">
         Gracias por crear tu cuenta. Verifica tu dirección de email para desbloquear todas las
@@ -144,5 +144,5 @@ export async function sendVerificationEmail(
   verifyUrl: string
 ): Promise<SendEmailResult> {
   const { html, text } = verificationTemplate(verifyUrl);
-  return sendEmail({ to, subject: 'Confirma tu email — Future Buller', html, text });
+  return sendEmail({ to, subject: 'Confirma tu email — IFPC', html, text });
 }

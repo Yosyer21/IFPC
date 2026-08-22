@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Badge, Card, CardContent } from '@future-buller/ui';
-import { PLAYER_STATUS_LABELS } from '@future-buller/config';
+import { Badge, Card, CardContent } from '@ifpc/ui';
+import { PLAYER_STATUS_LABELS } from '@ifpc/config';
 import { verifyPlayerAction } from '@/app/actions/admin';
 import { statusVariant } from './status-badge';
 

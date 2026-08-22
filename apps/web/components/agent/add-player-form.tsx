@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { addPlayerAction } from '@/app/actions/agent';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function AddPlayerForm() {
   const [state, formAction, pending] = useActionState(addPlayerAction, {});

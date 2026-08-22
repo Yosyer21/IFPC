@@ -6,7 +6,7 @@
 
 1. **Login**: el provider `credentials` valida email + contraseña (bcrypt) contra `User`.
 2. **Sesión JWT**: el token contiene `id`, `role` y datos básicos del usuario.
-3. **Middleware** (edge): decodifica el token con `getToken` (`@future-buller/auth/edge`) y protege `/dashboard`.
+3. **Middleware** (edge): decodifica el token con `getToken` (`@ifpc/auth/edge`) y protege `/dashboard`.
 4. **Guard por rol**: `/dashboard/<rol>` solo es accesible para ese rol (redirección si no corresponde).
 5. **Dashboard layout**: verifica la sesión en servidor antes de renderizar.
 

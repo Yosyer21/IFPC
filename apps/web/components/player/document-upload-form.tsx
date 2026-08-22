@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { uploadDocumentAction } from '@/app/actions/player';
-import { Button, Input, Select } from '@future-buller/ui';
+import { Button, Input, Select } from '@ifpc/ui';
 
 const TYPE_OPTIONS = [
   { value: 'passport', label: 'Pasaporte' },

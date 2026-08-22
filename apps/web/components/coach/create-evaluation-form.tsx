@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createEvaluationAction } from '@/app/actions/coach';
-import { Button, Input, Select } from '@future-buller/ui';
+import { Button, Input, Select } from '@ifpc/ui';
 
 const CATEGORY_OPTIONS = [
   { value: 'technical', label: 'Técnica' },

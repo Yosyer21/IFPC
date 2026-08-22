@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Card, CardContent } from '@future-buller/ui';
-import { POSITION_LABELS } from '@future-buller/config';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Card, CardContent } from '@ifpc/ui';
+import { POSITION_LABELS } from '@ifpc/config';
 import { savePlayerAction } from '@/app/actions/scout';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';

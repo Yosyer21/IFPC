@@ -34,7 +34,7 @@ Códigos: `401` sin sesión · `403` rol sin permiso · `400` body inválido · 
 | POST | `/api/camps` | admin | Crea camp |
 | GET | `/api/live-sessions` | jugador → suyas+grupales · coach → suyas · admin → todas | Sesiones |
 | POST | `/api/live-sessions` | admin/coach | Crea sesión |
-| GET | `/api/matching` | rol-aware | Scores del motor `@future-buller/matching` |
+| GET | `/api/matching` | rol-aware | Scores del motor `@ifpc/matching` |
 | GET | `/api/memberships` | autenticado | Membresía + pagos propios |
 | GET | `/api/payments` | autenticado | Pagos propios |
 | POST | `/api/payments/checkout` | autenticado | Crea Checkout Session de Stripe para una membresía (`tier: PREMIUM\|SCOUT\|CLUB`) → `{ url }`. 503 si Stripe no configurado |

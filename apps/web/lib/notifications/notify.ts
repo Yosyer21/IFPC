@@ -1,4 +1,4 @@
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 export interface NotifyInput {
   userId: string;

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
-import { OPPORTUNITY_TYPE_LABELS } from '@future-buller/config';
+import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 
 export const metadata: Metadata = { title: 'Oportunidades de mi hijo' };
 

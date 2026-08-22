@@ -1,6 +1,6 @@
 # Modelo de negocio
 
-**Future Buller** opera como plataforma de doble lado:
+**IFPC** opera como plataforma de doble lado:
 
 - **Lado jugador/familia**: servicio premium para destacar el perfil, más visibilidad y herramientas
   de desarrollo (vídeos ilimitados, estadísticas).

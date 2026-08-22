@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { updatePlayerStatusAction } from '@/app/actions/player';
-import { Button } from '@future-buller/ui';
+import { Button } from '@ifpc/ui';
 
 export function StatusToggle({ status }: { status: string }) {
   const [state, formAction, pending] = useActionState(updatePlayerStatusAction, {});

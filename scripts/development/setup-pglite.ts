@@ -23,7 +23,7 @@ async function main() {
       cwd: root,
       env: {
         ...process.env,
-        DATABASE_URL: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/future_buller',
+        DATABASE_URL: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/ifpc',
       },
     }
   );

@@ -5,10 +5,10 @@ import { prisma } from '../src/client';
 export async function main() {
   const adminHash = await bcrypt.hash('admin123', 10);
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@futurebuller.com' },
+    where: { email: 'admin@ifpc.com' },
     update: {},
     create: {
-      email: 'admin@futurebuller.com',
+      email: 'admin@ifpc.com',
       name: 'Administrador',
       role: 'ADMIN',
       passwordHash: adminHash,
@@ -613,7 +613,7 @@ export async function main() {
     update: {},
     create: {
       id: 'camp-1',
-      title: 'Campus de verano Future Buller',
+      title: 'Campus de verano IFPC',
       description:
         'Campus intensivo de pretemporada: técnico-táctico por la mañana y físico por la tarde. Plazas limitadas con seguimiento individualizado.',
       country: 'España',
@@ -730,7 +730,7 @@ export async function main() {
   });
 
   console.log('Seed completado:');
-  console.log(`- admin: admin@futurebuller.com / admin123`);
+  console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- jugador: player@demo.com / player123`);
   console.log(`- familiar: parent@demo.com / parent123`);
   console.log(`- club: club@demo.com / club123`);

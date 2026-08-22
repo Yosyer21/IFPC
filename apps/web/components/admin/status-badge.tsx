@@ -1,4 +1,4 @@
-import { Badge } from '@future-buller/ui';
+import { Badge } from '@ifpc/ui';
 
 const SUCCESS = new Set([
   'ACCEPTED',

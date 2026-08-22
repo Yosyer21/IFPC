@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /** GET /api/analytics — conteos de la plataforma (solo admin). */

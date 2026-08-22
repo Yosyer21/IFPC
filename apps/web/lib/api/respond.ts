@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@future-buller/auth';
+import { auth } from '@ifpc/auth';
 
 /** Devuelve la sesión autenticada o `null`. */
 export async function requireUser() {

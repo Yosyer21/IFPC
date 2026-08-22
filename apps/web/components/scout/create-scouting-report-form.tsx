@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { createScoutingReportAction } from '@/app/actions/scout';
-import { Button, Input, Select } from '@future-buller/ui';
+import { Button, Input, Select } from '@ifpc/ui';
 
 export function CreateScoutingReportForm({
   players,

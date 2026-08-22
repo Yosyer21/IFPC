@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { prisma } from '@future-buller/database';
-import { Badge } from '@future-buller/ui';
+import { prisma } from '@ifpc/database';
+import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Ejercicio — Future Buller' };
+export const metadata: Metadata = { title: 'Ejercicio — IFPC' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Técnica',

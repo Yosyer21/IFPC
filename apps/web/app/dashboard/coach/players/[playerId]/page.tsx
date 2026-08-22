@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Badge, Card, CardContent } from '@future-buller/ui';
-import { POSITION_LABELS } from '@future-buller/config';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Badge, Card, CardContent } from '@ifpc/ui';
+import { POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
 

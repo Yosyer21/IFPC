@@ -1,5 +1,5 @@
 {
-  "name": "@future-buller/auth",
+  "name": "@ifpc/auth",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -12,9 +12,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@future-buller/database": "workspace:*",
-    "@future-buller/types": "workspace:*",
-    "@future-buller/validation": "workspace:*",
+    "@ifpc/database": "workspace:*",
+    "@ifpc/types": "workspace:*",
+    "@ifpc/validation": "workspace:*",
     "bcryptjs": "^2.4.3",
     "next-auth": "^5.0.0-beta.25"
   },

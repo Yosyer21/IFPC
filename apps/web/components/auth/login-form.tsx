@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { loginAction, type ActionState } from '@/app/actions/auth';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(loginAction, {});

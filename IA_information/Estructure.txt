@@ -1,4 +1,4 @@
-future-buller-platform/
+ifpc-platform/
 │
 ├── apps/
 │   │

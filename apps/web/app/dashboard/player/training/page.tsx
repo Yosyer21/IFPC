@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Tabs } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Tabs } from '@ifpc/ui';
 import { TrainingGrid } from '@/components/player/training-grid';
 import { PageHeader } from '@/components/player/page-header';
 

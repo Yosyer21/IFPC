@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { auth } from '@future-buller/auth';
-import { Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { Card, CardContent } from '@ifpc/ui';
 
 export const metadata: Metadata = { title: 'Preferencias de notificaciones' };
 

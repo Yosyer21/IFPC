@@ -7,8 +7,8 @@ const describeDb = DATABASE_URL ? describe : describe.skip;
 
 describeDb('Auth · integración (requiere base de datos)', () => {
   it('crea un usuario y verifica el hash de contraseña', async () => {
-    const { prisma } = await import('@future-buller/database');
-    const { hashPassword, verifyPassword } = await import('@future-buller/auth');
+    const { prisma } = await import('@ifpc/database');
+    const { hashPassword, verifyPassword } = await import('@ifpc/auth');
 
     const password = 'integration-test-123';
     const hash = await hashPassword(password);
@@ -25,7 +25,7 @@ describeDb('Auth · integración (requiere base de datos)', () => {
   });
 
   it('crea un jugador vinculado a su usuario', async () => {
-    const { prisma } = await import('@future-buller/database');
+    const { prisma } = await import('@ifpc/database');
 
     const email = `it-player-${Date.now()}@test.com`;
     const user = await prisma.user.create({

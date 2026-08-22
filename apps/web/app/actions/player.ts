@@ -1,9 +1,9 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { playerProfileSchema } from '@future-buller/validation';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { playerProfileSchema } from '@ifpc/validation';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { ActionState } from './auth';

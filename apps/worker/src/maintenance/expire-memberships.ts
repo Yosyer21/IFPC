@@ -1,5 +1,5 @@
 import type { Job } from 'bullmq';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 export async function expireMemberships(job: Job) {
   const result = await prisma.membership.updateMany({

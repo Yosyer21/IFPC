@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { applyToOpportunityAction } from '@/app/actions/player';
-import { Button } from '@future-buller/ui';
+import { Button } from '@ifpc/ui';
 
 export function ApplyForm({
   opportunityId,

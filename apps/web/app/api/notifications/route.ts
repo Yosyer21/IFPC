@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 import { requireUser } from '@/lib/api/respond';
 
 /** GET /api/notifications — notificaciones del usuario autenticado. */

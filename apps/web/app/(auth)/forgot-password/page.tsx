@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { forgotPasswordAction, type ActionState } from '@/app/actions/auth';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export default function ForgotPasswordPage() {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(

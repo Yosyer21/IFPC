@@ -46,7 +46,7 @@ export function Features() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-emerald-400/80">
-            Why Future Buller
+            Why IFPC
           </p>
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Everything modern football needs

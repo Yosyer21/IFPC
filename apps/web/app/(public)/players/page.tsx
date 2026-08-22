@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { prisma } from '@future-buller/database';
-import { Badge } from '@future-buller/ui';
-import { POSITION_LABELS } from '@future-buller/config';
+import { prisma } from '@ifpc/database';
+import { Badge } from '@ifpc/ui';
+import { POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Jugadores — Future Buller',
-  description: 'Descubre jugadores disponibles con perfil deportivo verificado en Future Buller.',
+  title: 'Jugadores — IFPC',
+  description: 'Descubre jugadores disponibles con perfil deportivo verificado en IFPC.',
 };
 
 export default async function PublicPlayersPage() {

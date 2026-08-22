@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
 import { AccountForm } from '@/components/player/account-form';
 import { VerifyEmailBanner } from '@/components/player/verify-email-banner';
 

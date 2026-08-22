@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { updateAccountAction } from '@/app/actions/player';
-import { Button, Input } from '@future-buller/ui';
+import { Button, Input } from '@ifpc/ui';
 
 export function AccountForm({ name, email }: { name: string; email: string }) {
   const [state, formAction, pending] = useActionState(updateAccountAction, {});

@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 const USERS: { email: string; name: string; role: 'PLAYER' | 'PARENT' | 'CLUB' | 'AGENT' | 'SCOUT'; password: string }[] = [
   { email: 'player@demo.com', name: 'Jugador Demo', role: 'PLAYER', password: 'player123' },

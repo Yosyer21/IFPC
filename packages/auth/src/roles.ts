@@ -1,4 +1,4 @@
-import type { Role } from '@future-buller/types';
+import type { Role } from '@ifpc/types';
 
 export type { Role };
 

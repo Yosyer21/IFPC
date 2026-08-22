@@ -2,8 +2,8 @@ import type {} from './next-auth';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { prisma } from '@future-buller/database';
-import { loginSchema } from '@future-buller/validation';
+import { prisma } from '@ifpc/database';
+import { loginSchema } from '@ifpc/validation';
 import { authConfig } from './auth.config';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({

@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { inviteStaffAction } from '@/app/actions/club';
-import { Button, Input, Select } from '@future-buller/ui';
+import { Button, Input, Select } from '@ifpc/ui';
 
 const ROLES = [
   { value: 'STAFF', label: 'Staff' },

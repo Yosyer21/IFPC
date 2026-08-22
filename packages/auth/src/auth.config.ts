@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from 'next-auth';
-import type { Role } from '@future-buller/types';
+import type { Role } from '@ifpc/types';
 
 /**
  * Configuración base de Auth.js (segura para edge).

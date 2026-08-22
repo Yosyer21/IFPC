@@ -53,7 +53,7 @@ export async function createCheckoutSession(input: {
     'line_items[0][price_data][currency]': tier.currency,
     'line_items[0][price_data][unit_amount]': String(tier.priceCents),
     'line_items[0][price_data][product_data][name]': `Membresía ${tier.label}`,
-    'line_items[0][price_data][product_data][description]': `Suscripción anual ${tier.label} en Future Buller`,
+    'line_items[0][price_data][product_data][description]': `Suscripción anual ${tier.label} en IFPC`,
     'metadata[tier]': tier.id,
   });
 

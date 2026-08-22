@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { auth } from '@future-buller/auth';
-import { prisma } from '@future-buller/database';
-import { Card, CardContent } from '@future-buller/ui';
+import { auth } from '@ifpc/auth';
+import { prisma } from '@ifpc/database';
+import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerFilterLinks } from '@/components/admin/player-filter-links';
 import { PlayerRow } from '@/components/admin/player-row';

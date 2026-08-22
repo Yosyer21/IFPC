@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { prisma } from '@future-buller/database';
+import { prisma } from '@ifpc/database';
 
 async function main() {
   const [users, players, clubs, opportunities, submissions, trials, contracts] =

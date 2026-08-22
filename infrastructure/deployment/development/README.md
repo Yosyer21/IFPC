@@ -20,7 +20,7 @@ pnpm dev                      # web en http://localhost:3000
 | Club    | club@demo.com        | club123    |
 | Agente  | agent@demo.com       | agent123   |
 | Ojeador | scout@demo.com       | scout123   |
-| Admin   | admin@futurebuller.com | (via scripts:create-admin) |
+| Admin   | admin@ifpc.com | (via scripts:create-admin) |
 
 ## Herramientas
 
