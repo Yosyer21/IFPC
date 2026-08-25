@@ -10,6 +10,7 @@ COPY apps ./apps
 RUN pnpm install --frozen-lockfile --filter @ifpc/worker... --filter @ifpc/database
 
 FROM base AS builder
+COPY --from=deps /app/package.json /app/pnpm-workspace.yaml /app/pnpm-lock.yaml ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/apps ./apps

@@ -10,6 +10,7 @@ const nextConfig = {
     '@ifpc/validation',
     '@ifpc/auth',
     '@ifpc/matching',
+    '@ifpc/database',
   ],
   // PGlite carga WASM en el runtime Node del servidor.
   serverExternalPackages: ['@electric-sql/pglite', 'pglite-prisma-adapter'],
