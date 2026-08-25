@@ -25,6 +25,11 @@ RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+# Prisma: el output standalone no traza el query engine (.so.node). Se copia al contenedor
+# y se apunta con PRISMA_QUERY_ENGINE_LIBRARY.
+RUN mkdir -p /app/prisma-engines
+COPY --from=builder /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node /app/prisma-engines/
+ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/prisma-engines/libquery_engine-linux-musl-openssl-3.0.x.so.node
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
