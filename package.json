@@ -5,7 +5,8 @@
   "description": "Plataforma global de fútbol: desarrollo de jugadores y reclutamiento profesional",
   "packageManager": "pnpm@11.20.0",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.13.0",
+    "pnpm": ">=11.0.0"
   },
   "scripts": {
     "dev": "turbo run dev --filter=@ifpc/web",

@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Despliegue
-        run: echo 'Despliegue configurable según entorno (ver infra/deployment)'
+        run: echo 'Despliegue configurable segÃºn entorno (ver infra/deployment)'
