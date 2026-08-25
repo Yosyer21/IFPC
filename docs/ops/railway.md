@@ -39,14 +39,62 @@ Railway despliega el repositorio desde GitHub. El repo es un monorepo pnpm con
 
 ## Migraciones (una vez)
 
-Tras crear la base de datos, aplicar el esquema desde la pestaña **Run** de Railway:
+Tras crear la base de datos, aplicar el esquema. Desde local, conectando con el túnel
+de Railway (el host `postgres.railway.internal` es privado):
+
+```bash
+railway connect Postgres --tunnel-only --port 55432
+# en otra terminal, con DATABASE_URL apuntando a 127.0.0.1:55432:
+pnpm --filter database exec prisma db push
+```
+
+O desde la pestaña **Run** de Railway con el PostgreSQL de producción:
 
 ```bash
 pnpm --filter database exec prisma db push
 ```
 
-(o con migraciones: `prisma migrate deploy`). También puedes sembrar datos demo con
-`pnpm db:setup-pglite` localmente, pero en producción usa el PostgreSQL real.
+Seed demo (usuarios/roles de ejemplo, borra lo que crea y crea datos limpios):
+
+```bash
+pnpm --filter database db:seed
+```
+
+Credenciales generadas: `admin@ifpc.com/admin123`, `player@demo.com/player123`,
+`parent@demo.com/parent123`, `club@demo.com/club123`, `agent@demo.com/agent123`,
+`scout@demo.com/scout123`, `coach@demo.com/coach123`, `university@demo.com/university123`.
+
+## Requisito de Node.js (build)
+
+El monorepo fija `pnpm@11.20.0` (packageManager + corepack). **pnpm ≥ 11 requiere
+Node ≥ 22.13** (`node:sqlite`). Los Dockerfiles usan `node:22-alpine` y el root
+`package.json` declara `engines.node: ">=22.13.0"`. Los workflows de GitHub Actions
+también usan Node 22. No bajar a Node 20 o el `pnpm install` en el contenedor
+fallará con `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`.
+
+## Detalles del build web (standalone + Prisma)
+
+- El stage `builder` copia además `package.json`, `pnpm-workspace.yaml`,
+  `pnpm-lock.yaml` y `tsconfig.json` (el tsconfig de `apps/web` extiende
+  `../../tsconfig.json`).
+- `apps/web/next.config.mjs` incluye `@ifpc/database` en `transpilePackages`
+  (publica fuentes TS).
+- El output standalone no traza el query engine de Prisma
+  (`libquery_engine-linux-musl-openssl-3.0.x.so.node`). El Dockerfile lo copia a
+  `/app/prisma-engines` y apunta `PRISMA_QUERY_ENGINE_LIBRARY`.
+
+## Estado aplicado (2026-08)
+
+- **Web**: servicio `IFPC`, online, dominio `https://ifpc-production-0c78.up.railway.app`.
+- **PostgreSQL**: plugin `Postgres` (postgres-ssl:18), volumen `postgres-volume`,
+  `DATABASE_URL` inyectado al servicio web.
+- **Variables en web**: `USE_PGLITE=false`, `DATABASE_URL`, `AUTH_SECRET`,
+  `NEXT_PUBLIC_APP_URL` (dominio público). `RESEND_API_KEY`, `STRIPE_*` y `S3_*`
+  quedan pendientes (opcionales, según funcionalidades activadas).
+- **Worker**: pendiente de desplegar — requiere crear el servicio desde el dashboard
+  con *Dockerfile Path* `infrastructure/docker/Dockerfile.worker` y un plugin Redis
+  (`REDIS_URL`). El web actualmente inserta notificaciones de forma síncrona
+  (`notifyUser`), así que no depende de Redis.
 
 ## Build local de los Dockerfiles (validación)
 
