@@ -6,12 +6,12 @@
 Submission → Trial → Negotiation → Contract
 ```
 
-## Modelos
+## Models
 
-- **Submission**: jugador + club + agente (opcional) + etapa + estado.
+- **Submission**: player + club + agent (optional) + stage + status.
 - **Trial**: fechas, ubicación, estado (SCHEDULED/COMPLETED/CANCELLED/NO_SHOW).
-- **Negotiation**: oferta (importe + divisa) y estado.
-- **Contract**: salario, vigencia, estado de firma, `signedAt`.
+- **Negotiation**: offer (amount + currency) and status.
+- **Contract**: salary, duration, signing status, `signedAt`.
 
 ## Acciones
 
@@ -19,6 +19,6 @@ Submission → Trial → Negotiation → Contract
 - `addPlayerAction` (agente): vincula un jugador por email.
 - El detalle de envío muestra el **pipeline de etapas** y enlaza a cada registro.
 
-## Administración
+## Administration
 
 - `AdminRecruitmentPage` resume las 4 etapas con listados recientes.

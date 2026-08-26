@@ -23,7 +23,7 @@ export default async function AdminPlayersActivePage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Jugadores activos"
-        subtitle="Perfiles activos y disponibles para reclutamiento"
+        subtitle="Profilees activos y disponibles para reclutamiento"
         icon="whistle"
       />
       <PlayerFilterLinks />
@@ -31,7 +31,7 @@ export default async function AdminPlayersActivePage() {
       {players.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay jugadores activos.</p>
+            <p className="text-sm text-muted-foreground">No active players.</p>
           </CardContent>
         </Card>
       ) : (

@@ -57,14 +57,14 @@ export async function GET() {
   return NextResponse.json({ ok: true, sessions });
 }
 
-/** POST /api/live-sessions — crea una sesión (admin o coach). */
+/** POST /api/live-sessions — creates a session (admin or coach). */
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
     return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
   }
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const title = stringField(body, 'title');
   if (!title) return badRequest('title es obligatorio');

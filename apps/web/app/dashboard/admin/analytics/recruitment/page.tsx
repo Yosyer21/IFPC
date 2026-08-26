@@ -23,7 +23,7 @@ export default async function AdminAnalyticsRecruitmentPage() {
   ]);
 
   const pipeline = [
-    { label: 'Envíos', value: submissions.length },
+    { label: 'Submissions', value: submissions.length },
     { label: 'Pruebas', value: trials.length },
     { label: 'Negociaciones', value: negotiations.length },
     { label: 'Contratos', value: contracts.length },
@@ -48,12 +48,12 @@ export default async function AdminAnalyticsRecruitmentPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Analytics de reclutamiento"
-        subtitle="Embudo del pipeline y conversión entre etapas"
+        subtitle="Pipeline funnel and conversion between stages"
         icon="trending"
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard href="/dashboard/admin/recruitment" icon={IconUsers} label="Envíos" value={submissions.length} />
+        <StatCard href="/dashboard/admin/recruitment" icon={IconUsers} label="Submissions" value={submissions.length} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconTarget} label="Pruebas" value={trials.length} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Negociaciones" value={negotiations.length} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Contratos" value={contracts.length} />
@@ -68,13 +68,13 @@ export default async function AdminAnalyticsRecruitmentPage() {
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Conversión entre etapas</h2>
+            <h2 className="mb-4 font-semibold">Conversion between stages</h2>
             <div className="flex flex-col gap-4">
               {[
-                ['Envíos → Pruebas', conversion(submissions.length, trials.length)],
+                ['Submissions → Trials', conversion(submissions.length, trials.length)],
                 ['Pruebas → Negociaciones', conversion(trials.length, negotiations.length)],
                 ['Negociaciones → Contratos', conversion(negotiations.length, contracts.length)],
-                ['Envíos aceptados', conversion(submissions.length, acceptedSubmissions)],
+                ['Accepted submissions', conversion(submissions.length, acceptedSubmissions)],
                 ['Negociaciones aceptadas', conversion(negotiations.length, acceptedNegotiations)],
                 ['Contratos firmados', conversion(contracts.length, signedContracts)],
               ].map(([label, percent]) => (
@@ -98,7 +98,7 @@ export default async function AdminAnalyticsRecruitmentPage() {
 
       <Card className="mt-4">
         <CardContent>
-          <h2 className="mb-4 font-semibold">Actividad (envíos + pruebas) por mes</h2>
+          <h2 className="mb-4 font-semibold">Activity (submissions + trials) per month</h2>
           <CountsBars items={monthly} />
         </CardContent>
       </Card>

@@ -4,13 +4,13 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Nivel técnico' };
+export const metadata: Metadata = { title: 'Technical level' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológico',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function PlayerTechnicalPage() {
@@ -27,13 +27,13 @@ export default async function PlayerTechnicalPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-2xl font-bold">Nivel técnico</h1>
+      <h1 className="mb-6 text-2xl font-bold">Technical level</h1>
       {evaluations.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no tienes evaluaciones. Cuando tu entrenador u ojeadores te evalúen, sus notas
-              aparecerán aquí.
+              You have no assessments yet. When your coach or scouts assess you, their notes
+              will appear here.
             </p>
           </CardContent>
         </Card>

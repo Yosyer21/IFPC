@@ -23,7 +23,7 @@ async function main() {
       cleaned += 1;
     }
   }
-  console.log(`Archivos huérfanos eliminados: ${cleaned}`);
+  console.log(`Orphan files cleaned: ${cleaned}`);
 }
 
 main()

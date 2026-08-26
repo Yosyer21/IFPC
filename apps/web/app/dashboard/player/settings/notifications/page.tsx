@@ -21,15 +21,15 @@ export default async function PlayerNotificationSettingsPage() {
 
       <Card>
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-          <p>Recibirás avisos dentro de la plataforma para eventos como:</p>
+          <p>You will receive notifications within the platform for events such as:</p>
           <ul className="list-inside list-disc">
             <li>Respuesta de un club a tu solicitud</li>
-            <li>Nuevas oportunidades que encajan con tu perfil</li>
+            <li>New opportunities that match your profile</li>
             <li>Resultados de pruebas y evaluaciones</li>
             <li>Mensajes de ojeadores y agentes</li>
           </ul>
           <p>
-            Las preferencias de canal (email/push) se configurarán en próximas fases. Los avisos
+            Channel preferences (email/push) will be configured in upcoming phases. Notifications
             actuales aparecen en <Link href="/dashboard/player/notifications" className="text-primary hover:underline">Notificaciones</Link>.
           </p>
         </CardContent>

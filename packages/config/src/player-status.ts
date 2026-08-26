@@ -2,8 +2,8 @@ export const PLAYER_STATUSES = ['PENDING_VERIFICATION', 'ACTIVE', 'AVAILABLE', '
 export type PlayerStatus = (typeof PLAYER_STATUSES)[number];
 
 export const PLAYER_STATUS_LABELS: Record<PlayerStatus, string> = {
-  PENDING_VERIFICATION: 'Pendiente de verificación',
-  ACTIVE: 'Activo',
-  AVAILABLE: 'Disponible',
-  INACTIVE: 'Inactivo',
+  PENDING_VERIFICATION: 'Pending verification',
+  ACTIVE: 'Active',
+  AVAILABLE: 'Available',
+  INACTIVE: 'Inactive',
 };

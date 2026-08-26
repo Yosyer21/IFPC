@@ -56,7 +56,7 @@ export default async function UniversityDashboardPage() {
     {
       href: '/dashboard/university/players',
       icon: IconUsers,
-      label: 'Jugadores disponibles',
+      label: 'Available players',
       value: availablePlayers.length,
     },
     {
@@ -74,7 +74,7 @@ export default async function UniversityDashboardPage() {
     {
       href: '/dashboard/university/opportunities',
       icon: IconStar,
-      label: 'Solicitudes a becas',
+      label: 'Applications a becas',
       value: scholarshipApplications,
     },
   ];
@@ -103,13 +103,13 @@ export default async function UniversityDashboardPage() {
     },
   ];
 
-  // Acciones pendientes
+  // Pending actions
   const pendingActions: { href: string; icon: typeof IconBell; text: string; meta: string }[] = [];
   if (expiringScholarships.length > 0) {
     pendingActions.push({
       href: '/dashboard/university/opportunities',
       icon: IconBook,
-      text: `${expiringScholarships.length} beca${expiringScholarships.length === 1 ? '' : 's'} cierra${expiringScholarships.length === 1 ? '' : 'n'} en los próximos 7 días`,
+      text: `${expiringScholarships.length} scholarship${expiringScholarships.length === 1 ? '' : 's'} close${expiringScholarships.length === 1 ? 's' : ''} in the next 7 days`,
       meta: 'Ver plazos',
     });
   }
@@ -141,7 +141,7 @@ export default async function UniversityDashboardPage() {
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {university.city ? `${university.city}, ` : ''}
-              {university.country} · Portal académico-deportivo
+              {university.country} · Academic-sports portal
               {openOpportunities.length > 0
                 ? ` · ${openOpportunities.length} oportunidad${openOpportunities.length === 1 ? '' : 'es'} para tus candidatos`
                 : ''}
@@ -152,7 +152,7 @@ export default async function UniversityDashboardPage() {
               href="/dashboard/university/players"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Ver jugadores
+              View players
             </Link>
             <Link
               href="/dashboard/university/opportunities"
@@ -187,14 +187,14 @@ export default async function UniversityDashboardPage() {
         </div>
       </section>
 
-      {/* Alerta dinámica */}
+      {/* Dynamic alert */}
       {pendingActions.length > 0 ? (
         <div className="animate-fade-up mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            Tienes <strong>{pendingActions.length} novedad{pendingActions.length === 1 ? '' : 'es'}</strong> en tu portal universitario.
+            You have <strong>{pendingActions.length} novedad{pendingActions.length === 1 ? '' : 'es'}</strong> en tu portal universitario.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -209,7 +209,7 @@ export default async function UniversityDashboardPage() {
             <IconShield className="h-4 w-4" />
           </span>
           <p className="text-sm text-emerald-100">
-            Todo al día. No hay novedades en tu portal universitario.
+            All caught up. No updates in your university portal.
           </p>
         </div>
       )}
@@ -224,9 +224,9 @@ export default async function UniversityDashboardPage() {
       <Card className="animate-fade-up mb-6" style={{ animationDelay: '320ms' }}>
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold">Reclutamiento universitario</h2>
+            <h2 className="font-semibold">University recruitment</h2>
             <Link href="/dashboard/university/players" className="text-sm text-primary hover:underline">
-              Explorar jugadores →
+              Explore players →
             </Link>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -260,14 +260,14 @@ export default async function UniversityDashboardPage() {
         <Card className="animate-fade-up" style={{ animationDelay: '440ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Jugadores disponibles</h2>
+              <h2 className="font-semibold">Available players</h2>
               <Link href="/dashboard/university/players" className="text-sm text-primary hover:underline">
                 Ver todos →
               </Link>
             </div>
             {availablePlayers.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No hay jugadores disponibles en este momento.
+                No players available right now.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -275,7 +275,7 @@ export default async function UniversityDashboardPage() {
                   const positionLabel = player.position
                     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                       player.position)
-                    : 'Sin posición';
+                    : 'No position';
                   return (
                     <div
                       key={player.id}
@@ -304,7 +304,7 @@ export default async function UniversityDashboardPage() {
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Oportunidades destacadas</h2>
+              <h2 className="font-semibold">Featured opportunities</h2>
               <Link href="/dashboard/university/opportunities" className="text-sm text-primary hover:underline">
                 Ver todas →
               </Link>

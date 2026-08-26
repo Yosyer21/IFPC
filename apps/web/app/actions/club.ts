@@ -30,7 +30,7 @@ export async function createOpportunityAction(
 ): Promise<ActionState> {
   const club = await getClub();
   if (!club) {
-    return { error: 'Club no válido.' };
+    return { error: 'Invalid club.' };
   }
 
   const parsed = opportunitySchema.safeParse({
@@ -65,12 +65,12 @@ export async function createRequirementAction(
 ): Promise<ActionState> {
   const club = await getClub();
   if (!club) {
-    return { error: 'Club no válido.' };
+    return { error: 'Invalid club.' };
   }
 
   const title = str(formData, 'title');
   if (!title) {
-    return { error: 'El título es obligatorio.' };
+    return { error: 'Title is required.' };
   }
 
   try {
@@ -120,7 +120,7 @@ export async function respondInquiryAction(
 ): Promise<ActionState> {
   const club = await getClub();
   if (!club) {
-    return { error: 'Club no válido.' };
+    return { error: 'Invalid club.' };
   }
   const inquiryId = str(formData, 'inquiryId');
   const response = str(formData, 'response');
@@ -146,7 +146,7 @@ export async function inviteStaffAction(
 ): Promise<ActionState> {
   const club = await getClub();
   if (!club) {
-    return { error: 'Club no válido.' };
+    return { error: 'Invalid club.' };
   }
   const email = str(formData, 'email');
   const role = str(formData, 'role') ?? 'STAFF';

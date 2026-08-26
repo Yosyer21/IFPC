@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   if (session.user.role !== 'ADMIN') return forbidden();
 
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const name = stringField(body, 'name');
   const country = stringField(body, 'country');

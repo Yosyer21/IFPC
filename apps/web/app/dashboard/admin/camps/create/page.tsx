@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { createCampAction } from '@/app/actions/admin';
 import { CAMP_STATUS_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Nuevo camp' };
+export const metadata: Metadata = { title: 'New camp' };
 
 export default async function AdminCampCreatePage() {
   const session = await auth();
@@ -29,8 +29,8 @@ export default async function AdminCampCreatePage() {
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader
-        title="Nuevo camp"
-        subtitle="Crea un campus, clinic o concentración"
+        title="New camp"
+        subtitle="Create a camp, clinic or training stint"
         icon="trophy"
       >
         <Link
@@ -45,7 +45,7 @@ export default async function AdminCampCreatePage() {
         <CardContent>
           <form action={createCampAction} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="text-sm">
-              Título *
+              Title *
               <input
                 required
                 name="title"
@@ -68,12 +68,12 @@ export default async function AdminCampCreatePage() {
               </select>
             </label>
             <label className="text-sm sm:col-span-2">
-              Descripción
+              Description
               <textarea
                 name="description"
                 rows={3}
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
-                placeholder="Objetivos, metodología, plazas…"
+                placeholder="Goals, methodology, spots…"
               />
             </label>
             <label className="text-sm">
@@ -94,11 +94,11 @@ export default async function AdminCampCreatePage() {
               />
             </label>
             <label className="text-sm">
-              País
+              Country
               <input
                 name="country"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
-                placeholder="España"
+                placeholder="Spain"
               />
             </label>
             <label className="text-sm">
@@ -119,7 +119,7 @@ export default async function AdminCampCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Precio (en céntimos, 29900 = 299 €)
+              Price (in cents, 29900 = €299)
               <input
                 type="number"
                 name="price"

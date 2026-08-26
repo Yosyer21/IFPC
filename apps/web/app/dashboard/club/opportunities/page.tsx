@@ -37,7 +37,7 @@ export default async function ClubOpportunitiesPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has publicado oportunidades.
+              You haven't posted opportunities yet.
             </p>
           </CardContent>
         </Card>
@@ -60,7 +60,7 @@ export default async function ClubOpportunitiesPage() {
                 </div>
                 <h2 className="font-semibold">{opportunity.title}</h2>
                 <p className="text-sm text-muted-foreground">
-                  {opportunity.position ? `Posición: ${opportunity.position}` : 'Posición libre'}
+                  {opportunity.position ? `Position: ${opportunity.position}` : 'Open position'}
                   {opportunity.location ? ` · ${opportunity.location}` : ''}
                 </p>
                 <p className="text-xs text-muted-foreground">

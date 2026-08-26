@@ -3,8 +3,8 @@ import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
- * GET /api/media — listado de vídeos (alias de `/api/videos`).
- * - Jugador: sus vídeos.
+ * GET /api/media — video listing (alias of `/api/videos`).
+ * - Player: their videos.
  * - Admin: todos.
  */
 export async function GET() {

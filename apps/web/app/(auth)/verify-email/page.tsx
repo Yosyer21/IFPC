@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { prisma } from '@ifpc/database';
 import { Badge } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Verifica tu email' };
+export const metadata: Metadata = { title: 'Verify your email' };
 
 export default async function VerifyEmailPage({
   searchParams,
@@ -21,9 +21,9 @@ export default async function VerifyEmailPage({
     const record = await prisma.emailVerificationToken.findUnique({ where: { tokenHash } });
 
     if (!record || record.usedAt) {
-      error = 'El enlace no es válido o ya ha sido utilizado.';
+      error = 'The link is not valid or has already been used.';
     } else if (record.expiresAt < new Date()) {
-      error = 'El enlace ha caducado. Solicita uno nuevo desde tu cuenta.';
+      error = 'The link has expired. Request a new one from your account.';
     } else {
       await prisma.$transaction([
         prisma.user.update({
@@ -38,31 +38,31 @@ export default async function VerifyEmailPage({
       verified = true;
     }
   } else {
-    error = 'Falta el enlace de verificación. Revisa tu email o solicítalo de nuevo.';
+    error = 'Missing verification link. Check your email or request it again.';
   }
 
   return (
     <div className="text-center">
       {verified ? (
         <>
-          <Badge variant="success">Email verificado</Badge>
-          <h1 className="mb-4 mt-4 text-2xl font-bold">¡Tu email está confirmado!</h1>
+          <Badge variant="success">Email verified</Badge>
+          <h1 className="mb-4 mt-4 text-2xl font-bold">Your email is confirmed!</h1>
           <p className="mb-6 text-muted-foreground">
-            Ya puedes usar todas las funciones de IFPC.
+            You can now use all IFPC features.
           </p>
           <Link
             href="/dashboard"
             className="inline-block rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Ir a mi área
+            Go to my area
           </Link>
         </>
       ) : (
         <>
-          <h1 className="mb-4 text-2xl font-bold">No se pudo verificar el email</h1>
+          <h1 className="mb-4 text-2xl font-bold">Could not verify the email</h1>
           <p className="mb-6 text-muted-foreground">{error}</p>
           <Link href="/login" className="text-sm hover:underline">
-            Ir a iniciar sesión
+            Go to sign in
           </Link>
         </>
       )}

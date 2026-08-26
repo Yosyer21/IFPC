@@ -42,7 +42,7 @@ export default async function AdminAnalyticsPlayersPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Analytics de jugadores"
-        subtitle="Distribución de perfiles y evolución de registros"
+        subtitle="Profile distribution and registration growth"
         icon="trending"
       />
 
@@ -56,13 +56,13 @@ export default async function AdminAnalyticsPlayersPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Por estado</h2>
+            <h2 className="mb-4 font-semibold">By status</h2>
             <CountsBars items={byStatus} />
           </CardContent>
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Por posición</h2>
+            <h2 className="mb-4 font-semibold">By position</h2>
             {byPosition.length === 0 ? (
               <p className="text-sm text-muted-foreground">Sin posiciones registradas.</p>
             ) : (
@@ -74,7 +74,7 @@ export default async function AdminAnalyticsPlayersPage() {
 
       <Card className="mt-4">
         <CardContent>
-          <h2 className="mb-4 font-semibold">Registros por mes</h2>
+          <h2 className="mb-4 font-semibold">Monthly registrations</h2>
           <CountsBars items={monthly} />
         </CardContent>
       </Card>

@@ -29,12 +29,12 @@ export async function createScoutingReportAction(
 ): Promise<ActionState> {
   const scout = await getScout();
   if (!scout) {
-    return { error: 'Ojeador no válido.' };
+    return { error: 'Invalid scout.' };
   }
   const playerId = str(formData, 'playerId');
   const rating = num(formData, 'rating');
   if (!playerId || rating === null || rating < 1 || rating > 10) {
-    return { error: 'Datos del informe no válidos.' };
+    return { error: 'Invalid report data.' };
   }
 
   try {

@@ -25,18 +25,18 @@ export default async function AdminClubsPendingPage() {
         href="/dashboard/admin/clubs"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Todos los clubes
+        ← All clubs
       </Link>
       <PageHeader
         title="Clubes pendientes"
-        subtitle="Entidades que esperan verificación del administrador"
+        subtitle="Entities awaiting admin verification"
         icon="briefcase"
       />
 
       {clubs.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay clubes pendientes de verificación.</p>
+            <p className="text-sm text-muted-foreground">No clubs pending verification.</p>
           </CardContent>
         </Card>
       ) : (

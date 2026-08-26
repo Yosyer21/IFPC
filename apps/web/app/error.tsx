@@ -8,8 +8,8 @@ export default function ErrorPage({
 }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 text-center">
-      <h1 className="text-2xl font-bold">Algo salió mal</h1>
-      <p className="text-muted-foreground">Ocurrió un error inesperado en la aplicación.</p>
+      <h1 className="text-2xl font-bold">Something went wrong</h1>
+      <p className="text-muted-foreground">An unexpected error occurred in the application.</p>
       <button
         type="button"
         onClick={reset}

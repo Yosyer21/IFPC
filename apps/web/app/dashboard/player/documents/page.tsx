@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Mis documentos' };
 const TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
   contract: 'Contrato',
-  medical: 'Médico',
+  medical: 'Medical',
   other: 'Otro',
 };
 
@@ -43,7 +43,7 @@ export default async function PlayerDocumentsPage() {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               No tienes documentos subidos. Tus documentos (pasaporte, contrato, certificado
-              médico…) aparecerán aquí.
+              medical…) will appear here.
             </p>
           </CardContent>
         </Card>

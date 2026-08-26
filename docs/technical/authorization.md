@@ -13,6 +13,6 @@ RBAC basado en el rol de la sesión (`packages/auth/src/permissions.ts`).
 Las consultas filtran por el recurso del usuario (ej. `prisma.video.findFirst({ where: { id, player: { userId } } })`)
 para impedir accesos cruzados aunque se conozca el ID.
 
-## Administración
+## Administration
 
 Las acciones de admin comprueban `session.user.role === 'ADMIN'` antes de ejecutar.

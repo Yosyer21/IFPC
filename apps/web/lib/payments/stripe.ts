@@ -29,8 +29,8 @@ export interface CheckoutSession {
 }
 
 /**
- * Crea una Checkout Session de Stripe (modo payment) para una membresía.
- * Devuelve `null` si Stripe no está configurado.
+ * Creates a Stripe Checkout Session (payment mode) for a membership.
+ * Returns `null` if Stripe is not configured.
  */
 export async function createCheckoutSession(input: {
   tier: 'PREMIUM' | 'SCOUT' | 'CLUB';
@@ -40,7 +40,7 @@ export async function createCheckoutSession(input: {
   if (!stripeConfigured() || !SECRET_KEY) return null;
 
   const tier = MEMBERSHIP_TIERS[input.tier];
-  if (!tier) throw new Error('Tier de membresía no válido');
+  if (!tier) throw new Error('Invalid membership tier');
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
   const body = new URLSearchParams({
@@ -52,8 +52,8 @@ export async function createCheckoutSession(input: {
     'line_items[0][quantity]': '1',
     'line_items[0][price_data][currency]': tier.currency,
     'line_items[0][price_data][unit_amount]': String(tier.priceCents),
-    'line_items[0][price_data][product_data][name]': `Membresía ${tier.label}`,
-    'line_items[0][price_data][product_data][description]': `Suscripción anual ${tier.label} en IFPC`,
+    'line_items[0][price_data][product_data][name]': `${tier.label} membership`,
+    'line_items[0][price_data][product_data][description]': `Annual ${tier.label} subscription on IFPC`,
     'metadata[tier]': tier.id,
   });
 

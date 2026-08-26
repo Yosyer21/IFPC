@@ -5,33 +5,33 @@ import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
   title: 'Rutas de desarrollo — IFPC',
-  description: 'El camino del jugador: de categoría base a profesional y universitario.',
+  description: 'The player\u2019s journey: from youth level to professional and collegiate.',
 };
 
 const STAGES = [
   {
     id: 'base',
-    title: 'Categoría base',
-    age: '6–14 años',
-    focus: 'Técnica individual, coordinación y hábitos de entrenamiento.',
+    title: 'Youth level',
+    age: '6–14 years',
+    focus: 'Individual technique, coordination and training habits.',
   },
   {
     id: 'formacion',
-    title: 'Formación',
-    age: '14–17 años',
-    focus: 'Táctica, físico y competición. Primeros trials y visorías.',
+    title: 'Training',
+    age: '14–17 years',
+    focus: 'Tactics, physical and competition. First trials and showcases.',
   },
   {
     id: 'profesional',
     title: 'Pre-profesional',
-    age: '17–21 años',
+    age: '17–21 years',
     focus: 'Rendimiento, becas universitarias y primeros contratos.',
   },
   {
     id: 'universitario',
     title: 'Universitario / Pro',
-    age: '18+ años',
-    focus: 'Becas académico-deportivas o contratos profesionales.',
+    age: '18+ years',
+    focus: 'Academic-sports scholarships or professional contracts.',
   },
 ];
 
@@ -47,7 +47,7 @@ export default function PathwaysPage() {
           <h1 className="mt-2 text-4xl font-bold tracking-tight">El camino del jugador</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
             Cada jugador avanza por etapas. IFPC estructura ese recorrido con evaluaciones,
-            objetivos y oportunidades: desde la primera escuela de fútbol hasta la beca universitaria
+            goals and opportunities: from the first football school to the university scholarship
             o el contrato profesional.
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function PathwaysPage() {
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center">
           <h2 className="text-2xl font-bold">Empieza tu ruta hoy</h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
-            Crea tu perfil y recibe un plan de desarrollo adaptado a tu etapa y posición.
+            Create your profile and receive a development plan tailored to your stage and position.
           </p>
           <Link
             href="/register"

@@ -12,16 +12,16 @@ export default function ForgotPasswordPage() {
 
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">Recuperar contraseña</h1>
+      <h1 className="mb-2 text-2xl font-bold">Recover password</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Introduce tu email y te enviaremos un enlace para restablecerla.
+        Enter your email and we will send you a link to reset it.
       </p>
       <form action={formAction} className="flex flex-col gap-4">
-        <Input name="email" type="email" label="Email" placeholder="tu@email.com" required />
+        <Input name="email" type="email" label="Email" placeholder="you@email.com" required />
         {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
         {state.success ? <p className="text-sm text-emerald-600">{state.success}</p> : null}
         <Button type="submit" disabled={pending}>
-          {pending ? 'Enviando…' : 'Enviar enlace'}
+          {pending ? 'Sending…' : 'Send link'}
         </Button>
       </form>
     </div>

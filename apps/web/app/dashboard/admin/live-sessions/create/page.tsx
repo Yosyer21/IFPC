@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { createLiveSessionAction } from '@/app/actions/admin';
 import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Nueva sesión en vivo' };
+export const metadata: Metadata = { title: 'New live session' };
 
 export default async function AdminLiveSessionCreatePage() {
   const session = await auth();
@@ -29,7 +29,7 @@ export default async function AdminLiveSessionCreatePage() {
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader
-        title="Nueva sesión en vivo"
+        title="New live session"
         subtitle="Organiza un entrenamiento en directo, charla o prueba"
         icon="live"
       >
@@ -45,7 +45,7 @@ export default async function AdminLiveSessionCreatePage() {
         <CardContent>
           <form action={createLiveSessionAction} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="text-sm sm:col-span-2">
-              Título *
+              Title *
               <input
                 required
                 name="title"
@@ -54,7 +54,7 @@ export default async function AdminLiveSessionCreatePage() {
               />
             </label>
             <label className="text-sm sm:col-span-2">
-              Descripción
+              Description
               <textarea
                 name="description"
                 rows={3}
@@ -107,7 +107,7 @@ export default async function AdminLiveSessionCreatePage() {
               />
             </label>
             <label className="text-sm sm:col-span-2">
-              Enlace de reunión (Zoom/Meet)
+              Meeting link (Zoom/Meet)
               <input
                 name="meetingUrl"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
@@ -140,7 +140,7 @@ export default async function AdminLiveSessionCreatePage() {
               type="submit"
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:col-span-2"
             >
-              Crear sesión
+              Create session
             </button>
           </form>
         </CardContent>

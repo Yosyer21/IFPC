@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
 /**
- * GET /api/auth — información de la sesión actual.
+ * GET /api/auth — current session information.
  * El flujo de login/register vive en Auth.js (`/api/auth/[...nextauth]`).
  */
 export async function GET() {

@@ -10,9 +10,9 @@ import { IconBook, IconPlay, IconStar, IconWhistle } from '@/components/dashboar
 export const metadata: Metadata = { title: 'Entrenamiento' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  'strength-conditioning': 'Fuerza y condición',
-  psychology: 'Psicología',
+  technical: 'Technique',
+  'strength-conditioning': 'Strength and conditioning',
+  psychology: 'Psychology',
 };
 
 export default async function CoachTrainingPage() {
@@ -37,14 +37,14 @@ export default async function CoachTrainingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Entrenamiento"
-        subtitle="Catálogo de ejercicios para planificar el desarrollo de tus jugadores"
+        subtitle="Exercise catalog to plan your players' development"
         icon="play"
       />
 
       <div className="mb-6 grid grid-cols-3 gap-4">
         <StatCard href="/dashboard/coach/training" icon={IconPlay} label="Ejercicios" value={content.length} />
-        <StatCard href="/dashboard/coach/training" icon={IconBook} label="Categorías" value={categories.size} />
-        <StatCard href="/dashboard/coach/players" icon={IconWhistle} label="Mis jugadores" value={totalPlayers} />
+        <StatCard href="/dashboard/coach/training" icon={IconBook} label="Categories" value={categories.size} />
+        <StatCard href="/dashboard/coach/players" icon={IconWhistle} label="My players" value={totalPlayers} />
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -62,7 +62,7 @@ export default async function CoachTrainingPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Todavía no hay contenido de entrenamiento publicado.
+              No training content published yet.
             </p>
           </CardContent>
         </Card>
@@ -86,7 +86,7 @@ export default async function CoachTrainingPage() {
                     {item.description}
                   </p>
                   <p className="mt-3 text-xs text-muted-foreground">
-                    {item.durationMinutes ? `${item.durationMinutes} min` : 'Sin duración'}
+                    {item.durationMinutes ? `${item.durationMinutes} min` : 'No duration'}
                   </p>
                 </CardContent>
               </Card>

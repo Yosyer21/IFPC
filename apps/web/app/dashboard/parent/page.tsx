@@ -21,10 +21,10 @@ import {
 export const metadata: Metadata = { title: 'Hub familiar' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function ParentDashboardPage() {
@@ -70,7 +70,7 @@ export default async function ParentDashboardPage() {
     (t) => t.startsAt.getTime() < Date.now() + 7 * 24 * 60 * 60 * 1000
   );
 
-  // Nivel agregado de los hijos por categoría
+  // Aggregated children level by category
   const byCategory = new Map<string, number[]>();
   for (const evaluation of evaluations) {
     const list = byCategory.get(evaluation.category) ?? [];
@@ -84,7 +84,7 @@ export default async function ParentDashboardPage() {
     radarValues.push(Math.round((scores.reduce((s, n) => s + n, 0) / scores.length) * 10) / 10);
   }
 
-  // Valoración media
+  // Average rating
   const overall =
     evaluations.length > 0
       ? Math.round((evaluations.reduce((sum, e) => sum + e.score, 0) / evaluations.length) * 10) /
@@ -107,7 +107,7 @@ export default async function ParentDashboardPage() {
     {
       href: '/dashboard/parent/children',
       icon: IconTarget,
-      label: 'Objetivos activos',
+      label: 'Goals activos',
       value: activeGoals,
     },
     {
@@ -118,13 +118,13 @@ export default async function ParentDashboardPage() {
     },
   ];
 
-  // Acciones pendientes
+  // Pending actions
   const pendingActions: { href: string; icon: typeof IconBell; text: string; meta: string }[] = [];
   if (upcomingTrials.length > 0) {
     pendingActions.push({
       href: '/dashboard/parent/children',
       icon: IconStar,
-      text: `${upcomingTrials.length} prueba${upcomingTrials.length === 1 ? '' : 's'} próxima${upcomingTrials.length === 1 ? '' : 's'} en los próximos 7 días`,
+      text: `${upcomingTrials.length} upcoming trial${upcomingTrials.length === 1 ? '' : 's'} in the next 7 days`,
       meta: 'Ver agenda',
     });
   }
@@ -158,7 +158,7 @@ export default async function ParentDashboardPage() {
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Acompañamiento familiar
+              Family support
               {children.length > 0
                 ? ` · ${children.length} hijo${children.length === 1 ? '' : 's'} en la plataforma`
                 : ' · vincula a tu hijo para seguir su desarrollo'}
@@ -169,13 +169,13 @@ export default async function ParentDashboardPage() {
               href="/dashboard/parent/children"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Mis hijos
+              My children
             </Link>
             <Link
               href="/dashboard/parent/education"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Guías para familias
+              Guides for families
             </Link>
           </div>
         </div>
@@ -183,10 +183,10 @@ export default async function ParentDashboardPage() {
         {/* Quick actions */}
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
-            { href: '/dashboard/parent/children', icon: IconUsers, label: 'Mis hijos' },
+            { href: '/dashboard/parent/children', icon: IconUsers, label: 'My children' },
             { href: '/dashboard/parent/opportunities', icon: IconTarget, label: 'Oportunidades' },
-            { href: '/dashboard/parent/education', icon: IconBook, label: 'Educación' },
-            { href: '/dashboard/parent/payments', icon: IconStar, label: 'Pagos' },
+            { href: '/dashboard/parent/education', icon: IconBook, label: 'Education' },
+            { href: '/dashboard/parent/payments', icon: IconStar, label: 'Payments' },
           ].map((action, i) => {
             const Icon = action.icon;
             return (
@@ -204,14 +204,14 @@ export default async function ParentDashboardPage() {
         </div>
       </section>
 
-      {/* Alerta dinámica */}
+      {/* Dynamic alert */}
       {pendingActions.length > 0 ? (
         <div className="animate-fade-up mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            Tienes <strong>{pendingActions.length} novedad{pendingActions.length === 1 ? '' : 'es'}</strong> para revisar en el hub familiar.
+            You have <strong>{pendingActions.length} novedad{pendingActions.length === 1 ? '' : 'es'}</strong> para revisar en el hub familiar.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -226,7 +226,7 @@ export default async function ParentDashboardPage() {
             <IconShield className="h-4 w-4" />
           </span>
           <p className="text-sm text-emerald-100">
-            Todo al día. No hay novedades pendientes en el hub familiar.
+            All caught up. No pending updates in the family hub.
           </p>
         </div>
       )}
@@ -242,7 +242,7 @@ export default async function ParentDashboardPage() {
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '320ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Nivel de tu hijo por categoría</h2>
+              <h2 className="font-semibold">Your child's level by category</h2>
               {evaluations.length > 0 ? (
                 <Link href="/dashboard/parent/children" className="text-sm text-primary hover:underline">
                   Ver detalle →
@@ -259,8 +259,8 @@ export default async function ParentDashboardPage() {
                   <IconWhistle className="h-7 w-7" />
                 </span>
                 <p className="max-w-xs text-sm text-muted-foreground">
-                  Cuando el entrenador evalúe a tu hijo, verás aquí su nivel técnico, físico,
-                  táctico y psicológico.
+                  When the coach assesses your child, you will see here their technical, physical,
+                  tactical and psychological level.
                 </p>
               </div>
             )}
@@ -269,7 +269,7 @@ export default async function ParentDashboardPage() {
 
         <Card className="animate-fade-up flex flex-col items-center" style={{ animationDelay: '400ms' }}>
           <CardContent className="flex w-full flex-col items-center gap-4">
-            <h2 className="self-start font-semibold">Valoración media de tu hijo</h2>
+            <h2 className="self-start font-semibold">Your child's average rating</h2>
             {overall !== null ? (
               <>
                 <DonutChart
@@ -283,18 +283,18 @@ export default async function ParentDashboardPage() {
               </>
             ) : (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                Sin evaluaciones todavía.
+                No assessments yet.
               </p>
             )}
           </CardContent>
         </Card>
       </div>
-      {/* Mis hijos + actividad reciente */}
+      {/* My children + actividad reciente */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up" style={{ animationDelay: '480ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Mis hijos</h2>
+              <h2 className="font-semibold">My children</h2>
               <Link href="/dashboard/parent/children" className="text-sm text-primary hover:underline">
                 Ver todos →
               </Link>
@@ -309,7 +309,7 @@ export default async function ParentDashboardPage() {
                   const positionLabel = player.position
                     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                       player.position)
-                    : 'Sin posición';
+                    : 'No position';
                   return (
                     <Link
                       key={player.id}
@@ -336,10 +336,10 @@ export default async function ParentDashboardPage() {
 
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '560ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Actividad reciente</h2>
+            <h2 className="mb-4 font-semibold">Recent activity</h2>
             {recentEvals.length === 0 && recentTrials.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Cuando haya evaluaciones, pruebas u oportunidades, aparecerán aquí.
+                When there are assessments, trials or opportunities, they will appear here.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">
@@ -381,18 +381,18 @@ export default async function ParentDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      {/* Pagos */}
+      {/* Payments */}
       <Card className="animate-fade-up mt-6" style={{ animationDelay: '640ms' }}>
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold">Tus pagos</h2>
+            <h2 className="font-semibold">Your payments</h2>
             <Link href="/dashboard/parent/payments" className="text-sm text-primary hover:underline">
               Ver historial →
             </Link>
           </div>
           {payments.length === 0 ? (
             <p className="py-4 text-center text-sm text-muted-foreground">
-              No hay pagos registrados en tu cuenta.
+              No payments recorded in your account.
             </p>
           ) : (
             <div className="flex flex-col divide-y divide-border/60">

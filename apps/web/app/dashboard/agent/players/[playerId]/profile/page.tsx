@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Perfil del jugador' };
+export const metadata: Metadata = { title: 'Profile del jugador' };
 
 export default async function AgentPlayerProfilePage({
   params,
@@ -42,16 +42,16 @@ export default async function AgentPlayerProfilePage({
       >
         ← Jugador
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Perfil</h1>
+      <h1 className="mb-6 text-2xl font-bold">Profile</h1>
       <Card>
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
               ['Nombre', `${player.firstName} ${player.lastName}`],
               ['Email', player.user.email],
-              ['Posición', positionLabel],
+              ['Position', positionLabel],
               ['Nacionalidad', player.nationality ?? '—'],
-              ['Pierna hábil', player.foot ?? '—'],
+              ['Preferred foot', player.foot ?? '—'],
               ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
               ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
               ['Club actual', player.clubName ?? '—'],

@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Negociación' };
+export const metadata: Metadata = { title: 'Negotiation' };
 
 export default async function AgentNegotiationDetailPage({
   params,
@@ -31,9 +31,9 @@ export default async function AgentNegotiationDetailPage({
         href="/dashboard/agent/submissions"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Envíos
+        ← Submissions
       </Link>
-      <h1 className="mb-4 text-2xl font-bold">Negociación</h1>
+      <h1 className="mb-4 text-2xl font-bold">Negotiation</h1>
 
       <Card>
         <CardContent>
@@ -45,7 +45,7 @@ export default async function AgentNegotiationDetailPage({
               [
                 'Oferta',
                 negotiation.offerAmount
-                  ? `${negotiation.offerAmount.toLocaleString('es')} ${negotiation.currency}`
+                  ? `${negotiation.offerAmount.toLocaleString('en')} ${negotiation.currency}`
                   : '—',
               ],
             ].map(([label, value]) => (

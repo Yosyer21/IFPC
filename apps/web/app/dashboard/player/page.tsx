@@ -21,26 +21,26 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Mi área' };
+export const metadata: Metadata = { title: 'My area' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pendiente',
   in_progress: 'En curso',
-  completed: 'Completado',
+  completed: 'Completed',
 };
 
 function greeting(): string {
   const hour = new Date().getHours();
-  if (hour < 12) return 'Buenos días';
-  if (hour < 20) return 'Buenas tardes';
-  return 'Buenas noches';
+  if (hour < 12) return 'Good morning';
+  if (hour < 20) return 'Good afternoon';
+  return 'Good evening';
 }
 
 export default async function PlayerDashboardPage() {
@@ -74,7 +74,7 @@ export default async function PlayerDashboardPage() {
     (PLAYER_STATUS_LABELS as Record<string, string | undefined>)[player.status] ?? player.status;
   const positionLabel = player.position
     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position)
-    : 'Sin posición definida';
+    : 'No position defined';
   const competitionLabel = player.competitionLevel
     ? ((COMPETITION_LEVEL_LABELS as Record<string, string | undefined>)[player.competitionLevel] ??
       player.competitionLevel)
@@ -97,7 +97,7 @@ export default async function PlayerDashboardPage() {
   const completedFields = fields.filter(Boolean).length;
   const percent = Math.round((completedFields / fields.length) * 100);
 
-  // Media por categoría para el radar
+  // Average by category para el radar
   const byCategory = new Map<string, number[]>();
   for (const evaluation of evaluations) {
     const list = byCategory.get(evaluation.category) ?? [];
@@ -112,15 +112,15 @@ export default async function PlayerDashboardPage() {
   }
 
   const stats = [
-    { href: '/dashboard/player/videos', icon: IconVideo, label: 'Vídeos', value: videos },
-    { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Objetivos activos', value: pendingGoals },
+    { href: '/dashboard/player/videos', icon: IconVideo, label: 'Videos', value: videos },
+    { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluations.length },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Oportunidades abiertas', value: opportunities },
   ];
 
   const quickActions = [
     { href: '/dashboard/player/training', icon: IconPlay, label: 'Entrenar' },
-    { href: '/dashboard/player/videos/upload', icon: IconVideo, label: 'Subir vídeo' },
+    { href: '/dashboard/player/videos/upload', icon: IconVideo, label: 'Upload video' },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Buscar oportunidades' },
     { href: '/dashboard/player/pathway', icon: IconRoute, label: 'Mi ruta' },
   ];
@@ -137,7 +137,7 @@ export default async function PlayerDashboardPage() {
       key: evaluation.id,
       icon: IconWhistle,
       title: CATEGORY_LABELS[evaluation.category] ?? evaluation.category,
-      meta: `Evaluación · ${evaluation.score}/10${
+      meta: `Assessment · ${evaluation.score}/10${
         evaluation.evaluatedBy ? ` · ${evaluation.evaluatedBy}` : ''
       }`,
       date: evaluation.createdAt,
@@ -177,13 +177,13 @@ export default async function PlayerDashboardPage() {
               href="/dashboard/player/profile/edit"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Editar perfil
+              Edit profile
             </Link>
             <Link
               href="/dashboard/player/scouting"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Ver perfil público
+              View public profile
             </Link>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default async function PlayerDashboardPage() {
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '320ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Nivel por categoría</h2>
+              <h2 className="font-semibold">Level by category</h2>
               {evaluations.length > 0 ? (
                 <Link
                   href="/dashboard/player/development/evaluations"
@@ -238,8 +238,8 @@ export default async function PlayerDashboardPage() {
                   <IconWhistle className="h-7 w-7" />
                 </span>
                 <p className="max-w-xs text-sm text-muted-foreground">
-                  Cuando tu entrenador u ojeadores te evalúen, aquí verás tu nivel técnico, físico,
-                  táctico y psicológico.
+                  When your coach or scouts assess you, you will see here your technical, physical,
+                  tactical and psychological level.
                 </p>
                 <Link
                   href="/dashboard/player/development/progress"
@@ -257,7 +257,7 @@ export default async function PlayerDashboardPage() {
           style={{ animationDelay: '400ms' }}
         >
           <CardContent className="flex w-full flex-col items-center gap-4">
-            <h2 className="self-start font-semibold">Perfil completado</h2>
+            <h2 className="self-start font-semibold">Profile complete</h2>
             <DonutChart
               value={percent}
               label={`${percent}%`}
@@ -266,7 +266,7 @@ export default async function PlayerDashboardPage() {
             <div className="flex flex-col items-center gap-2">
               <p className="text-center text-sm text-muted-foreground">
                 {percent === 100
-                  ? '¡Perfil completo! Ya puedes aparecer en las búsquedas de clubes y ojeadores.'
+                  ? 'Profile complete! You can now appear in club and scout searches.'
                   : 'Completa tu perfil para destacar ante clubes y ojeadores.'}
               </p>
               {percent < 100 ? (
@@ -274,7 +274,7 @@ export default async function PlayerDashboardPage() {
                   href="/dashboard/player/profile/edit"
                   className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
                 >
-                  Completar perfil
+                  Complete profile
                 </Link>
               ) : null}
             </div>
@@ -282,11 +282,11 @@ export default async function PlayerDashboardPage() {
         </Card>
       </div>
 
-      {/* Actividad reciente */}
+      {/* Recent activity */}
       <Card className="animate-fade-up mt-6" style={{ animationDelay: '480ms' }}>
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold">Actividad reciente</h2>
+            <h2 className="font-semibold">Recent activity</h2>
             <Link
               href="/dashboard/player/notifications"
               className="text-sm text-primary hover:underline"
@@ -296,7 +296,7 @@ export default async function PlayerDashboardPage() {
           </div>
           {activity.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">
-              Aún no hay actividad. Sube un vídeo, aplica a una oportunidad o entrena para empezar.
+              No activity yet. Upload a video, apply to an opportunity or train to get started.
             </p>
           ) : (
             <div className="flex flex-col divide-y divide-border/60">

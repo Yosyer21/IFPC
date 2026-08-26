@@ -10,9 +10,9 @@ import { StatusBadge } from '@/components/admin/status-badge';
 export const metadata: Metadata = { title: 'Entrenamiento de mi hijo' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  'strength-conditioning': 'Fuerza y condición',
-  psychology: 'Psicología',
+  technical: 'Technique',
+  'strength-conditioning': 'Strength and conditioning',
+  psychology: 'Psychology',
   'parent-education': 'Para familias',
 };
 
@@ -101,7 +101,7 @@ export default async function ParentChildTrainingPage({
           <h2 className="mb-4 font-semibold">Contenido de entrenamiento</h2>
           {content.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Todavía no hay contenido publicado.
+              No content published yet.
             </p>
           ) : (
             <div className="flex flex-col gap-2">

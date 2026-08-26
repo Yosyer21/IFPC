@@ -9,9 +9,9 @@ import { Footer } from '@/components/landing/footer';
 export const metadata: Metadata = { title: 'Ejercicio — IFPC' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  'strength-conditioning': 'Fuerza y condición',
-  psychology: 'Psicología',
+  technical: 'Technique',
+  'strength-conditioning': 'Strength and conditioning',
+  psychology: 'Psychology',
   'parent-education': 'Para familias',
 };
 
@@ -67,7 +67,7 @@ export default async function PublicTrainingDetailPage({
 
           <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
             <p className="text-sm text-muted-foreground">
-              ¿Quieres seguir este plan y recibir ejercicios adaptados a tu nivel?
+              Want to follow this plan and receive exercises adapted to your level?
             </p>
             <Link
               href="/register"

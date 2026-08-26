@@ -61,7 +61,7 @@ export default async function AdminOpportunityDetailPage({
         </Card>
         <Card>
           <CardContent className="py-4">
-            <div className="text-xs text-muted-foreground">Solicitudes</div>
+            <div className="text-xs text-muted-foreground">Applications</div>
             <div className="mt-1 text-sm font-semibold">{opportunity.applications.length}</div>
           </CardContent>
         </Card>
@@ -78,16 +78,16 @@ export default async function AdminOpportunityDetailPage({
       <Card className="mb-6">
         <CardContent>
           <div className="flex flex-wrap gap-3 text-xs">
-            {opportunity.position ? <Badge variant="outline">Posición: {opportunity.position}</Badge> : null}
+            {opportunity.position ? <Badge variant="outline">Position: {opportunity.position}</Badge> : null}
             {opportunity.ageMin || opportunity.ageMax ? (
               <Badge variant="outline">
                 Edad: {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'}
               </Badge>
             ) : null}
-            {opportunity.location ? <Badge variant="outline">Ubicación: {opportunity.location}</Badge> : null}
+            {opportunity.location ? <Badge variant="outline">Location: {opportunity.location}</Badge> : null}
           </div>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            {opportunity.description ?? 'Sin descripción.'}
+            {opportunity.description ?? 'No description.'}
           </p>
 
           <form action={updateOpportunityStatusAction} className="mt-4 flex items-center gap-2">
@@ -105,7 +105,7 @@ export default async function AdminOpportunityDetailPage({
               type="submit"
               className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Actualizar estado
+              Update status
             </button>
           </form>
         </CardContent>
@@ -113,9 +113,9 @@ export default async function AdminOpportunityDetailPage({
 
       <Card>
         <CardContent>
-          <h2 className="mb-4 font-semibold">Solicitudes ({opportunity.applications.length})</h2>
+          <h2 className="mb-4 font-semibold">Applications ({opportunity.applications.length})</h2>
           {opportunity.applications.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Aún no hay solicitudes para esta oportunidad.</p>
+            <p className="text-sm text-muted-foreground">No applications for this opportunity yet.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {opportunity.applications.map((application) => (
@@ -128,7 +128,7 @@ export default async function AdminOpportunityDetailPage({
                       {application.player.firstName} {application.player.lastName}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      {application.player.position ?? 'Sin posición'} ·{' '}
+                      {application.player.position ?? 'No position'} ·{' '}
                       {application.createdAt.toLocaleDateString('es')}
                       {application.message ? ` · "${application.message.slice(0, 90)}"` : ''}
                     </div>

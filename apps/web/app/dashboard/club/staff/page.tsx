@@ -43,7 +43,7 @@ export default async function ClubStaffPage() {
       {staff.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Aún no hay miembros registrados.</p>
+            <p className="text-sm text-muted-foreground">No staff members registered yet.</p>
           </CardContent>
         </Card>
       ) : (

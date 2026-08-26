@@ -81,7 +81,7 @@ export default async function AdminCampDetailPage({
         </Card>
         <Card>
           <CardContent className="py-4">
-            <div className="text-xs text-muted-foreground">Ocupación</div>
+            <div className="text-xs text-muted-foreground">Occupancy</div>
             <div className="mt-1 text-sm font-semibold">
               {camp.registrations.length}/{camp.capacity ?? '∞'} {occupancy !== null ? `(${occupancy}%)` : ''}
             </div>
@@ -91,9 +91,9 @@ export default async function AdminCampDetailPage({
 
       <Card className="mb-6">
         <CardContent>
-          <h2 className="mb-2 font-semibold">Descripción</h2>
+          <h2 className="mb-2 font-semibold">Description</h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {camp.description ?? 'Sin descripción.'}
+            {camp.description ?? 'No description.'}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {camp.coach?.user?.name ? (
@@ -118,7 +118,7 @@ export default async function AdminCampDetailPage({
               type="submit"
               className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Actualizar estado
+              Update status
             </button>
           </form>
         </CardContent>
@@ -133,7 +133,7 @@ export default async function AdminCampDetailPage({
           </div>
           {camp.registrations.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Todavía no hay jugadores inscritos en este camp.
+              No players registered for this camp yet.
             </p>
           ) : (
             <div className="flex flex-col gap-2">
@@ -147,7 +147,7 @@ export default async function AdminCampDetailPage({
                       {registration.player.firstName} {registration.player.lastName}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {registration.player.position ?? 'Sin posición'} ·{' '}
+                      {registration.player.position ?? 'No position'} ·{' '}
                       {registration.createdAt.toLocaleDateString('es')}
                     </div>
                   </div>

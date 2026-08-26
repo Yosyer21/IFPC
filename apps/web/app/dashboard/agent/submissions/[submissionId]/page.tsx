@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Envío' };
+export const metadata: Metadata = { title: 'Submission' };
 
 const STAGES = ['SUBMISSION', 'TRIAL', 'NEGOTIATION', 'CONTRACT'];
 
@@ -41,7 +41,7 @@ export default async function AgentSubmissionDetailPage({
         href="/dashboard/agent/submissions"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Envíos
+        ← Submissions
       </Link>
       <h1 className="mb-4 text-2xl font-bold">
         {submission.player.firstName} {submission.player.lastName} → {submission.club.name}
@@ -104,7 +104,7 @@ export default async function AgentSubmissionDetailPage({
           <Link href={`/dashboard/agent/negotiations/${submission.negotiation.id}`} className="group">
             <Card className="transition-colors group-hover:border-primary">
               <CardContent className="flex items-center justify-between">
-                <span className="font-medium">Negociación</span>
+                <span className="font-medium">Negotiation</span>
                 <span className="text-sm text-muted-foreground">
                   {submission.negotiation.status}
                   {submission.negotiation.offerAmount

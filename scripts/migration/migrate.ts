@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process';
 
-// Aplica la migración sin interacción (requiere migrations generadas previamente).
+// Applies the migration without interaction (requires previously generated migrations).
 try {
   execSync('pnpm --filter @ifpc/database db:generate', { stdio: 'inherit' });
   execSync('npx prisma migrate deploy --schema packages/database/prisma/schema.prisma', {

@@ -51,7 +51,7 @@ export async function createEvaluationAction(
 ): Promise<ActionState> {
   const coach = await getCoachContext();
   if (!coach) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const playerId = str(formData, 'playerId');
@@ -59,17 +59,17 @@ export async function createEvaluationAction(
   const notes = str(formData, 'notes');
   const score = Number(formData.get('score'));
   if (!playerId || !category) {
-    return { error: 'Datos no válidos.' };
+    return { error: 'Invalid data.' };
   }
   if (!Number.isInteger(score) || score < 1 || score > 10) {
-    return { error: 'La puntuación debe estar entre 1 y 10.' };
+    return { error: 'The score must be between 1 and 10.' };
   }
 
   const assigned = await prisma.coachPlayer.findUnique({
     where: { coachId_playerId: { coachId: coach.id, playerId } },
   });
   if (!assigned) {
-    return { error: 'El jugador no está asignado a este entrenador.' };
+    return { error: 'The player is not assigned to this coach.' };
   }
 
   try {
@@ -83,7 +83,7 @@ export async function createEvaluationAction(
       },
     });
   } catch {
-    return { error: 'No se pudo registrar la evaluación.' };
+    return { error: 'Could not register the assessment.' };
   }
 
   redirect(`/dashboard/coach/players/${playerId}/evaluations`);
@@ -95,7 +95,7 @@ export async function createGoalAction(
 ): Promise<ActionState> {
   const coach = await getCoachContext();
   if (!coach) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const playerId = str(formData, 'playerId');
@@ -103,14 +103,14 @@ export async function createGoalAction(
   const description = str(formData, 'description');
   const dueDate = str(formData, 'dueDate');
   if (!playerId || !title) {
-    return { error: 'El título del objetivo es obligatorio.' };
+    return { error: 'Goal title is required.' };
   }
 
   const assigned = await prisma.coachPlayer.findUnique({
     where: { coachId_playerId: { coachId: coach.id, playerId } },
   });
   if (!assigned) {
-    return { error: 'El jugador no está asignado a este entrenador.' };
+    return { error: 'The player is not assigned to this coach.' };
   }
 
   try {

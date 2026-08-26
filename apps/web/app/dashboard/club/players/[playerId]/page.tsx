@@ -28,9 +28,9 @@ export default async function ClubPlayerDetailPage({
     : '—';
 
   const rows: [string, string][] = [
-    ['Posición', positionLabel],
+    ['Position', positionLabel],
     ['Nacionalidad', player.nationality ?? '—'],
-    ['Pierna hábil', player.foot ?? '—'],
+    ['Preferred foot', player.foot ?? '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Club actual', player.clubName ?? '—'],
@@ -51,7 +51,7 @@ export default async function ClubPlayerDetailPage({
         href="/dashboard/club/players"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Jugadores
+        ← Players
       </Link>
       <h1 className="mb-4 text-2xl font-bold">
         {player.firstName} {player.lastName}
@@ -78,15 +78,15 @@ export default async function ClubPlayerDetailPage({
       {player.bio ? (
         <Card className="mb-4">
           <CardContent>
-            <h2 className="mb-2 font-semibold">Biografía</h2>
+            <h2 className="mb-2 font-semibold">Biography</h2>
             <p className="text-sm text-muted-foreground">{player.bio}</p>
           </CardContent>
         </Card>
       ) : null}
 
-      <h2 className="mb-3 text-lg font-semibold">Vídeos</h2>
+      <h2 className="mb-3 text-lg font-semibold">Videos</h2>
       {player.videos.length === 0 ? (
-        <p className="text-sm text-muted-foreground">El jugador aún no ha subido vídeos.</p>
+        <p className="text-sm text-muted-foreground">The player has not uploaded videos yet.</p>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {player.videos.map((video) => (

@@ -1,9 +1,9 @@
 # Mercados internacionales
 
-## Mercados objetivo
+## Target markets
 
-- **Iberoamérica y España** (lanzamiento): gran volumen de talento joven y ecosistema de agentes.
-- **Europa**: clubes profesionales como compradores de talento.
+- **Iberoamérica y Spain** (lanzamiento): gran volumen de talento joven y ecosistema de agentes.
+- **Europe**: clubes profesionales como compradores de talento.
 - **Norteamérica**: universidades y MLS como mercado de becas (SCHOLARSHIP).
 
 ## Localización

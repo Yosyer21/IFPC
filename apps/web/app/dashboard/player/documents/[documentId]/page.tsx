@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'Documento' };
 const TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
   contract: 'Contrato',
-  medical: 'Médico',
+  medical: 'Medical',
   other: 'Otro',
 };
 
@@ -37,7 +37,7 @@ export default async function PlayerDocumentDetailPage({
         href="/dashboard/player/documents"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Mis documentos
+        ← My documents
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{document.title}</h1>
 

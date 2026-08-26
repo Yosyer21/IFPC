@@ -1,6 +1,6 @@
 # Procesamiento de vídeo
 
-## Fase actual
+## Current phase
 
 1. El jugador sube el vídeo vía Server Action → se guarda en `public/uploads/`.
 2. Se crea el registro `Video` con estado `ready` (sin transcodificación).

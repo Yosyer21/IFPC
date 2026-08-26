@@ -11,7 +11,7 @@ async function main() {
     update: { role: 'ADMIN', passwordHash },
     create: { email, name: 'Administrador', role: 'ADMIN', passwordHash },
   });
-  console.log(`Administrador listo: ${email} (contraseña: ${password})`);
+  console.log(`Admin ready: ${email} (password: ${password})`);
 }
 
 main()

@@ -27,7 +27,7 @@ export default async function AdminRecruitmentNegotiationsPage() {
         href="/dashboard/admin/recruitment"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Reclutamiento
+        ← Recruitment
       </Link>
       <PageHeader
         title="Negociaciones"

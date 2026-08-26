@@ -61,7 +61,7 @@ export default async function PublicCampDetailPage({
           </p>
 
           <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
-            {camp.description ?? 'Sin descripción.'}
+            {camp.description ?? 'No description.'}
           </p>
 
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -79,7 +79,7 @@ export default async function PublicCampDetailPage({
             <div className="rounded-xl border border-border/60 p-4">
               <div className="text-xs text-muted-foreground">Plazas</div>
               <div className="mt-1 text-lg font-semibold">
-                {camp.capacity ? `${spotsLeft ?? 0} de ${camp.capacity}` : 'Sin límite'}
+                {camp.capacity ? `${spotsLeft ?? 0} de ${camp.capacity}` : 'No limit'}
               </div>
             </div>
             <div className="rounded-xl border border-border/60 p-4">
@@ -92,7 +92,7 @@ export default async function PublicCampDetailPage({
 
           {alreadyRegistered ? (
             <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-400">
-              Ya estás inscrito en este camp. El club te contactará con los detalles.
+              You are already registered for this camp. The club will contact you with the details.
             </div>
           ) : (
             <form action={registerForCampAction} className="mt-8">

@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import { ContentCategory } from '@/components/admin/content-category';
 
-export const metadata: Metadata = { title: 'Contenido · Psicología' };
+export const metadata: Metadata = { title: 'Content · Psychology' };
 
 export default async function AdminContentPsychologyPage() {
   return (
     <ContentCategory
       category="psychology"
-      title="Psicología deportiva"
-      subtitle="Recursos de preparación mental para rendir al máximo"
+      title="Sports psychology"
+      subtitle="Mental preparation resources to perform at your best"
       icon="play"
     />
   );

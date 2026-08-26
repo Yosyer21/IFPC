@@ -4,13 +4,13 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Mis evaluaciones' };
+export const metadata: Metadata = { title: 'My assessments' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológico',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function PlayerEvaluationsPage() {
@@ -27,13 +27,13 @@ export default async function PlayerEvaluationsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-2xl font-bold">Mis evaluaciones</h1>
+      <h1 className="mb-6 text-2xl font-bold">My assessments</h1>
 
       {evaluations.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no tienes evaluaciones registradas.
+              You have no assessments registered yet.
             </p>
           </CardContent>
         </Card>

@@ -1,18 +1,18 @@
 # API · Jugadores
 
-## Conceptos
+## Concepts
 
-- **Perfil**: ficha futbolística + física + biografía (`Player`).
+- **Profile**: ficha futbolística + física + biografía (`Player`).
 - **Estado**: PENDING_VERIFICATION, ACTIVE, AVAILABLE, INACTIVE.
-- **Vídeos**: ligados al jugador con estado de procesado.
+- **Videos**: ligados al jugador con estado de procesado.
 
 ## Acciones principales
 
 | Acción | Implementación |
 | --- | --- |
 | Ver mi perfil | `GET /dashboard/player/profile` (server component) |
-| Editar perfil | `updatePlayerProfileAction` (zod + prisma) |
-| Subir vídeo | `uploadVideoAction` (guarda en `public/uploads`) |
+| Edit profile | `updatePlayerProfileAction` (zod + prisma) |
+| Upload video | `uploadVideoAction` (guarda en `public/uploads`) |
 | Aplicar a oportunidad | `applyToOpportunityAction` (upsert `Application`) |
 | Marcar notificaciones leídas | `markNotificationsReadAction` |
 

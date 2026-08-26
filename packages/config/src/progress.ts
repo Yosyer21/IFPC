@@ -1,4 +1,4 @@
-/** Porcentaje de campos completados (0-100). Los valores falsy cuentan como vacíos. */
+/** Percentage of completed fields (0-100). Falsy values count as empty. */
 export function profileCompletionPercentage(fields: Array<unknown>): number {
   if (fields.length === 0) return 0;
   const completed = fields.filter((field) => Boolean(field)).length;

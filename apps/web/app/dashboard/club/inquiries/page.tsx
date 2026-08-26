@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Consultas' };
+export const metadata: Metadata = { title: 'Inquiries' };
 
 export default async function ClubInquiriesPage() {
   const session = await auth();
@@ -23,7 +23,7 @@ export default async function ClubInquiriesPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Consultas recibidas"
+        title="Inquiries recibidas"
         subtitle="Mensajes de jugadores y familias interesados en tu club"
         icon="mail"
       />
@@ -32,7 +32,7 @@ export default async function ClubInquiriesPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No has recibido consultas todavía.
+              You haven't received any inquiries yet.
             </p>
           </CardContent>
         </Card>

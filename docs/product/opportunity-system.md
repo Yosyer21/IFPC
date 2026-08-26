@@ -1,10 +1,10 @@
 # Sistema de oportunidades
 
-## Tipos
+## Types
 
-| Tipo | Descripción |
+| Tipo | Description |
 | --- | --- |
-| **TRIAL** | Prueba deportiva organizada por el club |
+| **TRIAL** | Sports trial organized by the club |
 | **SCOUTING** | Proceso de observación/reclutamiento |
 | **CONTRACT** | Contrato directo |
 | **SCHOLARSHIP** | Beca académico-deportiva |

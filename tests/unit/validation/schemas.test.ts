@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { registerSchema, loginSchema, playerProfileSchema } from '@ifpc/validation';
 
 describe('registerSchema', () => {
-  it('acepta datos válidos', () => {
+  it('accepts valid data', () => {
     const result = registerSchema.safeParse({
       name: 'Ana García',
       email: 'ana@test.com',
@@ -11,7 +11,7 @@ describe('registerSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('rechaza un email inválido', () => {
+  it('rejects an invalid email', () => {
     const result = registerSchema.safeParse({
       name: 'Ana',
       email: 'no-es-un-email',
@@ -20,7 +20,7 @@ describe('registerSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it('rechaza una contraseña corta', () => {
+  it('rejects a short password', () => {
     const result = registerSchema.safeParse({
       name: 'Ana',
       email: 'ana@test.com',
@@ -36,7 +36,7 @@ describe('loginSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('rechaza credenciales vacías', () => {
+  it('rejects empty credentials', () => {
     const result = loginSchema.safeParse({ email: 'ana@test.com', password: '' });
     expect(result.success).toBe(false);
   });

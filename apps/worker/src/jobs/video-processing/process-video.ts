@@ -13,7 +13,7 @@ export async function processVideo(job: Job<ProcessVideoJobData>) {
     throw new Error(`Video ${videoId} no encontrado`);
   }
 
-  // Fase transcoding real (ffmpeg + S3) pendiente: marcamos el vídeo como listo.
+  // Real transcoding phase (ffmpeg + S3) pending: we mark the video as ready.
   await prisma.video.update({ where: { id: videoId }, data: { status: 'ready' } });
 
   console.log(`[video] video ${videoId} procesado`);

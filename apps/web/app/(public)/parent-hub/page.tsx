@@ -7,7 +7,7 @@ import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
   title: 'Parent Hub — IFPC',
-  description: 'Guías y recursos para acompañar la carrera futbolística de tu hijo.',
+  description: 'Guides and resources to support your child\u2019s football career.',
 };
 
 export default async function PublicParentHubPage() {
@@ -26,17 +26,17 @@ export default async function PublicParentHubPage() {
             Parent Hub
           </p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">
-            Guías para familias
+            Guides for families
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            {articles.length} guías para acompañar la carrera de tu hijo: desarrollo, academias,
-            becas, contratos y psicología deportiva.
+            {articles.length} guides to support your child's career: development, academies,
+            scholarships, contracts and sports psychology.
           </p>
         </div>
 
         {articles.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-10 text-center">
-            <p className="text-muted-foreground">Aún no hay guías publicadas.</p>
+            <p className="text-muted-foreground">No guides published yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -46,7 +46,7 @@ export default async function PublicParentHubPage() {
                 href={`/parent-hub/${article.id}`}
                 className="group rounded-2xl border border-border/60 bg-card p-6 transition-all hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10"
               >
-                <Badge variant="outline">Guía para familias</Badge>
+                <Badge variant="outline">Guide for families</Badge>
                 <h2 className="mt-4 font-semibold group-hover:text-emerald-400">
                   {article.title}
                 </h2>

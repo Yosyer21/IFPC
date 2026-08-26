@@ -7,7 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { MembershipUpgradeForm } from '@/components/player/membership-upgrade-form';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Membresía' };
+export const metadata: Metadata = { title: 'Membership' };
 
 export default async function PlayerMembershipPage() {
   const session = await auth();
@@ -22,7 +22,7 @@ export default async function PlayerMembershipPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Membresía"
+        title="Membership"
         subtitle="Elige el plan que mejor se adapte a tu etapa como jugador"
         icon="star"
       />
@@ -30,7 +30,7 @@ export default async function PlayerMembershipPage() {
       <Card className="mb-6">
         <CardContent className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="font-semibold">Tu plan actual</h2>
+            <h2 className="font-semibold">Your current plan</h2>
             <p className="text-sm text-muted-foreground">
               {membership?.tier ?? 'FREE'}
               {membership?.endsAt
@@ -44,7 +44,7 @@ export default async function PlayerMembershipPage() {
         </CardContent>
       </Card>
 
-      <h2 className="mb-4 text-lg font-semibold">Planes disponibles</h2>
+      <h2 className="mb-4 text-lg font-semibold">Available plans</h2>
       <MembershipUpgradeForm currentTier={membership?.tier ?? 'FREE'} />
 
       <div className="mt-6">

@@ -1,113 +1,114 @@
-# Railway · Despliegue
+# Railway · Deployment
 
-Railway despliega el repositorio desde GitHub. El repo es un monorepo pnpm con
-**2 servicios** (web y worker) + base de datos PostgreSQL.
+Railway deploys the repository from GitHub. The repo is a pnpm monorepo with
+**2 services** (web and worker) + PostgreSQL database.
 
-## Servicios
+## Services
 
-| Servicio | Root Directory | Dockerfile Path | Expone |
+| Service | Root Directory | Dockerfile Path | Exposes |
 | --- | --- | --- | --- |
-| **Web** (Next.js) | `.` (raíz) | `infrastructure/docker/Dockerfile.web` | Puerto 3000 |
-| **Worker** (BullMQ) | `.` (raíz) | `infrastructure/docker/Dockerfile.worker` | — (procesa colas) |
+| **Web** (Next.js) | `.` (root) | `infrastructure/docker/Dockerfile.web` | Port 3000 |
+| **Worker** (BullMQ) | `.` (root) | `infrastructure/docker/Dockerfile.worker` | — (processes queues) |
 
-- El primer servicio que se crea al conectar el repo usa el `railway.json` de la raíz
-  (web, Dockerfile.web + healthcheck `/`).
-- El **worker** se añade como segundo servicio: en el dashboard → *New Service* →
-  mismo repositorio → ajustar *Dockerfile Path* a `infrastructure/docker/Dockerfile.worker`.
+- The first service created when connecting the repo uses the root `railway.json`
+  (web, Dockerfile.web + `/` healthcheck).
+- The **worker** is added as a second service: in the dashboard → *New Service* →
+  same repository → adjust *Dockerfile Path* to `infrastructure/docker/Dockerfile.worker`.
 
-## Plugins de datos
+## Data plugins
 
-1. **PostgreSQL**: crear plugin *PostgreSQL* → expone `DATABASE_URL`.
-2. **Redis** (opcional pero recomendado para el worker/BullMQ): crear plugin *Redis* →
-   expone `REDIS_URL`. Sin Redis, el worker arranca pero no puede encolar jobs.
+1. **PostgreSQL**: create *PostgreSQL* plugin → exposes `DATABASE_URL`.
+2. **Redis** (optional but recommended for the worker/BullMQ): create *Redis* plugin →
+   exposes `REDIS_URL`. Without Redis the worker starts but cannot enqueue jobs.
 
-## Variables de entorno
+## Environment variables
 
-| Variable | Valor |
+| Variable | Value |
 | --- | --- |
-| `USE_PGLITE` | `false` (en producción se usa PostgreSQL real) |
-| `DATABASE_URL` | del plugin PostgreSQL |
-| `REDIS_URL` | del plugin Redis (opcional) |
-| `AUTH_SECRET` | secreto Auth.js (`openssl rand -base64 32`) |
-| `NEXT_PUBLIC_APP_URL` | URL pública de la app (el dominio `.up.railway.app` o el custom) |
-| `RESEND_API_KEY` | email de recuperación/verificación |
-| `RESEND_FROM_EMAIL` | remitente (opcional) |
-| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | pagos (opcional) |
-| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` / `S3_BUCKET` / `S3_ENDPOINT` | uploads (opcional) |
+| `USE_PGLITE` | `false` (in production real PostgreSQL is used) |
+| `DATABASE_URL` | from the PostgreSQL plugin |
+| `REDIS_URL` | from the Redis plugin (optional) |
+| `AUTH_SECRET` | Auth.js secret (`openssl rand -base64 32`) |
+| `NEXT_PUBLIC_APP_URL` | public URL of the app (the `.up.railway.app` domain or a custom one) |
+| `RESEND_API_KEY` | recovery/verification email |
+| `RESEND_FROM_EMAIL` | sender (optional) |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | payments (optional) |
+| `S3_ACCESS_KEY_ID` / `S3_SECRET_ACCESS_KEY` / `S3_BUCKET` / `S3_ENDPOINT` | uploads (optional) |
 
-> Las mismas variables para web y worker. `DATABASE_URL` y `REDIS_URL` salen de los plugins.
+> The same variables for web and worker. `DATABASE_URL` and `REDIS_URL` come from the plugins.
 
-## Migraciones (una vez)
+## Migrations (one-time)
 
-Tras crear la base de datos, aplicar el esquema. Desde local, conectando con el túnel
-de Railway (el host `postgres.railway.internal` es privado):
+After creating the database, apply the schema. From local, connecting through the Railway
+tunnel (the `postgres.railway.internal` host is private):
 
 ```bash
 railway connect Postgres --tunnel-only --port 55432
-# en otra terminal, con DATABASE_URL apuntando a 127.0.0.1:55432:
+# in another terminal, with DATABASE_URL pointing to 127.0.0.1:55432:
 pnpm --filter database exec prisma db push
 ```
 
-O desde la pestaña **Run** de Railway con el PostgreSQL de producción:
+Or from the **Run** tab of Railway with the production PostgreSQL:
 
 ```bash
 pnpm --filter database exec prisma db push
 ```
 
-Seed demo (usuarios/roles de ejemplo, borra lo que crea y crea datos limpios):
+Demo seed (example users/roles, it cleans what it creates and seeds fresh data):
 
 ```bash
 pnpm --filter database db:seed
 ```
 
-Credenciales generadas: `admin@ifpc.com/admin123`, `player@demo.com/player123`,
+Generated credentials: `admin@ifpc.com/admin123`, `player@demo.com/player123`,
 `parent@demo.com/parent123`, `club@demo.com/club123`, `agent@demo.com/agent123`,
 `scout@demo.com/scout123`, `coach@demo.com/coach123`, `university@demo.com/university123`.
 
-## Requisito de Node.js (build)
+## Node.js requirement (build)
 
-El monorepo fija `pnpm@11.20.0` (packageManager + corepack). **pnpm ≥ 11 requiere
-Node ≥ 22.13** (`node:sqlite`). Los Dockerfiles usan `node:22-alpine` y el root
-`package.json` declara `engines.node: ">=22.13.0"`. Los workflows de GitHub Actions
-también usan Node 22. No bajar a Node 20 o el `pnpm install` en el contenedor
-fallará con `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`.
+The monorepo pins `pnpm@11.20.0` (packageManager + corepack). **pnpm ≥ 11 requires
+Node ≥ 22.13** (`node:sqlite`). The Dockerfiles use `node:22-alpine` and the root
+`package.json` declares `engines.node: ">=22.13.0"`. GitHub Actions workflows also use
+Node 22. Do not downgrade to Node 20 or the `pnpm install` inside the container will fail
+with `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`.
 
-## Detalles del build web (standalone + Prisma)
+## Web build details (standalone + Prisma)
 
-- El stage `builder` copia además `package.json`, `pnpm-workspace.yaml`,
-  `pnpm-lock.yaml` y `tsconfig.json` (el tsconfig de `apps/web` extiende
+- The `builder` stage also copies `package.json`, `pnpm-workspace.yaml`,
+  `pnpm-lock.yaml` and `tsconfig.json` (the `apps/web` tsconfig extends
   `../../tsconfig.json`).
-- `apps/web/next.config.mjs` incluye `@ifpc/database` en `transpilePackages`
-  (publica fuentes TS).
-- El output standalone no traza el query engine de Prisma
-  (`libquery_engine-linux-musl-openssl-3.0.x.so.node`). El Dockerfile lo copia a
-  `/app/prisma-engines` y apunta `PRISMA_QUERY_ENGINE_LIBRARY`.
+- `apps/web/next.config.mjs` includes `@ifpc/database` in `transpilePackages`
+  (it publishes TS sources).
+- The standalone output does not trace the Prisma query engine
+  (`libquery_engine-linux-musl-openssl-3.0.x.so.node`). The Dockerfile copies it to
+  `/app/prisma-engines` and points to it via `PRISMA_QUERY_ENGINE_LIBRARY`.
 
-## Estado aplicado (2026-08)
+## Applied state (2026-08)
 
-- **Web**: servicio `IFPC`, online, dominio `https://ifpc-production-0c78.up.railway.app`.
-- **PostgreSQL**: plugin `Postgres` (postgres-ssl:18), volumen `postgres-volume`,
-  `DATABASE_URL` inyectado al servicio web.
-- **Variables en web**: `USE_PGLITE=false`, `DATABASE_URL`, `AUTH_SECRET`,
-  `NEXT_PUBLIC_APP_URL` (dominio público). `RESEND_API_KEY`, `STRIPE_*` y `S3_*`
-  quedan pendientes (opcionales, según funcionalidades activadas).
-- **Worker**: pendiente de desplegar — requiere crear el servicio desde el dashboard
-  con *Dockerfile Path* `infrastructure/docker/Dockerfile.worker` y un plugin Redis
-  (`REDIS_URL`). El web actualmente inserta notificaciones de forma síncrona
-  (`notifyUser`), así que no depende de Redis.
+- **Web**: `IFPC` service, online, domain `https://ifpc-production-0c78.up.railway.app`.
+- **PostgreSQL**: `Postgres` plugin (postgres-ssl:18), `postgres-volume` volume,
+  `DATABASE_URL` injected into the web service.
+- **Web variables**: `USE_PGLITE=false`, `DATABASE_URL`, `AUTH_SECRET`,
+  `NEXT_PUBLIC_APP_URL` (public domain). `RESEND_API_KEY`, `STRIPE_*` and `S3_*` are
+  still pending (optional, depending on enabled features).
+- **Worker**: pending deployment — requires creating the service from the dashboard
+  with *Dockerfile Path* `infrastructure/docker/Dockerfile.worker` and a Redis plugin
+  (`REDIS_URL`). The web currently inserts notifications synchronously
+  (`notifyUser`), so it does not depend on Redis.
 
-## Build local de los Dockerfiles (validación)
+## Building the Dockerfiles locally (validation)
 
 ```bash
 docker build -f infrastructure/docker/Dockerfile.web -t ifpc-web .
 docker build -f infrastructure/docker/Dockerfile.worker -t ifpc-worker .
 ```
 
-## Notas
+## Notes
 
-- **Standalone**: `apps/web/next.config.mjs` activa `output: 'standalone'` con la env
-  `STANDALONE=true` (el Dockerfile.web la define). En local/Windows el build normal no
-  genera standalone porque Windows bloquea la creación de symlinks sin Developer Mode.
-- **Worker en producción**: se ejecuta con `node --import=tsx src/index.ts` porque los
-  paquetes del workspace publican fuentes TS (`@ifpc/database` etc.).
-- **PGlite** solo se usa en desarrollo (`USE_PGLITE=true`); en Railway va `false`.
+- **Standalone**: `apps/web/next.config.mjs` enables `output: 'standalone'` with the env
+  `STANDALONE=true` (defined in Dockerfile.web). On local/Windows the normal build does not
+  generate standalone because Windows blocks symlink creation without Developer Mode.
+- **Worker in production**: runs with `node --import=tsx src/index.ts` because the workspace
+  packages publish TS sources (`@ifpc/database` etc.).
+- **PGlite** is only used in development (`USE_PGLITE=true`); on Railway it is `false`.
+

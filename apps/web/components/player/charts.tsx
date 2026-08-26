@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-/* ─── Gráficos SVG ligeros (sin dependencias), tema oscuro ─── */
+/* ─── Lightweight SVG charts (no dependencies), dark theme ─── */
 
 export interface ChartDatum {
   label: string;
@@ -8,7 +8,7 @@ export interface ChartDatum {
 }
 
 /**
- * Radar: categorías con valores 0-10. Usa pathLength para animar el trazado.
+ * Radar: categories with values 0-10. Uses pathLength to animate the stroke.
  */
 export function RadarChart({
   categories,
@@ -35,7 +35,7 @@ export function RadarChart({
 
   return (
     <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full">
-      {/* retícula */}
+      {/* grid */}
       {gridPolygons.map((points, i) => (
         <polygon
           key={i}
@@ -99,7 +99,7 @@ export function RadarChart({
 }
 
 /**
- * Anillo de progreso (donut) con animación de trazado.
+ * Progress ring (donut) with stroke animation.
  */
 export function DonutChart({
   value,
@@ -160,7 +160,7 @@ export function DonutChart({
 }
 
 /**
- * Línea de evolución con área degradada y animación de trazado.
+ * Evolution line with gradient area and stroke animation.
  */
 export function LineChart({
   points,
@@ -260,7 +260,7 @@ export function CategoryBars({ items }: { items: ChartDatum[] }) {
 }
 
 /**
- * Barras horizontales con escala automática sobre el máximo (recuentos de analytics).
+ * Horizontal bars with automatic scale over the maximum (analytics counts).
  */
 export function CountsBars({ items }: { items: ChartDatum[] }) {
   const max = Math.max(1, ...items.map((item) => item.value));

@@ -8,7 +8,7 @@ async function main() {
     },
     data: { status: 'FAILED' },
   });
-  console.log(`Membresías expiradas: ${result.count}`);
+  console.log(`Memberships expired: ${result.count}`);
 }
 
 main()

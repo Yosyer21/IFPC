@@ -9,10 +9,10 @@ export function VideoUploadForm() {
 
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
-      <Input name="title" label="Título del vídeo" placeholder="Ej: Highlights vs ..." required />
+      <Input name="title" label="Video title" placeholder="Ej: Highlights vs ..." required />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="file" className="text-sm font-medium">
-          Archivo de vídeo
+          Video file
         </label>
         <input
           id="file"
@@ -25,7 +25,7 @@ export function VideoUploadForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Subiendo…' : 'Subir vídeo'}
+        {pending ? 'Subiendo…' : 'Upload video'}
       </Button>
     </form>
   );

@@ -7,7 +7,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Mi perfil de scouting' };
+export const metadata: Metadata = { title: 'My profile de scouting' };
 
 export default async function PlayerScoutingPage() {
   const session = await auth();
@@ -33,22 +33,22 @@ export default async function PlayerScoutingPage() {
     : '—';
 
   const rows: [string, string][] = [
-    ['Posición', positionLabel],
-    ['Edad', player.dateOfBirth ? `${Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))} años` : '—'],
+    ['Position', positionLabel],
+    ['Edad', player.dateOfBirth ? `${Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years old` : '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-    ['Pierna hábil', footLabel],
+    ['Preferred foot', footLabel],
     ['Nacionalidad', player.nationality ?? '—'],
     ['Nivel competitivo', competitionLabel],
     ['Club actual', player.clubName ?? '—'],
-    ['Vídeos disponibles', String(videoCount)],
+    ['Available videos', String(videoCount)],
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Perfil de scouting"
-        subtitle="Así te ven ojeadores y clubes. Mantén tus datos y vídeos actualizados para aparecer en las búsquedas."
+        title="Profile de scouting"
+        subtitle="This is how scouts and clubs see you. Keep your data and videos updated to appear in searches."
         icon="search"
       />
 
@@ -67,10 +67,10 @@ export default async function PlayerScoutingPage() {
 
       <div className="mt-4 flex flex-col gap-2">
         <Link href="/dashboard/player/profile/edit" className="text-sm text-primary hover:underline">
-          → Completar perfil
+          → Complete profile
         </Link>
         <Link href="/dashboard/player/videos/upload" className="text-sm text-primary hover:underline">
-          → Subir vídeos
+          → Upload videos
         </Link>
       </div>
     </div>

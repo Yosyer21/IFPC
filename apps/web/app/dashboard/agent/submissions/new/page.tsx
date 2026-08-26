@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { CreateSubmissionForm } from '@/components/agent/create-submission-form';
 
-export const metadata: Metadata = { title: 'Nuevo envío' };
+export const metadata: Metadata = { title: 'New submission' };
 
 export default async function AgentNewSubmissionPage() {
   const session = await auth();
@@ -34,9 +34,9 @@ export default async function AgentNewSubmissionPage() {
         href="/dashboard/agent/submissions"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Envíos
+        ← Submissions
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Nuevo envío</h1>
+      <h1 className="mb-6 text-2xl font-bold">New submission</h1>
       <p className="mb-6 text-sm text-muted-foreground">
         Selecciona un jugador representado y el club al que quieres enviarlo.
       </p>

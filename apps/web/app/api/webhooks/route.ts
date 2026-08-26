@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   const signature = request.headers.get('stripe-signature');
 
   if (!verifyWebhookSignature(rawBody, signature)) {
-    return NextResponse.json({ ok: false, error: 'Firma no válida' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: 'Invalid signature' }, { status: 400 });
   }
 
   let event: {
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   try {
     event = JSON.parse(rawBody);
   } catch {
-    return NextResponse.json({ ok: false, error: 'Body no válido' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: 'Invalid body' }, { status: 400 });
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
             amount,
             currency,
             status: 'PAID',
-            description: `Membresía ${tier}`,
+            description: `Membership ${tier}`,
             stripePaymentIntentId: paymentIntent,
           },
         }),

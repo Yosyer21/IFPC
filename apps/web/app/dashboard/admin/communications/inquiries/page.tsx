@@ -4,7 +4,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { closeInquiryAction } from '@/app/actions/admin';
 
-export const metadata: Metadata = { title: 'Consultas' };
+export const metadata: Metadata = { title: 'Inquiries' };
 
 export default async function AdminInquiriesPage() {
   const session = await auth();
@@ -18,7 +18,7 @@ export default async function AdminInquiriesPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <h1 className="mb-6 text-2xl font-bold">Consultas</h1>
+      <h1 className="mb-6 text-2xl font-bold">Inquiries</h1>
 
       {inquiries.length === 0 ? (
         <Card>

@@ -16,7 +16,7 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Centro de control' };
+export const metadata: Metadata = { title: 'Control center' };
 
 const ROLE_LABELS: Record<string, string> = {
   PLAYER: 'Jugadores',
@@ -53,27 +53,27 @@ export default async function AdminDashboardPage() {
     prisma.club.count({ where: { verified: false } }),
   ]);
 
-  // Usuarios por rol
+  // Users by role
   const usersByRole = await prisma.user.groupBy({ by: ['role'], _count: { _all: true } });
   const roleCounts = new Map(usersByRole.map((row) => [row.role, row._count._all]));
   const revenue = payments.reduce((sum, payment) => sum + payment.amount, 0);
 
   const kpis = [
-    { href: '/dashboard/admin/users', icon: IconUsers, label: 'Usuarios', value: users },
+    { href: '/dashboard/admin/users', icon: IconUsers, label: 'Users', value: users },
     { href: '/dashboard/admin/players', icon: IconWhistle, label: 'Jugadores', value: players },
     { href: '/dashboard/admin/clubs', icon: IconBriefcase, label: 'Clubes', value: clubs },
     { href: '/dashboard/admin/opportunities', icon: IconTarget, label: 'Oportunidades abiertas', value: openOpportunities },
-    { href: '/dashboard/admin/memberships/payments', icon: IconStar, label: 'Pagos', value: payments.length },
+    { href: '/dashboard/admin/memberships/payments', icon: IconStar, label: 'Payments', value: payments.length },
     { href: '/dashboard/admin/analytics/revenue', icon: IconStar, label: 'Ingresos', value: Math.round(revenue / 100) },
   ];
 
-  // Acciones pendientes
+  // Pending actions
   const pendingActions: { href: string; icon: typeof IconBell; text: string; meta: string }[] = [];
   if (pendingPlayers > 0) {
     pendingActions.push({
       href: '/dashboard/admin/players/pending',
       icon: IconWhistle,
-      text: `${pendingPlayers} jugador${pendingPlayers === 1 ? '' : 'es'} pendiente${pendingPlayers === 1 ? '' : 's'} de verificación`,
+      text: `${pendingPlayers} pending player${pendingPlayers === 1 ? '' : 's'} awaiting verification`,
       meta: 'Revisar',
     });
   }
@@ -94,14 +94,14 @@ export default async function AdminDashboardPage() {
     });
   }
 
-  // Usuarios por rol (barras)
+  // Users by role (barras)
   const maxRoleCount = Math.max(1, ...Array.from(roleCounts.values()));
   const roleBars = Object.entries(ROLE_LABELS)
     .map(([role, label]) => ({ role, label, count: roleCounts.get(role as never) ?? 0 }))
     .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count);
 
-  // Actividad reciente
+  // Recent activity
   const [recentUsers, recentPayments] = await Promise.all([
     prisma.user.findMany({ orderBy: { createdAt: 'desc' }, take: 5 }),
     prisma.payment.findMany({
@@ -126,11 +126,11 @@ export default async function AdminDashboardPage() {
               </h1>
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
                 <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
-                Administración
+                Administration
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Centro de control de la plataforma · {users} usuarios · {players} jugadores ·{' '}
+              Control center de la plataforma · {users} usuarios · {players} jugadores ·{' '}
               {clubs} clubes
             </p>
           </div>
@@ -139,26 +139,26 @@ export default async function AdminDashboardPage() {
               href="/dashboard/admin/users"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Usuarios
+              Users
             </Link>
             <Link
               href="/dashboard/admin/memberships/payments"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Pagos
+              Payments
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Alerta dinámica */}
+      {/* Dynamic alert */}
       {pendingActions.length > 0 ? (
         <div className="animate-fade-up mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            Tienes <strong>{pendingActions.length} acción{pendingActions.length === 1 ? '' : 'es'} pendiente{pendingActions.length === 1 ? '' : 's'}</strong> de moderación en la plataforma.
+            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> moderation actions on the platform.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -173,7 +173,7 @@ export default async function AdminDashboardPage() {
             <IconShield className="h-4 w-4" />
           </span>
           <p className="text-sm text-emerald-100">
-            Todo al día. No hay acciones de moderación pendientes.
+            All caught up. No pending moderation actions.
           </p>
         </div>
       )}
@@ -189,12 +189,12 @@ export default async function AdminDashboardPage() {
           />
         ))}
       </div>
-      {/* Usuarios por rol + acciones pendientes */}
+      {/* Users by role + acciones pendientes */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '400ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Usuarios por rol</h2>
+              <h2 className="font-semibold">Users by role</h2>
               <Link href="/dashboard/admin/users" className="text-sm text-primary hover:underline">
                 Gestionar usuarios →
               </Link>
@@ -222,10 +222,10 @@ export default async function AdminDashboardPage() {
 
         <Card className="animate-fade-up" style={{ animationDelay: '460ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Acciones pendientes</h2>
+            <h2 className="mb-4 font-semibold">Pending actions</h2>
             {pendingActions.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No hay acciones de moderación pendientes.
+                No pending moderation actions.
               </p>
             ) : (
               <div className="flex flex-col gap-2">
@@ -250,13 +250,13 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      {/* Actividad reciente + ingresos recientes */}
+      {/* Recent activity + ingresos recientes */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '520ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Actividad reciente</h2>
+            <h2 className="mb-4 font-semibold">Recent activity</h2>
             {recentUsers.length === 0 ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">Sin actividad todavía.</p>
+              <p className="py-6 text-center text-sm text-muted-foreground">No activity yet.</p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">
                 {recentUsers.map((user) => (
@@ -302,20 +302,20 @@ export default async function AdminDashboardPage() {
         <Card className="animate-fade-up" style={{ animationDelay: '580ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Ingresos recientes</h2>
+              <h2 className="font-semibold">Recent revenue</h2>
               <Link href="/dashboard/admin/analytics/revenue" className="text-sm text-primary hover:underline">
-                Analítica →
+                Analytics →
               </Link>
             </div>
             <div className="mb-4 flex items-baseline gap-2">
               <span className="text-3xl font-bold tabular-nums">
                 {(revenue / 100).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
               </span>
-              <span className="text-sm text-muted-foreground">ingresos totales</span>
+              <span className="text-sm text-muted-foreground">total revenue</span>
             </div>
             {recentPayments.length === 0 ? (
               <p className="py-4 text-center text-sm text-muted-foreground">
-                Aún no hay pagos registrados.
+                No payments registered yet.
               </p>
             ) : (
               <div className="flex flex-col gap-2">

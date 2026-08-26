@@ -56,7 +56,7 @@ export default async function AgentOpportunitiesPage() {
                     {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {opportunity.position ? `Posición: ${opportunity.position}` : ''}
+                    {opportunity.position ? `Position: ${opportunity.position}` : ''}
                     {opportunity.closesAt
                       ? ` · Cierra: ${opportunity.closesAt.toLocaleDateString('es')}`
                       : ''}

@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   const role = session.user.role.toLowerCase();
 
-  // Contador de notificaciones sin leer solo para el área player (badge dinámico).
+  // Unread notifications counter only for the player area (dynamic badge).
   let unreadCount: number | undefined;
   if (role === 'player') {
     unreadCount = await prisma.notification.count({

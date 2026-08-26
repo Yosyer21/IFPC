@@ -23,7 +23,7 @@ export default async function AdminRecruitmentPage() {
   ]);
 
   const sections = [
-    { title: 'Envíos', items: submissions, href: '/dashboard/admin/recruitment/submissions' },
+    { title: 'Submissions', items: submissions, href: '/dashboard/admin/recruitment/submissions' },
     { title: 'Pruebas', items: trials, href: '/dashboard/admin/recruitment/trials' },
     { title: 'Negociaciones', items: negotiations, href: '/dashboard/admin/recruitment/negotiations' },
     { title: 'Contratos', items: contracts, href: '/dashboard/admin/recruitment/contracts' },
@@ -33,7 +33,7 @@ export default async function AdminRecruitmentPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Reclutamiento"
-        subtitle="Flujo global de envíos, pruebas, negociaciones y contratos"
+        subtitle="Global flow of submissions, trials, negotiations and contracts"
         icon="briefcase"
       />
 
@@ -47,7 +47,7 @@ export default async function AdminRecruitmentPage() {
               </div>
               <div className="flex flex-col gap-2">
                 {section.items.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Sin registros.</p>
+                  <p className="text-sm text-muted-foreground">No records.</p>
                 ) : (
                   section.items.slice(0, 5).map((item) => (
                     <div key={item.id} className="rounded-md border border-border p-2 text-sm">

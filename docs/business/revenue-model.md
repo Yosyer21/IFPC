@@ -1,9 +1,9 @@
 # Modelo de ingresos
 
-## Fuentes
+## Sources
 
-1. **Membresías jugador**: FREE (freemium), PREMIUM, SCOUT, CLUB.
-2. **Suscripciones profesionales**: acceso de ojeadores/agentes a herramientas avanzadas.
+1. **Memberships jugador**: FREE (freemium), PREMIUM, SCOUT, CLUB.
+2. **Professional subscriptions**: acceso de ojeadores/agentes a herramientas avanzadas.
 3. **Publicación de oportunidades**: tarifa por oportunidad destacada (futuro).
 4. **Comisión de éxito**: % sobre contratos cerrados vía la plataforma (futuro).
 

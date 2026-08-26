@@ -1,10 +1,10 @@
 # Representación de jugadores
 
-## Rol del agente en la plataforma
+## The agent's role on the platform
 
 - Registro con **licencia** (validación en fases futuras).
 - **Cartera**: jugadores representados (`AgentPlayer`) con estado activo/inactivo.
-- **Envíos**: presentación del jugador a clubes con notas.
+- **Submissions**: presentación del jugador a clubes con notas.
 - **Pipeline**: seguimiento envío → prueba → negociación → contrato.
 
 ## Transparencia

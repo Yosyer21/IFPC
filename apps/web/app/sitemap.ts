@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { prisma } from '@ifpc/database';
 
-// Consulta la DB en cada petición (PGlite/WASM no es compatible con el prerender estático).
+// Queries the DB on each request (PGlite/WASM is not compatible with static prerendering).
 export const dynamic = 'force-dynamic';
 
 const BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';

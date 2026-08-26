@@ -9,6 +9,6 @@ export async function expireMemberships(job: Job) {
     },
     data: { status: 'FAILED' },
   });
-  console.log(`[maintenance] membresías expiradas: ${result.count}`);
+  console.log(`[maintenance] memberships expired: ${result.count}`);
   return { expired: result.count };
 }

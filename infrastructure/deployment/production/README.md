@@ -9,7 +9,7 @@
 
 ## Checklist
 
-1. Variables de entorno de producción completas en `.env` (ver `.env.example`)
+1. Environment variables de producción completas en `.env` (ver `.env.example`)
 2. `AUTH_SECRET` generado con un generador criptográfico
 3. Migraciones aplicadas: `pnpm scripts:migrate`
 4. Verificación post-despliegue: `pnpm scripts:verify`

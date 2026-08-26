@@ -296,14 +296,14 @@ Write-File 'packages/types/src/payment.ts' $paymentTs
 
 # ─── packages/config/src ────────────────────────────────────────
 $countriesTs = @'
-export const COUNTRIES = ['España', 'México', 'Argentina', 'Colombia', 'Brasil', 'Estados Unidos', 'Reino Unido', 'Alemania', 'Francia', 'Italia', 'Portugal', 'Japón'] as const;
+export const COUNTRIES = ['Spain', 'Mexico', 'Argentina', 'Colombia', 'Brasil', 'Estados Unidos', 'Reino Unido', 'Alemania', 'Francia', 'Italia', 'Portugal', 'Japan'] as const;
 
 export type Country = (typeof COUNTRIES)[number];
 '@
 
 $currenciesTs = @'
 export const CURRENCIES = [
-  { code: 'USD', symbol: '$', name: 'Dólar estadounidense' },
+  { code: 'USD', symbol: '$', name: 'US dollar' },
   { code: 'EUR', symbol: '€', name: 'Euro' },
   { code: 'MXN', symbol: '$', name: 'Peso mexicano' },
   { code: 'GBP', symbol: '£', name: 'Libra esterlina' },
@@ -315,7 +315,7 @@ export const LANGUAGES = ['es', 'en'] as const;
 export type Language = (typeof LANGUAGES)[number];
 
 export const LANGUAGE_LABELS: Record<Language, string> = {
-  es: 'Español',
+  es: 'Spanish',
   en: 'English',
 };
 '@
@@ -350,7 +350,7 @@ export const PLAYER_STATUSES = ['PENDING_VERIFICATION', 'ACTIVE', 'AVAILABLE', '
 export type PlayerStatus = (typeof PLAYER_STATUSES)[number];
 
 export const PLAYER_STATUS_LABELS: Record<PlayerStatus, string> = {
-  PENDING_VERIFICATION: 'Pendiente de verificación',
+  PENDING_VERIFICATION: 'Pending verification',
   ACTIVE: 'Activo',
   AVAILABLE: 'Disponible',
   INACTIVE: 'Inactivo',
@@ -375,9 +375,9 @@ export const RECRUITMENT_STAGES = ['SUBMISSION', 'TRIAL', 'NEGOTIATION', 'CONTRA
 export type RecruitmentStage = (typeof RECRUITMENT_STAGES)[number];
 
 export const RECRUITMENT_STAGE_LABELS: Record<RecruitmentStage, string> = {
-  SUBMISSION: 'Envío',
+  SUBMISSION: 'Submission',
   TRIAL: 'Prueba',
-  NEGOTIATION: 'Negociación',
+  NEGOTIATION: 'Negotiation',
   CONTRACT: 'Contrato',
 };
 '@

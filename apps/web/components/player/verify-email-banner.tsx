@@ -13,9 +13,9 @@ export function VerifyEmailBanner() {
     <div className="mb-6 rounded-md border border-warning/40 bg-warning/10 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold">Tu email aún no está verificado</p>
+          <p className="text-sm font-semibold">Your email is not verified yet</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Verifica tu dirección de email para desbloquear todas las funciones de la plataforma.
+            Verify your email address to unlock all platform features.
           </p>
         </div>
         <form action={formAction}>
@@ -24,7 +24,7 @@ export function VerifyEmailBanner() {
             disabled={pending}
             className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
           >
-            {pending ? 'Enviando…' : 'Reenviar enlace'}
+            {pending ? 'Sending…' : 'Resend link'}
           </button>
         </form>
       </div>

@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'Documentos del jugador' };
 const TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
   contract: 'Contrato',
-  medical: 'Médico',
+  medical: 'Medical',
   other: 'Otro',
 };
 

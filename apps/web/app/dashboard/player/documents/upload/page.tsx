@@ -13,12 +13,12 @@ export default function PlayerDocumentUploadPage() {
           href="/dashboard/player/documents"
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Mis documentos
+          ← My documents
         </Link>
       </div>
       <p className="mb-6 text-sm text-muted-foreground">
-        Los documentos (pasaporte, contrato, certificado médico…) se almacenan de forma local en
-        esta fase. Solo tú y los perfiles autorizados en procesos de reclutamiento pueden verlos.
+        Documents (passport, contract, medical certificate…) are stored locally in
+        this phase. Only you and authorized profiles in recruitment processes can view them.
       </p>
       <DocumentUploadForm />
     </div>

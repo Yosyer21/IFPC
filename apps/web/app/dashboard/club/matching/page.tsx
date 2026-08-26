@@ -61,7 +61,7 @@ export default async function ClubMatchingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Matching"
-        subtitle="Jugadores disponibles ordenados por compatibilidad con tus requisitos (motor de matching)"
+        subtitle="Available players ordenados por compatibilidad con tus requisitos (motor de matching)"
         icon="target"
       />
 
@@ -80,7 +80,7 @@ export default async function ClubMatchingPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay coincidencias con tus requisitos en este momento.
+              No matches for your requirements right now.
             </p>
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ export default async function ClubMatchingPage() {
                         ? ((POSITION_LABELS as Record<string, string | undefined>)[
                             player.position
                           ] ?? player.position)
-                        : 'Sin posición'}
+                        : 'No position'}
                     </Badge>
                     <Badge variant="warning">{best?.total}/100</Badge>
                   </div>

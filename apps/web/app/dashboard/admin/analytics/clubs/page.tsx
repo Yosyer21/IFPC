@@ -37,7 +37,7 @@ export default async function AdminAnalyticsClubsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Analytics de clubes"
-        subtitle="Verificación, distribución geográfica y evolución"
+        subtitle="Verification, geographic distribution and growth"
         icon="trending"
       />
 
@@ -51,9 +51,9 @@ export default async function AdminAnalyticsClubsPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Por país</h2>
+            <h2 className="mb-4 font-semibold">By country</h2>
             {byCountry.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin clubes registrados.</p>
+              <p className="text-sm text-muted-foreground">No registered clubs.</p>
             ) : (
               <CountsBars items={byCountry} />
             )}
@@ -61,7 +61,7 @@ export default async function AdminAnalyticsClubsPage() {
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Registros por mes</h2>
+            <h2 className="mb-4 font-semibold">Monthly registrations</h2>
             <CountsBars items={monthly} />
           </CardContent>
         </Card>

@@ -1,10 +1,10 @@
 # Modelo de negocio
 
-**IFPC** opera como plataforma de doble lado:
+**IFPC** operates as a two-sided platform:
 
 - **Lado jugador/familia**: servicio premium para destacar el perfil, más visibilidad y herramientas
   de desarrollo (vídeos ilimitados, estadísticas).
-- **Lado profesional (ojeadores, agentes, clubes)**: planes B2B para buscar talento, publicar
+- **Professional side (scouts, agents, clubs)**: B2B plans to find talent, post
   oportunidades y gestionar reclutamiento.
 
 ## Propuesta de valor

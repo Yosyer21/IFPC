@@ -5,7 +5,7 @@ export interface Policy {
   can: (action: string, resource?: string) => boolean;
 }
 
-/** Crea una política simple: permite un conjunto fijo de acciones por rol. */
+/** Creates a simple policy: allows a fixed set of actions per role. */
 export function createPolicy(role: Role, allowedActions: string[]): Policy {
   return {
     role,

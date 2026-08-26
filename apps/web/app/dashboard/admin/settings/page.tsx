@@ -8,8 +8,8 @@ export const metadata: Metadata = { title: 'Ajustes' };
 const SECTIONS = [
   {
     href: '/dashboard/admin/settings/countries',
-    title: 'Países',
-    description: 'Mercados configurados y presencia por país',
+    title: 'Countries',
+    description: 'Configured markets and presence by country',
   },
   {
     href: '/dashboard/admin/settings/leagues',
@@ -29,7 +29,7 @@ const SECTIONS = [
   {
     href: '/dashboard/admin/settings/security',
     title: 'Seguridad',
-    description: 'Variables de entorno y prácticas de seguridad',
+    description: 'Environment variables and security practices',
   },
   {
     href: '/dashboard/admin/settings/system',
@@ -43,7 +43,7 @@ export default async function SettingsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Ajustes"
-        subtitle="Configuración general de la plataforma"
+        subtitle="General platform settings"
         icon="settings"
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/parent-education — guías para familias (categoría parent-education). */
+/** GET /api/parent-education — guides for families (parent-education category). */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-// Los tests de integración requieren una base de datos PostgreSQL disponible.
-// Sin DATABASE_URL (o sin servicio activo) se omiten automáticamente.
+// Integration tests require an available PostgreSQL database.
+// Without DATABASE_URL (or without an active service) they are skipped automatically.
 const DATABASE_URL = process.env.DATABASE_URL;
 const describeDb = DATABASE_URL ? describe : describe.skip;
 
-describeDb('Auth · integración (requiere base de datos)', () => {
-  it('crea un usuario y verifica el hash de contraseña', async () => {
+describeDb('Auth · integration (requires a database)', () => {
+  it('creates a user and verifies the password hash', async () => {
     const { prisma } = await import('@ifpc/database');
     const { hashPassword, verifyPassword } = await import('@ifpc/auth');
 
@@ -24,7 +24,7 @@ describeDb('Auth · integración (requiere base de datos)', () => {
     await prisma.user.delete({ where: { id: user.id } });
   });
 
-  it('crea un jugador vinculado a su usuario', async () => {
+  it('creates a player linked to their user', async () => {
     const { prisma } = await import('@ifpc/database');
 
     const email = `it-player-${Date.now()}@test.com`;

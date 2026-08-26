@@ -41,7 +41,7 @@ export default async function AdminOpportunityCreatePage() {
         <CardContent>
           <form action={createOpportunityAction} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label className="text-sm sm:col-span-2">
-              Título *
+              Title *
               <input
                 required
                 name="title"
@@ -89,19 +89,19 @@ export default async function AdminOpportunityCreatePage() {
               </select>
             </label>
             <label className="text-sm">
-              Posición
+              Position
               <input name="position" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" placeholder="DEL" />
             </label>
             <label className="text-sm">
-              Ubicación
+              Location
               <input name="location" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" placeholder="Madrid" />
             </label>
             <label className="text-sm">
-              Edad mínima
+              Minimum age
               <input type="number" name="ageMin" min={5} max={40} className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" />
             </label>
             <label className="text-sm">
-              Edad máxima
+              Maximum age
               <input type="number" name="ageMax" min={5} max={45} className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" />
             </label>
             <label className="text-sm">
@@ -117,7 +117,7 @@ export default async function AdminOpportunityCreatePage() {
               <input type="date" name="closesAt" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" />
             </label>
             <label className="text-sm sm:col-span-2">
-              Descripción
+              Description
               <textarea name="description" rows={3} className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" />
             </label>
             <button

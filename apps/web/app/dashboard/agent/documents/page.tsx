@@ -10,7 +10,7 @@ export default function AgentDocumentsPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Documentos"
-        subtitle="Contratos, licencias y documentación de tus representados"
+        subtitle="Contracts, licenses and documentation of your represented players"
         icon="file"
       />
       <Card className="animate-fade-up">
@@ -19,8 +19,8 @@ export default function AgentDocumentsPage() {
             <IconFile className="h-7 w-7" />
           </span>
           <p className="max-w-sm text-sm text-muted-foreground">
-            Los documentos de tus representados (contratos, licencias, pasaportes) aparecerán aquí
-            en una próxima fase.
+            Your represented players' documents (contracts, licenses, passports) will appear here
+            in an upcoming phase.
           </p>
         </CardContent>
       </Card>

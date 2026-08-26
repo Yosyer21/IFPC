@@ -11,16 +11,16 @@ import { DonutChart, RadarChart } from '@/components/player/charts';
 export const metadata: Metadata = { title: 'Mi hijo' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pendiente',
   in_progress: 'En curso',
-  completed: 'Completado',
+  completed: 'Completed',
 };
 
 export default async function ParentChildDetailPage({
@@ -57,7 +57,7 @@ export default async function ParentChildDetailPage({
     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position)
     : '—';
 
-  // Nivel del hijo por categoría
+  // Child level by category
   const byCategory = new Map<string, number[]>();
   for (const evaluation of player.evaluations) {
     const list = byCategory.get(evaluation.category) ?? [];
@@ -79,12 +79,12 @@ export default async function ParentChildDetailPage({
       : null;
 
   const rows: [string, string][] = [
-    ['Posición', positionLabel],
-    ['Edad', age !== null ? `${age} años` : '—'],
+    ['Position', positionLabel],
+    ['Edad', age !== null ? `${age} years old` : '—'],
     ['Nacionalidad', player.nationality ?? '—'],
     ['Club actual', player.clubName ?? '—'],
     ['Estado', player.status],
-    ['Vídeos', String(player._count.videos)],
+    ['Videos', String(player._count.videos)],
   ];
 
   return (
@@ -93,7 +93,7 @@ export default async function ParentChildDetailPage({
         href="/dashboard/parent/children"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Mis hijos
+        ← My children
       </Link>
 
       {/* Hero del hijo */}
@@ -111,7 +111,7 @@ export default async function ParentChildDetailPage({
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {positionLabel}
-              {age !== null ? ` · ${age} años` : ''}
+              {age !== null ? ` · ${age} years old` : ''}
               {player.clubName ? ` · ${player.clubName}` : ''}
               {overall !== null ? ` · Media ${overall}/10` : ''}
             </p>
@@ -127,7 +127,7 @@ export default async function ParentChildDetailPage({
               href="/dashboard/parent/education"
               className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Guías para familias
+              Guides for families
             </Link>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default async function ParentChildDetailPage({
             ) : (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
                 <p className="max-w-xs text-sm text-muted-foreground">
-                  Aún no hay suficientes evaluaciones para mostrar el nivel por categoría.
+                  Not enough assessments yet to show the level by category.
                 </p>
               </div>
             )}
@@ -163,7 +163,7 @@ export default async function ParentChildDetailPage({
                   sublabel={`sobre 10 · ${player.evaluations.length} evaluaciones`}
                 />
               ) : (
-                <p className="py-8 text-sm text-muted-foreground">Sin evaluaciones aún.</p>
+                <p className="py-8 text-sm text-muted-foreground">No assessments yet.</p>
               )}
             </CardContent>
           </Card>
@@ -186,10 +186,10 @@ export default async function ParentChildDetailPage({
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="animate-fade-up" style={{ animationDelay: '360ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Evaluaciones recientes</h2>
+            <h2 className="mb-4 font-semibold">Recent assessments</h2>
             {player.evaluations.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Aún no hay evaluaciones registradas.
+                No assessments registered yet.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">
@@ -214,10 +214,10 @@ export default async function ParentChildDetailPage({
 
         <Card className="animate-fade-up" style={{ animationDelay: '440ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Objetivos recientes</h2>
+            <h2 className="mb-4 font-semibold">Recent goals</h2>
             {player.goals.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Aún no hay objetivos asignados.
+                No goals assigned yet.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">

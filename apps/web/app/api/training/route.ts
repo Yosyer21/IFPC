@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/training — catálogo de contenido de entrenamiento. */
+/** GET /api/training — training content catalog. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

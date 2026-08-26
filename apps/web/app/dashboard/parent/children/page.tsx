@@ -8,7 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Mis hijos' };
+export const metadata: Metadata = { title: 'My children' };
 
 export default async function ParentChildrenPage() {
   const session = await auth();
@@ -26,7 +26,7 @@ export default async function ParentChildrenPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Mis hijos"
+        title="My children"
         subtitle="Jugadores vinculados a tu cuenta familiar"
         icon="users"
       />
@@ -35,8 +35,8 @@ export default async function ParentChildrenPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              Aún no tienes hijos vinculados. Cuando un jugador acepte tu invitación familiar,
-              aparecerá aquí.
+              You haven't linked any children yet. When a player accepts your family invitation,
+              it will appear here.
             </p>
           </CardContent>
         </Card>
@@ -68,7 +68,7 @@ export default async function ParentChildrenPage() {
                       </h2>
                       <p className="truncate text-sm text-muted-foreground">
                         {positionLabel}
-                        {age !== null ? ` · ${age} años` : ''}
+                        {age !== null ? ` · ${age} years old` : ''}
                       </p>
                       {player.clubName ? (
                         <p className="truncate text-xs text-muted-foreground">{player.clubName}</p>

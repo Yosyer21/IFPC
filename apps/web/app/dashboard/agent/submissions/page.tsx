@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Envíos' };
+export const metadata: Metadata = { title: 'Submissions' };
 
 export default async function AgentSubmissionsPage() {
   const session = await auth();
@@ -23,12 +23,12 @@ export default async function AgentSubmissionsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title="Envíos" subtitle="Jugadores presentados a clubes y su estado" icon="mail">
+      <PageHeader title="Submissions" subtitle="Jugadores presentados a clubes y su estado" icon="mail">
         <Link
           href="/dashboard/agent/submissions/new"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
         >
-          Nuevo envío
+          New submission
         </Link>
       </PageHeader>
 
@@ -36,7 +36,7 @@ export default async function AgentSubmissionsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has enviado jugadores a clubes.
+              You haven't submitted players to clubs yet.
             </p>
           </CardContent>
         </Card>

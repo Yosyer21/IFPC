@@ -6,7 +6,7 @@ import { PLAYER_STATUS_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Jugadores · Usuarios' };
+export const metadata: Metadata = { title: 'Jugadores · Users' };
 
 export default async function AdminUsersPlayersPage() {
   const session = await auth();
@@ -33,7 +33,7 @@ export default async function AdminUsersPlayersPage() {
       {players.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay jugadores registrados.</p>
+            <p className="text-sm text-muted-foreground">No registered players.</p>
           </CardContent>
         </Card>
       ) : (
@@ -47,7 +47,7 @@ export default async function AdminUsersPlayersPage() {
                   </p>
                   <p className="text-sm text-muted-foreground">{player.user.email}</p>
                   <p className="text-xs text-muted-foreground">
-                    {player.position ?? 'Sin posición'} · {player.nationality ?? '—'} ·{' '}
+                    {player.position ?? 'No position'} · {player.nationality ?? '—'} ·{' '}
                     {player.competitionLevel ?? '—'}
                   </p>
                 </div>
@@ -56,7 +56,7 @@ export default async function AdminUsersPlayersPage() {
                     {(PLAYER_STATUS_LABELS as Record<string, string | undefined>)[player.status] ??
                       player.status}
                   </Badge>
-                  <Badge variant="outline">{player._count.videos} vídeos</Badge>
+                  <Badge variant="outline">{player._count.videos} videos</Badge>
                   <Badge variant="outline">{player._count.evaluations} eval.</Badge>
                   <Badge variant="outline">{player._count.applications} solicitudes</Badge>
                 </div>

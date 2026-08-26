@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const ROLES = [
-  { href: '/onboarding/player', label: 'Jugador/a', description: 'Perfil deportivo' },
+  { href: '/onboarding/player', label: 'Jugador/a', description: 'Profile deportivo' },
   { href: '/onboarding/parent', label: 'Familiar', description: 'Cuenta de padre/madre/tutor' },
   { href: '/onboarding/coach', label: 'Entrenador/a', description: 'Datos de entrenador' },
   { href: '/onboarding/agent', label: 'Agente', description: 'Agencia y licencia' },

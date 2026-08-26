@@ -19,7 +19,7 @@ export default async function UniversityProfilePage() {
   const rows: [string, string][] = [
     ['Nombre', university.name],
     ['Email', university.user?.email ?? '—'],
-    ['País', university.country],
+    ['Country', university.country],
     ['Ciudad', university.city ?? '—'],
     ['Miembro desde', university.createdAt.toLocaleDateString('es')],
   ];
@@ -28,7 +28,7 @@ export default async function UniversityProfilePage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Mi universidad"
-        subtitle="Información pública de tu institución en la plataforma"
+        subtitle="Your institution's public information on the platform"
         icon="book"
       />
 

@@ -45,9 +45,9 @@ export default async function AdminSettingsLeaguesPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Clubes por liga</h2>
+            <h2 className="mb-4 font-semibold">Clubs by league</h2>
             {clubsByLeague.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin clubes con liga asignada.</p>
+              <p className="text-sm text-muted-foreground">No clubs with an assigned league.</p>
             ) : (
               <CountsBars items={clubsByLeague} />
             )}
@@ -55,9 +55,9 @@ export default async function AdminSettingsLeaguesPage() {
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Clubes sin liga configurada</h2>
+            <h2 className="mb-4 font-semibold">Clubs without a configured league</h2>
             {otherClubs.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Todos los clubes tienen liga asignada.</p>
+              <p className="text-sm text-muted-foreground">All clubs have an assigned league.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {otherClubs.slice(0, 20).map((club) => (

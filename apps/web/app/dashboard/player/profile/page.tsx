@@ -14,7 +14,7 @@ import { StatusToggle } from '@/components/player/status-toggle';
 import { DonutChart } from '@/components/player/charts';
 import { IconTarget, IconTrendingUp, IconUser, IconWhistle } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Mi perfil' };
+export const metadata: Metadata = { title: 'My profile' };
 
 export default async function PlayerProfilePage() {
   const session = await auth();
@@ -61,8 +61,8 @@ export default async function PlayerProfilePage() {
     ['Email', player.user.email],
     ['Fecha de nacimiento', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
     ['Nacionalidad', player.nationality ?? '—'],
-    ['Posición', positionLabel],
-    ['Pierna hábil', footLabel],
+    ['Position', positionLabel],
+    ['Preferred foot', footLabel],
     ['Nivel competitivo', competitionLabel],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
@@ -70,9 +70,9 @@ export default async function PlayerProfilePage() {
   ];
 
   const subLinks = [
-    { href: '/dashboard/player/profile/football', label: 'Ficha futbolística', icon: IconTarget },
-    { href: '/dashboard/player/profile/physical', label: 'Datos físicos', icon: IconTrendingUp },
-    { href: '/dashboard/player/profile/technical', label: 'Nivel técnico', icon: IconWhistle },
+    { href: '/dashboard/player/profile/football', label: 'Football profile', icon: IconTarget },
+    { href: '/dashboard/player/profile/physical', label: 'Physical data', icon: IconTrendingUp },
+    { href: '/dashboard/player/profile/technical', label: 'Technical level', icon: IconWhistle },
   ];
 
 
@@ -85,7 +85,7 @@ export default async function PlayerProfilePage() {
             <IconUser className="h-5 w-5" />
           </span>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Mi perfil</h1>
+            <h1 className="text-2xl font-bold tracking-tight">My profile</h1>
             <p className="text-sm text-muted-foreground">
               {positionLabel}
               {competitionLabel !== '—' ? ` · ${competitionLabel}` : ''}
@@ -98,7 +98,7 @@ export default async function PlayerProfilePage() {
             href="/dashboard/player/profile/edit"
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
           >
-            Editar perfil
+            Edit profile
           </Link>
         </div>
       </div>
@@ -125,7 +125,7 @@ export default async function PlayerProfilePage() {
           {player.bio ? (
             <Card className="animate-fade-up" style={{ animationDelay: '200ms' }}>
               <CardContent>
-                <h2 className="mb-2 font-semibold">Biografía</h2>
+                <h2 className="mb-2 font-semibold">Biography</h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">{player.bio}</p>
               </CardContent>
             </Card>
@@ -135,7 +135,7 @@ export default async function PlayerProfilePage() {
         <div className="flex flex-col gap-4">
           <Card className="animate-fade-up flex flex-col items-center" style={{ animationDelay: '160ms' }}>
             <CardContent className="flex w-full flex-col items-center gap-4">
-              <h2 className="self-start font-semibold">Perfil completado</h2>
+              <h2 className="self-start font-semibold">Profile complete</h2>
               <DonutChart
                 value={percent}
                 label={`${percent}%`}
@@ -146,7 +146,7 @@ export default async function PlayerProfilePage() {
                   href="/dashboard/player/profile/edit"
                   className="text-sm text-primary hover:underline"
                 >
-                  Completar perfil →
+                  Complete profile →
                 </Link>
               ) : null}
             </CardContent>
@@ -154,7 +154,7 @@ export default async function PlayerProfilePage() {
 
           <Card className="animate-fade-up" style={{ animationDelay: '240ms' }}>
             <CardContent className="flex flex-col gap-1">
-              <h2 className="mb-2 font-semibold">Mi ficha</h2>
+              <h2 className="mb-2 font-semibold">My profile card</h2>
               {subLinks.map((link) => {
                 const Icon = link.icon;
                 return (

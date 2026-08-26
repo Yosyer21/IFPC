@@ -21,7 +21,7 @@ export default async function UniversityPlayersPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Jugadores disponibles"
+        title="Available players"
         subtitle="Talento abierto a nuevas oportunidades para reclutar"
         icon="users"
       />
@@ -30,7 +30,7 @@ export default async function UniversityPlayersPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              No hay jugadores disponibles en este momento.
+              No players available right now.
             </p>
           </CardContent>
         </Card>
@@ -40,7 +40,7 @@ export default async function UniversityPlayersPage() {
             const positionLabel = player.position
               ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                 player.position)
-              : 'Sin posición';
+              : 'No position';
             return (
               <Card
                 key={player.id}

@@ -51,7 +51,7 @@ export default async function ParentChildOpportunitiesPage({
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Oportunidades de mi hijo"
-        subtitle="Solicitudes enviadas, oportunidades guardadas e inscripciones a camps"
+        subtitle="Applications enviadas, oportunidades guardadas e inscripciones a camps"
         icon="target"
       >
         <Link
@@ -64,9 +64,9 @@ export default async function ParentChildOpportunitiesPage({
 
       <Card className="mb-6">
         <CardContent>
-          <h2 className="mb-4 font-semibold">Solicitudes ({applications.length})</h2>
+          <h2 className="mb-4 font-semibold">Applications ({applications.length})</h2>
           {applications.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Aún no ha enviado solicitudes.</p>
+            <p className="text-sm text-muted-foreground">They haven't sent any applications yet.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {applications.map((application) => (
@@ -126,7 +126,7 @@ export default async function ParentChildOpportunitiesPage({
         <CardContent>
           <h2 className="mb-4 font-semibold">Camps ({camps.length})</h2>
           {camps.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No está inscrito en ningún camp.</p>
+            <p className="text-sm text-muted-foreground">Not registered for any camp.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {camps.map((registration) => (

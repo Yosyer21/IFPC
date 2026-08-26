@@ -2,14 +2,14 @@ import type { NextAuthConfig } from 'next-auth';
 import type { Role } from '@ifpc/types';
 
 /**
- * Configuración base de Auth.js (segura para edge).
- * El provider de credentials (que requiere base de datos) se añade en auth.ts.
+ * Base Auth.js configuration (edge-safe).
+ * The credentials provider (requires a database) is added in auth.ts.
  */
 export const authConfig = {
   session: { strategy: 'jwt' },
   trustHost: true,
   pages: { signIn: '/login' },
-  // El provider de credentials (requiere base de datos) se añade en auth.ts.
+  // The credentials provider (requires a database) is added in auth.ts.
   providers: [],
   callbacks: {
     jwt({ token, user }) {

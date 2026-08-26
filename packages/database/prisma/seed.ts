@@ -9,7 +9,7 @@ export async function main() {
     update: {},
     create: {
       email: 'admin@ifpc.com',
-      name: 'Administrador',
+      name: 'Administrator',
       role: 'ADMIN',
       passwordHash: adminHash,
     },
@@ -21,7 +21,7 @@ export async function main() {
     update: {},
     create: {
       email: 'player@demo.com',
-      name: 'Jugador Demo',
+      name: 'Demo Player',
       role: 'PLAYER',
       passwordHash: playerHash,
     },
@@ -45,7 +45,7 @@ export async function main() {
     update: {},
     create: {
       email: 'parent@demo.com',
-      name: 'Familiar Demo',
+      name: 'Demo Parent',
       role: 'PARENT',
       passwordHash: parentHash,
     },
@@ -62,7 +62,7 @@ export async function main() {
     update: {},
     create: {
       email: 'coach@demo.com',
-      name: 'Entrenador Demo',
+      name: 'Demo Coach',
       role: 'COACH',
       passwordHash: coachHash,
     },
@@ -72,7 +72,7 @@ export async function main() {
     update: {},
     create: {
       userId: coachUser.id,
-      clubName: 'Academia Demo',
+      clubName: 'Demo Academy',
     },
   });
 
@@ -82,7 +82,7 @@ export async function main() {
     update: {},
     create: {
       email: 'university@demo.com',
-      name: 'Universidad Demo',
+      name: 'Demo University',
       role: 'UNIVERSITY',
       passwordHash: universityHash,
     },
@@ -92,8 +92,8 @@ export async function main() {
     update: {},
     create: {
       userId: universityUser.id,
-      name: 'Universidad Demo',
-      country: 'España',
+      name: 'Demo University',
+      country: 'Spain',
       city: 'Valencia',
     },
   });
@@ -104,7 +104,7 @@ export async function main() {
     update: {},
     create: {
       email: 'club@demo.com',
-      name: 'Club Demo',
+      name: 'Demo Club',
       role: 'CLUB',
       passwordHash: clubHash,
     },
@@ -115,15 +115,15 @@ export async function main() {
     create: {
       userId: clubUser.id,
       email: 'club@demo.com',
-      name: 'Club Demo',
-      country: 'España',
+      name: 'Demo Club',
+      country: 'Spain',
       city: 'Madrid',
     },
   });
 
   const playerProfile = await prisma.player.findUnique({ where: { userId: playerUser.id } });
 
-  // Entrenador demo vinculado al jugador demo (para evaluaciones y objetivos)
+  // Demo coach linked to the demo player (for assessments and goals)
   const coachProfile = await prisma.coach.findUnique({ where: { userId: coachUser.id } });
   if (coachProfile && playerProfile) {
     await prisma.coachPlayer.upsert({
@@ -135,7 +135,7 @@ export async function main() {
     });
   }
 
-  // Familiar demo vinculado al jugador demo (acompañamiento familiar)
+  // Demo parent linked to the demo player (family support)
   const parentProfile = await prisma.parent.findUnique({ where: { userId: parentUser.id } });
   if (parentProfile && playerProfile) {
     await prisma.parentChild.upsert({
@@ -155,7 +155,7 @@ export async function main() {
         amount: 5999,
         currency: 'EUR',
         status: 'PAID',
-        description: 'Membresía familiar · Acompañamiento Premium',
+        description: 'Family membership · Premium support',
       },
     });
   }
@@ -167,25 +167,25 @@ export async function main() {
       title: 'Control y primer toque',
       category: 'technical',
       description:
-        'Ejercicios de recepción orientada y primer toque con ambas piernas. Mejora la capacidad de jugar bajo presión.',
+        'Oriented receiving and first-touch exercises with both feet. Improves the ability to play under pressure.',
       durationMinutes: 25,
       difficulty: 2,
     },
     {
       id: 'tc-tech-2',
-      title: 'Conducción y cambio de ritmo',
+      title: 'Dribbling and change of pace',
       category: 'technical',
       description:
-        'Circuitos de conducción con cambios de dirección y velocidad. Clave para superar rivales en espacios reducidos.',
+        'Dribbling circuits with direction and speed changes. Key to beating opponents in tight spaces.',
       durationMinutes: 30,
       difficulty: 3,
     },
     {
       id: 'tc-tech-3',
-      title: 'Precisión en el pase',
+      title: 'Passing accuracy',
       category: 'technical',
       description:
-        'Serie de pases cortos y largos buscando precisión y cadencia. Incluye trabajo de pase con presión.',
+        'Series of short and long passes aiming for accuracy and rhythm. Includes passing under pressure.',
       durationMinutes: 20,
       difficulty: 2,
     },
@@ -194,7 +194,7 @@ export async function main() {
       title: 'Fuerza del core',
       category: 'strength-conditioning',
       description:
-        'Rutina de core de 15 minutos para estabilidad y prevención de lesiones. Recomendada 3 veces por semana.',
+        '15-minute core routine for stability and injury prevention. Recommended 3 times per week.',
       durationMinutes: 15,
       difficulty: 1,
     },
@@ -203,61 +203,61 @@ export async function main() {
       title: 'Potencia de tren inferior',
       category: 'strength-conditioning',
       description:
-        'Squats, lunges y saltos pliométricos para mejorar aceleración y salto.',
+        'Squats, lunges and plyometric jumps to improve acceleration and jumping.',
       durationMinutes: 30,
       difficulty: 3,
     },
     {
       id: 'tc-strength-3',
-      title: 'Prevención de lesiones: isquios',
+      title: 'Hamstring injury prevention',
       category: 'strength-conditioning',
       description:
-        'Trabajo específico de isquiosurales (nórdicos, deslizamientos) para reducir el riesgo de lesión.',
+        'Specific hamstring work (Nordics, slides) to reduce injury risk.',
       durationMinutes: 20,
       difficulty: 2,
     },
     {
       id: 'tc-psych-1',
-      title: 'Concentración en partido',
+      title: 'Match focus',
       category: 'psychology',
       description:
-        'Técnicas de rutina pre-partido y anclajes para mantener el foco durante los 90 minutos.',
+        'Pre-match routine techniques and anchors to stay focused through the 90 minutes.',
       durationMinutes: 10,
       difficulty: 1,
     },
     {
       id: 'tc-psych-2',
-      title: 'Gestión de la presión',
+      title: 'Pressure management',
       category: 'psychology',
       description:
-        'Respiración, visualización y diálogo interno para rendir en situaciones de máxima exigencia.',
+        'Breathing, visualization and self-talk to perform in high-pressure situations.',
       durationMinutes: 15,
       difficulty: 2,
     },
     {
       id: 'tc-psych-3',
-      title: 'Visualización de jugadas',
+      title: 'Match-play visualization',
       category: 'psychology',
       description:
-        'Entrenamiento mental mediante visualización de acciones y toma de decisiones previas al partido.',
+        'Mental training through visualization of actions and pre-match decision-making.',
       durationMinutes: 12,
       difficulty: 2,
     },
     {
       id: 'tc-parent-1',
-      title: 'Cómo acompañar a tu hijo deportista',
+      title: 'How to support your young athlete',
       category: 'parent-education',
       description:
-        'Guía práctica para apoyar a tu hijo en su carrera deportiva: comunicación, gestión de expectativas y equilibrio entre fútbol y estudios.',
+        'Practical guide to support your child in their sporting career: communication, expectation management and balance between football and studies.',
       durationMinutes: 20,
       difficulty: 1,
     },
     {
       id: 'tc-parent-2',
-      title: 'Alimentación y descanso del joven futbolista',
+      title: 'Nutrition and rest for young footballers',
       category: 'parent-education',
       description:
-        'Claves de nutrición, hidratación y sueño para el desarrollo de jugadores en formación.',
+        'Keys to nutrition, hydration and sleep for developing young players.',
       durationMinutes: 15,
       difficulty: 1,
     },
@@ -270,7 +270,7 @@ export async function main() {
     });
   }
 
-  // ─── Pathway, objetivos, evaluación y documento (player demo) ──
+  // ─── Pathway, goals, assessment and document (demo player) ──
   if (playerProfile) {
     await prisma.pathway.upsert({
       where: { playerId: playerProfile.id },
@@ -278,11 +278,11 @@ export async function main() {
       create: {
         id: 'pw-player-demo',
         playerId: playerProfile.id,
-        title: 'Ruta al fútbol profesional',
+        title: 'Path to professional football',
         description:
-          'Programa de desarrollo de 12 meses centrado en toma de decisiones, físico y exposición a ojeadores.',
+          '12-month development program focused on decision-making, physical work and exposure to scouts.',
         level: 'Sub-17',
-        focus: 'Toma de decisiones, velocidad de ejecución, potencia de tren inferior.',
+        focus: 'Decision-making, execution speed, lower-body power.',
         goals: 'Sumar 20 apariciones oficiales, mejorar el tiempo en sprints de 30m y completar el perfil.',
         startsAt: new Date(),
         endsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
@@ -296,7 +296,7 @@ export async function main() {
           id: 'goal-player-1',
           playerId: playerProfile.id,
           title: 'Mejorar pierna no dominante',
-          description: 'Realizar 15 minutos diarios de conducción y pase con la pierna no dominante.',
+          description: 'Do 15 minutes daily of dribbling and passing with the non-dominant foot.',
           status: 'in_progress',
           dueDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
         },
@@ -317,14 +317,14 @@ export async function main() {
         id: 'ev-player-1',
         category: 'technical',
         score: 8,
-        notes: 'Buen control orientado y precisión en pase corto. Mejorar el juego de espaldas.',
+        notes: 'Good oriented control and short-pass accuracy. Improve hold-up play.',
         createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
       },
       {
         id: 'ev-player-2',
         category: 'physical',
         score: 7,
-        notes: 'Potencia de tren inferior correcta. Falta velocidad de reacción en los primeros metros.',
+        notes: 'Good lower-body power. Needs reaction speed in the first meters.',
         createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000),
       },
       {
@@ -338,14 +338,14 @@ export async function main() {
         id: 'ev-player-4',
         category: 'psychological',
         score: 8,
-        notes: 'Gran concentración en partidos y manejo de la presión.',
+        notes: 'Great focus in matches and pressure management.',
         createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
       },
       {
         id: 'ev-player-5',
         category: 'technical',
         score: 9,
-        notes: 'Progreso notable en el primer toque. Candidato a rotación en el once titular.',
+        notes: 'Notable progress on first touch. Candidate for starting XI rotation.',
         createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       },
     ];
@@ -372,7 +372,7 @@ export async function main() {
       create: {
         id: 'doc-player-1',
         playerId: playerProfile.id,
-        title: 'Certificado médico',
+        title: 'Medical certificate',
         url: '/uploads/example.pdf',
         type: 'medical',
       },
@@ -435,9 +435,9 @@ export async function main() {
         scoutId: scout.id,
         playerId: playerProfile.id,
         rating: 8,
-        strengths: 'Buen control, visión de juego y golpeo con ambas piernas.',
-        weaknesses: 'Juego de espaldas y juego aéreo.',
-        notes: 'Proyecto interesante para categoría Sub-17.',
+        strengths: 'Good control, game vision and striking with both feet.',
+        weaknesses: 'Hold-up play and aerial game.',
+        notes: 'Interesting prospect for U17 level.',
       },
     });
 
@@ -488,7 +488,7 @@ export async function main() {
       ageMin: 15,
       ageMax: 17,
       level: 'nacional',
-      country: 'España',
+      country: 'Spain',
       description: 'Buscamos un delantero con buen golpeo y movilidad para el equipo juvenil.',
       status: 'OPEN',
     },
@@ -503,7 +503,7 @@ export async function main() {
       name: 'María López',
       email: 'maria@example.com',
       subject: 'Prueba para mi hijo',
-      message: 'Mi hijo juega de mediocentro y nos gustaría saber cómo participar en una prueba.',
+      message: 'My son plays center midfield and we would like to know how to take part in a trial.',
       status: 'NEW',
     },
   });
@@ -521,7 +521,7 @@ export async function main() {
       ageMin: 15,
       ageMax: 17,
       location: 'Madrid',
-      description: 'Jornada de pruebas abierta para delanteros de la categoría Sub-17.',
+      description: 'Open trial day for U17 strikers.',
       closesAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     },
   });
@@ -540,7 +540,7 @@ export async function main() {
       ageMax: 19,
       location: 'Valencia',
       description:
-        'Beca académica-deportiva para delanteros que quieran combinar estudios y fútbol de alto nivel.',
+        'Academic-sports scholarship for strikers who want to combine studies and high-level football.',
       closesAt: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
     },
   });
@@ -554,7 +554,7 @@ export async function main() {
       create: { playerId: playerProfile.id, opportunityId: 'opp-club-1' },
     });
 
-    // Solicitud de aplicación del jugador demo (para que el club tenga candidatos en su bandeja)
+    // Application submitted by the demo player (so the club has candidates in its inbox)
     await prisma.application.upsert({
       where: {
         playerId_opportunityId: { playerId: playerProfile.id, opportunityId: 'opp-club-1' },
@@ -563,7 +563,7 @@ export async function main() {
       create: {
         playerId: playerProfile.id,
         opportunityId: 'opp-club-1',
-        message: 'Soy delantero Sub-17 con experiencia en categoría nacional. Me encantaría participar en la jornada de pruebas.',
+        message: 'I am a U17 striker with national-level experience. I would love to take part in the trial day.',
       },
     });
   }
@@ -593,7 +593,7 @@ export async function main() {
         id: 'opp-uni-1',
         universityId: universityProfile.id,
         creatorType: 'UNIVERSITY',
-        title: 'Beca deportiva universitaria (fútbol masculino)',
+        title: 'University sports scholarship (men's football)',
         type: 'SCHOLARSHIP',
         status: 'OPEN',
         position: 'DEL',
@@ -601,7 +601,7 @@ export async function main() {
         ageMax: 20,
         location: 'Valencia',
         description:
-          'Beca académica-deportiva para delanteros. Grado universitario + fútbol de competición en categoría nacional universitaria.',
+          'Academic-sports scholarship for strikers. University degree + competitive football in the national collegiate category.',
         closesAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
       },
     });
@@ -615,8 +615,8 @@ export async function main() {
       id: 'camp-1',
       title: 'Campus de verano IFPC',
       description:
-        'Campus intensivo de pretemporada: técnico-táctico por la mañana y físico por la tarde. Plazas limitadas con seguimiento individualizado.',
-      country: 'España',
+        'Intensive preseason camp: technical-tactical in the morning and physical in the afternoon. Limited spots with individualized follow-up.',
+      country: 'Spain',
       city: 'Valencia',
       startsAt: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000),
       endsAt: new Date(Date.now() + 28 * 24 * 60 * 60 * 1000),
@@ -633,8 +633,8 @@ export async function main() {
     create: {
       id: 'camp-2',
       title: 'Clinic de delanteros (borrador)',
-      description: 'Clinic de 3 días para delanteros Sub-15 a Sub-18 con entrenadores invitados.',
-      country: 'España',
+      description: '3-day clinic for U15–U18 strikers with guest coaches.',
+      country: 'Spain',
       city: 'Madrid',
       startsAt: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
       endsAt: new Date(Date.now() + 48 * 24 * 60 * 60 * 1000),
@@ -659,8 +659,8 @@ export async function main() {
     update: {},
     create: {
       id: 'live-1',
-      title: 'Entrenamiento en directo: primer toque bajo presión',
-      description: 'Sesión grupal en directo centrada en recepción orientada y juego bajo presión.',
+      title: 'Live training: first touch under pressure',
+      description: 'Live group session focused on oriented receiving and playing under pressure.',
       type: 'TRAINING',
       status: 'SCHEDULED',
       startsAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
@@ -690,8 +690,8 @@ export async function main() {
     update: {},
     create: {
       id: 'live-3',
-      title: 'Charla: gestión de la presión en partidos decisivos',
-      description: 'Píldora de psicología deportiva grabada en directo.',
+      title: 'Talk: pressure management in decisive matches',
+      description: 'Recorded live sports psychology session.',
       type: 'LECTURE',
       status: 'ENDED',
       startsAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
@@ -700,13 +700,13 @@ export async function main() {
     },
   });
 
-  // ─── Mensajería demo ───────────────────────────────────────────
+  // ─── Demo messaging ───────────────────────────────────────────
   await prisma.conversation.upsert({
     where: { id: 'conv-1' },
     update: {},
     create: {
       id: 'conv-1',
-      subject: 'Colaboración Club Demo × Futuro jugador',
+      subject: 'Club Demo × Future player collaboration',
       participants: {
         create: [
           { userId: clubUser.id, role: 'OWNER' },
@@ -718,11 +718,11 @@ export async function main() {
         create: [
           {
             senderId: clubUser.id,
-            body: 'Hola, estamos buscando delanteros Sub-17 para nuestra próxima jornada de pruebas. ¿Podéis difundirlo en la plataforma?',
+            body: 'Hi, we are looking for U17 strikers for our next trial day. Could you spread the word on the platform?',
           },
           {
             senderId: admin.id,
-            body: '¡Claro! La oportunidad ya está publicada y enlazada desde el perfil de los jugadores. Os avisaremos de cada solicitud recibida.',
+            body: 'Of course! The opportunity is already published and linked from the players' profiles. We will notify you of every application received.',
           },
         ],
       },
@@ -739,10 +739,10 @@ export async function main() {
   console.log(`- entrenador: coach@demo.com / coach123`);
   console.log(`- universidad: university@demo.com / university123`);
   console.log(`- club id: ${club.id}`);
-  console.log(`- contenido entrenamiento: ${trainingContents.length} ítems`);
+  console.log(`- training content: ${trainingContents.length} items`);
 }
 
-// Auto-ejecución solo cuando se invoca directamente (pnpm db:seed, scripts:seed).
+// Auto-executes only when invoked directly (pnpm db:seed, scripts:seed).
 const argvEntry = process.argv[1];
 const isDirectRun = argvEntry ? import.meta.url === pathToFileURL(argvEntry).href : false;
 if (isDirectRun) {

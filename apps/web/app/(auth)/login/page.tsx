@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { LoginForm } from '@/components/auth/login-form';
 
-export const metadata: Metadata = { title: 'Iniciar sesión' };
+export const metadata: Metadata = { title: 'Sign in' };
 
 export default async function LoginPage({
   searchParams,
@@ -11,7 +11,7 @@ export default async function LoginPage({
   const { callbackUrl } = await searchParams;
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Iniciar sesión</h1>
+      <h1 className="mb-6 text-2xl font-bold">Sign in</h1>
       <LoginForm callbackUrl={callbackUrl ?? '/dashboard'} />
     </div>
   );

@@ -33,8 +33,8 @@ export default async function AgentTrialsPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              No hay pruebas programadas. Cuando un club confirme una prueba tras un envío,
-              aparecerá aquí.
+              No trials scheduled. When a club confirms a trial after a submission,
+              it will appear here.
             </p>
           </CardContent>
         </Card>

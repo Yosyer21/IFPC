@@ -9,22 +9,22 @@ const CATEGORIES = [
   {
     href: '/dashboard/admin/content/training',
     title: 'Entrenamiento',
-    description: 'Catálogo de contenido técnico para jugadores',
+    description: 'Catalog of technical content for players',
   },
   {
     href: '/dashboard/admin/content/strength-conditioning',
     title: 'Fuerza y acondicionamiento',
-    description: 'Rutinas de fuerza y prevención de lesiones',
+    description: 'Strength routines and injury prevention',
   },
   {
     href: '/dashboard/admin/content/psychology',
-    title: 'Psicología deportiva',
-    description: 'Recursos de preparación mental',
+    title: 'Sports psychology',
+    description: 'Mental preparation resources',
   },
   {
     href: '/dashboard/admin/content/parent-education',
-    title: 'Educación para familias',
-    description: 'Guías para acompañar la carrera de los hijos',
+    title: 'Education for families',
+    description: 'Guides to support children\u2019s careers',
   },
 ];
 
@@ -33,7 +33,7 @@ export default async function ContentPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Contenido"
-        subtitle="Contenido de entrenamiento y educación publicado en la plataforma"
+        subtitle="Training and education content published on the platform"
         icon="file"
       />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

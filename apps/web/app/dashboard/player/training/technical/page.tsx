@@ -3,7 +3,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { TrainingGrid } from '@/components/player/training-grid';
 
-export const metadata: Metadata = { title: 'Entrenamiento · Técnica' };
+export const metadata: Metadata = { title: 'Training · Technique' };
 
 export default async function PlayerTrainingTechnicalPage() {
   const session = await auth();
@@ -16,7 +16,7 @@ export default async function PlayerTrainingTechnicalPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <h1 className="mb-6 text-2xl font-bold">Técnica</h1>
+      <h1 className="mb-6 text-2xl font-bold">Technique</h1>
       <TrainingGrid contents={contents} />
     </div>
   );

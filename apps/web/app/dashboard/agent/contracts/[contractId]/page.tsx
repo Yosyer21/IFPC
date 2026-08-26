@@ -31,7 +31,7 @@ export default async function AgentContractDetailPage({
         href="/dashboard/agent/submissions"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Envíos
+        ← Submissions
       </Link>
       <h1 className="mb-4 text-2xl font-bold">Contrato</h1>
 
@@ -46,7 +46,7 @@ export default async function AgentContractDetailPage({
               [
                 'Salario',
                 contract.salary
-                  ? `${contract.salary.toLocaleString('es')} ${contract.currency}/año`
+                  ? `${contract.salary.toLocaleString('en')} ${contract.currency}/year`
                   : '—',
               ],
               ['Firmado el', contract.signedAt ? contract.signedAt.toLocaleDateString('es') : '—'],

@@ -37,7 +37,7 @@ export default async function ScoutSavedPage() {
             <p className="text-sm text-muted-foreground">
               No has guardado jugadores.{' '}
               <Link href="/dashboard/scout/players" className="text-primary hover:underline">
-                Explorar jugadores
+                Explore players
               </Link>
             </p>
           </CardContent>
@@ -62,7 +62,7 @@ export default async function ScoutSavedPage() {
                         ? ((POSITION_LABELS as Record<string, string | undefined>)[
                             entry.player.position
                           ] ?? entry.player.position)
-                        : 'Sin posición'}
+                        : 'No position'}
                       {' · '}
                       Guardado el {entry.createdAt.toLocaleDateString('es')}
                     </p>

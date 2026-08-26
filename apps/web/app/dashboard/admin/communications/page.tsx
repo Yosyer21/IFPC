@@ -58,8 +58,8 @@ export default async function AdminCommunicationsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay conversaciones todavía. Las conversaciones entre clubes, jugadores y la
-              plataforma aparecerán aquí.
+              No conversations yet. Conversations between clubs, players and the
+              platform will appear here.
             </p>
           </CardContent>
         </Card>
@@ -75,7 +75,7 @@ export default async function AdminCommunicationsPage() {
                       <span className="font-semibold">{conversation.subject}</span>
                       <Badge variant="outline">{conversation.messages.length} mensajes</Badge>
                       {last && last.senderId !== session.user.id && !last.readAt ? (
-                        <Badge variant="warning">Nuevo</Badge>
+                        <Badge variant="warning">New</Badge>
                       ) : null}
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -101,7 +101,7 @@ export default async function AdminCommunicationsPage() {
                         type="submit"
                         className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-muted"
                       >
-                        Marcar leído
+                        Mark as read
                       </button>
                     </form>
                   </div>

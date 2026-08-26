@@ -7,7 +7,7 @@ import { Button, Input, Select } from '@ifpc/ui';
 const TYPE_OPTIONS = [
   { value: 'passport', label: 'Pasaporte' },
   { value: 'contract', label: 'Contrato' },
-  { value: 'medical', label: 'Médico' },
+  { value: 'medical', label: 'Medical' },
   { value: 'other', label: 'Otro' },
 ];
 
@@ -18,8 +18,8 @@ export function DocumentUploadForm() {
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <Input
         name="title"
-        label="Título del documento"
-        placeholder="Ej: Pasaporte, Certificado médico…"
+        label="Document title"
+        placeholder="E.g. Passport, medical certificate…"
         required
       />
       <Select name="type" label="Tipo" options={TYPE_OPTIONS} defaultValue="other" />

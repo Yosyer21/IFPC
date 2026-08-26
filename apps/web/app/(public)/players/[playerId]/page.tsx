@@ -7,7 +7,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Perfil de jugador — IFPC' };
+export const metadata: Metadata = { title: 'Profile de jugador — IFPC' };
 
 export default async function PublicPlayerProfilePage({
   params,
@@ -45,7 +45,7 @@ export default async function PublicPlayerProfilePage({
       <Navbar />
       <main className="mx-auto w-full max-w-4xl px-4 py-16">
         <Link href="/players" className="text-sm text-muted-foreground hover:text-emerald-400">
-          ← Jugadores
+          ← Players
         </Link>
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
@@ -60,7 +60,7 @@ export default async function PublicPlayerProfilePage({
               </h1>
               <p className="text-sm text-muted-foreground">
                 {positionLabel}
-                {age !== null ? ` · ${age} años` : ''} · {player.nationality ?? 'Sin nacionalidad'}
+                {age !== null ? ` · ${age} years old` : ''} · {player.nationality ?? 'Sin nacionalidad'}
               </p>
             </div>
             {overall !== null ? (
@@ -79,7 +79,7 @@ export default async function PublicPlayerProfilePage({
             ) : null}
             {player.clubName ? <Badge variant="outline">{player.clubName}</Badge> : null}
             {player.foot ? <Badge variant="outline">Pierna: {player.foot}</Badge> : null}
-            <Badge variant="outline">{player._count.videos} vídeos</Badge>
+            <Badge variant="outline">{player._count.videos} videos</Badge>
             <Badge variant="outline">{player.evaluations.length} evaluaciones</Badge>
           </div>
 
@@ -89,7 +89,7 @@ export default async function PublicPlayerProfilePage({
 
           <div className="mt-8 rounded-xl border border-border/60 p-5 text-center">
             <p className="text-sm text-muted-foreground">
-              ¿Representas a un club o universidad? Contacta con este jugador desde la plataforma.
+              Do you represent a club or university? Contact this player through the platform.
             </p>
             <Link
               href="/register"

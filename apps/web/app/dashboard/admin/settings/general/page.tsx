@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from '@ifpc/auth';
 import { Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Configuración general' };
+export const metadata: Metadata = { title: 'General settings' };
 
 export default async function AdminSettingsGeneralPage() {
   const session = await auth();
@@ -24,7 +24,7 @@ export default async function AdminSettingsGeneralPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-2xl font-bold">Configuración general</h1>
+      <h1 className="mb-6 text-2xl font-bold">General settings</h1>
       <Card>
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">

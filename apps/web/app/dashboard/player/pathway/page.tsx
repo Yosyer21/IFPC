@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Mi ruta de desarrollo' };
+export const metadata: Metadata = { title: 'My development pathway' };
 
 export default async function PlayerPathwayPage() {
   const session = await auth();
@@ -21,13 +21,13 @@ export default async function PlayerPathwayPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-2xl font-bold">Mi ruta de desarrollo</h1>
+      <h1 className="mb-6 text-2xl font-bold">My development pathway</h1>
 
       {!pathway ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no tienes una ruta asignada. Tu entrenador o la plataforma podrán asignarte un
+              You don't have an assigned pathway yet. Your coach or the platform can assign you a
               plan de desarrollo personalizado.
             </p>
           </CardContent>
@@ -49,13 +49,13 @@ export default async function PlayerPathwayPage() {
             ) : null}
             {pathway.focus ? (
               <div>
-                <h2 className="mb-1 text-sm font-semibold">Áreas de enfoque</h2>
+                <h2 className="mb-1 text-sm font-semibold">Focus areas</h2>
                 <p className="text-sm text-muted-foreground">{pathway.focus}</p>
               </div>
             ) : null}
             {pathway.goals ? (
               <div>
-                <h2 className="mb-1 text-sm font-semibold">Objetivos</h2>
+                <h2 className="mb-1 text-sm font-semibold">Goals</h2>
                 <p className="text-sm text-muted-foreground">{pathway.goals}</p>
               </div>
             ) : null}

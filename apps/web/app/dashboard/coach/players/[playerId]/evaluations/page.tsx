@@ -10,10 +10,10 @@ import { PageHeader } from '@/components/player/page-header';
 export const metadata: Metadata = { title: 'Evaluaciones del jugador' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológico',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function CoachPlayerEvaluationsPage({
@@ -58,7 +58,7 @@ export default async function CoachPlayerEvaluationsPage({
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-base">Registrar evaluación</CardTitle>
+          <CardTitle className="text-base">Register assessment</CardTitle>
         </CardHeader>
         <CardContent>
           <CreateEvaluationForm playerId={playerId} />

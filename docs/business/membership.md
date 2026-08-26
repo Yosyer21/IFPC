@@ -1,8 +1,8 @@
-# Membresía (negocio)
+# Membership (negocio)
 
-## Planes
+## Plans
 
-| Plan | Precio/año | Audiencia |
+| Plan | Precio/year | Audiencia |
 | --- | --- | --- |
 | FREE | 0 € | Todos |
 | PREMIUM | 59,99 € | Jugadores |

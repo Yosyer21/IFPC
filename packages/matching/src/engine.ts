@@ -41,29 +41,29 @@ export function calculateAge(dateOfBirth: Date): number {
 
 /**
  * Score 0-100 entre el perfil de un jugador y los requisitos de un club.
- * Criterios: posición (25), edad (25), nivel (20), disponibilidad (15), geografía (15).
- * Cada criterio devuelve puntos + explicación.
+ * Criteria: position (25), age (25), level (20), availability (15), geography (15).
+ * Each criterion returns points + explanation.
  */
 export function matchScore(player: MatchPlayer, requirement: MatchRequirement): MatchScore {
   const criteria: MatchCriterion[] = [];
 
-  // Posición (25)
+  // Position (25)
   const positionMax = 25;
   let positionScore: number;
   let positionDetail: string;
   if (!requirement.position) {
     positionScore = positionMax;
-    positionDetail = 'Sin requisito de posición (peso neutro)';
+    positionDetail = 'No position requirement (neutral weight)';
   } else if (player.position && player.position === requirement.position) {
     positionScore = positionMax;
-    positionDetail = `Coincide con la posición requerida (${requirement.position})`;
+    positionDetail = `Matches the required position (${requirement.position})`;
   } else {
     positionScore = 0;
-    positionDetail = `Posición ${player.position ?? 'sin definir'} no coincide con ${requirement.position}`;
+    positionDetail = `Position ${player.position ?? 'undefined'} does not match ${requirement.position}`;
   }
   criteria.push({
     key: 'position',
-    label: 'Posición',
+    label: 'Position',
     score: positionScore,
     max: positionMax,
     detail: positionDetail,
@@ -79,7 +79,7 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     ageDetail = 'Sin rango de edad requerido';
   } else if (age === null) {
     ageScore = Math.round(ageMax / 2);
-    ageDetail = 'Edad del jugador no informada (puntuación parcial)';
+    ageDetail = 'Player age not provided (partial score)';
   } else {
     const min = requirement.ageMin ?? -Infinity;
     const max = requirement.ageMax ?? Infinity;
@@ -111,7 +111,7 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     levelDetail = `Nivel ${player.competitionLevel} vs requerido ${requirement.level}`;
   } else {
     levelScore = Math.round(levelMax / 2);
-    levelDetail = 'Nivel del jugador no informado (puntuación parcial)';
+    levelDetail = 'Player level not provided (partial score)';
   }
   criteria.push({ key: 'level', label: 'Nivel', score: levelScore, max: levelMax, detail: levelDetail });
 
@@ -126,14 +126,14 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     detail: available ? 'Jugador disponible' : `Estado actual: ${player.status}`,
   });
 
-  // Geografía (15)
+  // Geography (15)
   const geographyMax = 15;
   let geographyScore: number;
   let geographyDetail: string;
   const requiredPlace = requirement.country ?? requirement.location ?? null;
   if (!requiredPlace) {
     geographyScore = geographyMax;
-    geographyDetail = 'Sin restricción geográfica';
+    geographyDetail = 'No geographic restriction';
   } else if (
     player.nationality &&
     requiredPlace.toLowerCase().includes(player.nationality.toLowerCase())
@@ -145,11 +145,11 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     geographyDetail = `Nacionalidad ${player.nationality} vs ${requiredPlace}`;
   } else {
     geographyScore = Math.round(geographyMax / 2);
-    geographyDetail = 'Nacionalidad no informada (puntuación parcial)';
+    geographyDetail = 'Nationality not provided (partial score)';
   }
   criteria.push({
     key: 'geography',
-    label: 'Geografía',
+    label: 'Geography',
     score: geographyScore,
     max: geographyMax,
     detail: geographyDetail,

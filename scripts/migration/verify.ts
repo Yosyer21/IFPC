@@ -9,12 +9,12 @@ async function main() {
     submissions: await prisma.submission.count(),
     contracts: await prisma.contract.count(),
   };
-  console.log('Conexión correcta. Conteos:', JSON.stringify(counts, null, 2));
+  console.log('Connection OK. Counts:', JSON.stringify(counts, null, 2));
 }
 
 main()
   .catch((error) => {
-    console.error('Error de conexión:', error);
+    console.error('Connection error:', error);
     process.exit(1);
   })
   .finally(async () => {

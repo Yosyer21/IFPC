@@ -4,12 +4,12 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Mis objetivos' };
+export const metadata: Metadata = { title: 'My goals' };
 
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Pendiente',
   in_progress: 'En curso',
-  completed: 'Completado',
+  completed: 'Completed',
 };
 
 export default async function PlayerGoalsPage() {
@@ -26,13 +26,13 @@ export default async function PlayerGoalsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="mb-6 text-2xl font-bold">Mis objetivos</h1>
+      <h1 className="mb-6 text-2xl font-bold">My goals</h1>
 
       {goals.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No tienes objetivos definidos todavía.
+              You have no goals defined yet.
             </p>
           </CardContent>
         </Card>
@@ -56,7 +56,7 @@ export default async function PlayerGoalsPage() {
                 ) : null}
                 {goal.dueDate ? (
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Fecha límite: {goal.dueDate.toLocaleDateString('es')}
+                    Deadline: {goal.dueDate.toLocaleDateString('es')}
                   </p>
                 ) : null}
               </CardContent>

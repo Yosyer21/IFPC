@@ -29,7 +29,7 @@ export default async function AdminSettingsSystemPage() {
     'Motor de base de datos': process.env.DATABASE_URL?.includes('pglite') ? 'PGlite (dev)' : 'PostgreSQL',
     'Almacenamiento': process.env.S3_ENDPOINT ? 'S3/MinIO' : 'Local (public/uploads)',
     'Correo': process.env.RESEND_API_KEY ? 'Resend' : 'No configurado',
-    'Pagos': process.env.STRIPE_SECRET_KEY ? 'Stripe' : 'Simulados',
+    'Payments': process.env.STRIPE_SECRET_KEY ? 'Stripe' : 'Simulados',
     'Workers (BullMQ)': 'Disponibles en apps/worker',
   };
 
@@ -44,20 +44,20 @@ export default async function AdminSettingsSystemPage() {
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard href="/dashboard/admin/users" icon={IconUsers} label="Usuarios" value={users} />
+        <StatCard href="/dashboard/admin/users" icon={IconUsers} label="Users" value={users} />
         <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Jugadores" value={players} />
         <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubes" value={clubs} />
         <StatCard href="/dashboard/admin/opportunities" icon={IconBell} label="Oportunidades" value={opportunities} />
         <StatCard href="/dashboard/admin/players/evaluations" icon={IconFile} label="Contenidos" value={contents} />
-        <StatCard href="/dashboard/admin/recruitment" icon={IconBell} label="Envíos" value={submissions} />
-        <StatCard href="/dashboard/admin/memberships/payments" icon={IconBell} label="Pagos" value={payments} />
-        <StatCard href="/dashboard/admin/players" icon={IconVideo} label="Vídeos" value={videos} />
+        <StatCard href="/dashboard/admin/recruitment" icon={IconBell} label="Submissions" value={submissions} />
+        <StatCard href="/dashboard/admin/memberships/payments" icon={IconBell} label="Payments" value={payments} />
+        <StatCard href="/dashboard/admin/players" icon={IconVideo} label="Videos" value={videos} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Configuración</h2>
+            <h2 className="mb-3 font-semibold">Settings</h2>
             <dl className="flex flex-col gap-2 text-sm">
               {info.map(([label, value]) => (
                 <div key={label} className="flex items-center justify-between gap-3">
@@ -71,7 +71,7 @@ export default async function AdminSettingsSystemPage() {
 
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Workers disponibles</h2>
+            <h2 className="mb-3 font-semibold">Available workers</h2>
             <div className="flex flex-wrap gap-2">
               {['notification', 'video-processing', 'matching', 'report', 'maintenance'].map(
                 (queue) => (
@@ -82,8 +82,8 @@ export default async function AdminSettingsSystemPage() {
               )}
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Colas definidas en apps/worker/src/queues. La integración con las acciones de la web
-              está pendiente.
+              Queues defined in apps/worker/src/queues. The integration with the web actions
+              is pending.
             </p>
           </CardContent>
         </Card>

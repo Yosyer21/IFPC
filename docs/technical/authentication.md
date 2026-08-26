@@ -1,6 +1,6 @@
 # Autenticación
 
-**Auth.js v5** (NextAuth) con estrategia JWT en `packages/auth`.
+**Auth.js v5** (NextAuth) with JWT strategy in `packages/auth`.
 
 ## Flujo
 
@@ -10,7 +10,7 @@
 4. **Guard por rol**: `/dashboard/<rol>` solo es accesible para ese rol (redirección si no corresponde).
 5. **Dashboard layout**: verifica la sesión en servidor antes de renderizar.
 
-## Contraseñas
+## Passwords
 
 - Hash con **bcryptjs** (10 rondas) en `packages/auth/src/password.ts`.
 - Recuperación: token aleatorio (sha256) con expiración de 1h en `PasswordResetToken`.

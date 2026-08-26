@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Vídeo' };
+export const metadata: Metadata = { title: 'Video' };
 
 export default async function PlayerVideoDetailPage({
   params,
@@ -27,7 +27,7 @@ export default async function PlayerVideoDetailPage({
         href="/dashboard/player/videos"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Mis vídeos
+        ← My videos
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{video.title}</h1>
       <video src={video.url} controls className="aspect-video w-full rounded-lg border border-border bg-black" />
@@ -36,7 +36,7 @@ export default async function PlayerVideoDetailPage({
           <Badge variant={video.status === 'ready' ? 'success' : 'warning'}>{video.status}</Badge>
           {video.duration ? (
             <span className="text-sm text-muted-foreground">
-              Duración: {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
+              Duration: {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
             </span>
           ) : null}
           <span className="text-sm text-muted-foreground">

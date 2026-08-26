@@ -9,9 +9,9 @@ export const metadata: Metadata = { title: 'Entrenamiento' };
 
 const CATEGORIES = [
   { value: 'all', label: 'Todos' },
-  { value: 'technical', label: 'Técnica' },
+  { value: 'technical', label: 'Technique' },
   { value: 'strength-conditioning', label: 'Fuerza' },
-  { value: 'psychology', label: 'Psicología' },
+  { value: 'psychology', label: 'Psychology' },
 ] as const;
 
 export default async function PlayerTrainingPage() {
@@ -39,7 +39,7 @@ export default async function PlayerTrainingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Entrenamiento"
-        subtitle="Contenido para mejorar tu técnica, fuerza y mentalidad"
+        subtitle="Content to improve your technique, strength and mindset"
         icon="play"
       />
       <Tabs tabs={tabs} defaultValue="all" />

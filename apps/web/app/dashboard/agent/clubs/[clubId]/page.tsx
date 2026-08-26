@@ -32,14 +32,14 @@ export default async function AgentClubDetailPage({
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{club.name}</h1>
       <Badge variant={club.verified ? 'success' : 'warning'}>
-        {club.verified ? 'Verificado' : 'Pendiente de verificación'}
+        {club.verified ? 'Verificado' : 'Pending verification'}
       </Badge>
 
       <Card className="mt-4 mb-4">
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
-              ['País', club.country],
+              ['Country', club.country],
               ['Ciudad', club.city ?? '—'],
               ['Liga', club.league ?? '—'],
             ].map(([label, value]) => (
@@ -60,7 +60,7 @@ export default async function AgentClubDetailPage({
               <CardContent>
                 <p className="text-sm font-medium">{opportunity.title}</p>
                 <p className="text-xs text-muted-foreground">
-                  {opportunity.position ? `Posición: ${opportunity.position}` : ''}
+                  {opportunity.position ? `Position: ${opportunity.position}` : ''}
                 </p>
               </CardContent>
             </Card>

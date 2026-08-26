@@ -9,10 +9,10 @@ import { PageHeader } from '@/components/player/page-header';
 export const metadata: Metadata = { title: 'Evaluaciones realizadas' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológico',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function CoachEvaluationsPage() {
@@ -45,8 +45,8 @@ export default async function CoachEvaluationsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has registrado evaluaciones. Accede a un jugador y usa el formulario de
-              evaluación.
+              You haven't registered any assessments yet. Go to a player and use the assessment
+              form.
             </p>
           </CardContent>
         </Card>

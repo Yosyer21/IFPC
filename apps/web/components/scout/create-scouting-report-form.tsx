@@ -14,9 +14,9 @@ export function CreateScoutingReportForm({
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <Select name="playerId" label="Jugador" options={players} placeholder="Selecciona…" required />
-      <Input name="rating" type="number" label="Valoración (1-10)" min={1} max={10} required />
-      <Input name="strengths" label="Fortalezas" placeholder="Control, visión…" />
-      <Input name="weaknesses" label="A mejorar" placeholder="Juego aéreo…" />
+      <Input name="rating" type="number" label="Rating (1-10)" min={1} max={10} required />
+      <Input name="strengths" label="Fortalezas" placeholder="Control, vision…" />
+      <Input name="weaknesses" label="A mejorar" placeholder="Aerial game…" />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="notes" className="text-sm font-medium">
           Notas

@@ -8,7 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Jugadores disponibles' };
+export const metadata: Metadata = { title: 'Available players' };
 
 export default async function ClubPlayersPage() {
   const session = await auth();
@@ -27,8 +27,8 @@ export default async function ClubPlayersPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Jugadores disponibles"
-        subtitle="Perfiles abiertos a nuevas oportunidades en la plataforma"
+        title="Available players"
+        subtitle="Profilees abiertos a nuevas oportunidades en la plataforma"
         icon="users"
       />
 
@@ -36,7 +36,7 @@ export default async function ClubPlayersPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay jugadores disponibles en este momento.
+              No players available right now.
             </p>
           </CardContent>
         </Card>
@@ -59,13 +59,13 @@ export default async function ClubPlayersPage() {
                       {player.position
                         ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                           player.position)
-                        : 'Posición sin definir'}
+                        : 'Undefined position'}
                       {player.heightCm ? ` · ${player.heightCm} cm` : ''}
                     </p>
                     <div className="mt-1 flex items-center gap-2">
                       <Badge>{player.nationality ?? '—'}</Badge>
                       <Badge variant="success">
-                        {player.videos.length > 0 ? `${player.videos.length} vídeo(s)` : 'Sin vídeos'}
+                        {player.videos.length > 0 ? `${player.videos.length} video(s)` : 'No videos'}
                       </Badge>
                     </div>
                   </div>

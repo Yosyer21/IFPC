@@ -31,7 +31,7 @@ export default async function AgentTrialDetailPage({
         href="/dashboard/agent/submissions"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Envíos
+        ← Submissions
       </Link>
       <h1 className="mb-4 text-2xl font-bold">Prueba</h1>
 
@@ -41,9 +41,9 @@ export default async function AgentTrialDetailPage({
             {[
               ['Jugador', `${trial.player.firstName} ${trial.player.lastName}`],
               ['Club', trial.club.name],
-              ['Inicio', trial.startsAt.toLocaleString('es')],
-              ['Fin', trial.endsAt ? trial.endsAt.toLocaleString('es') : '—'],
-              ['Ubicación', trial.location ?? '—'],
+              ['Inicio', trial.startsAt.toLocaleString('en')],
+              ['Fin', trial.endsAt ? trial.endsAt.toLocaleString('en') : '—'],
+              ['Location', trial.location ?? '—'],
               ['Estado', trial.status],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-border p-3">

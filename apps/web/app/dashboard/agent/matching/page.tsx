@@ -52,7 +52,7 @@ export default async function AgentMatchingPage() {
     .filter((entry) => entry.best !== null)
     .sort((a, b) => (b.best?.total ?? 0) - (a.best?.total ?? 0));
 
-  // Añadir nombre del club a la mejor oportunidad
+  // Add the club name to the best opportunity
   const clubIds = matches
     .map((match) => match.best?.clubName)
     .filter((id): id is string => Boolean(id));

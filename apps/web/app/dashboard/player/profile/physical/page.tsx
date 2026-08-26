@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Datos físicos' };
+export const metadata: Metadata = { title: 'Physical data' };
 
 export default async function PlayerPhysicalPage() {
   const session = await auth();
@@ -19,7 +19,7 @@ export default async function PlayerPhysicalPage() {
     : null;
 
   const rows: [string, string][] = [
-    ['Edad', age !== null ? `${age} años` : '—'],
+    ['Edad', age !== null ? `${age} years old` : '—'],
     ['Fecha de nacimiento', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
@@ -29,7 +29,7 @@ export default async function PlayerPhysicalPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Datos físicos</h1>
+        <h1 className="text-2xl font-bold">Physical data</h1>
         <Link
           href="/dashboard/player/profile/edit"
           className="text-sm text-muted-foreground hover:underline"

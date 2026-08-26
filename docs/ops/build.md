@@ -1,68 +1,69 @@
-# Producción · Build y despliegue
+# Production · Build and deployment
 
-## Requisitos
+## Requirements
 
-- Node 20+ y pnpm 9+
-- Base de datos PostgreSQL (o PGlite embebido para dev)
-- Variables de entorno: ver `.env.example`
+- Node 22.13+ and pnpm 9+
+- PostgreSQL database (or embedded PGlite for dev)
+- Environment variables: see `.env.example`
 
-## Variables de entorno (producción)
+## Environment variables (production)
 
-| Variable | Descripción |
+| Variable | Description |
 | --- | --- |
-| `DATABASE_URL` | PostgreSQL (en prod usar `USE_PGLITE=false`) |
-| `USE_PGLITE` | `true` para PGlite embebido, `false` con PostgreSQL real |
-| `AUTH_SECRET` | Secreto de Auth.js (generar con `openssl rand -base64 32`) |
-| `NEXT_PUBLIC_APP_URL` | URL pública de la app |
-| `RESEND_API_KEY` | API key de Resend (email de recuperación) |
-| `RESEND_FROM_EMAIL` | Remitente de los emails (opcional) |
-| `REDIS_URL` | Redis para el worker (BullMQ) |
-| `S3_*` | Bucket S3/MinIO para vídeos/upload |
-| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Pagos |
+| `DATABASE_URL` | PostgreSQL (in prod use `USE_PGLITE=false`) |
+| `USE_PGLITE` | `true` for embedded PGlite, `false` with real PostgreSQL |
+| `AUTH_SECRET` | Auth.js secret (generate with `openssl rand -base64 32`) |
+| `NEXT_PUBLIC_APP_URL` | Public URL of the app |
+| `RESEND_API_KEY` | Resend API key (recovery email) |
+| `RESEND_FROM_EMAIL` | Email sender (optional) |
+| `REDIS_URL` | Redis for the worker (BullMQ) |
+| `S3_*` | S3/MinIO bucket for videos/uploads |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Payments |
 
-## Pasos de build
+## Build steps
 
 ```bash
-# 1. Instalar dependencias
+# 1. Install dependencies
 pnpm install
 
-# 2. Preparar la base de datos (una sola vez)
-pnpm db:setup-pglite   # dev con PGlite
-# o en producción con PostgreSQL:
+# 2. Prepare the database (one-time)
+pnpm db:setup-pglite   # dev with PGlite
+# or in production with PostgreSQL:
 #   pnpm --filter database exec prisma migrate deploy
 
-# 3. Validar el monorepo
+# 3. Validate the monorepo
 pnpm lint && pnpm typecheck && pnpm test
 
-# 4. Build de producción (web + worker)
+# 4. Production build (web + worker)
 pnpm build
 ```
 
-> ⚠️ No ejecutar `pnpm build` mientras `pnpm dev` esté activo: comparten `.next` y el
-> cliente Prisma puede fallar por locks de archivo en Windows.
+> ⚠️ Do not run `pnpm build` while `pnpm dev` is active: they share `.next` and the
+> Prisma client can fail due to file locks on Windows.
 >
-> ⚠️ Las páginas públicas son `force-dynamic` (layout `(public)`): consultan la base de datos
-> en cada request y no deben prerenderizarse en build time (PGlite/WASM aborta). Si el build
-> llegara a corromper `.pglite`, reset: `Remove-Item .pglite` + `pnpm db:setup-pglite`.
+> ⚠️ Public pages are `force-dynamic` (layout `(public)`): they query the database on
+> each request and must not be prerendered at build time (PGlite/WASM aborts). If the build
+> corrupts `.pglite`, reset: `Remove-Item .pglite` + `pnpm db:setup-pglite`.
 
-## Worker (jobs en segundo plano)
+## Worker (background jobs)
 
 ```bash
-pnpm --filter worker dev       # dev (con Redis disponible)
-# producción:
-pnpm --filter worker start     # usa apps/worker/dist
+pnpm --filter worker dev       # dev (with Redis available)
+# production:
+pnpm --filter worker start     # uses apps/worker/dist
 ```
 
-Jobs: `video`, `matching`, `notification`, `report`, `maintenance` (cron diario).
+Jobs: `video`, `matching`, `notification`, `report`, `maintenance` (daily cron).
 
-## Despliegue sugerido
+## Suggested deployment
 
-- **Web**: Vercel/Next.js — comando `pnpm --filter web build`, salida `apps/web/.next`.
-- **Worker**: contenedor Node con Redis (Docker o servicio gestionado).
-- **Base de datos**: PostgreSQL gestionado; correr migraciones antes de desplegar.
-- **Storage**: S3/MinIO para uploads (los uploads locales en `public/uploads` son solo dev).
+- **Web**: Vercel/Next.js — command `pnpm --filter web build`, output `apps/web/.next`.
+- **Worker**: Node container with Redis (Docker or managed service).
+- **Database**: managed PostgreSQL; run migrations before deploying.
+- **Storage**: S3/MinIO for uploads (local uploads in `public/uploads` are dev-only).
 
-## Notas
+## Notes
 
-- En dev, los emails se loguean en consola si `RESEND_API_KEY` no está configurada.
-- Stripe webhooks (`/api/webhooks`) responden 501 hasta integrar el checkout.
+- In dev, emails are logged to the console if `RESEND_API_KEY` is not configured.
+- Stripe webhooks (`/api/webhooks`) respond 501 until the checkout is integrated.
+

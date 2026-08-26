@@ -1,34 +1,34 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@ifpc/auth';
 
-/** Devuelve la sesión autenticada o `null`. */
+/** Returns the authenticated session or `null`. */
 export async function requireUser() {
   const session = await auth();
   if (!session?.user?.id) return null;
   return session;
 }
 
-export function unauthorized(message = 'No autorizado'): NextResponse {
+export function unauthorized(message = 'Unauthorized'): NextResponse {
   return NextResponse.json({ ok: false, error: message }, { status: 401 });
 }
 
-export function forbidden(message = 'Acceso denegado'): NextResponse {
+export function forbidden(message = 'Access denied'): NextResponse {
   return NextResponse.json({ ok: false, error: message }, { status: 403 });
 }
 
-export function badRequest(message = 'Solicitud no válida'): NextResponse {
+export function badRequest(message = 'Invalid request'): NextResponse {
   return NextResponse.json({ ok: false, error: message }, { status: 400 });
 }
 
-export function notFound(message = 'No encontrado'): NextResponse {
+export function notFound(message = 'Not found'): NextResponse {
   return NextResponse.json({ ok: false, error: message }, { status: 404 });
 }
 
 export function methodNotAllowed(): NextResponse {
-  return NextResponse.json({ ok: false, error: 'Método no permitido' }, { status: 405 });
+  return NextResponse.json({ ok: false, error: 'Method not allowed' }, { status: 405 });
 }
 
-/** Lee el body JSON devolviendo `null` si no es válido. */
+/** Reads the JSON body, returning `null` if it is not valid. */
 export async function readJson(request: Request): Promise<Record<string, unknown> | null> {
   try {
     const body = await request.json();
@@ -39,7 +39,7 @@ export async function readJson(request: Request): Promise<Record<string, unknown
   }
 }
 
-/** Devuelve un string limpio del body o `null`. */
+/** Returns a trimmed string from the body or `null`. */
 export function stringField(
   body: Record<string, unknown>,
   key: string
@@ -48,7 +48,7 @@ export function stringField(
   return typeof value === 'string' && value.trim() ? value.trim() : null;
 }
 
-/** Devuelve un número entero del body o `null`. */
+/** Returns an integer from the body or `null`. */
 export function intField(body: Record<string, unknown>, key: string): number | null {
   const value = body[key];
   if (typeof value === 'number' && Number.isFinite(value)) return Math.trunc(value);
@@ -58,7 +58,7 @@ export function intField(body: Record<string, unknown>, key: string): number | n
   return null;
 }
 
-/** Devuelve una fecha ISO del body o `null`. */
+/** Returns an ISO date from the body or `null`. */
 export function dateField(body: Record<string, unknown>, key: string): Date | null {
   const value = body[key];
   if (typeof value !== 'string' || !value.trim()) return null;

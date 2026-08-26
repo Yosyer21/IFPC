@@ -10,8 +10,8 @@ const FIELDS: OnboardingField[] = [
 export default function OnboardingCoachPage() {
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">Perfil de entrenador</h1>
-      <p className="mb-6 text-sm text-muted-foreground">Completa tu información.</p>
+      <h1 className="mb-2 text-2xl font-bold">Profile de entrenador</h1>
+      <p className="mb-6 text-sm text-muted-foreground">Complete your information.</p>
       <OnboardingForm role="coach" fields={FIELDS} />
     </div>
   );

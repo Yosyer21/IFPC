@@ -6,24 +6,24 @@ import { Footer } from '@/components/landing/footer';
 export const metadata: Metadata = {
   title: 'About — IFPC',
   description:
-    'IFPC conecta talento con oportunidades: desarrollo, scouting y reclutamiento en un solo lugar.',
+    'IFPC connects talent with opportunities: development, scouting and recruitment in one place.',
 };
 
 const VALUES = [
   {
-    title: 'Talento primero',
+    title: 'Talent first',
     description:
-      'Cada jugador tiene un perfil único. Ayudamos a que su nivel y potencial se vean con claridad.',
+      'Every player has a unique profile. We help their level and potential be seen clearly.',
   },
   {
-    title: 'Transparencia',
+    title: 'Transparency',
     description:
-      'Clubes, ojeadores y agentes evalúan con datos reales: evaluaciones, vídeos y métricas.',
+      'Clubs, scouts and agents evaluate with real data: assessments, videos and metrics.',
   },
   {
-    title: 'Sin fronteras',
+    title: 'No borders',
     description:
-      'De categoría base a profesional y universitario. El futuro del jugador no depende del código postal.',
+      'From youth football to professional and collegiate. A player\u2019s future should not depend on their postcode.',
   },
 ];
 
@@ -35,13 +35,13 @@ export default function AboutPage() {
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">About</p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">
-            Donde el talento encuentra su futuro
+            Where talent finds its future
           </h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            IFPC es una plataforma global de fútbol que une a jugadores, familias,
-            entrenadores, clubes, agentes, ojeadores y universidades. Perfil deportivo, plan de
-            desarrollo, pruebas, becas y contratos: todo el recorrido profesional del jugador en un
-            solo ecosistema.
+            IFPC is a global football platform that connects players, families,
+            coaches, clubs, agents, scouts and universities. Sports profile, development plan,
+            trials, scholarships and contracts: the player\u2019s entire professional journey in a
+            single ecosystem.
           </p>
         </div>
 
@@ -60,22 +60,22 @@ export default function AboutPage() {
         </div>
 
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center">
-          <h2 className="text-2xl font-bold">¿Eres jugador o representas a un club?</h2>
+          <h2 className="text-2xl font-bold">Are you a player or do you represent a club?</h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
-            Crea tu perfil y empieza a recibir oportunidades que se ajustan a tu nivel.
+            Create your profile and start receiving opportunities that match your level.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               href="/register"
               className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Crear cuenta
+              Create account
             </Link>
             <Link
               href="/opportunities"
               className="rounded-xl border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition-colors hover:bg-white/5"
             >
-              Ver oportunidades
+              View opportunities
             </Link>
           </div>
         </div>

@@ -16,7 +16,7 @@ export default async function PlayerSettingsPage() {
 
   const items = [
     { href: '/dashboard/player/settings/account', label: 'Cuenta', description: `Nombre y email (${user.email})` },
-    { href: '/dashboard/player/settings/privacy', label: 'Privacidad', description: 'Controla quién ve tu perfil' },
+    { href: '/dashboard/player/settings/privacy', label: 'Privacidad', description: 'Control who sees your profile' },
     { href: '/dashboard/player/settings/notifications', label: 'Notificaciones', description: 'Preferencias de avisos' },
   ];
 

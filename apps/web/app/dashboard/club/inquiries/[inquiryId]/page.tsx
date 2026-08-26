@@ -31,7 +31,7 @@ export default async function ClubInquiryDetailPage({
         href="/dashboard/club/inquiries"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Consultas
+        ← Inquiries
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{inquiry.subject ?? 'Consulta'}</h1>
 

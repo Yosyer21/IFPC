@@ -36,7 +36,7 @@ export default async function PublicOpportunitiesPage() {
             Oportunidades abiertas
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            {opportunities.length} convocatorias · {scholarships} becas · {countries} países.
+            {opportunities.length} trials · {scholarships} scholarships · {countries} countries.
             Aplica desde tu perfil de jugador.
           </p>
         </div>
@@ -83,7 +83,7 @@ export default async function PublicOpportunitiesPage() {
                     ) : null}
                     {opportunity.ageMin || opportunity.ageMax ? (
                       <Badge variant="outline">
-                        {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'} años
+                        {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'} years old
                       </Badge>
                     ) : null}
                     {opportunity.closesAt ? (

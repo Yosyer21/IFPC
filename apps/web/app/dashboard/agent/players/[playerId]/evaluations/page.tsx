@@ -8,10 +8,10 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 export const metadata: Metadata = { title: 'Evaluaciones del jugador' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológico',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function AgentPlayerEvaluationsPage({

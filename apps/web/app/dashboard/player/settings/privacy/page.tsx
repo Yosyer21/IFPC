@@ -26,8 +26,8 @@ export default async function PlayerPrivacySettingsPage() {
             estado es <strong>Disponible</strong>.
           </p>
           <p>
-            Los controles finos de privacidad (quién puede ver tus vídeos, contacto directo y
-            exportación de datos) se habilitarán en próximas fases de la plataforma.
+            Fine-grained privacy controls (who can see your videos, direct contact and
+            data export) will be enabled in upcoming platform phases.
           </p>
           <p>Usuario: {session.user.email}</p>
         </CardContent>

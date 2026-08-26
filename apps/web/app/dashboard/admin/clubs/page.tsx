@@ -21,14 +21,14 @@ export default async function AdminClubsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Clubes"
-        subtitle="Clubes registrados y verificación de entidades"
+        subtitle="Registered clubs and entity verification"
         icon="briefcase"
       />
 
       {clubs.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay clubes registrados.</p>
+            <p className="text-sm text-muted-foreground">No registered clubs.</p>
           </CardContent>
         </Card>
       ) : (

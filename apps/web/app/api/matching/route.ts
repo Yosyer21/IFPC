@@ -7,7 +7,7 @@ import { requireUser, methodNotAllowed } from '@/lib/api/respond';
  * GET /api/matching — scores de matching.
  * - Jugador: sus mejores coincidencias con requisitos abiertos.
  * - Club: los mejores jugadores para sus requisitos.
- * - Otros: lista genérica.
+ * - Others: generic list.
  */
 export async function GET() {
   const session = await requireUser();
@@ -55,7 +55,7 @@ export async function GET() {
     return NextResponse.json({ ok: true, matches });
   }
 
-  // Vista genérica (admin/scout/agente)
+  // Generic view (admin/scout/agent)
   const sample = requirements.slice(0, 10).map((requirement) => {
     const player = players
       .map((p) => ({ player: p, score: matchScore(p, requirement).total }))

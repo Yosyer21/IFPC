@@ -16,7 +16,7 @@ async function getAgent() {
   return prisma.agent.findUnique({ where: { userId: session.user.id } });
 }
 
-/** Envía un mensaje a una conversación en la que el agente participa. */
+/** Sends a message to a conversation in which the agent participates. */
 export async function sendMessageAction(formData: FormData): Promise<void> {
   const session = await auth();
   if (!session?.user?.id) return;
@@ -43,7 +43,7 @@ export async function addPlayerAction(
 ): Promise<ActionState> {
   const agent = await getAgent();
   if (!agent) {
-    return { error: 'Agente no válido.' };
+    return { error: 'Invalid agent.' };
   }
   const email = str(formData, 'email');
   if (!email) {
@@ -53,7 +53,7 @@ export async function addPlayerAction(
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
   const player = user ? await prisma.player.findUnique({ where: { userId: user.id } }) : null;
   if (!player) {
-    return { error: 'No se encontró un jugador con ese email.' };
+    return { error: 'No player found with that email.' };
   }
 
   try {
@@ -63,7 +63,7 @@ export async function addPlayerAction(
       create: { agentId: agent.id, playerId: player.id },
     });
   } catch {
-    return { error: 'No se pudo añadir al jugador.' };
+    return { error: 'Could not add the player.' };
   }
 
   redirect('/dashboard/agent/players');
@@ -75,7 +75,7 @@ export async function createSubmissionAction(
 ): Promise<ActionState> {
   const agent = await getAgent();
   if (!agent) {
-    return { error: 'Agente no válido.' };
+    return { error: 'Invalid agent.' };
   }
   const playerId = str(formData, 'playerId');
   const clubId = str(formData, 'clubId');
@@ -95,7 +95,7 @@ export async function createSubmissionAction(
       },
     });
   } catch {
-    return { error: 'No se pudo crear el envío.' };
+    return { error: 'Could not create the submission.' };
   }
 
   redirect('/dashboard/agent/submissions');

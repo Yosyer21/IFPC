@@ -1,7 +1,7 @@
 /**
- * Layout del segmento público.
- * `force-dynamic`: las páginas públicas consultan la base de datos (PGlite) y no deben
- * prerenderizarse en build time (PGlite WASM no es compatible con la generación estática).
+ * Public segment layout.
+ * `force-dynamic`: public pages query the database (PGlite) and must not be
+ * prerendered at build time (PGlite WASM is not compatible with static generation).
  */
 export const dynamic = 'force-dynamic';
 

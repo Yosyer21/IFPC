@@ -25,7 +25,7 @@ async function main() {
       });
     }
   }
-  console.log(`Usuarios de prueba listos (${USERS.length})`);
+  console.log(`Users de prueba listos (${USERS.length})`);
 }
 
 main()

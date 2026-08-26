@@ -8,7 +8,7 @@ import { OPPORTUNITY_TYPE_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Solicitudes recibidas' };
+export const metadata: Metadata = { title: 'Applications recibidas' };
 
 const APPLICATION_STATUS_LABELS: Record<string, { label: string; variant: 'default' | 'success' | 'danger' | 'warning' }> = {
   PENDING: { label: 'Pendiente', variant: 'warning' },
@@ -42,7 +42,7 @@ export default async function ClubApplicationsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Solicitudes recibidas"
+        title="Applications recibidas"
         subtitle="Candidatos que han aplicado a tus oportunidades"
         icon="mail"
       >
@@ -55,7 +55,7 @@ export default async function ClubApplicationsPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              Aún no has recibido solicitudes. Publica oportunidades para que los jugadores puedan
+              You haven't received applications yet. Post opportunities so players can
               aplicar.
             </p>
           </CardContent>
@@ -71,7 +71,7 @@ export default async function ClubApplicationsPage() {
               ? ((POSITION_LABELS as Record<string, string | undefined>)[
                   application.player.position
                 ] ?? application.player.position)
-              : 'Posición sin definir';
+              : 'Undefined position';
             return (
               <Link
                 key={application.id}
@@ -98,7 +98,7 @@ export default async function ClubApplicationsPage() {
                         {application.player.nationality ? ` · ${application.player.nationality}` : ''}
                       </div>
                       <div className="mt-0.5 truncate text-xs text-muted-foreground">
-                        Solicitó:{' '}
+                        Requested:{' '}
                         {application.opportunity.title}
                         {application.opportunity.type
                           ? ` · ${

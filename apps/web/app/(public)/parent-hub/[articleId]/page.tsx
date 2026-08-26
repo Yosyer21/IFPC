@@ -6,7 +6,7 @@ import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Guía — IFPC' };
+export const metadata: Metadata = { title: 'Guide — IFPC' };
 
 export default async function PublicParentHubArticlePage({
   params,
@@ -27,7 +27,7 @@ export default async function PublicParentHubArticlePage({
         </Link>
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
-          <Badge variant="outline">Guía para familias</Badge>
+          <Badge variant="outline">Guide for families</Badge>
           <h1 className="mt-4 text-3xl font-bold tracking-tight">{article.title}</h1>
           <div className="mt-3 flex items-center gap-3 text-sm text-muted-foreground">
             {article.durationMinutes ? (
@@ -45,7 +45,7 @@ export default async function PublicParentHubArticlePage({
 
           <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
             <p className="text-sm text-muted-foreground">
-              Sigue todas las guías y el desarrollo de tu hijo desde tu cuenta familiar.
+              Follow all the guides and your child's development from your family account.
             </p>
             <Link
               href="/register"

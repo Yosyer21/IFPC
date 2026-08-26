@@ -62,14 +62,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
   }
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const title = stringField(body, 'title');
   if (!title) return badRequest('title es obligatorio');
 
   const type = stringField(body, 'type') ?? 'TRIAL';
   const validTypes = ['TRIAL', 'SCOUTING', 'CONTRACT', 'SCHOLARSHIP', 'ACADEMY'];
-  if (!validTypes.includes(type)) return badRequest('type no válido');
+  if (!validTypes.includes(type)) return badRequest('invalid type');
 
   let clubId: string | null = null;
   let universityId: string | null = null;

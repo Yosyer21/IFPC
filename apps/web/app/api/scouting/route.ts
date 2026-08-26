@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
   }
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const playerId = stringField(body, 'playerId');
   const rating = intField(body, 'rating');
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
   const scout = await prisma.scout.findUnique({ where: { userId: session.user.id } });
   if (!scout) {
-    return NextResponse.json({ ok: false, error: 'Perfil de ojeador no encontrado' }, { status: 403 });
+    return NextResponse.json({ ok: false, error: 'Profile de ojeador no encontrado' }, { status: 403 });
   }
 
   const report = await prisma.scoutingReport.create({

@@ -41,24 +41,24 @@ export default async function PlayerDevelopmentPage() {
   ]);
 
   const summary = [
-    { href: '/dashboard/player/development/goals', label: 'Objetivos activos', value: pendingGoals },
+    { href: '/dashboard/player/development/goals', label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/player/development/evaluations', label: 'Evaluaciones', value: evaluationCount },
     { href: '/dashboard/player/development/progress', label: 'Mi progreso', value: `${Math.round(((pendingGoals > 0 ? 1 : 0) + (evaluationCount > 0 ? 1 : 0) + (videoCount > 0 ? 1 : 0)) * 100 / 3)}%` },
-    { href: '/dashboard/player/videos', label: 'Vídeos subidos', value: videoCount },
+    { href: '/dashboard/player/videos', label: 'Uploaded videos', value: videoCount },
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Mi desarrollo"
-        subtitle="Tu evolución como jugador: perfil, objetivos, evaluaciones y progreso"
+        subtitle="Your evolution as a player: profile, goals, assessments and progress"
         icon="trending"
       />
 
       <Card className="mb-4">
         <CardContent>
           <div className="mb-2 flex items-center justify-between">
-            <h2 className="font-semibold">Perfil completado</h2>
+            <h2 className="font-semibold">Profile complete</h2>
             <span className="text-sm font-medium text-muted-foreground">{percent}%</span>
           </div>
           <Progress value={percent} />
@@ -83,7 +83,7 @@ export default async function PlayerDevelopmentPage() {
           → Continuar entrenamiento
         </Link>
         <Link href="/dashboard/player/pathway" className="text-sm text-primary hover:underline">
-          → Ver mi ruta de desarrollo
+          → View my development pathway
         </Link>
       </div>
     </div>

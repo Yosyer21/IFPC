@@ -26,7 +26,7 @@ export default async function AgentClubsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Clubes"
-        subtitle="Clubes con los que tienes relación a través de envíos"
+        subtitle="Clubs you have a relationship with through submissions"
         icon="briefcase"
       />
 
@@ -34,9 +34,9 @@ export default async function AgentClubsPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              Aún no has tenido relación con clubes. Haz un{' '}
+              You haven't had relationships with clubs yet. Make a{' '}
               <Link href="/dashboard/agent/submissions/new" className="text-primary hover:underline">
-                nuevo envío
+                new submission
               </Link>{' '}
               para empezar.
             </p>

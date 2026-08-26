@@ -1,17 +1,17 @@
 # Notificaciones
 
-## Modelo
+## Model
 
 `Notification` (userId, type, title, message, read, createdAt) en PostgreSQL.
 
-## Envío
+## Submission
 
 - Cola `notification` (BullMQ).
 - Job `send-notification` crea el registro en BD (visible en el panel de notificaciones).
 - Email (Resend) pendiente de configuración: cuando `RESEND_API_KEY` esté disponible, el job
   enviará también un correo.
 
-## Tipos
+## Types
 
 application · match · trial · negotiation · contract · payment · reminder
 

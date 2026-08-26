@@ -27,7 +27,7 @@ export async function updatePlayerProfileAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const parsed = playerProfileSchema.safeParse({
@@ -44,7 +44,7 @@ export async function updatePlayerProfileAction(
     clubName: str(formData, 'clubName'),
   });
   if (!parsed.success) {
-    return { error: 'Revisa los datos del perfil.' };
+    return { error: 'Please review the profile data.' };
   }
 
   const { dateOfBirth, ...rest } = parsed.data;
@@ -54,7 +54,7 @@ export async function updatePlayerProfileAction(
       data: { ...rest, dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null },
     });
   } catch {
-    return { error: 'No se pudo guardar el perfil.' };
+    return { error: 'Could not save the profile.' };
   }
 
   redirect('/dashboard/player/profile');
@@ -66,12 +66,12 @@ export async function updatePlayerStatusAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const status = str(formData, 'status');
   if (!status || !['PENDING_VERIFICATION', 'ACTIVE', 'AVAILABLE', 'INACTIVE'].includes(status)) {
-    return { error: 'Estado no válido.' };
+    return { error: 'Invalid status.' };
   }
 
   try {
@@ -80,7 +80,7 @@ export async function updatePlayerStatusAction(
       data: { status: status as 'AVAILABLE' | 'INACTIVE' | 'ACTIVE' | 'PENDING_VERIFICATION' },
     });
   } catch {
-    return { error: 'No se pudo actualizar tu estado.' };
+    return { error: 'Could not update your status.' };
   }
 
   redirect('/dashboard/player/profile');
@@ -92,18 +92,18 @@ export async function updateAccountAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const name = str(formData, 'name');
   if (!name) {
-    return { error: 'El nombre es obligatorio.' };
+    return { error: 'Name is required.' };
   }
 
   try {
     await prisma.user.update({ where: { id: session.user.id }, data: { name } });
   } catch {
-    return { error: 'No se pudo actualizar la cuenta.' };
+    return { error: 'Could not update the account.' };
   }
 
   redirect('/dashboard/player/settings/account');
@@ -115,21 +115,21 @@ export async function uploadVideoAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const file = formData.get('file');
   const title = str(formData, 'title');
   if (!(file instanceof File) || file.size === 0) {
-    return { error: 'Selecciona un archivo de vídeo.' };
+    return { error: 'Select a video file.' };
   }
   if (!title) {
-    return { error: 'El título es obligatorio.' };
+    return { error: 'Title is required.' };
   }
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Perfil de jugador no encontrado.' };
+    return { error: 'Profile de jugador no encontrado.' };
   }
 
   const ext = file.name.split('.').pop() ?? 'mp4';
@@ -148,7 +148,7 @@ export async function uploadVideoAction(
       },
     });
   } catch {
-    return { error: 'No se pudo subir el vídeo.' };
+    return { error: 'Could not upload the video.' };
   }
 
   redirect('/dashboard/player/videos');
@@ -160,7 +160,7 @@ export async function uploadDocumentAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const file = formData.get('file');
@@ -170,12 +170,12 @@ export async function uploadDocumentAction(
     return { error: 'Selecciona un archivo.' };
   }
   if (!title) {
-    return { error: 'El título es obligatorio.' };
+    return { error: 'Title is required.' };
   }
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Perfil de jugador no encontrado.' };
+    return { error: 'Profile de jugador no encontrado.' };
   }
 
   const ext = file.name.split('.').pop() ?? 'pdf';
@@ -206,17 +206,17 @@ export async function applyToOpportunityAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const opportunityId = str(formData, 'opportunityId');
   if (!opportunityId) {
-    return { error: 'Oportunidad no válida.' };
+    return { error: 'Invalid opportunity.' };
   }
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Perfil de jugador no encontrado.' };
+    return { error: 'Profile de jugador no encontrado.' };
   }
 
   try {
@@ -232,10 +232,10 @@ export async function applyToOpportunityAction(
       },
     });
   } catch {
-    return { error: 'No se pudo enviar la solicitud.' };
+    return { error: 'Could not submit the application.' };
   }
 
-  // Notificar al club/universidad propietaria de la oportunidad.
+  // Notify the club/university that owns the opportunity.
   try {
     const opportunity = await prisma.opportunity.findUnique({
       where: { id: opportunityId },
@@ -249,13 +249,13 @@ export async function applyToOpportunityAction(
       await notifyUser({
         userId: ownerUserId,
         type: 'application',
-        title: 'Nueva solicitud recibida',
-        message: `${player.firstName} ${player.lastName} ha solicitado participar en "${opportunity.title}".`,
+        title: 'New application received',
+        message: `${player.firstName} ${player.lastName} has requested to participate in "${opportunity.title}".`,
         link: '/dashboard/club/applications',
       });
     }
   } catch {
-    // La notificación nunca debe romper la solicitud.
+    // The notification must never break the application.
   }
 
   redirect('/dashboard/player/opportunities/applications');

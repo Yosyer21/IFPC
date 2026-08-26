@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { ProfileEditForm } from '@/components/player/profile-edit-form';
 
-export const metadata: Metadata = { title: 'Editar perfil' };
+export const metadata: Metadata = { title: 'Edit profile' };
 
 export default async function PlayerProfileEditPage() {
   const session = await auth();
@@ -17,12 +17,12 @@ export default async function PlayerProfileEditPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Editar perfil</h1>
+        <h1 className="text-2xl font-bold">Edit profile</h1>
         <Link
           href="/dashboard/player/profile"
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Volver al perfil
+          ← Back to profile
         </Link>
       </div>
       <ProfileEditForm player={player} />

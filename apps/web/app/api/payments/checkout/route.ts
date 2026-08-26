@@ -2,17 +2,17 @@ import { NextResponse } from 'next/server';
 import { requireUser, badRequest, readJson, stringField } from '@/lib/api/respond';
 import { createCheckoutSession } from '@/lib/payments/stripe';
 
-/** POST /api/payments/checkout — crea una Checkout Session de Stripe para una membresía. */
+/** POST /api/payments/checkout — creates a Stripe Checkout Session for a membership. */
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
     return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
   }
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const tier = stringField(body, 'tier') ?? 'PREMIUM';
-  if (!['PREMIUM', 'SCOUT', 'CLUB'].includes(tier)) return badRequest('tier no válido');
+  if (!['PREMIUM', 'SCOUT', 'CLUB'].includes(tier)) return badRequest('invalid tier');
 
   try {
     const checkout = await createCheckoutSession({
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('[payments] error creando checkout:', error);
     return NextResponse.json(
-      { ok: false, error: 'No se pudo crear la sesión de pago' },
+      { ok: false, error: 'Could not create the payment session' },
       { status: 500 }
     );
   }

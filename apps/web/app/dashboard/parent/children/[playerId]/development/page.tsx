@@ -12,16 +12,16 @@ import { IconRoute, IconStar, IconTarget, IconVideo } from '@/components/dashboa
 export const metadata: Metadata = { title: 'Desarrollo de mi hijo' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pendiente',
   in_progress: 'En curso',
-  completed: 'Completado',
+  completed: 'Completed',
 };
 
 export default async function ParentChildDevelopmentPage({
@@ -79,7 +79,7 @@ export default async function ParentChildDevelopmentPage({
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title={`Desarrollo · ${player.firstName}`}
-        subtitle="Evolución deportiva, evaluaciones y objetivos"
+        subtitle="Sports development, assessments and goals"
         icon="trending"
       >
         <Link
@@ -92,18 +92,18 @@ export default async function ParentChildDevelopmentPage({
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconStar} label="Nivel global" value={overall} suffix="/10" />
-        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconTarget} label="Objetivos completados" value={completedGoals} />
-        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconRoute} label="Objetivos totales" value={player.goals.length} />
-        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconVideo} label="Vídeos" value={player._count.videos} />
+        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconTarget} label="Goals completados" value={completedGoals} />
+        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconRoute} label="Goals totales" value={player.goals.length} />
+        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconVideo} label="Videos" value={player._count.videos} />
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Nivel por categoría</h2>
+            <h2 className="mb-4 font-semibold">Level by category</h2>
             {radarCategories.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                Aún no hay evaluaciones de tu hijo.
+                No assessments of your child yet.
               </p>
             ) : (
               <div className="mx-auto max-w-xs">
@@ -130,7 +130,7 @@ export default async function ParentChildDevelopmentPage({
         <Card className="mb-6">
           <CardContent>
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="font-semibold">Ruta de desarrollo</h2>
+              <h2 className="font-semibold">Development pathway</h2>
               <Badge variant={player.pathway.status === 'completed' ? 'success' : 'warning'}>
                 {player.pathway.status}
               </Badge>
@@ -159,10 +159,10 @@ export default async function ParentChildDevelopmentPage({
       {/* GOALS_SECTION */}
       <Card>
         <CardContent>
-          <h2 className="mb-4 font-semibold">Objetivos ({player.goals.length})</h2>
+          <h2 className="mb-4 font-semibold">Goals ({player.goals.length})</h2>
           {player.goals.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Tu hijo aún no tiene objetivos asignados.
+              Your child has no goals assigned yet.
             </p>
           ) : (
             <div className="flex flex-col gap-2">
@@ -174,7 +174,7 @@ export default async function ParentChildDevelopmentPage({
                   <div className="min-w-0">
                     <div className="text-sm font-medium">{goal.title}</div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      {goal.description ?? 'Sin descripción'}
+                      {goal.description ?? 'No description'}
                       {goal.dueDate ? ` · Vence: ${goal.dueDate.toLocaleDateString('es')}` : ''}
                     </div>
                   </div>

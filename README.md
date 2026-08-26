@@ -1,36 +1,37 @@
 # IFPC Platform
 
-Plataforma global de fútbol para el desarrollo de jugadores y el reclutamiento profesional:
-perfiles de jugadores, vídeos, entrenamiento, scouting, trials, negociaciones, contratos,
-matching jugador↔club, membresías y pagos.
+Global football platform for player development and professional recruitment:
+player profiles, videos, training, scouting, trials, negotiations, contracts,
+player↔club matching, memberships and payments.
 
 ## Stack
 
 - Monorepo: pnpm + Turborepo
 - `apps/web` — Next.js 15 (App Router, TypeScript, Tailwind CSS)
-- `apps/worker` — Node.js + BullMQ/Redis (jobs de video, matching, notificaciones, reportes)
+- `apps/worker` — Node.js + BullMQ/Redis (video, matching, notifications, reports jobs)
 - `packages/database` — Prisma + PostgreSQL
 - `packages/auth` — Auth.js v5 (RBAC)
-- `packages/{types,config,validation,ui}` — código compartido
+- `packages/{types,config,validation,ui}` — shared code
 
-## Requisitos
+## Requirements
 
-- Node ≥ 20
+- Node ≥ 22.13
 - pnpm ≥ 9
-- Docker (opcional, para postgres/redis/minio locales)
+- Docker (optional, for local postgres/redis/minio)
 
-## Puesta en marcha
+## Getting started
 
 ```bash
 pnpm install
 docker compose up -d          # postgres + redis + minio
-cp .env.example .env          # ajustar valores si es necesario
-pnpm db:migrate               # crear el esquema de la base de datos
-pnpm db:seed                  # datos de demostración
+cp .env.example .env          # adjust values if needed
+pnpm db:migrate               # create the database schema
+pnpm db:seed                  # demo data
 pnpm dev                      # http://localhost:3000
 ```
 
-## Estructura
+## Structure
 
-- Especificación compacta para agentes IA: `IA_information/IA_agent_info.txt`
-- Árbol de directorios detallado: `IA_information/Estructure.txt`
+- Compact specification for AI agents: `IA_information/IA_agent_info.txt`
+- Detailed directory tree: `IA_information/Estructure.txt`
+

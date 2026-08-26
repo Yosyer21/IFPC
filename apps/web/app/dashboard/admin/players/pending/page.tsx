@@ -23,7 +23,7 @@ export default async function AdminPlayersPendingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Jugadores pendientes"
-        subtitle="Perfiles que esperan verificación y activación"
+        subtitle="Profiles awaiting verification and activation"
         icon="whistle"
       />
       <PlayerFilterLinks />
@@ -32,7 +32,7 @@ export default async function AdminPlayersPendingPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay jugadores pendientes de verificación.
+              No players pending verification.
             </p>
           </CardContent>
         </Card>

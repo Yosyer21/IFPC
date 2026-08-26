@@ -32,7 +32,7 @@ export default async function AdminMessagesPage() {
       {conversations.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay mensajes todavía.</p>
+            <p className="text-sm text-muted-foreground">No messages yet.</p>
           </CardContent>
         </Card>
       ) : (
@@ -49,7 +49,7 @@ export default async function AdminMessagesPage() {
 
                 <div className="mb-4 flex flex-col gap-3">
                   {conversation.messages.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">Sin mensajes en esta conversación.</p>
+                    <p className="text-sm text-muted-foreground">No messages in this conversation.</p>
                   ) : (
                     conversation.messages.map((message) => {
                       const mine = message.senderId === session.user.id;

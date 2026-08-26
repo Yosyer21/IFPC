@@ -12,7 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       credentials: {
         email: { label: 'Email', type: 'email' },
-        password: { label: 'Contraseña', type: 'password' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         const parsed = loginSchema.safeParse(credentials);

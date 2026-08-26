@@ -34,7 +34,7 @@ export default async function PublicClubDetailPage({
       <Navbar />
       <main className="mx-auto w-full max-w-4xl px-4 py-16">
         <Link href="/clubs" className="text-sm text-muted-foreground hover:text-emerald-400">
-          ← Clubes
+          ← Clubs
         </Link>
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
@@ -89,8 +89,8 @@ export default async function PublicClubDetailPage({
                   </Badge>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  {opportunity.position ? `Posición: ${opportunity.position} · ` : ''}
-                  {opportunity.location ?? 'Ubicación por definir'}
+                  {opportunity.position ? `Position: ${opportunity.position} · ` : ''}
+                  {opportunity.location ?? 'Location to be defined'}
                   {opportunity.closesAt
                     ? ` · Cierra: ${opportunity.closesAt.toLocaleDateString('es')}`
                     : ''}
@@ -100,7 +100,7 @@ export default async function PublicClubDetailPage({
           </div>
         )}
 
-        <h2 className="mb-4 mt-10 text-xl font-semibold">Perfiles buscados</h2>
+        <h2 className="mb-4 mt-10 text-xl font-semibold">Profilees buscados</h2>
         {club.requirements.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-6 text-center text-sm text-muted-foreground">
             No hay perfiles buscados publicados.
@@ -119,7 +119,7 @@ export default async function PublicClubDetailPage({
                   ) : null}
                   {requirement.ageMin || requirement.ageMax ? (
                     <Badge variant="outline">
-                      {requirement.ageMin ?? '?'}–{requirement.ageMax ?? '?'} años
+                      {requirement.ageMin ?? '?'}–{requirement.ageMax ?? '?'} years old
                     </Badge>
                   ) : null}
                   {requirement.country ? (

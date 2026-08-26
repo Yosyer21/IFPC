@@ -1,8 +1,8 @@
 # Almacenamiento
 
-## Fase actual
+## Current phase
 
-- Vídeos subidos se guardan en `apps/web/public/uploads/` (gitignored) y se sirven estáticamente.
+- Uploaded videos se guardan en `apps/web/public/uploads/` (gitignored) y se sirven estáticamente.
 - URL generada con `crypto.randomUUID()` para evitar colisiones.
 - Documentos de ejemplo apuntan a rutas estáticas.
 

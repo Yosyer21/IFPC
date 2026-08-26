@@ -18,7 +18,7 @@ export async function GET() {
   return NextResponse.json({ ok: true, notifications, unread });
 }
 
-/** POST /api/notifications — marca todas las notificaciones como leídas. */
+/** POST /api/notifications — marks all notifications as read. */
 export async function POST() {
   const session = await requireUser();
   if (!session) {

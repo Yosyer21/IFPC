@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { SESSION_TYPE_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Sesión en vivo' };
+export const metadata: Metadata = { title: 'Live session' };
 
 export default async function PlayerLiveSessionDetailPage({
   params,
@@ -62,9 +62,9 @@ export default async function PlayerLiveSessionDetailPage({
             </Badge>
           </div>
 
-          <h2 className="mb-2 font-semibold">Descripción</h2>
+          <h2 className="mb-2 font-semibold">Description</h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {liveSession.description ?? 'Sin descripción.'}
+            {liveSession.description ?? 'No description.'}
           </p>
 
           {isUpcoming && liveSession.meetingUrl ? (
@@ -74,13 +74,13 @@ export default async function PlayerLiveSessionDetailPage({
               rel="noreferrer"
               className="mt-5 inline-block rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Entrar en la sesión
+              Join the session
             </a>
           ) : (
             <p className="mt-5 text-xs text-muted-foreground">
               {isUpcoming
-                ? 'El enlace de la sesión se activará cuando empiece.'
-                : 'Esta sesión ya ha finalizado.'}
+                ? 'The session link will activate when it starts.'
+                : 'This session has ended.'}
             </p>
           )}
         </CardContent>

@@ -17,7 +17,7 @@ export default async function ParentSettingsPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Ajustes"
-        subtitle="Información de tu cuenta familiar"
+        subtitle="Your family account information"
         icon="settings"
       />
 

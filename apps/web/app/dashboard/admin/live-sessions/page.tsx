@@ -40,22 +40,22 @@ export default async function AdminLiveSessionsPage() {
           href="/dashboard/admin/live-sessions/create"
           className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Nueva sesión
+          New session
         </Link>
       </PageHeader>
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard href="/dashboard/admin/live-sessions" icon={IconLive} label="Total sesiones" value={total} />
-        <StatCard href="/dashboard/admin/live-sessions" icon={IconClock} label="Próximas" value={upcoming} />
+        <StatCard href="/dashboard/admin/live-sessions" icon={IconClock} label="Upcoming" value={upcoming} />
         <StatCard href="/dashboard/admin/live-sessions" icon={IconVideo} label="En directo" value={live} />
-        <StatCard href="/dashboard/admin/live-sessions" icon={IconCalendar} label="Finalizadas" value={sessions.filter((s) => s.status === 'ENDED').length} />
+        <StatCard href="/dashboard/admin/live-sessions" icon={IconCalendar} label="Ended" value={sessions.filter((s) => s.status === 'ENDED').length} />
       </div>
 
       {sessions.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay sesiones en vivo todavía. Crea la primera para empezar.
+              No live sessions yet. Create the first one to get started.
             </p>
           </CardContent>
         </Card>
@@ -93,7 +93,7 @@ export default async function AdminLiveSessionsPage() {
                       </Badge>
                     ) : null}
                     {session.meetingUrl ? (
-                      <Badge variant="outline">Enlace de reunión</Badge>
+                      <Badge variant="outline">Meeting link</Badge>
                     ) : null}
                   </div>
                 </div>

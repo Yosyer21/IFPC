@@ -12,16 +12,16 @@ import { CategoryBars } from '@/components/player/charts';
 export const metadata: Metadata = { title: 'Detalle del jugador' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pendiente',
   in_progress: 'En curso',
-  completed: 'Completado',
+  completed: 'Completed',
 };
 
 export default async function AdminPlayerDetailPage({
@@ -58,7 +58,7 @@ export default async function AdminPlayerDetailPage({
     ['Fecha de nacimiento', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
     ['Nacionalidad', player.nationality ?? '—'],
     [
-      'Posición',
+      'Position',
       player.position
         ? (POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position
         : '—',
@@ -66,7 +66,7 @@ export default async function AdminPlayerDetailPage({
     ['Pie dominante', player.foot ?? '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-    ['Nivel de competición', player.competitionLevel ?? '—'],
+    ['Competition level', player.competitionLevel ?? '—'],
     ['Club actual', player.clubName ?? '—'],
   ];
 
@@ -83,7 +83,7 @@ export default async function AdminPlayerDetailPage({
         href="/dashboard/admin/players"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Jugadores
+        ← Players
       </Link>
       <PageHeader
         title={`${player.firstName} ${player.lastName}`}
@@ -98,9 +98,9 @@ export default async function AdminPlayerDetailPage({
 
       <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {[
-          ['Solicitudes', player._count.applications],
+          ['Applications', player._count.applications],
           ['Guardadas', player._count.savedOpportunities],
-          ['Envíos', player._count.submissions],
+          ['Submissions', player._count.submissions],
           ['Pruebas', player._count.trials],
           ['Contratos', player._count.contracts],
         ].map(([label, value]) => (
@@ -116,7 +116,7 @@ export default async function AdminPlayerDetailPage({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Perfil</h2>
+            <h2 className="mb-3 font-semibold">Profile</h2>
             <dl className="flex flex-col gap-2 text-sm">
               {info.map(([label, value]) => (
                 <div key={label} className="flex items-center justify-between gap-3">
@@ -130,9 +130,9 @@ export default async function AdminPlayerDetailPage({
 
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Media por categoría</h2>
+            <h2 className="mb-4 font-semibold">Average by category</h2>
             {player.evaluations.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin evaluaciones todavía.</p>
+              <p className="text-sm text-muted-foreground">No assessments yet.</p>
             ) : (
               <CategoryBars items={averages} />
             )}
@@ -143,7 +143,7 @@ export default async function AdminPlayerDetailPage({
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Evaluaciones recientes</h2>
+            <h2 className="mb-3 font-semibold">Recent assessments</h2>
             {player.evaluations.length === 0 ? (
               <p className="text-sm text-muted-foreground">Sin evaluaciones.</p>
             ) : (
@@ -174,9 +174,9 @@ export default async function AdminPlayerDetailPage({
         <div className="flex flex-col gap-4">
           <Card>
             <CardContent>
-              <h2 className="mb-3 font-semibold">Vídeos ({player.videos.length})</h2>
+              <h2 className="mb-3 font-semibold">Videos ({player.videos.length})</h2>
               {player.videos.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Sin vídeos.</p>
+                <p className="text-sm text-muted-foreground">No videos.</p>
               ) : (
                 <div className="flex flex-col gap-2">
                   {player.videos.slice(0, 8).map((video) => (
@@ -195,7 +195,7 @@ export default async function AdminPlayerDetailPage({
 
           <Card>
             <CardContent>
-              <h2 className="mb-3 font-semibold">Objetivos ({player.goals.length})</h2>
+              <h2 className="mb-3 font-semibold">Goals ({player.goals.length})</h2>
               {player.goals.length === 0 ? (
                 <p className="text-sm text-muted-foreground">Sin objetivos.</p>
               ) : (

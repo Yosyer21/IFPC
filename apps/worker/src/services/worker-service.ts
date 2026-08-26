@@ -16,7 +16,7 @@ function startWorker(queueName: string, processor: JobProcessor) {
   const worker = new Worker(queueName, processor, { connection: redisConnection });
   worker.on('completed', (job) => console.log(`[worker] ${queueName}:${job.id} completado`));
   worker.on('failed', (job, error) =>
-    console.error(`[worker] ${queueName}:${job?.id} falló`, error)
+    console.error(`[worker] ${queueName}:${job?.id} failed`, error)
   );
   return worker;
 }
@@ -26,7 +26,7 @@ async function scheduleMaintenance() {
   try {
     await maintenanceQueue.add('expire-memberships', {}, { repeat: { pattern: '0 3 * * *' } });
     await maintenanceQueue.add('cleanup-files', {}, { repeat: { pattern: '0 4 * * *' } });
-    console.log('[worker] mantenimiento programado (expirar membresías 03:00, limpieza 04:00)');
+    console.log('[worker] maintenance scheduled (expire memberships 03:00, cleanup 04:00)');
   } catch (error) {
     console.warn('[worker] no se pudo programar mantenimiento (Redis no disponible)', error);
   }
@@ -47,7 +47,7 @@ const maintenanceWorker = new Worker(
   { connection: redisConnection }
 );
 maintenanceWorker.on('failed', (job, error) =>
-  console.error(`[worker] maintenance:${job?.name} falló`, error)
+  console.error(`[worker] maintenance:${job?.name} failed`, error)
 );
 
 void scheduleMaintenance();

@@ -7,12 +7,12 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 import { CreateGoalForm } from '@/components/coach/create-goal-form';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Objetivos del jugador' };
+export const metadata: Metadata = { title: 'Goals del jugador' };
 
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Pendiente',
   in_progress: 'En curso',
-  completed: 'Completado',
+  completed: 'Completed',
 };
 
 export default async function CoachPlayerDevelopmentPage({
@@ -50,14 +50,14 @@ export default async function CoachPlayerDevelopmentPage({
         ← {player.firstName} {player.lastName}
       </Link>
       <PageHeader
-        title="Objetivos de desarrollo"
-        subtitle={`Objetivos asignados a ${player.firstName} ${player.lastName}`}
+        title="Goals de desarrollo"
+        subtitle={`Goals asignados a ${player.firstName} ${player.lastName}`}
         icon="trending"
       />
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle className="text-base">Nuevo objetivo</CardTitle>
+          <CardTitle className="text-base">New goal</CardTitle>
         </CardHeader>
         <CardContent>
           <CreateGoalForm playerId={playerId} />
@@ -94,7 +94,7 @@ export default async function CoachPlayerDevelopmentPage({
                 ) : null}
                 {goal.dueDate ? (
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Fecha límite: {goal.dueDate.toLocaleDateString('es')}
+                    Deadline: {goal.dueDate.toLocaleDateString('es')}
                   </p>
                 ) : null}
               </CardContent>

@@ -42,7 +42,7 @@ export default async function ParentPathwaysPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has vinculado a ningún hijo. Vincúlalo desde «Mis hijos» para ver su ruta.
+              You haven't linked any child yet. Link them from 'My children' to see their path.
             </p>
           </CardContent>
         </Card>
@@ -95,7 +95,7 @@ export default async function ParentPathwaysPage() {
                       </div>
                     ) : (
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Sin ruta asignada todavía. Los objetivos y evaluaciones irán construyendo su
+                        No path assigned yet. Goals and assessments will keep building their
                         plan de desarrollo.
                       </p>
                     )}
@@ -112,7 +112,7 @@ export default async function ParentPathwaysPage() {
                         className="inline-flex items-center gap-1 text-primary hover:underline"
                       >
                         <IconRoute className="h-3.5 w-3.5" />
-                        Ver desarrollo
+                        View development
                       </Link>
                     </div>
                   </div>

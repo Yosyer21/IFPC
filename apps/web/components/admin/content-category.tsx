@@ -38,17 +38,17 @@ export async function ContentCategory({
             <input
               required
               name="title"
-              placeholder="Título del contenido"
+              placeholder="Content title"
               className={inputClass}
             />
             <textarea
               name="description"
-              placeholder="Descripción"
+              placeholder="Description"
               rows={3}
               className={inputClass}
             />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <input name="videoUrl" placeholder="URL de vídeo" className={inputClass} />
+              <input name="videoUrl" placeholder="Video URL" className={inputClass} />
               <input name="thumbnailUrl" placeholder="URL de imagen" className={inputClass} />
               <input
                 type="number"
@@ -87,7 +87,7 @@ export async function ContentCategory({
       {contents.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay contenido publicado en esta categoría.</p>
+            <p className="text-sm text-muted-foreground">No content published in this category.</p>
           </CardContent>
         </Card>
       ) : (

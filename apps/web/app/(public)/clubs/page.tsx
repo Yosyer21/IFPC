@@ -28,14 +28,14 @@ export default async function PublicClubsPage() {
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Clubs</p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">Clubes que reclutan</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            {clubs.length} clubes verificados · {countries} países. Publican pruebas, becas y
+            {clubs.length} verified clubs · {countries} countries. They post trials, scholarships and
             convocatorias en la plataforma.
           </p>
         </div>
 
         {clubs.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-10 text-center">
-            <p className="text-muted-foreground">Aún no hay clubes verificados.</p>
+            <p className="text-muted-foreground">No verified clubs yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

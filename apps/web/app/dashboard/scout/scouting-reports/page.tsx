@@ -41,14 +41,14 @@ export default async function ScoutReportsPage() {
         icon="whistle"
       />
 
-      <h2 className="mb-3 text-lg font-semibold">Nuevo informe</h2>
+      <h2 className="mb-3 text-lg font-semibold">New report</h2>
       <CreateScoutingReportForm players={playerOptions} />
 
-      <h2 className="mb-3 mt-8 text-lg font-semibold">Creados</h2>
+      <h2 className="mb-3 mt-8 text-lg font-semibold">Created</h2>
       {reports.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Aún no has creado informes.</p>
+            <p className="text-sm text-muted-foreground">You haven't created any reports yet.</p>
           </CardContent>
         </Card>
       ) : (

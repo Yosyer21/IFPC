@@ -36,7 +36,7 @@ export default async function AdminClubDetailPage({
 
   const info: [string, string][] = [
     ['Email', club.email],
-    ['País', club.country],
+    ['Country', club.country],
     ['Ciudad', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
     ['Usuario', club.user?.name ?? 'Sin usuario vinculado'],
@@ -49,7 +49,7 @@ export default async function AdminClubDetailPage({
         href="/dashboard/admin/clubs"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Clubes
+        ← Clubs
       </Link>
       <PageHeader title={club.name} subtitle={club.user?.email ?? club.email} icon="briefcase">
         <Badge variant={club.verified ? 'success' : 'warning'}>
@@ -70,11 +70,11 @@ export default async function AdminClubDetailPage({
 
       <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {[
-          ['Envíos', club._count.submissions],
+          ['Submissions', club._count.submissions],
           ['Pruebas', club._count.trials],
           ['Negociaciones', club._count.negotiations],
           ['Contratos', club._count.contracts],
-          ['Consultas', club._count.inquiries],
+          ['Inquiries', club._count.inquiries],
         ].map(([label, value]) => (
           <Card key={label}>
             <CardContent className="text-center">
@@ -88,7 +88,7 @@ export default async function AdminClubDetailPage({
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Información</h2>
+            <h2 className="mb-3 font-semibold">Information</h2>
             <dl className="flex flex-col gap-2 text-sm">
               {info.map(([label, value]) => (
                 <div key={label} className="flex items-center justify-between gap-3">
@@ -171,7 +171,7 @@ export default async function AdminClubDetailPage({
                     <div className="min-w-0">
                       <p className="truncate font-medium">{requirement.title}</p>
                       <p className="text-xs text-muted-foreground">
-                        {requirement.position ?? 'Cualquier posición'} · {requirement.country ?? '—'}
+                        {requirement.position ?? 'Any position'} · {requirement.country ?? '—'}
                       </p>
                     </div>
                     <StatusBadge status={requirement.status} />

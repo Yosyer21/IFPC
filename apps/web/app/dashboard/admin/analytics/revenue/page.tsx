@@ -45,7 +45,7 @@ export default async function AdminAnalyticsRevenuePage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Analytics de ingresos"
-        subtitle="Pagos simulados, membresías y evolución mensual"
+        subtitle="Simulated payments, memberships and monthly growth"
         icon="trending"
       />
 
@@ -57,21 +57,21 @@ export default async function AdminAnalyticsRevenuePage() {
           value={Math.round(totalRevenue / 100)}
           suffix=" €"
         />
-        <StatCard href="/dashboard/admin/memberships/payments" icon={IconUsers} label="Pagos realizados" value={paid.length} />
-        <StatCard href="/dashboard/admin/memberships" icon={IconTarget} label="Membresías" value={memberships.length} />
-        <StatCard href="/dashboard/admin/memberships/payments" icon={IconTrendingUp} label="Pagos pendientes" value={pendingPayments} />
+        <StatCard href="/dashboard/admin/memberships/payments" icon={IconUsers} label="Payments realizados" value={paid.length} />
+        <StatCard href="/dashboard/admin/memberships" icon={IconTarget} label="Memberships" value={memberships.length} />
+        <StatCard href="/dashboard/admin/memberships/payments" icon={IconTrendingUp} label="Payments pendientes" value={pendingPayments} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Membresías por plan</h2>
+            <h2 className="mb-4 font-semibold">Memberships by plan</h2>
             <CountsBars items={byTier} />
           </CardContent>
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Pagos cobrados por mes</h2>
+            <h2 className="mb-4 font-semibold">Payments collected per month</h2>
             <CountsBars items={monthly} />
           </CardContent>
         </Card>
@@ -79,9 +79,9 @@ export default async function AdminAnalyticsRevenuePage() {
 
       <Card className="mt-4">
         <CardContent>
-          <h2 className="mb-3 font-semibold">Últimos pagos ({payments.length})</h2>
+          <h2 className="mb-3 font-semibold">Latest payments ({payments.length})</h2>
           {payments.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No hay pagos registrados.</p>
+            <p className="text-sm text-muted-foreground">No payments registered.</p>
           ) : (
             <div className="flex max-h-80 flex-col gap-2 overflow-y-auto">
               {payments.slice(0, 30).map((payment) => (

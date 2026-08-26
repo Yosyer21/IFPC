@@ -34,13 +34,13 @@ export default async function ParentPaymentsHistoryPage() {
         icon="star"
       >
         <Link href="/dashboard/parent/payments" className="text-sm text-muted-foreground hover:underline">
-          ← Pagos
+          ← Payments
         </Link>
       </PageHeader>
 
       <div className="mb-6 grid grid-cols-3 gap-4">
         <StatCard href="/dashboard/parent/payments/history" icon={IconStar} label="Total pagado" value={Math.round(total / 100)} />
-        <StatCard href="/dashboard/parent/payments/history" icon={IconUsers} label="Pagos" value={payments.length} />
+        <StatCard href="/dashboard/parent/payments/history" icon={IconUsers} label="Payments" value={payments.length} />
         <StatCard href="/dashboard/parent/payments/history" icon={IconCalendar} label="Pagados" value={paid.length} />
       </div>
 
@@ -48,7 +48,7 @@ export default async function ParentPaymentsHistoryPage() {
         <CardContent>
           {payments.length === 0 ? (
             <p className="py-10 text-center text-sm text-muted-foreground">
-              No hay movimientos registrados todavía. ({totalFormatted})
+              No transactions recorded yet. ({totalFormatted})
             </p>
           ) : (
             <div className="flex flex-col divide-y divide-border/60">

@@ -51,20 +51,20 @@ export async function GET() {
   return NextResponse.json({ ok: true, applications });
 }
 
-/** POST /api/applications — el jugador envía una solicitud a una oportunidad. */
+/** POST /api/applications — the player sends an application to an opportunity. */
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
     return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
   }
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const opportunityId = stringField(body, 'opportunityId');
   if (!opportunityId) return badRequest('opportunityId es obligatorio');
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
-  if (!player) return forbidden('Perfil de jugador no encontrado');
+  if (!player) return forbidden('Profile de jugador no encontrado');
 
   const application = await prisma.application.upsert({
     where: { playerId_opportunityId: { playerId: player.id, opportunityId } },

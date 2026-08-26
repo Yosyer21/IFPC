@@ -15,7 +15,7 @@
 - Las mutaciones usan **Server Actions** con validación zod.
 - Tareas pesadas/asíncronas se encolan en BullMQ y las procesa `apps/worker`.
 
-## Seguridad por capas
+## Security por capas
 
 1. Middleware (edge): sesión JWT + guard por rol.
 2. Layout del dashboard: verificación de sesión en servidor.

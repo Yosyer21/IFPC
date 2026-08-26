@@ -11,10 +11,10 @@ import { DonutChart, RadarChart } from '@/components/player/charts';
 export const metadata: Metadata = { title: 'Jugador' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function CoachPlayerDetailPage({
@@ -50,7 +50,7 @@ export default async function CoachPlayerDetailPage({
     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position)
     : '—';
 
-  // Nivel del jugador por categoría
+  // Player level by category
   const byCategory = new Map<string, number[]>();
   for (const evaluation of player.evaluations) {
     const list = byCategory.get(evaluation.category) ?? [];
@@ -64,7 +64,7 @@ export default async function CoachPlayerDetailPage({
     radarValues.push(Math.round((scores.reduce((s, n) => s + n, 0) / scores.length) * 10) / 10);
   }
 
-  // Media del jugador
+  // Player average
   const overall =
     player.evaluations.length > 0
       ? Math.round(
@@ -73,13 +73,13 @@ export default async function CoachPlayerDetailPage({
       : null;
 
   const rows: [string, string][] = [
-    ['Posición', positionLabel],
-    ['Edad', age !== null ? `${age} años` : '—'],
+    ['Position', positionLabel],
+    ['Edad', age !== null ? `${age} years old` : '—'],
     ['Nacionalidad', player.nationality ?? '—'],
     ['Club actual', player.clubName ?? '—'],
     ['Estado', player.status],
-    ['Objetivos', String(player._count.goals)],
-    ['Vídeos', String(player._count.videos)],
+    ['Goals', String(player._count.goals)],
+    ['Videos', String(player._count.videos)],
   ];
 
   return (
@@ -88,7 +88,7 @@ export default async function CoachPlayerDetailPage({
         href="/dashboard/coach/players"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Mis jugadores
+        ← My players
       </Link>
 
       {/* Hero del jugador */}
@@ -106,7 +106,7 @@ export default async function CoachPlayerDetailPage({
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {positionLabel}
-              {age !== null ? ` · ${age} años` : ''}
+              {age !== null ? ` · ${age} years old` : ''}
               {player.clubName ? ` · ${player.clubName}` : ''}
               {overall !== null ? ` · Media ${overall}/10` : ''}
             </p>
@@ -140,14 +140,14 @@ export default async function CoachPlayerDetailPage({
             ) : (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
                 <p className="max-w-xs text-sm text-muted-foreground">
-                  Aún no hay suficientes evaluaciones de {player.firstName} para mostrar su nivel
-                  por categoría.
+                  There are not enough assessments of {player.firstName} yet to show their level
+                  by category.
                 </p>
                 <Link
                   href={`/dashboard/coach/players/${player.id}/evaluations`}
                   className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
                 >
-                  Registrar evaluación
+                  Register assessment
                 </Link>
               </div>
             )}
@@ -157,7 +157,7 @@ export default async function CoachPlayerDetailPage({
         <div className="flex flex-col gap-4">
           <Card className="animate-fade-up flex flex-col items-center" style={{ animationDelay: '200ms' }}>
             <CardContent className="flex w-full flex-col items-center gap-4">
-              <h2 className="self-start font-semibold">Media del jugador</h2>
+              <h2 className="self-start font-semibold">Player average</h2>
               {overall !== null ? (
                 <DonutChart
                   value={overall * 10}
@@ -165,7 +165,7 @@ export default async function CoachPlayerDetailPage({
                   sublabel={`sobre 10 · ${player.evaluations.length} evaluaciones`}
                 />
               ) : (
-                <p className="py-8 text-sm text-muted-foreground">Sin evaluaciones aún.</p>
+                <p className="py-8 text-sm text-muted-foreground">No assessments yet.</p>
               )}
             </CardContent>
           </Card>

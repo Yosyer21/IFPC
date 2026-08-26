@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { IconStar } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Pagos' };
+export const metadata: Metadata = { title: 'Payments' };
 
 export default async function ParentPaymentsPage() {
   const session = await auth();
@@ -19,7 +19,7 @@ export default async function ParentPaymentsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Pagos"
+        title="Payments"
         subtitle="Historial de pagos de tu cuenta familiar"
         icon="star"
       />
@@ -31,7 +31,7 @@ export default async function ParentPaymentsPage() {
               <IconStar className="h-7 w-7" />
             </span>
             <p className="max-w-sm text-sm text-muted-foreground">
-              No hay pagos registrados en tu cuenta todavía.
+              No payments recorded in your account yet.
             </p>
           </CardContent>
         </Card>

@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { Job } from 'bullmq';
 import { prisma } from '@ifpc/database';
 
-/** Elimina archivos de uploads locales que no estén referenciados por ningún vídeo. */
+/** Deletes local upload files that are not referenced by any video. */
 export async function cleanupFiles(job: Job) {
   const uploadsDir =
     process.env.UPLOAD_DIR ?? path.resolve(process.cwd(), '..', 'web', 'public', 'uploads');
@@ -26,6 +26,6 @@ export async function cleanupFiles(job: Job) {
     }
   }
 
-  console.log(`[maintenance] archivos huérfanos eliminados: ${cleaned}`);
+  console.log(`[maintenance] orphan files cleaned: ${cleaned}`);
   return { cleaned, total: files.length };
 }

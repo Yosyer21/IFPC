@@ -4,7 +4,7 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
  * GET /api/videos
- * - Jugador: sus vídeos.
+ * - Player: their videos.
  * - Admin: todos.
  * - Otros roles: 403.
  */

@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Educación para familias' };
+export const metadata: Metadata = { title: 'Education for families' };
 
 export default async function ParentEducationPage() {
   const session = await auth();
@@ -19,8 +19,8 @@ export default async function ParentEducationPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Educación para familias"
-        subtitle="Guías y recursos para acompañar la carrera deportiva de tu hijo"
+        title="Education for families"
+        subtitle="Guides and resources to support your child's sporting career"
         icon="book"
       />
 
@@ -28,7 +28,7 @@ export default async function ParentEducationPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              No hay guías publicadas todavía. Vuelve pronto.
+              No guides published yet. Come back soon.
             </p>
           </CardContent>
         </Card>
@@ -43,7 +43,7 @@ export default async function ParentEducationPage() {
             >
               <Card className="card-hover h-full">
                 <CardContent className="flex h-full flex-col gap-2">
-                  <Badge>Guía para familias</Badge>
+                  <Badge>Guide for families</Badge>
                   <h2 className="font-semibold">{content.title}</h2>
                   <p className="line-clamp-3 text-sm text-muted-foreground">
                     {content.description}

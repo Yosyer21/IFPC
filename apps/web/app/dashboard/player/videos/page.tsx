@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Mis vídeos' };
+export const metadata: Metadata = { title: 'My videos' };
 
 export default async function PlayerVideosPage() {
   const session = await auth();
@@ -22,12 +22,12 @@ export default async function PlayerVideosPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Mis vídeos" icon="video">
+      <PageHeader title="My videos" icon="video">
         <Link
           href="/dashboard/player/videos/upload"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
         >
-          Subir vídeo
+          Upload video
         </Link>
       </PageHeader>
 
@@ -35,7 +35,7 @@ export default async function PlayerVideosPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has subido vídeos. Sube tus highlights para que ojeadores y clubes puedan verte
+              You haven't uploaded any videos yet. Upload your highlights so scouts and clubs can see you
               jugar.
             </p>
           </CardContent>

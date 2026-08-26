@@ -5,7 +5,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Universidades · Usuarios' };
+export const metadata: Metadata = { title: 'Universidades · Users' };
 
 export default async function AdminUsersUniversitiesPage() {
   const session = await auth();
@@ -21,7 +21,7 @@ export default async function AdminUsersUniversitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Universidades"
-        subtitle="Instituciones académicas con acceso a reclutamiento"
+        subtitle="Academic institutions with recruitment access"
         icon="users"
       />
       <RoleLinks />

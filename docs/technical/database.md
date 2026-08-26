@@ -1,13 +1,13 @@
-# Base de datos
+# Database
 
 Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.prisma`).
 
-## Modelos principales
+## Main models
 
 - **Cuentas**: `User` (rol, hash de contraseña), `Player`, `Parent`, `Coach`, `Scout`, `Agent`, `Club`, `University`, `Academy`, `ClubStaff`.
 - **Desarrollo**: `TrainingContent`, `Pathway`, `PlayerGoal`, `Evaluation`, `Document`.
-- **Vídeo**: `Video` (estado: uploading/processing/ready/failed).
-- **Oportunidades**: `Opportunity`, `Application`.
+- **Video**: `Video` (estado: uploading/processing/ready/failed).
+- **Opportunities**: `Opportunity`, `Application`.
 - **Reclutamiento**: `Submission`, `Trial`, `Negotiation`, `Contract` (pipeline enlazado).
 - **Scouting**: `ScoutingReport`, `SavedPlayer`.
 - **Contacto**: `Inquiry`, `Requirement`.

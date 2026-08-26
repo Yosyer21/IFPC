@@ -50,7 +50,7 @@ export default async function AdminCampsPage() {
           href="/dashboard/admin/camps/create"
           className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Nuevo camp
+          New camp
         </Link>
       </PageHeader>
 
@@ -58,14 +58,14 @@ export default async function AdminCampsPage() {
         <StatCard href="/dashboard/admin/camps" icon={IconTrophy} label="Total camps" value={camps.length} />
         <StatCard href="/dashboard/admin/camps" icon={IconCheckCircle} label="Abiertos" value={open} />
         <StatCard href="/dashboard/admin/camps" icon={IconUsers} label="Inscripciones" value={registrations} />
-        <StatCard href="/dashboard/admin/camps" icon={IconCalendar} label="Ocupación" value={occupancy} suffix="%" />
+        <StatCard href="/dashboard/admin/camps" icon={IconCalendar} label="Occupancy" value={occupancy} suffix="%" />
       </div>
 
       {camps.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay camps creados todavía. Crea el primero para abrir inscripciones.
+              No camps created yet. Create the first one to open registrations.
             </p>
           </CardContent>
         </Card>

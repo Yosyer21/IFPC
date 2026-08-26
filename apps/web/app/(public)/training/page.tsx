@@ -7,13 +7,13 @@ import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
   title: 'Entrenamiento — IFPC',
-  description: 'Ejercicios, rutinas y contenido de desarrollo futbolístico abierto.',
+  description: 'Open football development exercises, routines and content.',
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  'strength-conditioning': 'Fuerza y condición',
-  psychology: 'Psicología',
+  technical: 'Technique',
+  'strength-conditioning': 'Strength and conditioning',
+  psychology: 'Psychology',
 };
 
 export default async function PublicTrainingPage() {
@@ -33,7 +33,7 @@ export default async function PublicTrainingPage() {
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Training</p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">Plan de entrenamiento abierto</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            {content.length} ejercicios · {categories.size} áreas. Accede al catálogo completo y a tu
+            {content.length} exercises · {categories.size} areas. Access the full catalog and your
             plan personalizado con una cuenta de jugador.
           </p>
         </div>
@@ -48,7 +48,7 @@ export default async function PublicTrainingPage() {
 
         {content.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-10 text-center">
-            <p className="text-muted-foreground">Aún no hay contenido publicado.</p>
+            <p className="text-muted-foreground">No content published yet.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

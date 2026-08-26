@@ -11,9 +11,9 @@ pnpm db:seed
 pnpm dev                      # web en http://localhost:3000
 ```
 
-## Usuarios demo
+## Users demo
 
-| Rol     | Email                | Contraseña |
+| Rol     | Email                | Password |
 | ------- | -------------------- | ---------- |
 | Jugador | player@demo.com      | player123  |
 | Familiar | parent@demo.com     | parent123  |

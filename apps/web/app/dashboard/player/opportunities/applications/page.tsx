@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Mis solicitudes' };
+export const metadata: Metadata = { title: 'My applications' };
 
 export default async function PlayerApplicationsPage() {
   const session = await auth();
@@ -23,13 +23,13 @@ export default async function PlayerApplicationsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="mb-6 text-2xl font-bold">Mis solicitudes</h1>
+      <h1 className="mb-6 text-2xl font-bold">My applications</h1>
 
       {applications.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has enviado solicitudes.{' '}
+              You haven't sent any applications yet.{' '}
               <Link href="/dashboard/player/opportunities" className="text-primary hover:underline">
                 Ver oportunidades
               </Link>

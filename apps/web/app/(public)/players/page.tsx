@@ -30,14 +30,14 @@ export default async function PublicPlayersPage() {
           <h1 className="mt-2 text-4xl font-bold tracking-tight">Talento disponible</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {players.length} jugadores con perfil abierto · {countries} nacionalidades. Contacta con
-            ellos vía plataforma.
+            them via the platform.
           </p>
         </div>
 
         {players.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-10 text-center">
             <p className="text-muted-foreground">
-              Todavía no hay jugadores con perfil público.
+              No players with a public profile yet.
             </p>
           </div>
         ) : (
@@ -67,7 +67,7 @@ export default async function PublicPlayersPage() {
                     {player.position
                       ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                         player.position)
-                      : 'Sin posición'}
+                      : 'No position'}
                   </Badge>
                   {player.competitionLevel ? (
                     <Badge variant="outline">{player.competitionLevel}</Badge>

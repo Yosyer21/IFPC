@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Ficha futbolística' };
+export const metadata: Metadata = { title: 'Football profile' };
 
 export default async function PlayerFootballPage() {
   const session = await auth();
@@ -28,8 +28,8 @@ export default async function PlayerFootballPage() {
     : '—';
 
   const rows: [string, string][] = [
-    ['Posición principal', positionLabel],
-    ['Pierna hábil', footLabel],
+    ['Main position', positionLabel],
+    ['Preferred foot', footLabel],
     ['Nivel competitivo', competitionLabel],
     ['Club actual', player.clubName ?? '—'],
     ['Disponibilidad', player.status === 'AVAILABLE' ? 'Disponible' : 'No disponible'],
@@ -38,7 +38,7 @@ export default async function PlayerFootballPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Ficha futbolística</h1>
+        <h1 className="text-2xl font-bold">Football profile</h1>
         <Link
           href="/dashboard/player/profile/edit"
           className="text-sm text-muted-foreground hover:underline"

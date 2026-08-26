@@ -3,9 +3,9 @@ import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
- * GET /api/submissions — envíos de jugadores.
- * - Agente: sus envíos.
- * - Club: envíos a su club.
+ * GET /api/submissions — player submissions.
+ * - Agent: their submissions.
+ * - Club: submissions to their club.
  * - Admin: todos.
  */
 export async function GET() {

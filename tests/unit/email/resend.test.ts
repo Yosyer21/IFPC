@@ -14,7 +14,7 @@ afterEach(() => {
 });
 
 describe('lib/email/resend', () => {
-  it('sendEmail sin API key configurada no hace fetch y avisa', async () => {
+  it('sendEmail without an API key does not call fetch and warns', async () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch');
     const result = await email.sendEmail({
       to: 'test@ifpc.com',
@@ -23,11 +23,11 @@ describe('lib/email/resend', () => {
       text: 'hola',
     });
     expect(result.ok).toBe(false);
-    expect(result.error).toBe('Resend no configurado');
+    expect(result.error).toBe('Resend not configured');
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  it('sendPasswordResetEmail devuelve el mismo aviso en dev', async () => {
+  it('sendPasswordResetEmail returns the same warning in dev', async () => {
     const result = await email.sendPasswordResetEmail(
       'test@ifpc.com',
       'http://localhost:3000/reset-password?token=abc'

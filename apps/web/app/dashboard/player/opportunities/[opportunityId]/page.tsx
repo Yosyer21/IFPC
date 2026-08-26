@@ -47,9 +47,9 @@ export default async function PlayerOpportunityDetailPage({
   const details: [string, string][] = [
     ['Club', opportunity.club?.name ?? opportunity.university?.name ?? '—'],
     ['Tipo', typeLabel],
-    ['Posición', opportunity.position ?? '—'],
-    ['Rango de edad', opportunity.ageMin || opportunity.ageMax ? `${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} años` : '—'],
-    ['Ubicación', opportunity.location ?? '—'],
+    ['Position', opportunity.position ?? '—'],
+    ['Rango de edad', opportunity.ageMin || opportunity.ageMax ? `${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} years old` : '—'],
+    ['Location', opportunity.location ?? '—'],
     ['Cierra el', opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('es') : '—'],
     ['Publicada el', opportunity.createdAt.toLocaleDateString('es')],
   ];

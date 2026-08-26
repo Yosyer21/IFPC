@@ -43,7 +43,7 @@ export default async function AdminMatchingPlayersPage() {
       <Card>
         <CardContent>
           {rows.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No hay jugadores registrados.</p>
+            <p className="text-sm text-muted-foreground">No registered players.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {rows.map(({ player, best }) => (
@@ -57,7 +57,7 @@ export default async function AdminMatchingPlayersPage() {
                       <span>
                         {player.firstName} {player.lastName}
                       </span>
-                      <Badge variant="outline">{player.position ?? 'Sin posición'}</Badge>
+                      <Badge variant="outline">{player.position ?? 'No position'}</Badge>
                       <Badge variant="outline">{player.status}</Badge>
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">

@@ -14,7 +14,7 @@ describe('matchScore', () => {
   const player = {
     position: 'DEL',
     dateOfBirth: new Date('2010-03-10'),
-    nationality: 'España',
+    nationality: 'Spain',
     competitionLevel: 'nacional',
     status: 'AVAILABLE',
   };
@@ -25,14 +25,14 @@ describe('matchScore', () => {
       ageMin: 15,
       ageMax: 17,
       level: 'nacional',
-      country: 'España',
+      country: 'Spain',
     });
     expect(result.total).toBe(100);
     expect(result.criteria).toHaveLength(5);
     expect(result.summary).toBe('Muy buena coincidencia');
   });
 
-  it('penaliza la posición no coincidente', () => {
+  it('penalizes the non-matching position', () => {
     const result = matchScore(player, { position: 'DEF' });
     expect(result.total).toBeLessThan(100);
     const position = result.criteria.find((criterion) => criterion.key === 'position');

@@ -54,7 +54,7 @@ export function PlayerRow({ player }: { player: PlayerRowData }) {
             href={`/dashboard/admin/players/${player.id}`}
             className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
           >
-            Perfil
+            Profile
           </Link>
         </div>
       </CardContent>

@@ -8,7 +8,7 @@ export default async function AdminContentTrainingPage() {
     <ContentCategory
       category="technical"
       title="Entrenamiento"
-      subtitle="Catálogo de contenido técnico para jugadores"
+      subtitle="Catalog of technical content for players"
       icon="play"
     />
   );

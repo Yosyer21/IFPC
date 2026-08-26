@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Perfil del club' };
+export const metadata: Metadata = { title: 'Profile del club' };
 
 export default async function ClubProfilePage() {
   const session = await auth();
@@ -20,7 +20,7 @@ export default async function ClubProfilePage() {
   const rows: [string, string][] = [
     ['Nombre', club.name],
     ['Email', club.user?.email ?? '—'],
-    ['País', club.country],
+    ['Country', club.country],
     ['Ciudad', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
     ['Miembro desde', club.createdAt.toLocaleDateString('es')],
@@ -29,16 +29,16 @@ export default async function ClubProfilePage() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Perfil del club"
-        subtitle="Información pública de tu club en la plataforma"
+        title="Profile del club"
+        subtitle="Your club's public information on the platform"
         icon="briefcase"
       />
       <Badge variant={club.verified ? 'success' : 'warning'}>
-        {club.verified ? 'Verificado' : 'Pendiente de verificación'}
+        {club.verified ? 'Verificado' : 'Pending verification'}
       </Badge>
       <Card className="mt-4">
         <CardHeader>
-          <CardTitle>Información</CardTitle>
+          <CardTitle>Information</CardTitle>
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -54,7 +54,7 @@ export default async function ClubProfilePage() {
       {club.description ? (
         <Card className="mt-4">
           <CardHeader>
-            <CardTitle>Descripción</CardTitle>
+            <CardTitle>Description</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">{club.description}</p>

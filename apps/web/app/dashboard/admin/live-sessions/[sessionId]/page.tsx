@@ -9,7 +9,7 @@ import { StatusBadge } from '@/components/admin/status-badge';
 import { changeLiveSessionStatusAction } from '@/app/actions/admin';
 import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Sesión en vivo' };
+export const metadata: Metadata = { title: 'Live session' };
 
 export default async function AdminLiveSessionDetailPage({
   params,
@@ -78,9 +78,9 @@ export default async function AdminLiveSessionDetailPage({
             </div>
           </div>
 
-          <h2 className="mb-2 mt-5 font-semibold">Descripción</h2>
+          <h2 className="mb-2 mt-5 font-semibold">Description</h2>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {liveSession.description ?? 'Sin descripción.'}
+            {liveSession.description ?? 'No description.'}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-2">
@@ -92,7 +92,7 @@ export default async function AdminLiveSessionDetailPage({
                 rel="noreferrer"
                 className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
-                Abrir reunión
+                Open meeting
               </a>
             ) : null}
           </div>
@@ -114,7 +114,7 @@ export default async function AdminLiveSessionDetailPage({
               type="submit"
               className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Actualizar estado
+              Update status
             </button>
           </form>
         </CardContent>

@@ -47,7 +47,7 @@ export default async function ScoutOpportunitiesPage() {
                   {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {opportunity.position ? `Posición: ${opportunity.position}` : ''}
+                  {opportunity.position ? `Position: ${opportunity.position}` : ''}
                   {opportunity.location ? ` · ${opportunity.location}` : ''}
                 </p>
                 <Link

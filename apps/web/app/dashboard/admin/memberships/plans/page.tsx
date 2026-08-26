@@ -3,13 +3,13 @@ import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Planes de membresía' };
+export const metadata: Metadata = { title: 'Membership plans' };
 
 const PLANS = [
-  { tier: 'FREE', price: '0 €', features: ['Perfil básico', 'Contenido', 'Aplicar a oportunidades'] },
-  { tier: 'PREMIUM', price: '59,99 €/año', features: ['Perfil destacado', 'Vídeos ilimitados', 'Estadísticas'] },
-  { tier: 'SCOUT', price: '149,99 €/año', features: ['Informes de scouting', 'Búsqueda avanzada'] },
-  { tier: 'CLUB', price: '299,99 €/año', features: ['Oportunidades', 'Requisitos', 'Matching completo'] },
+  { tier: 'FREE', price: '0 €', features: ['Basic profile', 'Contenido', 'Aplicar a oportunidades'] },
+  { tier: 'PREMIUM', price: '€59.99/year', features: ['Profile destacado', 'Unlimited videos', 'Statistics'] },
+  { tier: 'SCOUT', price: '€149.99/year', features: ['Informes de scouting', 'Advanced search'] },
+  { tier: 'CLUB', price: '€299.99/year', features: ['Oportunidades', 'Requisitos', 'Matching completo'] },
 ];
 
 export default async function AdminMembershipPlansPage() {
@@ -22,9 +22,9 @@ export default async function AdminMembershipPlansPage() {
         href="/dashboard/admin/memberships"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Membresías
+        ← Memberships
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Planes de membresía</h1>
+      <h1 className="mb-6 text-2xl font-bold">Membership plans</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {PLANS.map((plan) => (
@@ -44,8 +44,8 @@ export default async function AdminMembershipPlansPage() {
         ))}
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        Los precios y beneficios se gestionarán desde la configuración en próximas fases. Los pagos
-        son simulados hasta la integración con Stripe.
+        Prices and benefits will be managed from the settings in upcoming phases. Payments
+        are simulated until the Stripe integration.
       </p>
     </div>
   );

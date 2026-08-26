@@ -34,7 +34,7 @@ async function main() {
     const check = await pglite.query(`SELECT to_regclass('public."User"') AS t`);
     const hasSchema = check.rows[0]?.t != null;
     if (hasSchema) {
-      console.log('[pglite] esquema ya aplicado, se omite la creación');
+      console.log('[pglite] schema already applied, skipping creation');
     } else {
       await pglite.exec(sql);
       console.log('[pglite] esquema aplicado');

@@ -3,23 +3,23 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Contacto — IFPC',
-  description: 'Ponte en contacto con el equipo de IFPC.',
+  title: 'Contact — IFPC',
+  description: 'Get in touch with the IFPC team.',
 };
 
 const CHANNELS = [
   {
-    label: 'Soporte general',
+    label: 'General support',
     value: 'hola@ifpc.com',
     href: 'mailto:hola@ifpc.com',
   },
   {
-    label: 'Clubes y academias',
+    label: 'Clubs and academies',
     value: 'clubs@ifpc.com',
     href: 'mailto:clubs@ifpc.com',
   },
   {
-    label: 'Universidades',
+    label: 'Universities',
     value: 'universities@ifpc.com',
     href: 'mailto:universities@ifpc.com',
   },
@@ -32,10 +32,10 @@ export default function ContactPage() {
       <main className="mx-auto w-full max-w-4xl px-4 py-16">
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Contact</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">Hablemos</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">Let\u2019s talk</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            ¿Tienes dudas sobre la plataforma, quieres incorporar a tu club o universidad, o
-            necesitas ayuda con tu cuenta? Escríbenos y te responderemos en menos de 48 horas.
+            Do you have questions about the platform, want to onboard your club or university, or
+            need help with your account? Write to us and we will reply within 48 hours.
           </p>
         </div>
 
@@ -53,27 +53,27 @@ export default function ContactPage() {
         </div>
 
         <div className="mt-12 rounded-2xl border border-border/60 bg-card p-8">
-          <h2 className="text-lg font-semibold">Preguntas frecuentes</h2>
+          <h2 className="text-lg font-semibold">Frequently asked questions</h2>
           <div className="mt-4 flex flex-col gap-4 text-sm">
             <div>
-              <h3 className="font-medium">¿Cómo creo mi perfil de jugador?</h3>
+              <h3 className="font-medium">How do I create my player profile?</h3>
               <p className="mt-1 text-muted-foreground">
-                Regístrate gratis, completa tu perfil deportivo y sube vídeos. Tu perfil quedará
-                visible para clubes y ojeadores.
+                Sign up for free, complete your sports profile and upload videos. Your profile will
+                be visible to clubs and scouts.
               </p>
             </div>
             <div>
-              <h3 className="font-medium">¿Qué papel juegan las familias?</h3>
+              <h3 className="font-medium">What role do families play?</h3>
               <p className="mt-1 text-muted-foreground">
-                Puedes vincular a tus hijos desde una cuenta familiar y seguir su desarrollo,
-                evaluaciones y oportunidades en un hub privado.
+                You can link your children from a family account and follow their development,
+                assessments and opportunities in a private hub.
               </p>
             </div>
             <div>
-              <h3 className="font-medium">¿Cuánto cuesta?</h3>
+              <h3 className="font-medium">How much does it cost?</h3>
               <p className="mt-1 text-muted-foreground">
-                La creación de perfil es gratuita. Las membresías premium desbloquean funciones
-                avanzadas de visibilidad y reclutamiento.
+                Creating a profile is free. Premium memberships unlock advanced visibility and
+                recruitment features.
               </p>
             </div>
           </div>

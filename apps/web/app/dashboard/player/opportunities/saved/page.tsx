@@ -29,7 +29,7 @@ export default async function PlayerSavedOpportunitiesPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no has guardado ninguna oportunidad.{' '}
+              You haven't saved any opportunity yet.{' '}
               <Link href="/dashboard/player/opportunities" className="text-primary hover:underline">
                 Explorar oportunidades
               </Link>

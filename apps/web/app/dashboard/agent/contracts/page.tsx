@@ -33,8 +33,8 @@ export default async function AgentContractsPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              No hay contratos registrados. Cuando se cierre una negociación con contrato,
-              aparecerá aquí.
+              No contracts registered. When a negotiation with a contract closes,
+              it will appear here.
             </p>
           </CardContent>
         </Card>
@@ -56,7 +56,7 @@ export default async function AgentContractsPage() {
                     <p className="truncate text-sm text-muted-foreground">
                       {contract.club.name}
                       {contract.salary
-                        ? ` · ${contract.salary.toLocaleString('es')} ${contract.currency}/año`
+                        ? ` · ${contract.salary.toLocaleString('en')} ${contract.currency}/year`
                         : ''}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">

@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Ruta de desarrollo' };
+export const metadata: Metadata = { title: 'Development pathway' };
 
 export default async function PlayerPathwayDetailPage({
   params,
@@ -48,19 +48,19 @@ export default async function PlayerPathwayDetailPage({
         <CardContent className="flex flex-col gap-4">
           {pathway.description ? (
             <div>
-              <h2 className="mb-1 text-sm font-semibold">Descripción</h2>
+              <h2 className="mb-1 text-sm font-semibold">Description</h2>
               <p className="text-sm text-muted-foreground">{pathway.description}</p>
             </div>
           ) : null}
           {pathway.focus ? (
             <div>
-              <h2 className="mb-1 text-sm font-semibold">Áreas de enfoque</h2>
+              <h2 className="mb-1 text-sm font-semibold">Focus areas</h2>
               <p className="text-sm text-muted-foreground">{pathway.focus}</p>
             </div>
           ) : null}
           {pathway.goals ? (
             <div>
-              <h2 className="mb-1 text-sm font-semibold">Objetivos</h2>
+              <h2 className="mb-1 text-sm font-semibold">Goals</h2>
               <p className="text-sm text-muted-foreground">{pathway.goals}</p>
             </div>
           ) : null}

@@ -8,7 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Mis jugadores' };
+export const metadata: Metadata = { title: 'My players' };
 
 export default async function AgentPlayersPage() {
   const session = await auth();
@@ -25,12 +25,12 @@ export default async function AgentPlayersPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Mis jugadores" icon="users">
+      <PageHeader title="My players" icon="users">
         <Link
           href="/dashboard/agent/players/add"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
         >
-          Añadir jugador
+          Add player
         </Link>
       </PageHeader>
 
@@ -38,9 +38,9 @@ export default async function AgentPlayersPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no representas a ningún jugador.{' '}
+              You don't represent any player yet.{' '}
               <Link href="/dashboard/agent/players/add" className="text-primary hover:underline">
-                Añade tu primer jugador
+                Add your first player
               </Link>
             </p>
           </CardContent>
@@ -69,7 +69,7 @@ export default async function AgentPlayersPage() {
                         ? ((POSITION_LABELS as Record<string, string | undefined>)[
                             entry.player.position
                           ] ?? entry.player.position)
-                        : 'Posición sin definir'}
+                        : 'Undefined position'}
                     </p>
                     <div className="mt-1 flex items-center gap-2">
                       <Badge variant="success">{entry.player.status}</Badge>

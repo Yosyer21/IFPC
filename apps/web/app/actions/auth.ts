@@ -29,7 +29,7 @@ export async function loginAction(
     password: formData.get('password'),
   });
   if (!parsed.success) {
-    return { error: 'Email o contraseña no válidos.' };
+    return { error: 'Invalid email or password.' };
   }
 
   const callbackUrl = (formData.get('callbackUrl') as string) || '/dashboard';
@@ -42,7 +42,7 @@ export async function loginAction(
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      return { error: 'Credenciales incorrectas. Inténtalo de nuevo.' };
+      return { error: 'Incorrect credentials. Please try again.' };
     }
     throw error;
   }
@@ -60,18 +60,18 @@ export async function registerAction(
     password: formData.get('password'),
   });
   if (!parsed.success) {
-    return { error: 'Revisa los datos del formulario.' };
+    return { error: 'Please review the form fields.' };
   }
 
   const rawRole = (formData.get('role') as string) ?? '';
   if (!isRole(rawRole)) {
-    return { error: 'Tipo de cuenta no válido.' };
+    return { error: 'Invalid account type.' };
   }
   const role: Role = rawRole;
 
   const passwordHash = await hashPassword(parsed.data.password);
   const email = parsed.data.email.toLowerCase();
-  const country = ((formData.get('country') as string) ?? '').trim() || 'Sin especificar';
+  const country = ((formData.get('country') as string) ?? '').trim() || 'Unspecified';
 
   let userId: string | null = null;
   try {
@@ -108,10 +108,10 @@ export async function registerAction(
       return user.id;
     });
   } catch {
-    return { error: 'El email ya está registrado.' };
+    return { error: 'This email is already registered.' };
   }
 
-  // Email de verificación (no bloquea el registro; en dev el enlace se loguea).
+  // Verifiestion email (does not block registration; in dev the link is logged).
   if (userId) {
     try {
       const token = randomBytes(32).toString('hex');
@@ -127,10 +127,10 @@ export async function registerAction(
       const verifyUrl = `${appUrl}/verify-email?token=${token}`;
       const result = await sendVerificationEmail(email, verifyUrl);
       if (!result.ok) {
-        console.log(`[auth] enlace de verificación: ${verifyUrl}`);
+        console.log(`[auth] verification link: ${verifyUrl}`);
       }
     } catch (error) {
-      console.error('[auth] no se pudo crear el token de verificación', error);
+      console.error('[auth] could not create the verification token', error);
     }
   }
 
@@ -142,7 +142,7 @@ export async function registerAction(
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      return { error: 'No se pudo iniciar sesión automáticamente.' };
+      return { error: 'Could not sign in automatically.' };
     }
     throw error;
   }
@@ -156,7 +156,7 @@ export async function completeOnboardingAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
   const userId = session.user.id;
   const role = (formData.get('role') as string) ?? '';
@@ -197,7 +197,7 @@ export async function completeOnboardingAction(
       }
       case 'coach': {
         const parsed = coachOnboardingSchema.safeParse({ clubName: str('clubName') });
-        if (!parsed.success) return { error: 'Datos no válidos.' };
+        if (!parsed.success) return { error: 'Invalid data.' };
         await prisma.coach.update({ where: { userId }, data: parsed.data });
         break;
       }
@@ -206,7 +206,7 @@ export async function completeOnboardingAction(
           agency: str('agency'),
           license: str('license'),
         });
-        if (!parsed.success) return { error: 'Datos no válidos.' };
+        if (!parsed.success) return { error: 'Invalid data.' };
         await prisma.agent.update({ where: { userId }, data: parsed.data });
         break;
       }
@@ -226,10 +226,10 @@ export async function completeOnboardingAction(
         // Sin campos obligatorios en esta fase.
         break;
       default:
-        return { error: 'Rol de onboarding no válido.' };
+        return { error: 'Invalid onboarding role.' };
     }
   } catch {
-    return { error: 'No se pudo guardar la información.' };
+    return { error: 'Could not save the information.' };
   }
 
   redirect(`/dashboard/${role}`);
@@ -242,12 +242,12 @@ export async function forgotPasswordAction(
 ): Promise<ActionState> {
   const email = ((formData.get('email') as string) ?? '').toLowerCase().trim();
   if (!email) {
-    return { error: 'Introduce tu email.' };
+    return { error: 'Enter your email.' };
   }
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    return { success: 'Si el email existe, recibirás un enlace para restablecer la contraseña.' };
+    return { success: 'If the email exists, you will receive a link to reset your password.' };
   }
 
   const token = randomBytes(32).toString('hex');
@@ -262,15 +262,15 @@ export async function forgotPasswordAction(
   const result = await sendPasswordResetEmail(user.email, resetUrl);
   if (result.ok) {
     return {
-      success: 'Revisa tu email: te hemos enviado un enlace para restablecer la contraseña.',
+      success: 'Check your email: we have sent you a link to reset your password.',
     };
   }
 
-  // Sin Resend configurado: en desarrollo el enlace queda visible en la consola.
-  console.log(`[auth] enlace de recuperación: ${resetUrl}`);
+  // Without Resend configured: in development the link stays visible in the console.
+  console.log(`[auth] recovery link: ${resetUrl}`);
   return {
     success:
-      'Revisa tu email. (En desarrollo sin Resend configurado, el enlace se muestra en la consola del servidor).',
+      'Check your email. (In development without Resend configured, the link is shown in the server console).',
   };
 }
 
@@ -281,13 +281,13 @@ export async function resetPasswordAction(
   const token = (formData.get('token') as string) ?? '';
   const password = (formData.get('password') as string) ?? '';
   if (!token || password.length < 8) {
-    return { error: 'Enlace no válido o contraseña demasiado corta.' };
+    return { error: 'Invalid link or password too short.' };
   }
 
   const tokenHash = createHash('sha256').update(token).digest('hex');
   const record = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
   if (!record || record.usedAt || record.expiresAt < new Date()) {
-    return { error: 'El enlace no es válido o ha caducado.' };
+    return { error: 'The link is not valid or has expired.' };
   }
 
   const passwordHash = await hashPassword(password);
@@ -296,19 +296,19 @@ export async function resetPasswordAction(
     prisma.passwordResetToken.update({ where: { id: record.id }, data: { usedAt: new Date() } }),
   ]);
 
-  return { success: 'Contraseña actualizada. Ya puedes iniciar sesión.' };
+  return { success: 'Password updated. You can now sign in.' };
 }
 
-/** Reenvía el email de verificación al usuario autenticado. */
+/** Resends the verification email to the authenticated user. */
 export async function resendVerificationEmailAction(): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
-  if (!user) return { error: 'Usuario no encontrado.' };
-  if (user.emailVerified) return { success: 'Tu email ya está verificado.' };
+  if (!user) return { error: 'User not found.' };
+  if (user.emailVerified) return { success: 'Your email is already verified.' };
 
   const token = randomBytes(32).toString('hex');
   const tokenHash = createHash('sha256').update(token).digest('hex');
@@ -320,12 +320,12 @@ export async function resendVerificationEmailAction(): Promise<ActionState> {
   const verifyUrl = `${appUrl}/verify-email?token=${token}`;
   const result = await sendVerificationEmail(user.email, verifyUrl);
   if (result.ok) {
-    return { success: 'Te hemos enviado un nuevo enlace de verificación a tu email.' };
+    return { success: 'We have sent you a new verification link to your email.' };
   }
 
-  console.log(`[auth] enlace de verificación: ${verifyUrl}`);
+  console.log(`[auth] verification link: ${verifyUrl}`);
   return {
-    success: `Revisa tu email. (En desarrollo sin Resend configurado, enlace: ${verifyUrl})`,
+    success: `Check your email. (In development without Resend configured, link: ${verifyUrl})`,
   };
 }
 

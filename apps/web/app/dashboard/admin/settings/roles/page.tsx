@@ -10,12 +10,12 @@ export const metadata: Metadata = { title: 'Roles · Ajustes' };
 const ROLE_INFO: Record<string, { label: string; description: string; prefix: string }> = {
   PLAYER: {
     label: 'Jugador',
-    description: 'Perfil profesional, desarrollo, oportunidades y contenidos de entrenamiento.',
+    description: 'Profile profesional, desarrollo, oportunidades y contenidos de entrenamiento.',
     prefix: '/dashboard/player',
   },
   PARENT: {
     label: 'Familiar',
-    description: 'Acompañamiento de hijos deportistas, educación, pagos y rutas.',
+    description: 'Support for young athletes, education, payments and pathways.',
     prefix: '/dashboard/parent',
   },
   COACH: {
@@ -25,12 +25,12 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
   },
   SCOUT: {
     label: 'Ojeador',
-    description: 'Exploración, guardado de jugadores e informes de scouting.',
+    description: 'Discovery, saved players and scouting reports.',
     prefix: '/dashboard/scout',
   },
   AGENT: {
     label: 'Agente',
-    description: 'Representación de jugadores y gestión de reclutamiento.',
+    description: 'Player representation and recruitment management.',
     prefix: '/dashboard/agent',
   },
   CLUB: {
@@ -40,12 +40,12 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
   },
   UNIVERSITY: {
     label: 'Universidad',
-    description: 'Reclutamiento académico-deportivo y becas.',
+    description: 'Academic-sports recruitment and scholarships.',
     prefix: '/dashboard/university',
   },
   ADMIN: {
     label: 'Administrador',
-    description: 'Centro de control, moderación, contenido y configuración global.',
+    description: 'Control center: moderation, content and global configuration.',
     prefix: '/dashboard/admin',
   },
 };
@@ -78,7 +78,7 @@ export default async function AdminSettingsRolesPage() {
                 </div>
                 <p className="text-sm text-muted-foreground">{info?.description}</p>
                 <p className="mt-2 text-xs text-muted-foreground">
-                  Área: <span className="font-mono">{info?.prefix ?? '—'}</span>
+                  Area: <span className="font-mono">{info?.prefix ?? '—'}</span>
                 </p>
               </CardContent>
             </Card>

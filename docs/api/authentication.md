@@ -2,7 +2,7 @@
 
 ## Endpoints (Route Handlers)
 
-| Método | Ruta | Descripción |
+| Método | Ruta | Description |
 | --- | --- | --- |
 | GET/POST | `/api/auth/[...nextauth]` | Handlers de Auth.js (login con credentials, sesión) |
 

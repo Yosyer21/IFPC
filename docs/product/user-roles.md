@@ -1,15 +1,15 @@
-# Roles de usuario
+# User roles
 
-| Rol | Descripción | Acceso principal |
+| Rol | Description | Acceso principal |
 | --- | --- | --- |
-| **Jugador** | Futbolista que construye su perfil y busca oportunidades | `/dashboard/player` |
-| **Familiar** | Padre/madre/tutor que acompaña el desarrollo | `/dashboard/parent` |
-| **Entrenador** | Técnico que evalúa y guía jugadores | `/dashboard/coach` |
-| **Ojeador** | Profesional que descubre y reporta talento | `/dashboard/scout` |
-| **Agente** | Representante legal de jugadores | `/dashboard/agent` |
+| **Player** | Footballer who builds their profile and looks for opportunities | /dashboard/player |
+| **Parent** | Padre/madre/tutor que acompaña el desarrollo | `/dashboard/parent` |
+| **Coach** | Técnico que evalúa y guía jugadores | `/dashboard/coach` |
+| **Scout** | Profesional que descubre y reporta talento | `/dashboard/scout` |
+| **Agent** | Representante legal de jugadores | `/dashboard/agent` |
 | **Club** | Entidad que publica oportunidades y recluta | `/dashboard/club` |
-| **Universidad** | Institución académico-deportiva | `/dashboard/university` |
-| **Administrador** | Gestión global de la plataforma | `/dashboard/admin` |
+| **University** | Institución académico-deportiva | `/dashboard/university` |
+| **Admin** | Gestión global de la plataforma | `/dashboard/admin` |
 
 ## Permisos
 

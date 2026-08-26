@@ -7,7 +7,7 @@ import { setUserRoleAction, deleteUserAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Usuarios' };
+export const metadata: Metadata = { title: 'Users' };
 
 export default async function AdminUsersPage({
   searchParams,
@@ -28,8 +28,8 @@ export default async function AdminUsersPage({
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Usuarios"
-        subtitle="Cuentas de la plataforma, roles y moderación"
+        title="Users"
+        subtitle="Platform accounts, roles and moderation"
         icon="users"
       />
 

@@ -6,7 +6,7 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
  * GET /api/development — desarrollo del jugador (ruta, objetivos, evaluaciones).
  * - Jugador: su desarrollo.
  * - Coach: de sus jugadores.
- * - Admin: de todos (sin incluir relación).
+ * - Admin: all (without including relationship).
  */
 export async function GET() {
   const session = await requireUser();

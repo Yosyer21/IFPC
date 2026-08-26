@@ -1,17 +1,17 @@
 # API · Oportunidades
 
-## Modelo
+## Model
 
 `Opportunity` (clubId, título, tipo, estado, posición, edad, ubicación, descripción, cierre) + `Application`.
 
-## Tipos
+## Types
 
 TRIAL · SCOUTING · CONTRACT · SCHOLARSHIP · ACADEMY
 
 ## Flujo
 
 1. **Club** publica (`createOpportunityAction`).
-2. **Jugador** explora y envía solicitud (`applyToOpportunityAction`), único por par jugador-oportunidad.
+2. **Player** explora y envía solicitud (`applyToOpportunityAction`), único por par jugador-oportunidad.
 3. **Estados** de la solicitud: PENDING → ACCEPTED/REJECTED/WITHDRAWN.
 4. **Admin** puede cerrar oportunidades (`closeOpportunityAction`).
 

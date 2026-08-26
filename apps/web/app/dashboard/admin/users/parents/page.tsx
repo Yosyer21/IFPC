@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Familiares · Usuarios' };
+export const metadata: Metadata = { title: 'Familiares · Users' };
 
 export default async function AdminUsersParentsPage() {
   const session = await auth();

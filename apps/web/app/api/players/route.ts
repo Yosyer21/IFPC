@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
   }
   const body = await readJson(request);
-  if (!body) return badRequest('Cuerpo JSON no válido');
+  if (!body) return badRequest('Invalid JSON body');
 
   const firstName = stringField(body, 'firstName');
   if (!firstName) return badRequest('firstName es obligatorio');

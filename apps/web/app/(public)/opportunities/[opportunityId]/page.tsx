@@ -73,7 +73,7 @@ export default async function PublicOpportunityDetailPage({
 
           <div className="mt-6 flex flex-wrap gap-2 text-xs">
             {opportunity.position ? (
-              <Badge variant="outline">Posición: {opportunity.position}</Badge>
+              <Badge variant="outline">Position: {opportunity.position}</Badge>
             ) : null}
             {opportunity.ageMin || opportunity.ageMax ? (
               <Badge variant="outline">
@@ -81,7 +81,7 @@ export default async function PublicOpportunityDetailPage({
               </Badge>
             ) : null}
             {opportunity.location ? (
-              <Badge variant="outline">Ubicación: {opportunity.location}</Badge>
+              <Badge variant="outline">Location: {opportunity.location}</Badge>
             ) : null}
           </div>
 
@@ -93,7 +93,7 @@ export default async function PublicOpportunityDetailPage({
 
           <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
             <p className="text-sm text-muted-foreground">
-              ¿Encajas con este perfil? Envía tu solicitud desde tu cuenta de jugador.
+              Do you fit this profile? Send your application from your player account.
             </p>
             <Link
               href="/register"

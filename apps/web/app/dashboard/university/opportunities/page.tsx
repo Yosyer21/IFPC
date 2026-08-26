@@ -62,9 +62,9 @@ export default async function UniversityOpportunitiesPage() {
                   {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
                 </p>
                   <p className="text-xs text-muted-foreground">
-                    {opportunity.position ? `Posición: ${opportunity.position}` : ''}
+                    {opportunity.position ? `Position: ${opportunity.position}` : ''}
                     {opportunity.ageMin || opportunity.ageMax
-                      ? ` · ${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} años`
+                      ? ` · ${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} years old`
                       : ''}
                     {opportunity.location ? ` · ${opportunity.location}` : ''}
                   </p>

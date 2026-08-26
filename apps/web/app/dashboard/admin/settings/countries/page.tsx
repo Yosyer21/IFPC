@@ -8,7 +8,7 @@ import { StatCard } from '@/components/player/stat-card';
 import { CountsBars } from '@/components/player/charts';
 import { IconShield, IconUsers } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Países · Ajustes' };
+export const metadata: Metadata = { title: 'Countries · Settings' };
 
 export default async function AdminSettingsCountriesPage() {
   const session = await auth();
@@ -34,21 +34,21 @@ export default async function AdminSettingsCountriesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Países"
+        title="Countries"
         subtitle="Mercados configurados y presencia de la plataforma"
         icon="shield"
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard href="/dashboard/admin/settings" icon={IconShield} label="Países configurados" value={COUNTRIES.length} />
-        <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Jugadores con país" value={playersWithCountry} />
-        <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubes con país" value={clubs.length} />
+        <StatCard href="/dashboard/admin/settings" icon={IconShield} label="Configured countries" value={COUNTRIES.length} />
+        <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Players by country" value={playersWithCountry} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubs by country" value={clubs.length} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Jugadores por país</h2>
+            <h2 className="mb-4 font-semibold">Players by country</h2>
             {Object.keys(playersByCountry).length === 0 ? (
               <p className="text-sm text-muted-foreground">Sin nacionalidades registradas.</p>
             ) : (
@@ -63,9 +63,9 @@ export default async function AdminSettingsCountriesPage() {
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Clubes por país</h2>
+            <h2 className="mb-4 font-semibold">Clubs by country</h2>
             {Object.keys(clubsByCountry).length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin clubes registrados.</p>
+              <p className="text-sm text-muted-foreground">No registered clubs.</p>
             ) : (
               <CountsBars
                 items={Object.entries(clubsByCountry)
@@ -80,7 +80,7 @@ export default async function AdminSettingsCountriesPage() {
 
       <Card className="mt-4">
         <CardContent>
-          <h2 className="mb-3 font-semibold">Catálogo de países</h2>
+          <h2 className="mb-3 font-semibold">Countries catalog</h2>
           <div className="flex flex-wrap gap-2">
             {COUNTRIES.map((country) => (
               <Badge key={country} variant="outline">

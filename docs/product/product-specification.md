@@ -8,10 +8,10 @@
 - Sesiones JWT con rol embebido y guards por área.
 
 ### Jugador
-- Perfil completo (ficha futbolística, datos físicos, biografía).
-- Vídeos con reproductor y subida.
+- Profile completo (ficha futbolística, datos físicos, biografía).
+- Videos con reproductor y subida.
 - Biblioteca de entrenamiento por categorías (técnica, fuerza, psicología).
-- Ruta de desarrollo (pathway), objetivos y evaluaciones.
+- Development pathway (pathway), objetivos y evaluaciones.
 - Exploración y solicitud de oportunidades con seguimiento de estado.
 - Notificaciones y ajustes de cuenta.
 
@@ -25,14 +25,14 @@
 
 ### Agente
 - Representación de jugadores (añadir por email).
-- Envíos a clubes con pipeline: envío → prueba → negociación → contrato.
+- Submissions a clubes con pipeline: envío → prueba → negociación → contrato.
 - Detalle de cada etapa (fechas, ofertas, salarios, estado).
 
 ### Ojeador
 - Búsqueda de jugadores disponibles, guardado de favoritos.
 - Informes de scouting con valoración, fortalezas y debilidades.
 
-### Administración
+### Administration
 - Gestión de usuarios (roles, verificación, eliminación).
 - Verificación de jugadores y clubes.
 - Supervisión de oportunidades, reclutamiento, membresías, pagos y analíticas.

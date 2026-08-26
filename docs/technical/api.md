@@ -6,7 +6,7 @@ La API se implementa con **Server Actions** (mutaciones) y **Route Handlers** de
 
 Estructura: `app/api/<dominio>/route.ts` con GET (listado), POST (creación), y `[id]/route.ts` para GET/PATCH/DELETE.
 
-Dominios disponibles (scaffold): auth, users, players, parents, coaches, scouts, agents, clubs,
+Available domains (scaffold): auth, users, players, parents, coaches, scouts, agents, clubs,
 academias, universidades, videos, media, training, parent-education, evaluations, development,
 pathways, camps, live-sessions, opportunities, applications, submissions, trials, negotiations,
 contracts, scouting, matching, documents, communications, notifications, memberships, payments,

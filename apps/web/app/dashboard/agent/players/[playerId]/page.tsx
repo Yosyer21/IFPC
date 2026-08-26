@@ -32,8 +32,8 @@ export default async function AgentPlayerDetailPage({
   if (!player) notFound();
 
   const sections = [
-    { href: `/dashboard/agent/players/${playerId}/profile`, label: 'Perfil' },
-    { href: `/dashboard/agent/players/${playerId}/videos`, label: 'Vídeos' },
+    { href: `/dashboard/agent/players/${playerId}/profile`, label: 'Profile' },
+    { href: `/dashboard/agent/players/${playerId}/videos`, label: 'Videos' },
     { href: `/dashboard/agent/players/${playerId}/evaluations`, label: 'Evaluaciones' },
     { href: `/dashboard/agent/players/${playerId}/documents`, label: 'Documentos' },
   ];
@@ -48,7 +48,7 @@ export default async function AgentPlayerDetailPage({
         href="/dashboard/agent/players"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Mis jugadores
+        ← My players
       </Link>
       <h1 className="mb-4 text-2xl font-bold">
         {player.firstName} {player.lastName}
@@ -62,7 +62,7 @@ export default async function AgentPlayerDetailPage({
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
-              ['Posición', positionLabel],
+              ['Position', positionLabel],
               ['Nacionalidad', player.nationality ?? '—'],
               ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
               ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],

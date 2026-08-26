@@ -24,7 +24,7 @@ export default async function AdminNotificationsPage() {
             type="submit"
             className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-muted"
           >
-            Marcar todas como leídas
+            Mark all as read
           </button>
         </form>
       </PageHeader>
@@ -46,10 +46,10 @@ export default async function AdminNotificationsPage() {
                     <p className="mt-1 text-sm text-muted-foreground">{notification.message}</p>
                   ) : null}
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {notification.createdAt.toLocaleString('es')}
+                    {notification.createdAt.toLocaleString('en')}
                   </p>
                 </div>
-                {!notification.read ? <Badge>Nuevo</Badge> : null}
+                {!notification.read ? <Badge>New</Badge> : null}
               </CardContent>
             </Card>
           ))}

@@ -44,7 +44,7 @@ describe('lib/payments/stripe', () => {
     expect(stripe.MEMBERSHIP_TIERS.CLUB.priceCents).toBe(49900);
   });
 
-  it('verifyWebhookSignature acepta una firma válida', () => {
+  it('verifyWebhookSignature accepts a valid signature', () => {
     const payload = JSON.stringify({ type: 'checkout.session.completed' });
     const header = signatureHeader('1700000000', payload);
     expect(stripe.verifyWebhookSignature(payload, header)).toBe(true);

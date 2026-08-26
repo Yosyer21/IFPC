@@ -1,6 +1,6 @@
 import type { Role } from './roles';
 
-/** Prefijo de ruta de dashboard accesible por cada rol. */
+/** Dashboard path prefix accessible by each role. */
 export const ROLE_DASHBOARD_PREFIXES: Record<Role, string> = {
   PLAYER: '/dashboard/player',
   PARENT: '/dashboard/parent',

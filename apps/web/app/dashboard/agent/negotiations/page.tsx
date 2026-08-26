@@ -25,7 +25,7 @@ export default async function AgentNegotiationsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Negociaciones"
-        subtitle="Condiciones en negociación para tus representados"
+        subtitle="Negotiation conditions for your represented players"
         icon="briefcase"
       />
 
@@ -33,8 +33,8 @@ export default async function AgentNegotiationsPage() {
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
-              No hay negociaciones abiertas. Cuando un club inicie una negociación tras una prueba,
-              aparecerá aquí.
+              No open negotiations. When a club starts a negotiation after a trial,
+              it will appear here.
             </p>
           </CardContent>
         </Card>
@@ -56,7 +56,7 @@ export default async function AgentNegotiationsPage() {
                     <p className="truncate text-sm text-muted-foreground">
                       {negotiation.club.name}
                       {negotiation.offerAmount
-                        ? ` · Oferta: ${negotiation.offerAmount.toLocaleString('es')} ${negotiation.currency}`
+                        ? ` · Oferta: ${negotiation.offerAmount.toLocaleString('en')} ${negotiation.currency}`
                         : ''}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">

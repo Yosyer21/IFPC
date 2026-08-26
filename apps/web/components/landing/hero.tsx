@@ -79,7 +79,7 @@ function Pipeline() {
 export function Hero() {
   return (
     <section className="relative overflow-hidden pb-24 pt-32 sm:pb-32 sm:pt-40">
-      {/* Fondo: textura de campo muy sutil */}
+      {/* Background: very subtle pitch texture */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div
           className="absolute inset-0 opacity-[0.035]"

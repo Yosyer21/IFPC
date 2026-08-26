@@ -8,44 +8,44 @@ export const metadata: Metadata = { title: 'Ruta — IFPC' };
 
 const STAGES: Record<string, { title: string; age: string; focus: string; goals: string[] }> = {
   base: {
-    title: 'Categoría base',
-    age: '6–14 años',
-    focus: 'Técnica individual, coordinación y hábitos de entrenamiento.',
+    title: 'Youth level',
+    age: '6–14 years',
+    focus: 'Individual technique, coordination and training habits.',
     goals: [
       'Dominar el control y el primer toque con ambas piernas',
-      'Desarrollar la conducción con cambio de ritmo',
-      'Crear hábitos de calentamiento y recuperación',
+      'Develop dribbling with change of pace',
+      'Build warm-up and recovery habits',
       'Disputar el primer torneo oficial',
     ],
   },
   formacion: {
-    title: 'Formación',
-    age: '14–17 años',
-    focus: 'Táctica, físico y competición. Primeros trials y visorías.',
+    title: 'Training',
+    age: '14–17 years',
+    focus: 'Tactics, physical and competition. First trials and showcases.',
     goals: [
-      'Consolidar el rol táctico en la posición',
-      'Subir el nivel competitivo a categoría nacional',
+      'Consolidate the tactical role in the position',
+      'Raise the competitive level to national',
       'Participar en jornadas de pruebas (trials)',
-      'Construir un perfil de scouting con vídeos',
+      'Build a scouting profile with videos',
     ],
   },
   profesional: {
     title: 'Pre-profesional',
-    age: '17–21 años',
+    age: '17–21 years',
     focus: 'Rendimiento, becas universitarias y primeros contratos.',
     goals: [
-      'Mantener un nivel físico profesional',
-      'Obtener becas académico-deportivas',
-      'Firmar el primer contrato de formación',
-      'Consolidar minutos en competición sénior',
+      'Maintain a professional physical level',
+      'Earn academic-sports scholarships',
+      'Sign the first training contract',
+      'Earn regular minutes in senior competition',
     ],
   },
   universitario: {
     title: 'Universitario / Pro',
-    age: '18+ años',
-    focus: 'Becas académico-deportivas o contratos profesionales.',
+    age: '18+ years',
+    focus: 'Academic-sports scholarships or professional contracts.',
     goals: [
-      'Combinar estudios y fútbol de competición',
+      'Combine studies and competitive football',
       'Representar a la universidad en liga nacional',
       'Firmar contrato profesional si el rendimiento lo permite',
     ],
@@ -89,7 +89,7 @@ async function PathwayContent({ params }: { params: Promise<{ pathwayId: string 
       </div>
       <p className="mt-3 text-muted-foreground">{stage.focus}</p>
 
-      <h2 className="mb-4 mt-8 text-lg font-semibold">Objetivos de la etapa</h2>
+      <h2 className="mb-4 mt-8 text-lg font-semibold">Goals de la etapa</h2>
       <div className="flex flex-col gap-2">
         {stage.goals.map((goal) => (
           <div

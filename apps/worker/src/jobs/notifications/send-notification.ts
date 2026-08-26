@@ -16,7 +16,7 @@ export async function sendNotification(job: Job<SendNotificationJobData>) {
     data: { userId, type, title, message, link },
   });
 
-  // Fase email: envío vía Resend cuando RESEND_API_KEY esté configurado.
+  // Email phase: sending via Resend when RESEND_API_KEY is configured.
   console.log(`[notification] ${type} -> ${userId}: ${title}`);
   return { notificationId: notification.id, userId, type };
 }

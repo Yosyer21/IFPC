@@ -34,7 +34,7 @@ function SidebarContent({
   const sectionHasActive = (section: NavSection) =>
     section.items.some((item) => isActive(item.href));
 
-  // La sección de la página actual se abre automáticamente al navegar.
+  // The current page section opens automatically when navigating.
   useEffect(() => {
     setOpenSections((prev) => {
       let changed = false;
@@ -127,7 +127,7 @@ function SidebarContent({
           className="flex w-full items-center gap-2.5 rounded-md border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <IconLogout className="h-4 w-4" />
-          Cerrar sesión
+          Sign out
         </button>
       </form>
     </>
@@ -139,19 +139,19 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
   const [mobileOpen, setMobileOpen] = useState(false);
   const sections = NAV[role] ?? FALLBACK_NAV;
 
-  // Cierra el cajón móvil al navegar.
+  // Closes the mobile drawer when navigating.
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
   return (
     <>
-      {/* Barra superior en móvil */}
+      {/* Top bar on mobile */}
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-card px-4 py-3 md:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          aria-label="Abrir menú"
+          aria-label="Open menu"
           className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:bg-muted"
         >
           <IconMenu className="h-5 w-5" />
@@ -162,7 +162,7 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
         <span className="w-9" />
       </header>
 
-      {/* Cajón móvil */}
+      {/* Mobile drawer */}
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 md:hidden">
           <div
@@ -178,7 +178,7 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                aria-label="Cerrar menú"
+                aria-label="Close menu"
                 className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:bg-muted"
               >
                 <IconX className="h-5 w-5" />

@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Agentes · Usuarios' };
+export const metadata: Metadata = { title: 'Agentes · Users' };
 
 export default async function AdminUsersAgentsPage() {
   const session = await auth();
@@ -50,7 +50,7 @@ export default async function AdminUsersAgentsPage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{agent._count.players} representados</Badge>
-                  <Badge variant="outline">{agent._count.submissions} envíos</Badge>
+                  <Badge variant="outline">{agent._count.submissions} submissions</Badge>
                 </div>
               </CardContent>
             </Card>

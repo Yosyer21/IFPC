@@ -669,7 +669,7 @@ model Camp {
   startsAt    DateTime
   endsAt      DateTime?
   capacity    Int?
-  price       Int? // en céntimos (29900 = 299,00 €)
+  price       Int? // in cents (29900 = €299.00)
   currency    String     @default("EUR")
   status      CampStatus @default(DRAFT)
   coverUrl    String?

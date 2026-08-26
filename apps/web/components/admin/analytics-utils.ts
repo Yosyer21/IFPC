@@ -3,7 +3,7 @@ export interface MonthlyPoint {
   value: number;
 }
 
-/** Agrupa registros por mes (últimos N meses) para las series de analytics. */
+/** Groups records by month (last N months) for the analytics series. */
 export function monthlyCounts(records: { createdAt: Date }[], months = 6): MonthlyPoint[] {
   const now = new Date();
   const current = now.getFullYear() * 12 + now.getMonth();
@@ -25,5 +25,5 @@ export function monthlyCounts(records: { createdAt: Date }[], months = 6): Month
 }
 
 export function formatCurrency(amount: number, currency = 'EUR'): string {
-  return `${(amount / 100).toLocaleString('es')} ${currency}`;
+  return `${(amount / 100).toLocaleString('en')} ${currency}`;
 }

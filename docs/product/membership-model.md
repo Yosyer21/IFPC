@@ -1,13 +1,13 @@
 # Modelo de membresía
 
-## Planes
+## Plans
 
 | Plan | Precio | Beneficios clave |
 | --- | --- | --- |
-| **FREE** | 0 € | Perfil básico, contenido de entrenamiento, aplicar a oportunidades |
-| **PREMIUM** | 59,99 €/año | Perfil destacado, vídeos ilimitados, estadísticas de desarrollo |
-| **SCOUT** | 149,99 €/año | Informes de scouting, búsqueda avanzada, guardar jugadores |
-| **CLUB** | 299,99 €/año | Publicar oportunidades, requisitos, matching completo |
+| **FREE** | 0 € | Basic profile, contenido de entrenamiento, aplicar a oportunidades |
+| **PREMIUM** | €59.99/year | Profile destacado, vídeos ilimitados, estadísticas de desarrollo |
+| **SCOUT** | €149.99/year | Informes de scouting, búsqueda avanzada, guardar jugadores |
+| **CLUB** | €299.99/year | Publicar oportunidades, requisitos, matching completo |
 
 ## Ciclo
 

@@ -4,7 +4,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Pagos' };
+export const metadata: Metadata = { title: 'Payments' };
 
 export default async function AdminPaymentsPage() {
   const session = await auth();
@@ -24,17 +24,17 @@ export default async function AdminPaymentsPage() {
         href="/dashboard/admin/memberships"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Membresías
+        ← Memberships
       </Link>
-      <h1 className="mb-2 text-2xl font-bold">Pagos</h1>
+      <h1 className="mb-2 text-2xl font-bold">Payments</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Ingresos registrados: {(totalRevenue / 100).toLocaleString('es')} EUR
+        Ingresos registrados: {(totalRevenue / 100).toLocaleString('en')} EUR
       </p>
 
       {payments.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay pagos registrados.</p>
+            <p className="text-sm text-muted-foreground">No payments registered.</p>
           </CardContent>
         </Card>
       ) : (

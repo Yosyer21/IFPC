@@ -41,14 +41,14 @@ export function ProfileEditForm({ player }: { player: Player }) {
       />
       <Select
         name="position"
-        label="Posición"
+        label="Position"
         options={positionOptions}
         defaultValue={player.position ?? ''}
         placeholder="Selecciona…"
       />
       <Select
         name="foot"
-        label="Pierna hábil"
+        label="Preferred foot"
         options={footOptions}
         defaultValue={player.foot ?? ''}
         placeholder="Selecciona…"
@@ -67,7 +67,7 @@ export function ProfileEditForm({ player }: { player: Player }) {
       <Input name="clubName" label="Club actual" defaultValue={player.clubName ?? ''} />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="bio" className="text-sm font-medium">
-          Biografía
+          Biography
         </label>
         <textarea
           id="bio"

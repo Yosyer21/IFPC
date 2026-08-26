@@ -9,10 +9,10 @@ import { CategoryBars, DonutChart, LineChart, RadarChart } from '@/components/pl
 export const metadata: Metadata = { title: 'Mi progreso' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function PlayerProgressPage() {
@@ -27,7 +27,7 @@ export default async function PlayerProgressPage() {
 
   const evaluations = player.evaluations;
 
-  // Media global
+  // Overall average
   const overall =
     evaluations.length > 0
       ? Math.round(
@@ -37,7 +37,7 @@ export default async function PlayerProgressPage() {
         ) / 10
       : null;
 
-  // Media por categoría
+  // Average by category
   const byCategory = new Map<string, number[]>();
   for (const evaluation of evaluations) {
     const list = byCategory.get(evaluation.category) ?? [];
@@ -67,7 +67,7 @@ export default async function PlayerProgressPage() {
     <div className="mx-auto max-w-6xl">
       <PageHeader
         title="Mi progreso"
-        subtitle="Sigue tu evolución a partir de las evaluaciones de tu entrenador y ojeadores"
+        subtitle="Track your development based on your coach and scouts' assessments"
         icon="trending"
       />
 
@@ -90,18 +90,18 @@ export default async function PlayerProgressPage() {
               </svg>
             </span>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Aún no hay datos de evaluación para mostrar tu progreso. Cuando tu entrenador te
-              evalúe, verás aquí tu media global, la evolución y el desglose por categoría.
+              No assessment data yet to show your progress. When your coach
+              assesses you, you will see here your overall average, the evolution and the breakdown by category.
             </p>
           </CardContent>
         </Card>
       ) : (
         <>
-          {/* Media global + evolución */}
+          {/* Overall average + evolution */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             <Card className="animate-fade-up flex flex-col items-center">
               <CardContent className="flex w-full flex-col items-center gap-4">
-                <h2 className="self-start font-semibold">Media global</h2>
+                <h2 className="self-start font-semibold">Overall average</h2>
                 <DonutChart
                   value={overall * 10}
                   label={`${overall}`}
@@ -122,9 +122,9 @@ export default async function PlayerProgressPage() {
 
             <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '120ms' }}>
               <CardContent>
-                <h2 className="mb-2 font-semibold">Evolución de puntuaciones</h2>
+                <h2 className="mb-2 font-semibold">Score evolution</h2>
                 <p className="mb-4 text-sm text-muted-foreground">
-                  Cada punto es una evaluación registrada, en orden cronológico.
+                  Each point is a registered assessment, in chronological order.
                 </p>
                 <div className="animate-scale-in">
                   <LineChart points={linePoints} gradientId="fb-progress-gradient" />
@@ -137,7 +137,7 @@ export default async function PlayerProgressPage() {
           <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <Card className="animate-fade-up" style={{ animationDelay: '240ms' }}>
               <CardContent>
-                <h2 className="mb-2 font-semibold">Nivel por categoría</h2>
+                <h2 className="mb-2 font-semibold">Level by category</h2>
                 <div className="animate-scale-in mx-auto max-w-xs">
                   <RadarChart categories={radarCategories} values={radarValues} />
                 </div>
@@ -146,7 +146,7 @@ export default async function PlayerProgressPage() {
 
             <Card className="animate-fade-up" style={{ animationDelay: '320ms' }}>
               <CardContent>
-                <h2 className="mb-4 font-semibold">Puntuaciones por área</h2>
+                <h2 className="mb-4 font-semibold">Scores by area</h2>
                 {bars.length > 0 ? <CategoryBars items={bars} /> : null}
               </CardContent>
             </Card>

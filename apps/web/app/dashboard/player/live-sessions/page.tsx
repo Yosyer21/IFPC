@@ -41,13 +41,13 @@ export default async function PlayerLiveSessionsPage() {
         icon="live"
       />
 
-      <h2 className="mb-3 font-semibold">Próximas</h2>
+      <h2 className="mb-3 font-semibold">Upcoming</h2>
       {upcoming.length === 0 ? (
         <Card className="mb-6">
           <CardContent>
             <p className="text-sm text-muted-foreground">
               No tienes sesiones en vivo programadas. Cuando tu club o un entrenador organicen
-              sesiones (entrenamientos, charlas o pruebas), aparecerán aquí.
+              sessions (training, talks or trials) will appear here.
             </p>
           </CardContent>
         </Card>
@@ -83,11 +83,11 @@ export default async function PlayerLiveSessionsPage() {
         </div>
       )}
 
-      <h2 className="mb-3 font-semibold">Finalizadas</h2>
+      <h2 className="mb-3 font-semibold">Ended</h2>
       {past.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Aún no hay sesiones finalizadas.</p>
+            <p className="text-sm text-muted-foreground">No ended sessions yet.</p>
           </CardContent>
         </Card>
       ) : (

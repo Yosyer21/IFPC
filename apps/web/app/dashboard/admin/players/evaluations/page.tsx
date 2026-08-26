@@ -10,10 +10,10 @@ import { IconTrendingUp, IconWhistle } from '@/components/dashboard/icons';
 export const metadata: Metadata = { title: 'Evaluaciones' };
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
-  physical: 'Físico',
-  tactical: 'Táctica',
-  psychological: 'Psicológica',
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
 };
 
 export default async function AdminPlayersEvaluationsPage() {
@@ -59,7 +59,7 @@ export default async function AdminPlayersEvaluationsPage() {
         <StatCard
           href="/dashboard/admin/players"
           icon={IconTrendingUp}
-          label="Media global"
+          label="Overall average"
           value={Number(average.toFixed(1))}
           suffix="/10"
         />
@@ -74,7 +74,7 @@ export default async function AdminPlayersEvaluationsPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Media por categoría</h2>
+            <h2 className="mb-4 font-semibold">Average by category</h2>
             {total === 0 ? (
               <p className="text-sm text-muted-foreground">No hay evaluaciones registradas.</p>
             ) : (
@@ -85,7 +85,7 @@ export default async function AdminPlayersEvaluationsPage() {
 
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Recientes ({evaluations.length})</h2>
+            <h2 className="mb-3 font-semibold">Recent ({evaluations.length})</h2>
             {evaluations.length === 0 ? (
               <p className="text-sm text-muted-foreground">Sin evaluaciones.</p>
             ) : (

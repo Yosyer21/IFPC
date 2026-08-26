@@ -18,7 +18,7 @@ export function AddPlayerForm() {
       />
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Buscando…' : 'Añadir jugador'}
+        {pending ? 'Buscando…' : 'Add player'}
       </Button>
     </form>
   );

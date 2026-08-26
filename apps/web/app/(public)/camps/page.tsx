@@ -7,7 +7,7 @@ import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
   title: 'Camps — IFPC',
-  description: 'Campus de fútbol, clinics y concentraciones organizados por clubes y entrenadores.',
+  description: 'Football camps, clinics and training stints organized by clubs and coaches.',
 };
 
 export default async function PublicCampsPage() {

@@ -1,6 +1,6 @@
 # Alertas
 
-## Reglas sugeridas
+## Suggested rules
 
 | Alerta | Condición | Severidad |
 | ------ | --------- | --------- |
@@ -10,7 +10,7 @@
 | Redis caído | sin conectividad > 1 min | Crítica |
 | Postgres lleno | espacio > 80% | Alta |
 | Jobs fallidos | > 10% de fallos en 1 h | Media |
-| Pagos fallidos | tasa de fallo > 5% | Media |
+| Payments fallidos | tasa de fallo > 5% | Media |
 
 ## Canales
 

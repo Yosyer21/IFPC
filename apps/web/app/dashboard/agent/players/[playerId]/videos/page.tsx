@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Vídeos del jugador' };
+export const metadata: Metadata = { title: 'Player\u2019s videos' };
 
 export default async function AgentPlayerVideosPage({
   params,
@@ -36,12 +36,12 @@ export default async function AgentPlayerVideosPage({
       >
         ← Jugador
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Vídeos</h1>
+      <h1 className="mb-6 text-2xl font-bold">Videos</h1>
 
       {videos.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">El jugador no ha subido vídeos.</p>
+            <p className="text-sm text-muted-foreground">The player has not uploaded videos.</p>
           </CardContent>
         </Card>
       ) : (

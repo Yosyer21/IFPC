@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Documento' };
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
   contract: 'Contrato',
-  medical: 'Médico',
+  medical: 'Medical',
   other: 'Otro',
 };
 
@@ -62,7 +62,7 @@ export default async function AdminDocumentDetailPage({
               </dd>
             </div>
             <div className="rounded-md border border-border p-3">
-              <dt className="text-xs text-muted-foreground">Posición</dt>
+              <dt className="text-xs text-muted-foreground">Position</dt>
               <dd className="mt-1 font-medium">{document.player.position ?? '—'}</dd>
             </div>
           </dl>

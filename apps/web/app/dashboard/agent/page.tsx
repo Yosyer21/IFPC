@@ -22,9 +22,9 @@ import {
 export const metadata: Metadata = { title: 'Mi agencia' };
 
 const STAGE_LABELS: Record<string, string> = {
-  SUBMISSION: 'Envío',
+  SUBMISSION: 'Submission',
   TRIAL: 'Prueba',
-  NEGOTIATION: 'Negociación',
+  NEGOTIATION: 'Negotiation',
   CONTRACT: 'Contrato',
 };
 
@@ -87,7 +87,7 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/submissions',
       icon: IconMail,
-      label: 'Envíos realizados',
+      label: 'Submissions made',
       value: submissions.length,
     },
     {
@@ -114,7 +114,7 @@ export default async function AgentDashboardPage() {
     },
     {
       href: '/dashboard/agent/submissions',
-      label: 'Envíos',
+      label: 'Submissions',
       sub: 'a clubes',
       value: submissions.length,
       icon: IconMail,
@@ -142,13 +142,13 @@ export default async function AgentDashboardPage() {
     },
   ];
 
-  // Acciones pendientes
+  // Pending actions
   const pendingActions: { href: string; icon: typeof IconMail; text: string; meta: string }[] = [];
   if (inReviewSubmissions.length > 0) {
     pendingActions.push({
       href: '/dashboard/agent/submissions',
       icon: IconMail,
-      text: `${inReviewSubmissions.length} envío${inReviewSubmissions.length === 1 ? '' : 's'} en revisión por el club`,
+      text: `${inReviewSubmissions.length} submission${inReviewSubmissions.length === 1 ? '' : 's'} under club review`,
       meta: 'Seguimiento',
     });
   }
@@ -156,7 +156,7 @@ export default async function AgentDashboardPage() {
     pendingActions.push({
       href: '/dashboard/agent/trials',
       icon: IconWhistle,
-      text: `${upcomingTrials.length} prueba${upcomingTrials.length === 1 ? '' : 's'} en los próximos 7 días`,
+      text: `${upcomingTrials.length} trial${upcomingTrials.length === 1 ? '' : 's'} in the next 7 days`,
       meta: 'Ver agenda',
     });
   }
@@ -164,7 +164,7 @@ export default async function AgentDashboardPage() {
     pendingActions.push({
       href: '/dashboard/agent/negotiations',
       icon: IconBriefcase,
-      text: `${openNegotiations.length} negociación${openNegotiations.length === 1 ? '' : 'es'} abierta${openNegotiations.length === 1 ? '' : 's'}`,
+      text: `${openNegotiations.length} open negotiation${openNegotiations.length === 1 ? '' : 's'}`,
       meta: 'Revisar ofertas',
     });
   }
@@ -177,13 +177,13 @@ export default async function AgentDashboardPage() {
     });
   }
 
-  // Distribución de envíos por fase
+  // Submissions distribution by stage
   const stageCounts = ['SUBMISSION', 'TRIAL', 'NEGOTIATION', 'CONTRACT'].map((stage) => ({
     stage,
     count: submissions.filter((s) => s.stage === stage).length,
   }));
 
-  // Actividad reciente
+  // Recent activity
   const recentSubmissions = submissions.slice(0, 3);
   const recentTrials = trials.slice(0, 2);
 
@@ -201,7 +201,7 @@ export default async function AgentDashboardPage() {
               {agent.license ? <Badge>Licencia {agent.license}</Badge> : null}
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              {agent.user.email} · Agencia de representación
+              {agent.user.email} · Representation agency
               {players.length > 0
                 ? ` · ${players.length} jugador${players.length === 1 ? '' : 'es'} representado${players.length === 1 ? '' : 's'}`
                 : ''}
@@ -212,13 +212,13 @@ export default async function AgentDashboardPage() {
               href="/dashboard/agent/players/add"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Añadir jugador
+              Add player
             </Link>
             <Link
               href="/dashboard/agent/submissions/new"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Nuevo envío
+              New submission
             </Link>
           </div>
         </div>
@@ -226,8 +226,8 @@ export default async function AgentDashboardPage() {
         {/* Quick actions */}
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
-            { href: '/dashboard/agent/players', icon: IconUsers, label: 'Mis jugadores' },
-            { href: '/dashboard/agent/submissions', icon: IconMail, label: 'Envíos' },
+            { href: '/dashboard/agent/players', icon: IconUsers, label: 'My players' },
+            { href: '/dashboard/agent/submissions', icon: IconMail, label: 'Submissions' },
             { href: '/dashboard/agent/trials', icon: IconWhistle, label: 'Pruebas' },
             { href: '/dashboard/agent/opportunities', icon: IconTarget, label: 'Oportunidades' },
           ].map((action, i) => {
@@ -247,14 +247,14 @@ export default async function AgentDashboardPage() {
         </div>
       </section>
 
-      {/* Alerta dinámica */}
+      {/* Dynamic alert */}
       {pendingActions.length > 0 ? (
         <div className="animate-fade-up mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            Tienes <strong>{pendingActions.length} acción{pendingActions.length === 1 ? '' : 'es'} pendiente{pendingActions.length === 1 ? '' : 's'}</strong> en tu cartera.
+            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> en tu cartera.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -269,7 +269,7 @@ export default async function AgentDashboardPage() {
             <IconShield className="h-4 w-4" />
           </span>
           <p className="text-sm text-emerald-100">
-            Todo al día. No tienes acciones pendientes en tu cartera.
+            All caught up. You have no pending actions in your portfolio.
           </p>
         </div>
       )}
@@ -280,13 +280,13 @@ export default async function AgentDashboardPage() {
         ))}
       </div>
 
-      {/* Pipeline de representación */}
+      {/* Representation pipeline */}
       <Card className="animate-fade-up mb-6" style={{ animationDelay: '320ms' }}>
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold">Pipeline de representación</h2>
+            <h2 className="font-semibold">Representation pipeline</h2>
             <Link href="/dashboard/agent/submissions" className="text-sm text-primary hover:underline">
-              Gestionar envíos →
+              Manage submissions →
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -315,14 +315,14 @@ export default async function AgentDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Envíos por fase + acciones pendientes */}
+      {/* Submissions by stage + acciones pendientes */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Envíos por fase</h2>
+            <h2 className="mb-4 font-semibold">Submissions by stage</h2>
             {submissions.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                Aún no hay envíos. Cuando presentes jugadores a clubes, verás aquí su distribución
+                No submissions yet. When you present players to clubs, you will see their distribution here
                 por fase del proceso.
               </p>
             ) : (
@@ -354,10 +354,10 @@ export default async function AgentDashboardPage() {
 
         <Card className="animate-fade-up" style={{ animationDelay: '560ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Acciones pendientes</h2>
+            <h2 className="mb-4 font-semibold">Pending actions</h2>
             {pendingActions.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No hay acciones que requieran tu atención.
+                No actions require your attention.
               </p>
             ) : (
               <div className="flex flex-col gap-2">
@@ -382,19 +382,19 @@ export default async function AgentDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      {/* Mis jugadores + actividad reciente */}
+      {/* My players + actividad reciente */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up" style={{ animationDelay: '620ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Mis jugadores</h2>
+              <h2 className="font-semibold">My players</h2>
               <Link href="/dashboard/agent/players" className="text-sm text-primary hover:underline">
                 Ver todos →
               </Link>
             </div>
             {players.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Añade tu primer jugador para empezar a representarlo.
+                Add your first player to start representing them.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -402,7 +402,7 @@ export default async function AgentDashboardPage() {
                   const positionLabel = player.position
                     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                       player.position)
-                    : 'Sin posición';
+                    : 'No position';
                   return (
                     <Link
                       key={player.id}
@@ -429,10 +429,10 @@ export default async function AgentDashboardPage() {
 
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '680ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Actividad reciente</h2>
+            <h2 className="mb-4 font-semibold">Recent activity</h2>
             {recentSubmissions.length === 0 && recentTrials.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Haz un envío o gestiona una prueba para ver la actividad de tu cartera.
+                Make a submission or manage a trial to see your portfolio activity.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">

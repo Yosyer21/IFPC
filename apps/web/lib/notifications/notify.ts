@@ -9,12 +9,12 @@ export interface NotifyInput {
 }
 
 /**
- * Crea una notificación de forma síncrona y fiable.
+ * Creates a notification synchronously and reliably.
  *
- * Integración worker: el payload es idéntico al del job `notification` de
- * apps/worker (send-notification). En producción se encolará vía BullMQ
- * (notification.queue) para desacoplar el envío; en dev se inserta directo
- * para no depender de Redis.
+ * Worker integration: the payload is identical to the `notification` job in
+ * apps/worker (send-notification). In production it will be queued via BullMQ
+ * (notification.queue) to decouple the sending; in dev it is inserted directly
+ * so it does not depend on Redis.
  */
 export async function notifyUser(input: NotifyInput): Promise<void> {
   await prisma.notification.create({

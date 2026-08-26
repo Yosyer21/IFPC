@@ -16,8 +16,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
       <Input
         name="password"
         type="password"
-        label="Nueva contraseña"
-        placeholder="Mínimo 8 caracteres"
+        label="New password"
+        placeholder="Minimum 8 characters"
         minLength={8}
         required
         autoComplete="new-password"
@@ -25,7 +25,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-600">{state.success}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Actualizar contraseña'}
+        {pending ? 'Saving…' : 'Update password'}
       </Button>
     </form>
   );

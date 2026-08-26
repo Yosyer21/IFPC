@@ -27,7 +27,7 @@ export default async function ClubRequirementsPage() {
           href="/dashboard/club/requirements/new"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
         >
-          Nuevo requisito
+          New requirement
         </Link>
       </PageHeader>
 
@@ -35,7 +35,7 @@ export default async function ClubRequirementsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Define qué perfiles de jugador busca tu club.
+              Define which player profiles your club is looking for.
             </p>
           </CardContent>
         </Card>
@@ -54,9 +54,9 @@ export default async function ClubRequirementsPage() {
                   </Badge>
                   <h2 className="font-semibold">{requirement.title}</h2>
                   <p className="text-sm text-muted-foreground">
-                    {requirement.position ? `Posición: ${requirement.position}` : 'Cualquier posición'}
+                    {requirement.position ? `Position: ${requirement.position}` : 'Any position'}
                     {requirement.ageMin || requirement.ageMax
-                      ? ` · ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} años`
+                      ? ` · ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} years old`
                       : ''}
                   </p>
                 </CardContent>

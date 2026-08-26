@@ -6,7 +6,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 
-export const metadata: Metadata = { title: 'Envíos · Reclutamiento' };
+export const metadata: Metadata = { title: 'Submissions · Recruitment' };
 
 export default async function AdminRecruitmentSubmissionsPage() {
   const session = await auth();
@@ -33,11 +33,11 @@ export default async function AdminRecruitmentSubmissionsPage() {
         href="/dashboard/admin/recruitment"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Reclutamiento
+        ← Recruitment
       </Link>
       <PageHeader
-        title="Envíos"
-        subtitle={`${submissions.length} envíos de jugadores a clubes`}
+        title="Submissions"
+        subtitle={`${submissions.length} player submissions to clubs`}
         icon="briefcase"
       />
 
@@ -53,7 +53,7 @@ export default async function AdminRecruitmentSubmissionsPage() {
       {submissions.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay envíos registrados.</p>
+            <p className="text-sm text-muted-foreground">No submissions registered.</p>
           </CardContent>
         </Card>
       ) : (

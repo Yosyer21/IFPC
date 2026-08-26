@@ -25,7 +25,7 @@ export default async function PlayerOpportunitiesPage() {
           href="/dashboard/player/opportunities/applications"
           className="text-sm text-muted-foreground hover:underline"
         >
-          Mis solicitudes →
+          My applications →
         </Link>
       </PageHeader>
 
@@ -57,7 +57,7 @@ export default async function PlayerOpportunitiesPage() {
                     {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
                   </p>
                   <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                    {opportunity.position ? <span>Posición: {opportunity.position}</span> : null}
+                    {opportunity.position ? <span>Position: {opportunity.position}</span> : null}
                     {opportunity.location ? <span>{opportunity.location}</span> : null}
                     {opportunity.closesAt ? (
                       <span>Cierra: {opportunity.closesAt.toLocaleDateString('es')}</span>

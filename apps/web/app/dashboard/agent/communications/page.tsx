@@ -41,8 +41,8 @@ export default async function AgentCommunicationsPage() {
               <IconMail className="h-7 w-7" />
             </span>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Aún no tienes conversaciones. Cuando un club o la plataforma te escriba, aparecerá
-              aquí.
+              You have no conversations yet. When a club or the platform writes to you, it will appear
+              here.
             </p>
           </CardContent>
         </Card>
@@ -62,7 +62,7 @@ export default async function AgentCommunicationsPage() {
 
                   <div className="mb-4 flex flex-col gap-3">
                     {conversation.messages.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">Sin mensajes todavía.</p>
+                      <p className="text-sm text-muted-foreground">No messages yet.</p>
                     ) : (
                       conversation.messages.map((message) => {
                         const mine = message.senderId === session.user.id;

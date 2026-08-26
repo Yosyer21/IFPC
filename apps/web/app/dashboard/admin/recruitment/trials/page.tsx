@@ -27,7 +27,7 @@ export default async function AdminRecruitmentTrialsPage() {
         href="/dashboard/admin/recruitment"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Reclutamiento
+        ← Recruitment
       </Link>
       <PageHeader
         title="Pruebas"
@@ -36,7 +36,7 @@ export default async function AdminRecruitmentTrialsPage() {
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge variant="outline">{upcoming} próximas</Badge>
+        <Badge variant="outline">{upcoming} upcoming</Badge>
         <Badge variant="outline">{completed} completadas</Badge>
       </div>
 
@@ -56,7 +56,7 @@ export default async function AdminRecruitmentTrialsPage() {
                     {trial.player.firstName} {trial.player.lastName}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    → {trial.club.name} · {trial.location ?? 'Sin ubicación'}
+                    → {trial.club.name} · {trial.location ?? 'No location'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {trial.startsAt.toLocaleDateString('es')}

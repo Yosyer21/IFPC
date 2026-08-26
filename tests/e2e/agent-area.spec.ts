@@ -5,29 +5,29 @@ const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 async function loginAsAgent(page: import('@playwright/test').Page) {
   await page.goto(`${BASE}/login`);
   await page.getByLabel('Email').fill('agent@demo.com');
-  await page.getByLabel('Contraseña').fill('agent123');
-  await page.getByRole('button', { name: /iniciar sesión/i }).click();
+  await page.getByLabel('Password').fill('agent123');
+  await page.getByRole('button', { name: /sign in/i }).click();
   await page.waitForURL('**/dashboard/**', { timeout: 15_000 });
 }
 
-test('Agente: workspace, pipeline y páginas nuevas sin 404', async ({ page }) => {
+test('Agent: workspace, pipeline and new pages without 404', async ({ page }) => {
   await loginAsAgent(page);
 
   // 1. Dashboard del agente
   await page.goto(`${BASE}/dashboard/agent`);
-  await expect(page.getByText('Pipeline de representación')).toBeVisible();
-  await expect(page.getByText('Envíos por fase')).toBeVisible();
-  await expect(page.getByText('Acciones pendientes').first()).toBeVisible();
-  await expect(page.getByText('Mis jugadores').first()).toBeVisible();
-  await expect(page.getByText('Actividad reciente')).toBeVisible();
+  await expect(page.getByText('Representation pipeline')).toBeVisible();
+  await expect(page.getByText('Submissions by stage')).toBeVisible();
+  await expect(page.getByText('Pending actions').first()).toBeVisible();
+  await expect(page.getByText('My players').first()).toBeVisible();
+  await expect(page.getByText('Recent activity')).toBeVisible();
 
-  // 2. Sidebar con Envíos (renombrado)
+  // 2. Sidebar with Submissions (renamed)
   await page.getByRole('button', { name: 'Reclutamiento' }).click();
   await expect(
-    page.locator('aside').getByRole('link', { name: 'Envíos', exact: true }).first()
+    page.locator('aside').getByRole('link', { name: 'Submissions', exact: true }).first()
   ).toBeVisible();
 
-  // 3. Páginas nuevas: Pruebas, Negociaciones, Contratos, Clubes (sin 404)
+  // 3. New pages: Trials, Negotiations, Contracts, Clubs (no 404)
   for (const [url, heading] of [
     ['/dashboard/agent/trials', 'Pruebas'],
     ['/dashboard/agent/negotiations', 'Negociaciones'],

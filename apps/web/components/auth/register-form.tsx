@@ -6,11 +6,11 @@ import { Button, Input } from '@ifpc/ui';
 import type { Role } from '@ifpc/types';
 
 const ROLES: { value: Role; label: string; description: string }[] = [
-  { value: 'PLAYER', label: 'Jugador/a', description: 'Soy futbolista' },
-  { value: 'PARENT', label: 'Familiar', description: 'Padre, madre o tutor' },
-  { value: 'COACH', label: 'Entrenador/a', description: 'Entreno a jugadores' },
-  { value: 'AGENT', label: 'Agente', description: 'Represento a jugadores' },
-  { value: 'CLUB', label: 'Club', description: 'Represento a un club' },
+  { value: 'PLAYER', label: 'Player', description: 'I am a footballer' },
+  { value: 'PARENT', label: 'Parent', description: 'Father, mother or guardian' },
+  { value: 'COACH', label: 'Coach', description: 'I coach players' },
+  { value: 'AGENT', label: 'Agent', description: 'I represent players' },
+  { value: 'CLUB', label: 'Club', description: 'I represent a club' },
 ];
 
 export function RegisterForm({ initialRole }: { initialRole?: string }) {
@@ -23,7 +23,7 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div>
-        <label className="mb-2 block text-sm font-medium">Tipo de cuenta</label>
+        <label className="mb-2 block text-sm font-medium">Account type</label>
         <div className="grid grid-cols-1 gap-2">
           {ROLES.map((item) => (
             <label
@@ -47,13 +47,13 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
         </div>
       </div>
 
-      <Input name="name" label="Nombre completo" placeholder="Tu nombre" required />
-      <Input name="email" type="email" label="Email" placeholder="tu@email.com" required autoComplete="email" />
+      <Input name="name" label="Full name" placeholder="Your name" required />
+      <Input name="email" type="email" label="Email" placeholder="you@email.com" required autoComplete="email" />
       <Input
         name="password"
         type="password"
-        label="Contraseña"
-        placeholder="Mínimo 8 caracteres"
+        label="Password"
+        placeholder="Minimum 8 characters"
         minLength={8}
         required
         autoComplete="new-password"
@@ -61,15 +61,15 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
 
       {isClub ? (
         <div className="grid grid-cols-2 gap-3">
-          <Input name="country" label="País" placeholder="España" required />
-          <Input name="city" label="Ciudad" placeholder="Madrid" />
+          <Input name="country" label="Country" placeholder="Spain" required />
+          <Input name="city" label="City" placeholder="Madrid" />
         </div>
       ) : null}
 
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
 
       <Button type="submit" disabled={pending}>
-        {pending ? 'Creando cuenta…' : 'Crear cuenta'}
+        {pending ? 'Creating account…' : 'Create account'}
       </Button>
     </form>
   );

@@ -8,7 +8,7 @@ import { savePlayerAction } from '@/app/actions/scout';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Buscar jugadores' };
+export const metadata: Metadata = { title: 'Search players' };
 
 export default async function ScoutPlayersPage() {
   const session = await auth();
@@ -32,8 +32,8 @@ export default async function ScoutPlayersPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Buscar jugadores"
-        subtitle="Perfiles disponibles para tu radar de scouting"
+        title="Search players"
+        subtitle="Profilees disponibles para tu radar de scouting"
         icon="search"
       />
 
@@ -41,7 +41,7 @@ export default async function ScoutPlayersPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay jugadores disponibles en este momento.
+              No players available right now.
             </p>
           </CardContent>
         </Card>
@@ -60,7 +60,7 @@ export default async function ScoutPlayersPage() {
                       {player.position
                         ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                           player.position)
-                        : 'Sin posición'}
+                        : 'No position'}
                       {player.heightCm ? ` · ${player.heightCm} cm` : ''}
                     </p>
                   </div>

@@ -8,7 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Mis jugadores' };
+export const metadata: Metadata = { title: 'My players' };
 
 export default async function CoachPlayersPage() {
   const session = await auth();
@@ -26,7 +26,7 @@ export default async function CoachPlayersPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Mis jugadores"
+        title="My players"
         subtitle="Jugadores vinculados a ti para su seguimiento y desarrollo"
         icon="users"
       />
@@ -35,7 +35,7 @@ export default async function CoachPlayersPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Aún no tienes jugadores asignados.
+              You have no assigned players yet.
             </p>
           </CardContent>
         </Card>
@@ -65,7 +65,7 @@ export default async function CoachPlayersPage() {
                         </h2>
                         <p className="truncate text-sm text-muted-foreground">
                           {positionLabel}
-                          {age !== null ? ` · ${age} años` : ''}
+                          {age !== null ? ` · ${age} years old` : ''}
                           {player.clubName ? ` · ${player.clubName}` : ''}
                         </p>
                       </div>

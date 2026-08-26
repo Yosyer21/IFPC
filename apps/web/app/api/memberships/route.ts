@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/memberships — membresías y pagos del usuario autenticado. */
+/** GET /api/memberships — memberships and payments of the authenticated user. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

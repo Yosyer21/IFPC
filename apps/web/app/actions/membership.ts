@@ -7,7 +7,7 @@ import { createCheckoutSession } from '@/lib/payments/stripe';
 import type { MembershipTier } from '@ifpc/types';
 import type { ActionState } from './auth';
 
-// Precios alineados con lib/payments/stripe.ts (MEMBERSHIP_TIERS).
+// Prices aligned with lib/payments/stripe.ts (MEMBERSHIP_TIERS).
 const PLANS: Record<string, { price: number; months: number }> = {
   PREMIUM: { price: 9900, months: 12 },
   SCOUT: { price: 19900, months: 12 },
@@ -15,9 +15,9 @@ const PLANS: Record<string, { price: number; months: number }> = {
 };
 
 /**
- * Inicia el pago de una membresía:
- * 1) Con STRIPE_SECRET_KEY → crea Checkout Session y redirige a Stripe.
- * 2) Sin Stripe (dev) → pago simulado local.
+ * Starts the payment of a membership:
+ * 1) With STRIPE_SECRET_KEY → creates a Checkout Session and redirects to Stripe.
+ * 2) Without Stripe (dev) → simulated local payment.
  */
 export async function startCheckoutAction(
   _prev: ActionState,
@@ -25,12 +25,12 @@ export async function startCheckoutAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Sesión no válida.' };
+    return { error: 'Invalid session.' };
   }
   const tier = (formData.get('tier') as string) ?? '';
   const plan = PLANS[tier];
   if (!plan) {
-    return { error: 'Plan no válido.' };
+    return { error: 'Invalid plan.' };
   }
 
   try {
@@ -43,11 +43,11 @@ export async function startCheckoutAction(
       redirect(checkout.url);
     }
   } catch (error) {
-    console.error('[membership] error iniciando checkout:', error);
-    return { error: 'No se pudo iniciar el pago con Stripe.' };
+    console.error('[membership] error starting checkout:', error);
+    return { error: 'Could not start the Stripe payment.' };
   }
 
-  // Fallback de desarrollo: pago simulado (Stripe no configurado).
+  // Development fallback: simulated payment (Stripe not configured).
   const endsAt = new Date();
   endsAt.setMonth(endsAt.getMonth() + plan.months);
 
@@ -75,12 +75,12 @@ export async function startCheckoutAction(
           amount: plan.price,
           currency: 'EUR',
           status: 'PAID',
-          description: `Membresía ${tier} (${plan.months} meses, simulada)`,
+          description: `Membership ${tier} (${plan.months} months, simulated)`,
         },
       }),
     ]);
   } catch {
-    return { error: 'No se pudo activar el plan.' };
+    return { error: 'Could not activate the plan.' };
   }
 
   redirect('/dashboard/player/membership');

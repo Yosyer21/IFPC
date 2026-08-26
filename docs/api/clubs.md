@@ -1,10 +1,10 @@
 # API · Clubes
 
-## Conceptos
+## Concepts
 
 - **Club**: entidad con perfil, país, ciudad, liga y estado de verificación.
 - **Oportunidad**: oferta publicada (tipo, posición, edad, ubicación, cierre).
-- **Requisito**: perfil buscado para matching.
+- **Requirement**: profile searched for matching.
 - **Consulta** (Inquiry): mensaje recibido de familias/jugadores.
 - **Staff**: miembros del club con rol.
 

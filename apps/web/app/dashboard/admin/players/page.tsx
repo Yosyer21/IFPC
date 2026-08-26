@@ -28,7 +28,7 @@ export default async function AdminPlayersPage({
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Jugadores"
-        subtitle="Gestión de perfiles, verificación y estados"
+        subtitle="Profile management, verification and statuses"
         icon="whistle"
       />
 
@@ -37,7 +37,7 @@ export default async function AdminPlayersPage({
       {players.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay jugadores con este filtro.</p>
+            <p className="text-sm text-muted-foreground">No players with this filter.</p>
           </CardContent>
         </Card>
       ) : (

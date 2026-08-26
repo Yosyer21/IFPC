@@ -8,7 +8,7 @@ export default async function AdminContentStrengthConditioningPage() {
     <ContentCategory
       category="strength-conditioning"
       title="Fuerza y acondicionamiento"
-      subtitle="Rutinas de fuerza y prevención de lesiones"
+      subtitle="Strength routines and injury prevention"
       icon="play"
     />
   );

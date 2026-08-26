@@ -34,10 +34,10 @@ export default async function CoachLiveSessionsPage() {
 
       <Card className="mb-6">
         <CardContent>
-          <h2 className="mb-3 font-semibold">Programar nueva sesión</h2>
+          <h2 className="mb-3 font-semibold">Schedule new session</h2>
           <form action={createCoachLiveSessionAction} className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <label className="text-sm">
-              Título *
+              Title *
               <input
                 required
                 name="title"
@@ -73,7 +73,7 @@ export default async function CoachLiveSessionsPage() {
               />
             </label>
             <label className="text-sm sm:col-span-2">
-              Enlace de reunión
+              Meeting link
               <input
                 name="meetingUrl"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
@@ -94,7 +94,7 @@ export default async function CoachLiveSessionsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Todavía no has programado sesiones en vivo. Usa el formulario para crear la primera.
+              You haven't scheduled any live sessions yet. Use the form to create the first one.
             </p>
           </CardContent>
         </Card>

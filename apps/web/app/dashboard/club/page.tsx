@@ -63,19 +63,19 @@ export default async function ClubDashboardPage() {
     {
       href: '/dashboard/club/applications',
       icon: IconUsers,
-      label: 'Solicitudes pendientes',
+      label: 'Applications pendientes',
       value: pendingApplications.length,
     },
     {
       href: '/dashboard/club/requirements',
       icon: IconFile,
-      label: 'Requisitos activos',
+      label: 'Active requirements',
       value: openRequirements.length,
     },
     {
       href: '/dashboard/club/inquiries',
       icon: IconMail,
-      label: 'Consultas sin responder',
+      label: 'Inquiries sin responder',
       value: newInquiries.length,
     },
   ];
@@ -91,7 +91,7 @@ export default async function ClubDashboardPage() {
     },
     {
       href: '/dashboard/club/applications',
-      label: 'Solicitudes',
+      label: 'Applications',
       sub: 'recibidas en total',
       value: applications.length,
       icon: IconUsers,
@@ -112,13 +112,13 @@ export default async function ClubDashboardPage() {
     },
   ];
 
-  // Acciones pendientes (priorizadas)
+  // Pending actions (priorizadas)
   const pendingActions: { href: string; icon: typeof IconMail; text: string; meta: string }[] = [];
   if (pendingApplications.length > 0) {
     pendingActions.push({
       href: '/dashboard/club/applications',
       icon: IconUsers,
-      text: `${pendingApplications.length} solicitud${pendingApplications.length === 1 ? '' : 'es'} pendiente${pendingApplications.length === 1 ? '' : 's'} de revisión`,
+      text: `${pendingApplications.length} pending application${pendingApplications.length === 1 ? '' : 's'} awaiting review`,
       meta: 'Revisar candidatos',
     });
   }
@@ -142,12 +142,12 @@ export default async function ClubDashboardPage() {
     pendingActions.push({
       href: '/dashboard/club/opportunities',
       icon: IconBell,
-      text: `${expiring.length} oportunidad${expiring.length === 1 ? '' : 'es'} cierran en menos de 7 días`,
+      text: `${expiring.length} opportunit${expiring.length === 1 ? 'y' : 'ies'} close in less than 7 days`,
       meta: 'Ver plazos',
     });
   }
 
-  // Actividad reciente
+  // Recent activity
   const recentApps = applications.slice(0, 3);
   const recentInquiries = inquiries.slice(0, 2);
 
@@ -163,7 +163,7 @@ export default async function ClubDashboardPage() {
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold tracking-tight">{club.name}</h1>
               <Badge variant={club.verified ? 'success' : 'warning'}>
-                {club.verified ? 'Verificado' : 'Pendiente de verificación'}
+                {club.verified ? 'Verificado' : 'Pending verification'}
               </Badge>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -183,7 +183,7 @@ export default async function ClubDashboardPage() {
               href="/dashboard/club/requirements/new"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Nuevo requisito
+              New requirement
             </Link>
             <Link
               href="/dashboard/club/applications"
@@ -195,14 +195,14 @@ export default async function ClubDashboardPage() {
         </div>
       </section>
 
-      {/* Alerta dinámica */}
+      {/* Dynamic alert */}
       {pendingActions.length > 0 ? (
         <div className="animate-fade-up mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            Tienes <strong>{pendingActions.length} acción{pendingActions.length === 1 ? '' : 'es'} pendiente{pendingActions.length === 1 ? '' : 's'}</strong> en el centro de reclutamiento.
+            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> en el centro de reclutamiento.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -217,7 +217,7 @@ export default async function ClubDashboardPage() {
             <IconShield className="h-4 w-4" />
           </span>
           <p className="text-sm text-emerald-100">
-            Todo al día. No tienes acciones pendientes en el centro de reclutamiento.
+            All caught up. You have no pending actions in the recruitment center.
           </p>
         </div>
       )}
@@ -264,15 +264,15 @@ export default async function ClubDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Solicitudes por estado + requisitos activos */}
+      {/* Applications by status + requisitos activos */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Solicitudes por estado</h2>
+            <h2 className="mb-4 font-semibold">Applications by status</h2>
             {applications.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                Aún no hay solicitudes. Cuando los jugadores apliquen a tus oportunidades, verás aquí
-                la distribución.
+                No applications yet. When players apply to your opportunities, you will see here
+                the distribution.
               </p>
             ) : (
               <>
@@ -318,14 +318,14 @@ export default async function ClubDashboardPage() {
         <Card className="animate-fade-up" style={{ animationDelay: '560ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Requisitos activos</h2>
+              <h2 className="font-semibold">Active requirements</h2>
               <Link href="/dashboard/club/requirements/new" className="text-sm text-primary hover:underline">
                 Crear →
               </Link>
             </div>
             {openRequirements.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Define qué perfiles buscas para activar el matching.
+                Define which profiles you are looking for to activate matching.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -339,9 +339,9 @@ export default async function ClubDashboardPage() {
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{requirement.title}</div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {requirement.position ?? 'Cualquier posición'}
+                        {requirement.position ?? 'Any position'}
                         {requirement.ageMin || requirement.ageMax
-                          ? ` · ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} años`
+                          ? ` · ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} years old`
                           : ''}
                       </div>
                     </div>
@@ -353,11 +353,11 @@ export default async function ClubDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      {/* Acciones pendientes + actividad reciente */}
+      {/* Pending actions + actividad reciente */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '620ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Actividad reciente</h2>
+            <h2 className="mb-4 font-semibold">Recent activity</h2>
             {recentApps.length === 0 && recentInquiries.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
                 Publica oportunidades y responde consultas para ver la actividad de tu club.
@@ -374,7 +374,7 @@ export default async function ClubDashboardPage() {
                         {application.player.firstName} {application.player.lastName}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        Solicitó «{application.opportunity.title}»
+                        Requested «{application.opportunity.title}»
                       </div>
                     </div>
                     <Badge
@@ -411,10 +411,10 @@ export default async function ClubDashboardPage() {
 
         <Card className="animate-fade-up" style={{ animationDelay: '680ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Acciones pendientes</h2>
+            <h2 className="mb-4 font-semibold">Pending actions</h2>
             {pendingActions.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No hay acciones que requieran tu atención.
+                No actions require your attention.
               </p>
             ) : (
               <div className="flex flex-col gap-2">

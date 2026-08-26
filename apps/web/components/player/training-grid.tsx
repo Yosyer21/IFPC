@@ -3,10 +3,10 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import type { TrainingContent } from '@ifpc/types';
 
 const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Técnica',
+  technical: 'Technique',
   'strength-conditioning': 'Fuerza y acondicionamiento',
-  psychology: 'Psicología',
-  'parent-education': 'Educación para padres',
+  psychology: 'Psychology',
+  'parent-education': 'Education for parents',
 };
 
 export function TrainingGrid({ contents }: { contents: TrainingContent[] }) {

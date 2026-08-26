@@ -9,16 +9,16 @@ export function CreateRequirementForm() {
 
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
-      <Input name="title" label="Título" placeholder="Ej: Delantero Sub-17" required />
-      <Input name="position" label="Posición" placeholder="DEL / MED / DEF…" />
+      <Input name="title" label="Title" placeholder="Ej: Delantero Sub-17" required />
+      <Input name="position" label="Position" placeholder="DEL / MED / DEF…" />
       <div className="grid grid-cols-2 gap-3">
-        <Input name="ageMin" type="number" label="Edad mínima" />
-        <Input name="ageMax" type="number" label="Edad máxima" />
+        <Input name="ageMin" type="number" label="Minimum age" />
+        <Input name="ageMax" type="number" label="Maximum age" />
       </div>
       <Input name="level" label="Nivel" placeholder="regional / nacional…" />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="description" className="text-sm font-medium">
-          Descripción
+          Description
         </label>
         <textarea
           id="description"

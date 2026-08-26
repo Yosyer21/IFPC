@@ -1,4 +1,4 @@
-# Motor de matching
+# Matching engine
 
 Implementación: `packages/matching/src/engine.ts` (función pura, testeada con vitest).
 
@@ -6,11 +6,11 @@ Implementación: `packages/matching/src/engine.ts` (función pura, testeada con 
 
 | Criterio | Peso | Lógica |
 | --- | --- | --- |
-| Posición | 25 | coincidencia exacta con el requisito |
+| Position | 25 | coincidencia exacta con el requisito |
 | Edad | 25 | dentro del rango (parcial si cercano ±2 años) |
 | Nivel | 20 | `player.competitionLevel` = `requirement.level` |
 | Disponibilidad | 15 | estado `AVAILABLE`/`ACTIVE` |
-| Geografía | 15 | nacionalidad compatible con país/ubicación |
+| Geography | 15 | nacionalidad compatible con país/ubicación |
 
 - Sin restricción en un criterio → peso neutro (máximo).
 - Dato faltante → puntuación parcial.
@@ -19,5 +19,5 @@ Implementación: `packages/matching/src/engine.ts` (función pura, testeada con 
 
 ## Uso
 
-- Página de matching del club y del agente (orden por score, desglose por criterio).
+- Página de matching del club y del agente (orden por score, breakdown por criterio).
 - Job `calculate-matches` del worker (mejores coincidencias ≥60).

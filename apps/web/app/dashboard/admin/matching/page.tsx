@@ -66,7 +66,7 @@ export default async function AdminMatchingPage() {
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Distribución de scores</h2>
+            <h2 className="mb-4 font-semibold">Score distribution</h2>
             <CountsBars items={scoreBuckets} />
             <p className="mt-3 text-xs text-muted-foreground">
               {matches.length} combinaciones jugador × requisito evaluadas por el motor.
@@ -75,7 +75,7 @@ export default async function AdminMatchingPage() {
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Accesos rápidos</h2>
+            <h2 className="mb-4 font-semibold">Quick access</h2>
             <div className="flex flex-col gap-2">
               <Link href="/dashboard/admin/matching/players" className="rounded-md border border-border p-3 text-sm transition-colors hover:bg-muted">
                 Ver scores por jugador →
@@ -90,7 +90,7 @@ export default async function AdminMatchingPage() {
 
       <Card>
         <CardContent>
-          <h2 className="mb-4 font-semibold">Mejores coincidencias</h2>
+          <h2 className="mb-4 font-semibold">Best matches</h2>
           {top.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No hay suficientes jugadores o requisitos para calcular coincidencias.
@@ -103,7 +103,7 @@ export default async function AdminMatchingPage() {
                     <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
                       <span className="text-muted-foreground">#{index + 1}</span>
                       <span>{match.player.firstName} {match.player.lastName}</span>
-                      <Badge variant="outline">{match.player.position ?? 'Sin posición'}</Badge>
+                      <Badge variant="outline">{match.player.position ?? 'No position'}</Badge>
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
                       {match.requirement.club?.name} · {match.requirement.title}

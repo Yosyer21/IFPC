@@ -1,6 +1,6 @@
-# Pagos
+# Payments
 
-## Fase actual (simulada)
+## Current phase (simulated)
 
 - Planes: FREE, PREMIUM (59,99 €), SCOUT (149,99 €), CLUB (299,99 €) al año.
 - La acción `upgradeMembershipAction` crea/actualiza la `Membership` (12 meses) y registra un `Payment`

@@ -48,7 +48,7 @@ export default async function ScoutDashboardPage() {
   const reportedPlayerIds = new Set(reports.map((report) => report.playerId));
   const savedWithoutReport = saved.filter((entry) => !reportedPlayerIds.has(entry.playerId));
 
-  // Distribución de valoraciones
+  // Ratings distribution
   const high = reports.filter((r) => r.rating >= 8).length;
   const medium = reports.filter((r) => r.rating >= 6 && r.rating < 8).length;
   const low = reports.filter((r) => r.rating < 6).length;
@@ -57,7 +57,7 @@ export default async function ScoutDashboardPage() {
     {
       href: '/dashboard/scout/players',
       icon: IconUsers,
-      label: 'Jugadores disponibles',
+      label: 'Available players',
       value: availableCount,
     },
     {
@@ -104,7 +104,7 @@ export default async function ScoutDashboardPage() {
     },
   ];
 
-  // Acciones pendientes
+  // Pending actions
   const pendingActions: { href: string; icon: typeof IconBell; text: string; meta: string }[] = [];
   if (savedWithoutReport.length > 0) {
     pendingActions.push({
@@ -145,13 +145,13 @@ export default async function ScoutDashboardPage() {
               href="/dashboard/scout/players"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Buscar jugadores
+              Search players
             </Link>
             <Link
               href="/dashboard/scout/scouting-reports"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Nuevo informe
+              New report
             </Link>
           </div>
         </div>
@@ -159,8 +159,8 @@ export default async function ScoutDashboardPage() {
         {/* Quick actions */}
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
-            { href: '/dashboard/scout/players', icon: IconSearch, label: 'Explorar jugadores' },
-            { href: '/dashboard/scout/saved', icon: IconStar, label: 'Mi radar' },
+            { href: '/dashboard/scout/players', icon: IconSearch, label: 'Explore players' },
+            { href: '/dashboard/scout/saved', icon: IconStar, label: 'My radar' },
             { href: '/dashboard/scout/scouting-reports', icon: IconWhistle, label: 'Informes' },
             { href: '/dashboard/scout/opportunities', icon: IconTarget, label: 'Oportunidades' },
           ].map((action, i) => {
@@ -180,14 +180,14 @@ export default async function ScoutDashboardPage() {
         </div>
       </section>
 
-      {/* Alerta dinámica */}
+      {/* Dynamic alert */}
       {pendingActions.length > 0 ? (
         <div className="animate-fade-up mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            Tienes <strong>{pendingActions.length} acción{pendingActions.length === 1 ? '' : 'es'} pendiente{pendingActions.length === 1 ? '' : 's'}</strong> en tu puesto de scouting.
+            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> en tu puesto de scouting.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -202,7 +202,7 @@ export default async function ScoutDashboardPage() {
             <IconShield className="h-4 w-4" />
           </span>
           <p className="text-sm text-emerald-100">
-            Todo al día. No tienes acciones pendientes en tu puesto de scouting.
+            All caught up. You have no pending actions in your scouting position.
           </p>
         </div>
       )}
@@ -217,9 +217,9 @@ export default async function ScoutDashboardPage() {
       <Card className="animate-fade-up mb-6" style={{ animationDelay: '320ms' }}>
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="font-semibold">Proceso de scouting</h2>
+            <h2 className="font-semibold">Scouting process</h2>
             <Link href="/dashboard/scout/players" className="text-sm text-primary hover:underline">
-              Explorar jugadores →
+              Explore players →
             </Link>
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -252,10 +252,10 @@ export default async function ScoutDashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Distribución de valoraciones</h2>
+            <h2 className="mb-4 font-semibold">Ratings distribution</h2>
             {reports.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                Cuando crees informes de scouting, verás aquí la distribución de tus valoraciones
+                When you create scouting reports, you will see here the distribution of your ratings
                 (altas, medias y bajas).
               </p>
             ) : (
@@ -287,7 +287,7 @@ export default async function ScoutDashboardPage() {
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                    Medias (6-7) <strong className="tabular-nums">{medium}</strong>
+                    Averages (6-7) <strong className="tabular-nums">{medium}</strong>
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
@@ -302,7 +302,7 @@ export default async function ScoutDashboardPage() {
         <Card className="animate-fade-up" style={{ animationDelay: '560ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Guardados sin informe</h2>
+              <h2 className="font-semibold">Saved without report</h2>
               {savedWithoutReport.length > 0 ? (
                 <Link
                   href="/dashboard/scout/scouting-reports"
@@ -314,7 +314,7 @@ export default async function ScoutDashboardPage() {
             </div>
             {savedWithoutReport.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Todos tus jugadores guardados tienen informe o aún no has guardado ninguno.
+                All your saved players have a report or you haven't saved any yet.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -326,7 +326,7 @@ export default async function ScoutDashboardPage() {
                         {player.firstName} {player.lastName}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {player.position ?? 'Sin posición'}
+                        {player.position ?? 'No position'}
                       </div>
                     </div>
                     <Link
@@ -342,19 +342,19 @@ export default async function ScoutDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      {/* Mi radar + informes recientes */}
+      {/* My radar + informes recientes */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up" style={{ animationDelay: '620ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Mi radar</h2>
+              <h2 className="font-semibold">My radar</h2>
               <Link href="/dashboard/scout/saved" className="text-sm text-primary hover:underline">
                 Ver todos →
               </Link>
             </div>
             {saved.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Guarda jugadores interesantes para seguirlos aquí.
+                Save interesting players to follow them here.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -362,7 +362,7 @@ export default async function ScoutDashboardPage() {
                   const positionLabel = player.position
                     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
                       player.position)
-                    : 'Sin posición';
+                    : 'No position';
                   const hasReport = reportedPlayerIds.has(player.id);
                   return (
                     <div
@@ -389,7 +389,7 @@ export default async function ScoutDashboardPage() {
 
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '680ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Informes recientes</h2>
+            <h2 className="mb-4 font-semibold">Recent reports</h2>
             {reports.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
                 Crea tu primer informe de scouting para documentar el talento que encuentres.

@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Guía para familias' };
+export const metadata: Metadata = { title: 'Guide for families' };
 
 export default async function ParentEducationArticlePage({
   params,
@@ -25,10 +25,10 @@ export default async function ParentEducationArticlePage({
         href="/dashboard/parent/education"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Educación para familias
+        ← Education for families
       </Link>
       <div className="animate-fade-up mb-4">
-        <Badge>Guía para familias</Badge>
+        <Badge>Guide for families</Badge>
         <h1 className="mt-3 text-2xl font-bold tracking-tight">{content.title}</h1>
         <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
           {content.durationMinutes ? <span>{content.durationMinutes} min</span> : null}

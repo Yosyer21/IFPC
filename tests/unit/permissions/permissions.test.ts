@@ -3,12 +3,12 @@ import { canAccessDashboard, ROLE_DASHBOARD_PREFIXES } from '../../../packages/a
 import { ROLES } from '../../../packages/auth/src/roles';
 
 describe('canAccessDashboard', () => {
-  it('permite el acceso al índice del dashboard a cualquier rol', () => {
+  it('allows any role to access the dashboard index', () => {
     expect(canAccessDashboard('PLAYER', '/dashboard')).toBe(true);
     expect(canAccessDashboard('ADMIN', '/dashboard')).toBe(true);
   });
 
-  it('permite a cada rol acceder a su propia área', () => {
+  it('allows each role to access its own area', () => {
     expect(canAccessDashboard('PLAYER', '/dashboard/player/profile')).toBe(true);
     expect(canAccessDashboard('PARENT', '/dashboard/parent/children')).toBe(true);
     expect(canAccessDashboard('COACH', '/dashboard/coach/players')).toBe(true);

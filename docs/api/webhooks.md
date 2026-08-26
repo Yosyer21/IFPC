@@ -4,12 +4,12 @@
 
 Puntos de entrada para servicios externos que informan eventos a la plataforma:
 
-| Webhook | Proveedor | Evento |
+| Webhook | Provider | Event |
 | --- | --- | --- |
 | `/api/webhooks/stripe` | Stripe | Pago confirmado, suscripción cancelada |
-| `/api/webhooks/video` | Worker/video | Procesamiento completado |
+| `/api/webhooks/video` | Worker/video | Processing completed |
 
-## Seguridad
+## Security
 
 - Verificar la firma del payload (cabecera de firma del proveedor).
 - Responder rápidamente (2xx) y encolar el procesamiento en BullMQ.

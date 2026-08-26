@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: 'Documentos' };
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
   contract: 'Contrato',
-  medical: 'Médico',
+  medical: 'Medical',
   other: 'Otro',
 };
 
@@ -33,7 +33,7 @@ export default async function AdminDocumentsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Documentos"
-        subtitle="Documentos subidos por los jugadores (pasaportes, contratos, médicos…)"
+        subtitle="Documents uploaded by players (passports, contracts, medical…)"
         icon="file"
       />
 
@@ -47,7 +47,7 @@ export default async function AdminDocumentsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay documentos subidos todavía.
+              No documents uploaded yet.
             </p>
           </CardContent>
         </Card>

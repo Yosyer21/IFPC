@@ -26,11 +26,11 @@ export default async function ClubRequirementDetailPage({
   if (!requirement) notFound();
 
   const rows: [string, string][] = [
-    ['Posición', requirement.position ?? 'Cualquier posición'],
+    ['Position', requirement.position ?? 'Any position'],
     [
       'Rango de edad',
       requirement.ageMin || requirement.ageMax
-        ? `${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} años`
+        ? `${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} years old`
         : '—',
     ],
     ['Nivel', requirement.level ?? '—'],
@@ -43,7 +43,7 @@ export default async function ClubRequirementDetailPage({
         href="/dashboard/club/requirements"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Requisitos
+        ← Requirements
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{requirement.title}</h1>
 

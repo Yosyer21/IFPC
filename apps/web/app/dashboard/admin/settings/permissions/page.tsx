@@ -8,14 +8,14 @@ import { PageHeader } from '@/components/player/page-header';
 export const metadata: Metadata = { title: 'Permisos · Ajustes' };
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-  PLAYER: ['Editar perfil', 'Subir vídeos', 'Subir documentos', 'Aplicar a oportunidades', 'Guardar oportunidades', 'Ver contenido de entrenamiento'],
-  PARENT: ['Ver hijos vinculados', 'Educación para familias', 'Ver oportunidades de hijos', 'Historial de pagos'],
+  PLAYER: ['Edit profile', 'Upload videos', 'Subir documentos', 'Aplicar a oportunidades', 'Guardar oportunidades', 'Ver contenido de entrenamiento'],
+  PARENT: ['Ver hijos vinculados', 'Education for families', 'Ver oportunidades de hijos', 'Historial de pagos'],
   COACH: ['Gestionar jugadores asignados', 'Crear evaluaciones', 'Crear objetivos', 'Asignar contenido'],
-  SCOUT: ['Explorar jugadores', 'Guardar jugadores', 'Crear informes de scouting'],
+  SCOUT: ['Explore players', 'Guardar jugadores', 'Crear informes de scouting'],
   AGENT: ['Vincular jugadores', 'Enviar jugadores a clubes', 'Gestionar pruebas, negociaciones y contratos'],
   CLUB: ['Publicar oportunidades', 'Crear requisitos', 'Revisar solicitudes', 'Responder consultas', 'Gestionar staff'],
-  UNIVERSITY: ['Ver jugadores', 'Ver oportunidades y becas'],
-  ADMIN: ['Acceso total', 'Verificar jugadores y clubes', 'Gestionar usuarios y roles', 'Publicar contenido', 'Ver analytics', 'Configuración del sistema'],
+  UNIVERSITY: ['View players', 'Ver oportunidades y becas'],
+  ADMIN: ['Acceso total', 'Verificar jugadores y clubes', 'Gestionar usuarios y roles', 'Publicar contenido', 'Ver analytics', 'System settings'],
 };
 
 export default async function AdminSettingsPermissionsPage() {

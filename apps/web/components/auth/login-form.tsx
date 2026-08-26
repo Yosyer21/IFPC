@@ -21,18 +21,18 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
       <Input
         name="password"
         type="password"
-        label="Contraseña"
+        label="Password"
         placeholder="••••••••"
         required
         autoComplete="current-password"
       />
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Iniciando…' : 'Iniciar sesión'}
+        {pending ? 'Iniciando…' : 'Sign in'}
       </Button>
       <div className="flex items-center justify-between text-sm">
         <a href="/forgot-password" className="text-muted-foreground hover:underline">
-          ¿Olvidaste tu contraseña?
+          Forgot your password?
         </a>
         <a href="/register" className="hover:underline">
           Crear cuenta

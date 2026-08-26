@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Membresías' };
+export const metadata: Metadata = { title: 'Memberships' };
 
 export default async function AdminMembershipsPage() {
   const session = await auth();
@@ -24,8 +24,8 @@ export default async function AdminMembershipsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Membresías"
-        subtitle="Planes activos y distribución por tier"
+        title="Memberships"
+        subtitle="Active plans and distribution by tier"
         icon="star"
       />
 
@@ -37,14 +37,14 @@ export default async function AdminMembershipsPage() {
           </Badge>
         ))}
         <Link href="/dashboard/admin/memberships/payments" className="text-sm text-primary hover:underline">
-          Pagos ({payments}) →
+          Payments ({payments}) →
         </Link>
       </div>
 
       {memberships.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay membresías activas.</p>
+            <p className="text-sm text-muted-foreground">No active memberships.</p>
           </CardContent>
         </Card>
       ) : (

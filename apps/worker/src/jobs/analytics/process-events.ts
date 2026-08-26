@@ -8,7 +8,7 @@ export interface ProcessEventsJobData {
 export async function processEvents(job: Job<ProcessEventsJobData>) {
   const { eventName, payload } = job.data;
 
-  // Fase analytics: persistencia en almacén dedicado cuando esté disponible.
+  // Analytics phase: persistence in a dedicated store when available.
   // De momento se registra el evento con marca temporal para consumo posterior.
   console.log(
     `[analytics] ${eventName} ${new Date().toISOString()}`,

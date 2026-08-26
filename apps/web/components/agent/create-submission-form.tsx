@@ -30,7 +30,7 @@ export function CreateSubmissionForm({
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Enviando…' : 'Crear envío'}
+        {pending ? 'Enviando…' : 'Create submission'}
       </Button>
     </form>
   );

@@ -2,8 +2,8 @@ export const RECRUITMENT_STAGES = ['SUBMISSION', 'TRIAL', 'NEGOTIATION', 'CONTRA
 export type RecruitmentStage = (typeof RECRUITMENT_STAGES)[number];
 
 export const RECRUITMENT_STAGE_LABELS: Record<RecruitmentStage, string> = {
-  SUBMISSION: 'Envío',
+  SUBMISSION: 'Submission',
   TRIAL: 'Prueba',
-  NEGOTIATION: 'Negociación',
+  NEGOTIATION: 'Negotiation',
   CONTRACT: 'Contrato',
 };
