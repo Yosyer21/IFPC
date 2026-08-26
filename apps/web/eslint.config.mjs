@@ -11,6 +11,12 @@ const config = [
   {
     ignores: ['.next/**', 'out/**', 'next-env.d.ts', 'public/**'],
   },
+  {
+    rules: {
+      // English text legitimately uses apostrophes in JSX (e.g. "player's profile").
+      'react/no-unescaped-entities': ['error', { forbid: ['>', '"', '}'] }],
+    },
+  },
 ];
 
 export default config;
