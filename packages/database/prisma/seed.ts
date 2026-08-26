@@ -581,7 +581,7 @@ export async function main() {
     },
   });
 
-  // ─── Oportunidad de universidad (beca SCHOLARSHIP) ─────────────
+  // ─── University opportunity (SCHOLARSHIP) ─────────────
   const universityProfile = await prisma.university.findUnique({
     where: { userId: universityUser.id },
   });
@@ -593,7 +593,7 @@ export async function main() {
         id: 'opp-uni-1',
         universityId: universityProfile.id,
         creatorType: 'UNIVERSITY',
-        title: 'University sports scholarship (men's football)',
+        title: 'University sports scholarship (men\u2019s football)',
         type: 'SCHOLARSHIP',
         status: 'OPEN',
         position: 'DEL',
@@ -722,7 +722,7 @@ export async function main() {
           },
           {
             senderId: admin.id,
-            body: 'Of course! The opportunity is already published and linked from the players' profiles. We will notify you of every application received.',
+            body: 'Of course! The opportunity is already published and linked from the players\u2019 profiles. We will notify you of every application received.',
           },
         ],
       },
