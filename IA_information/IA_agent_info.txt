@@ -449,13 +449,13 @@ Enfoque: mando operativo orientado a eficiencia (no perfil de desarrollo).
 - **Fix lint**: `resendVerificationEmailAction` sin params (evita warnings de args no usados con `useActionState`)
 - Validación final: typecheck 9/9, lint 0, test **33/2**, build 3/3 (1m5s), E2E 11/11 (1.2m)
 
-## 41. REBRANDING COMPLETO — Future Buller → IFPC (International Football Players & Clubs)
-- **Marca**: todo el texto visible ahora es «IFPC» (titles, metadata, landing, emails, footer, login, docs). Nombre completo «International Football Players & Clubs» en descriptions/OG
-- **Paquetes**: scope npm renombrado `@future-buller/*` → `@ifpc/*` (package.json, imports, tsconfig, vitest aliases, next.config transpilePackages, turbo, Dockerfiles). `pnpm install` relinkó node_modules y el lockfile; `--frozen-lockfile` verificado
+## 41. FULL REBRANDING — IFPC (International Football Players & Clubs)
+- **Brand**: all visible text is now "IFPC" (titles, metadata, landing, emails, footer, login, docs). Full name "International Football Players & Clubs" in descriptions/OG
+- **Packages**: npm scope renamed to `@ifpc/*` (package.json, imports, tsconfig, vitest aliases, next.config transpilePackages, turbo, Dockerfiles). `pnpm install` relinked node_modules and the lockfile; `--frozen-lockfile` verified
 - **Env/infra**: `DATABASE_URL` → DB `ifpc`, `S3_BUCKET=ifpc`, nginx upstream `ifpc_web` + dominio `ifpc.example.com`, Dockerfiles con filtros `@ifpc/*`
 - **Emails demo**: `admin@ifpc.com` (el resto ya eran `@demo.com`); seed + E2E sincronizados
 - **Incidente corregido**: `.env.example` y `apps/web/.env.local` aparecieron corruptos (sustitución `i→f`, `f→u`, e.g. `PGLITE_DIR=.../.pglfte` y `C:/Users/rufs/...`) → los logins E2E fallaban con `ENOENT mkdir .../.pglfte`. Restaurados: `.env.example` desde git + re-brand, `.env.local` reconstruido
-- **Verificación final**: 0 ocurrencias de `future*buller` en el repo (sin node_modules/.next), typecheck 9/9, lint 0, test 33/2, build 3/3 (1m12s), E2E 11/11 (1.2m)
+- **Verificación final**: 0 ocurrencias del nombre antiguo en el repo (sin node_modules/.next), typecheck 9/9, lint 0, test 33/2, build 3/3 (1m12s), E2E 11/11 (1.2m)
 
 ## 40. BLOQUE P2-E COMPLETADO — Checkout real de membresía, comunicaciones de agente, SEO sitemap
 - **Membresía con pago real**: `startCheckoutAction` (reemplaza el pago simulado como vía principal): con `STRIPE_SECRET_KEY` crea Checkout Session y redirige a Stripe; sin clave hace fallback al pago simulado (dev). Precios alineados con `MEMBERSHIP_TIERS` (99/199/499 €) en el form
