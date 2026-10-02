@@ -6,7 +6,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Camps — IFPC',
+  title: 'Camps — Future Buller',
   description: 'Football camps, clinics and training stints organized by clubs and coaches.',
 };
 

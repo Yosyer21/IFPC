@@ -6,8 +6,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Clubes — IFPC',
-  description: 'Directorio de clubes y academias que reclutan en IFPC.',
+  title: 'Clubes — Future Buller',
+  description: 'Directorio de clubes y academias que reclutan en Future Buller.',
 };
 
 export default async function PublicClubsPage() {

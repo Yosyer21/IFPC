@@ -4,29 +4,27 @@ import { IconGlobe, IconMail } from './icons';
 
 const COLUMNS = [
   {
-    title: 'Platform',
+    title: 'Explore',
     links: [
-      { href: '/opportunities', label: 'Opportunities' },
-      { href: '/clubs', label: 'Clubs' },
-      { href: '/training', label: 'Training' },
-      { href: '/register', label: 'Sign up' },
+      { href: '/activities', label: 'Activities' },
+      { href: '/events', label: 'Events' },
+      { href: '/products', label: 'Products' },
     ],
   },
   {
-    title: 'Information',
+    title: 'Company',
     links: [
-      { href: '/about', label: 'About us' },
-      { href: '/parent-hub', label: 'Parent hub' },
-      { href: '/pathways', label: 'Development pathways' },
-      { href: '/contact', label: 'Contact' },
+      { href: '/about', label: 'About' },
+      { href: '/contact', label: 'Contact us' },
+      { href: '/register', label: 'Sign up' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { href: '#', label: 'Terms of service' },
-      { href: '#', label: 'Privacy policy' },
-      { href: '#', label: 'Cookies' },
+      { href: '/info/disclaimer', label: 'Disclaimer' },
+      { href: '/info/copyright', label: 'Copyright' },
+      { href: '/info/privacy', label: 'Privacy' },
     ],
   },
 ];
@@ -39,11 +37,12 @@ export function Footer() {
           <div>
             <Logo />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-white/45">
-              The global platform where young talent connects with clubs, scouts and agents.
+              Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and
+              Emily Gielnik.
             </p>
             <div className="mt-6 flex items-center gap-3 text-white/40">
               <a
-                href="mailto:hello@ifpc.com"
+                href="mailto:hello@futurebuller.com"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 transition-colors hover:border-emerald-500/40 hover:text-emerald-400"
                 aria-label="Email"
               >
@@ -82,9 +81,9 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-7 sm:flex-row">
           <p className="text-sm text-white/35">
-            © {new Date().getFullYear()} IFPC. All rights reserved.
+            © {new Date().getFullYear()} Future Buller. All rights reserved.
           </p>
-          <p className="text-sm text-white/35">Built for football</p>
+          <p className="text-sm text-white/35">Empowering the next generation</p>
         </div>
       </div>
     </footer>

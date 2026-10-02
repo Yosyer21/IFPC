@@ -15,9 +15,19 @@ async function main() {
     process.env.PGLITE_DIR ?? path.resolve(root, '.pglite');
   await mkdir(dataDir, { recursive: true });
 
+  console.log('[pglite] generando cliente Prisma...');
+  execSync('pnpm --filter @ifpc/database exec prisma generate', {
+    cwd: root,
+    stdio: 'inherit',
+    env: process.env,
+  });
+
   console.log('[pglite] generando SQL del esquema...');
+  // Se invoca el binario `prisma` del paquete @ifpc/database a través de pnpm en
+  // lugar de `npx`: en un monorepo pnpm, `npx prisma` no resuelve el binario
+  // desde la raíz (falla en Linux/macOS y en checkouts limpios).
   const sql = execSync(
-    `npx prisma migrate diff --from-empty --to-schema-datamodel "${schemaPath}" --script`,
+    `pnpm --filter @ifpc/database exec prisma migrate diff --from-empty --to-schema-datamodel "${schemaPath}" --script`,
     {
       encoding: 'utf-8',
       cwd: root,
@@ -26,7 +36,7 @@ async function main() {
         DATABASE_URL: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/ifpc',
       },
     }
-  );
+  ).trim();
 
   console.log('[pglite] aplicando esquema...');
   const pglite = new PGlite(dataDir);

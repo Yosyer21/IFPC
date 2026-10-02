@@ -7,7 +7,7 @@ import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Oportunidad — IFPC' };
+export const metadata: Metadata = { title: 'Oportunidad — Future Buller' };
 
 export default async function PublicOpportunityDetailPage({
   params,

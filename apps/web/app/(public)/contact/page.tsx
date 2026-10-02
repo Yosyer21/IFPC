@@ -3,25 +3,25 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Contact — IFPC',
-  description: 'Get in touch with the IFPC team.',
+  title: 'Contact — Future Buller',
+  description: 'Get in touch with the Future Buller team.',
 };
 
 const CHANNELS = [
   {
-    label: 'General support',
-    value: 'hola@ifpc.com',
-    href: 'mailto:hola@ifpc.com',
+    label: 'General enquiries',
+    value: 'hello@futurebuller.com',
+    href: 'mailto:hello@futurebuller.com',
   },
   {
-    label: 'Clubs and academies',
-    value: 'clubs@ifpc.com',
-    href: 'mailto:clubs@ifpc.com',
+    label: 'Clinics & squad sessions',
+    value: 'clinics@futurebuller.com',
+    href: 'mailto:clinics@futurebuller.com',
   },
   {
-    label: 'Universities',
-    value: 'universities@ifpc.com',
-    href: 'mailto:universities@ifpc.com',
+    label: 'Events & tickets',
+    value: 'events@futurebuller.com',
+    href: 'mailto:events@futurebuller.com',
   },
 ];
 

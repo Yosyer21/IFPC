@@ -49,7 +49,6 @@ export default async function AgentCommunicationsPage() {
       ) : (
         <div className="flex flex-col gap-6">
           {conversations.map((conversation) => {
-            const last = conversation.messages[conversation.messages.length - 1];
             return (
               <Card key={conversation.id}>
                 <CardContent>

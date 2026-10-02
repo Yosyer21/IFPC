@@ -6,7 +6,7 @@ import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Ejercicio — IFPC' };
+export const metadata: Metadata = { title: 'Ejercicio — Future Buller' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',

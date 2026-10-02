@@ -170,3 +170,47 @@ export function IconGlobe(props: IconProps) {
     </Base>
   );
 }
+
+export function IconCalendar(props: IconProps) {
+  return (
+    <Base {...props}>
+      <rect x="3" y="4.5" width="18" height="16" rx="2" />
+      <path d="M3 9h18M8 2.5v4M16 2.5v4" />
+    </Base>
+  );
+}
+
+export function IconMapPin(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11Z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </Base>
+  );
+}
+
+export function IconTicket(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M4 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a3 3 0 0 0 0 6v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1a3 3 0 0 0 0-6V8Z" />
+      <path d="M13 6v12" />
+    </Base>
+  );
+}
+
+export function IconBook(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z" />
+      <path d="M4 19a2 2 0 0 0 2 2h13" />
+    </Base>
+  );
+}
+
+export function IconHeart(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M12 20s-7-4.5-7-9.5A4 4 0 0 1 12 7a4 4 0 0 1 7 3.5C19 15.5 12 20 12 20Z" />
+    </Base>
+  );
+}

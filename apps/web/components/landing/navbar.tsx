@@ -7,9 +7,10 @@ import { IconMenu, IconX } from './icons';
 
 const LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/opportunities', label: 'Opportunities' },
-  { href: '/clubs', label: 'Clubs' },
-  { href: '/training', label: 'Training' },
+  { href: '/about', label: 'About' },
+  { href: '/activities', label: 'Activities' },
+  { href: '/events', label: 'Events' },
+  { href: '/products', label: 'Products' },
   { href: '/contact', label: 'Contact' },
 ];
 

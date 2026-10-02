@@ -7,7 +7,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Profile de jugador — IFPC' };
+export const metadata: Metadata = { title: 'Profile de jugador — Future Buller' };
 
 export default async function PublicPlayerProfilePage({
   params,

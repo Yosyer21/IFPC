@@ -6,7 +6,7 @@ import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Guide — IFPC' };
+export const metadata: Metadata = { title: 'Guide — Future Buller' };
 
 export default async function PublicParentHubArticlePage({
   params,

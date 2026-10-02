@@ -4,26 +4,26 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'About — IFPC',
+  title: 'About — Future Buller',
   description:
-    'IFPC connects talent with opportunities: development, scouting and recruitment in one place.',
+    'Future Buller is a holistic football development pathway for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
 };
 
 const VALUES = [
   {
-    title: 'Talent first',
+    title: 'Holistic development',
     description:
-      'Every player has a unique profile. We help their level and potential be seen clearly.',
+      'Technical skills, mindset, leadership and personal growth — we develop the whole player, on and off the pitch.',
   },
   {
-    title: 'Transparency',
+    title: 'Led by Matildas',
     description:
-      'Clubs, scouts and agents evaluate with real data: assessments, videos and metrics.',
+      'Chloe Logarzo and Emily Gielnik share the knowledge and habits of elite international football.',
   },
   {
-    title: 'No borders',
+    title: 'Open to all abilities',
     description:
-      'From youth football to professional and collegiate. A player\u2019s future should not depend on their postcode.',
+      'Whether you are just starting out or chasing the next level, there is a place for you in the squad.',
   },
 ];
 
@@ -34,23 +34,22 @@ export default function AboutPage() {
       <main className="mx-auto w-full max-w-5xl px-4 py-16">
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">About</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">
-            Where talent finds its future
-          </h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">The World of Future Buller</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            IFPC is a global football platform that connects players, families,
-            coaches, clubs, agents, scouts and universities. Sports profile, development plan,
-            trials, scholarships and contracts: the player\u2019s entire professional journey in a
-            single ecosystem.
+            Future Buller is dedicated to empowering girls aged 10–18 through holistic football
+            development — combining technical training, mindset, leadership and personal growth so
+            every player can perform their best both on and off the pitch.
+          </p>
+          <p className="mt-4 max-w-2xl text-muted-foreground">
+            Founded and led by international players Chloe Logarzo and Emily Gielnik, our mission is
+            to create a belief on and off the field — building confidence, resilience and
+            self-belief through events, tools and resources.
           </p>
         </div>
 
         <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
           {VALUES.map((value) => (
-            <div
-              key={value.title}
-              className="rounded-2xl border border-border/60 bg-card p-6"
-            >
+            <div key={value.title} className="rounded-2xl border border-border/60 bg-card p-6">
               <h2 className="text-lg font-semibold text-emerald-400">{value.title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {value.description}
@@ -60,22 +59,22 @@ export default function AboutPage() {
         </div>
 
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center">
-          <h2 className="text-2xl font-bold">Are you a player or do you represent a club?</h2>
+          <h2 className="text-2xl font-bold">Ready to grow your game?</h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
-            Create your profile and start receiving opportunities that match your level.
+            Explore our clinics and squad experiences, or join the next Train with a Matilda event.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
-              href="/register"
+              href="/activities"
               className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Create account
+              Explore activities
             </Link>
             <Link
-              href="/opportunities"
+              href="/contact"
               className="rounded-xl border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition-colors hover:bg-white/5"
             >
-              View opportunities
+              Contact us
             </Link>
           </div>
         </div>

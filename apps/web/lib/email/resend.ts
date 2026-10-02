@@ -1,6 +1,6 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL ?? 'IFPC <no-reply@ifpc.com>';
+  process.env.RESEND_FROM_EMAIL ?? 'Future Buller <no-reply@futurebuller.com>';
 
 export interface EmailMessage {
   to: string;
@@ -56,7 +56,7 @@ export async function sendEmail(message: EmailMessage): Promise<SendEmailResult>
 }
 
 function resetPasswordTemplate(resetUrl: string): { html: string; text: string } {
-  const text = `Recover your IFPC password\n
+  const text = `Recover your Future Buller password\n
 Open this link to choose a new password (valid for 1 hour):
 ${resetUrl}
 
@@ -66,7 +66,7 @@ If you did not request this change, you can ignore this email and your password 
 <html lang="en">
   <body style="margin:0;background:#0a0e0c;padding:24px;font-family:Arial,sans-serif">
     <div style="max-width:480px;margin:0 auto;background:#111814;border:1px solid #2a332d;border-radius:16px;padding:32px">
-      <div style="font-size:18px;font-weight:700;color:#34d399">IFPC</div>
+      <div style="font-size:18px;font-weight:700;color:#34d399">Future Buller</div>
       <h1 style="color:#ffffff;font-size:22px;margin:20px 0 8px">Recover your password</h1>
       <p style="color:#9ca3af;font-size:14px;line-height:1.6">
         We received a request to reset your password. The link is valid for
@@ -98,21 +98,21 @@ export async function sendPasswordResetEmail(
   resetUrl: string
 ): Promise<SendEmailResult> {
   const { html, text } = resetPasswordTemplate(resetUrl);
-  return sendEmail({ to, subject: 'Recover your password — IFPC', html, text });
+  return sendEmail({ to, subject: 'Recover your password — Future Buller', html, text });
 }
 
 function verificationTemplate(verifyUrl: string): { html: string; text: string } {
-  const text = `Confirm your IFPC email
+  const text = `Confirm your Future Buller email
 \nOpen this link to verify your email address (valid for 24 hours):
 ${verifyUrl}
 
-If you did not create an IFPC account, ignore this email.`;
+If you did not create an Future Buller account, ignore this email.`;
 
   const html = `<!doctype html>
 <html lang="en">
   <body style="margin:0;background:#0a0e0c;padding:24px;font-family:Arial,sans-serif">
     <div style="max-width:480px;margin:0 auto;background:#111814;border:1px solid #2a332d;border-radius:16px;padding:32px">
-      <div style="font-size:18px;font-weight:700;color:#34d399">IFPC</div>
+      <div style="font-size:18px;font-weight:700;color:#34d399">Future Buller</div>
       <h1 style="color:#ffffff;font-size:22px;margin:20px 0 8px">Confirm your email</h1>
       <p style="color:#9ca3af;font-size:14px;line-height:1.6">
         Thank you for creating your account. Verify your email address to unlock all the
@@ -142,5 +142,5 @@ export async function sendVerificationEmail(
   verifyUrl: string
 ): Promise<SendEmailResult> {
   const { html, text } = verificationTemplate(verifyUrl);
-  return sendEmail({ to, subject: 'Confirm your email — IFPC', html, text });
+  return sendEmail({ to, subject: 'Confirm your email — Future Buller', html, text });
 }

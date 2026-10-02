@@ -6,7 +6,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Parent Hub — IFPC',
+  title: 'Parent Hub — Future Buller',
   description: 'Guides and resources to support your child\u2019s football career.',
 };
 

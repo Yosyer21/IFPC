@@ -48,7 +48,7 @@ export default async function VerifyEmailPage({
           <Badge variant="success">Email verified</Badge>
           <h1 className="mb-4 mt-4 text-2xl font-bold">Your email is confirmed!</h1>
           <p className="mb-6 text-muted-foreground">
-            You can now use all IFPC features.
+            You can now use all Future Buller features.
           </p>
           <Link
             href="/dashboard"

@@ -7,27 +7,36 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: 'IFPC',
-    template: '%s | IFPC',
+    default: 'Future Buller',
+    template: '%s | Future Buller',
   },
   description:
-    'IFPC — International Football Players & Clubs. Global football platform: player development, scouting and professional recruitment. Profiles, trials, scholarships and contracts.',
-  applicationName: 'IFPC',
-  keywords: ['football', 'scouting', 'recruitment', 'scholarships', 'players', 'trials', 'IFPC'],
+    'Future Buller — holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik. Clinics, squad super sessions and mindset tools.',
+  applicationName: 'Future Buller',
+  keywords: [
+    'Future Buller',
+    'girls football',
+    'football clinics',
+    'soccer',
+    'development',
+    'Matildas',
+    'Chloe Logarzo',
+    'Emily Gielnik',
+  ],
   openGraph: {
     type: 'website',
-    locale: 'en_US',
-    siteName: 'IFPC',
-    title: 'IFPC',
+    locale: 'en_AU',
+    siteName: 'Future Buller',
+    title: 'Future Buller',
     description:
-      'IFPC — International Football Players & Clubs. Global football platform: player development, scouting and professional recruitment.',
+      'Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
     url: APP_URL,
   },
   twitter: {
     card: 'summary',
-    title: 'IFPC',
+    title: 'Future Buller',
     description:
-      'IFPC — International Football Players & Clubs. Player development, scouting and professional recruitment.',
+      'Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
   },
   robots: { index: true, follow: true },
 };

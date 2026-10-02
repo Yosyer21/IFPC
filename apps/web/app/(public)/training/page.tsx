@@ -6,7 +6,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Entrenamiento — IFPC',
+  title: 'Entrenamiento — Future Buller',
   description: 'Open football development exercises, routines and content.',
 };
 

@@ -7,8 +7,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Jugadores — IFPC',
-  description: 'Descubre jugadores disponibles con perfil deportivo verificado en IFPC.',
+  title: 'Jugadores — Future Buller',
+  description: 'Descubre jugadores disponibles con perfil deportivo verificado en Future Buller.',
 };
 
 export default async function PublicPlayersPage() {
