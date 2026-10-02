@@ -157,12 +157,15 @@ FeaturedProduct · Newsletter · Footer. (Contact lives on `/contact`.)
 Routes to add/change: `/activities`, `/events`, `/products`, `/about` (and keep
 `/contact`, `/info/*`). Nav links updated accordingly.
 
-## 8. Assets needed
-- Hero image (players / Matildas) — placeholder for now.
-- Founder portraits (Chloe Logarzo, Emily Gielnik).
-- Event image (Ballarat Grammar session).
-- Product image (Planner).
+## 8. Assets
+- Hero / pitch photos: `apps/web/public/images/football-01..08.jpg` (Wikimedia CC BY-SA).
+- Founder portrait: `apps/web/public/images/chloe-logarzo.jpg` — used in the Founders
+  section (main image + card avatar) and the Featured Event ("Train with a Matilda").
+- Product image: `apps/web/public/images/planner.jpg` (Future Baller Planner by Migoals)
+  — used in the Featured Product section.
+- Event image: `football-03.jpg` (Featured Event background).
 - SVG wordmark `FutureBaller` (replace `logo.tsx`).
+- Still needed: portrait of Emily Gielnik.
 
 ## 9. Implementation plan
 - **Phase 0 — Brand rename** Future Baller → Future Baller (metadata, landing, emails,

@@ -1,8 +1,13 @@
 import Image from 'next/image';
 import { IconStar } from './icons';
 
-const FOUNDERS = [
-  { name: 'Chloe Logarzo', role: 'Matildas midfielder · Ex-professional', initials: 'CL' },
+const FOUNDERS: { name: string; role: string; initials: string; img?: string }[] = [
+  {
+    name: 'Chloe Logarzo',
+    role: 'Matildas midfielder · Ex-professional',
+    initials: 'CL',
+    img: '/images/chloe-logarzo.jpg',
+  },
   { name: 'Emily Gielnik', role: 'Matildas forward · Ex-professional', initials: 'EG' },
 ];
 
@@ -16,11 +21,11 @@ export function Founders() {
           <div className="relative">
             <div className="relative h-[420px] overflow-hidden rounded-3xl border border-white/10">
               <Image
-                src="/images/football-07.jpg"
-                alt="Footballers on the pitch"
+                src="/images/chloe-logarzo.jpg"
+                alt="Chloe Logarzo, Matildas midfielder, in the Australia kit"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                className="object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e0c]/70 via-transparent to-transparent" />
             </div>
@@ -62,9 +67,21 @@ export function Founders() {
                   key={founder.name}
                   className="flex items-center gap-4 rounded-2xl border border-white/10 bg-[#101512] p-4"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/40 bg-gradient-to-br from-emerald-500/20 to-lime-500/10 text-sm font-semibold text-emerald-400">
-                    {founder.initials}
-                  </div>
+                  {founder.img ? (
+                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-emerald-500/40">
+                      <Image
+                        src={founder.img}
+                        alt={founder.name}
+                        fill
+                        sizes="48px"
+                        className="object-cover object-top"
+                      />
+                    </span>
+                  ) : (
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-emerald-500/40 bg-gradient-to-br from-emerald-500/20 to-lime-500/10 text-sm font-semibold text-emerald-400">
+                      {founder.initials}
+                    </div>
+                  )}
                   <div>
                     <p className="flex items-center gap-2 font-semibold text-white">
                       {founder.name}

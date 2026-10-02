@@ -51,7 +51,20 @@ export function FeaturedEvent() {
               </div>
             </div>
 
-            <div className="flex items-end lg:justify-end">
+            <div className="flex flex-col items-center gap-6 lg:items-end lg:justify-end">
+              <div className="relative h-80 w-64 shrink-0 overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+                <Image
+                  src="/images/chloe-logarzo.jpg"
+                  alt="Chloe Logarzo, Matildas midfielder"
+                  fill
+                  sizes="256px"
+                  className="object-cover object-top"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#070b09] via-[#070b09]/70 to-transparent p-4">
+                  <p className="text-sm font-bold text-white">Chloe Logarzo</p>
+                  <p className="text-xs font-semibold text-emerald-400">Matildas · Midfielder</p>
+                </div>
+              </div>
               <div className="glass grid w-full grid-cols-1 gap-4 rounded-2xl p-6 sm:grid-cols-3 lg:w-auto">
                 <div>
                   <IconMapPin className="h-5 w-5 text-emerald-400" />
