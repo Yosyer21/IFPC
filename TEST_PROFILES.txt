@@ -1,0 +1,103 @@
+FUTURE BALLER — PERFILES DE PRUEBA (TEST)
+========================================
+Generado: 2026-10-02T22:39:51.815Z
+Base de datos: PGlite embebida (USE_PGLITE) → /home/yosh/Documentos/IFPC/.pglite
+App local: http://localhost:3000
+
+CÓMO USAR
+---------
+1. Arranca la app:  pnpm dev         (http://localhost:3000)
+2. Abre el login:   http://localhost:3000/login
+3. Entra con el email y la contraseña de cualquiera de los perfiles de abajo.
+   La plataforma redirige sola a tu área (/dashboard/<rol>).
+4. Guard por rol: si abres el área de otro rol, te devuelve a la tuya.
+
+Regenerar estos perfiles:   pnpm scripts:create-test-users
+
+PERFILES
+--------
+────────────────────────────────────────────────────────────────────────
+[ADMIN]  Administrador
+  Nombre      : Administrator
+  Email       : admin@ifpc.com
+  Contraseña  : admin123
+  Área        : /dashboard/admin
+  Notas       : Control center: usuarios, roles, contenidos, analytics y ajustes.
+
+────────────────────────────────────────────────────────────────────────
+[PLAYER]  Jugador/a
+  Nombre      : Demo Player
+  Email       : player@demo.com
+  Contraseña  : player123
+  Área        : /dashboard/player
+  Notas       : Perfil de jugadora: posición, disponibilidad, desarrollo y oportunidades.
+
+────────────────────────────────────────────────────────────────────────
+[PARENT]  Familiar
+  Nombre      : Demo Parent
+  Email       : parent@demo.com
+  Contraseña  : parent123
+  Área        : /dashboard/parent
+  Notas       : Vinculado a la jugadora demo. Educación, pathways y pagos.
+
+────────────────────────────────────────────────────────────────────────
+[COACH]  Entrenador/a
+  Nombre      : Demo Coach
+  Email       : coach@demo.com
+  Contraseña  : coach123
+  Área        : /dashboard/coach
+  Notas       : Vinculado a la jugadora demo. Evaluaciones, objetivos y sesiones.
+
+────────────────────────────────────────────────────────────────────────
+[SCOUT]  Ojeador/a
+  Nombre      : Demo Scout
+  Email       : scout@demo.com
+  Contraseña  : scout123
+  Área        : /dashboard/scout
+  Notas       : Explora jugadoras, guarda favoritas y redacta informes de scouting.
+
+────────────────────────────────────────────────────────────────────────
+[AGENT]  Agente
+  Nombre      : Demo Agent
+  Email       : agent@demo.com
+  Contraseña  : agent123
+  Área        : /dashboard/agent
+  Notas       : Vinculado a la jugadora demo. Envíos, pruebas, negociaciones y contratos.
+
+────────────────────────────────────────────────────────────────────────
+[CLUB]  Club
+  Nombre      : Demo Club
+  Email       : club@demo.com
+  Contraseña  : club123
+  Área        : /dashboard/club
+  Notas       : Reclutamiento: oportunidades, requisitos, staff y solicitudes.
+
+────────────────────────────────────────────────────────────────────────
+[UNIVERSITY]  Universidad
+  Nombre      : Demo University
+  Email       : university@demo.com
+  Contraseña  : university123
+  Área        : /dashboard/university
+  Notas       : Reclutamiento académico-deportivo y becas.
+
+────────────────────────────────────────────────────────────────────────
+[SCHOOL]  Escuela / Servicio comunitario
+  Nombre      : Demo School
+  Email       : school@demo.com
+  Contraseña  : school123
+  Área        : /dashboard/school
+  Notas       : Programas y clínicas para colegios y servicios comunitarios.
+
+TABLA RÁPIDA
+------------
+ROL          EMAIL                      CONTRASEÑA        ÁREA
+ADMIN        admin@ifpc.com             admin123          /dashboard/admin
+PLAYER       player@demo.com            player123         /dashboard/player
+PARENT       parent@demo.com            parent123         /dashboard/parent
+COACH        coach@demo.com             coach123          /dashboard/coach
+SCOUT        scout@demo.com             scout123          /dashboard/scout
+AGENT        agent@demo.com             agent123          /dashboard/agent
+CLUB         club@demo.com              club123           /dashboard/club
+UNIVERSITY   university@demo.com        university123     /dashboard/university
+SCHOOL       school@demo.com            school123         /dashboard/school
+

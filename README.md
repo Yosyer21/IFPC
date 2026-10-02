@@ -37,9 +37,13 @@ pnpm dev                      # http://localhost:3000
 > delete `.pglite/` and run `pnpm db:setup-pglite` again.
 >
 > Demo users (seeded): `player@demo.com / player123`, `parent@demo.com / parent123`,
-> `club@demo.com / club123`, `agent@demo.com / agent123`, `scout@demo.com / scout123`,
-> `coach@demo.com / coach123`, `university@demo.com / university123`,
-> `admin@ifpc.com / admin123`.
+> `coach@demo.com / coach123`, `scout@demo.com / scout123`, `agent@demo.com / agent123`,
+> `club@demo.com / club123`, `university@demo.com / university123`,
+> `school@demo.com / school123`, `admin@ifpc.com / admin123`.
+>
+> **All profiles for manual testing:** run `pnpm scripts:create-test-users` to (re)create
+> one test account per role (with its linked record) and generate **`TEST_PROFILES.txt`**
+> at the repo root with every email/password and its dashboard area.
 
 ### Option B — with Docker (real Postgres + Redis + MinIO)
 
