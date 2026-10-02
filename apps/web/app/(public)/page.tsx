@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/landing/navbar';
 import { Hero } from '@/components/landing/hero';
+import { Marquee } from '@/components/landing/marquee';
 import { Mission } from '@/components/landing/mission';
 import { Offerings } from '@/components/landing/offerings';
 import { Gallery } from '@/components/landing/gallery';
-import { Positioning } from '@/components/landing/positioning';
 import { Founders } from '@/components/landing/founders';
 import { FeaturedEvent } from '@/components/landing/featured-event';
 import { FeaturedProduct } from '@/components/landing/featured-product';
@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0a0e0c] text-white selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#070b09] text-white selection:bg-emerald-500/30">
       <Navbar />
       <main>
         <Hero />
+        <Marquee />
         <Mission />
         <Offerings />
         <Gallery />
-        <Positioning />
         <Founders />
         <FeaturedEvent />
         <FeaturedProduct />

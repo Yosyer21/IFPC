@@ -214,3 +214,22 @@ export function IconHeart(props: IconProps) {
     </Base>
   );
 }
+
+export function IconBall(props: IconProps) {
+  return (
+    <Base {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m12 6.5 3.6 2.6-1.4 4.3H9.8L8.4 9.1 12 6.5Z" />
+      <path d="M12 3v3.5M4.7 8.7 8.4 9.1M19.3 8.7l-3.7.4M6.7 18.5l3.1-3.5M17.3 18.5l-3.1-3.5M12 21v-4.4" />
+    </Base>
+  );
+}
+
+export function IconTrophy(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" />
+      <path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3M9 21h6M12 14v7" />
+    </Base>
+  );
+}
