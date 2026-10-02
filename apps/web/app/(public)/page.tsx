@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Intro } from '@/components/landing/intro';
 import { Navbar } from '@/components/landing/navbar';
 import { Hero } from '@/components/landing/hero';
 import { Marquee } from '@/components/landing/marquee';
@@ -10,6 +11,7 @@ import { FeaturedEvent } from '@/components/landing/featured-event';
 import { FeaturedProduct } from '@/components/landing/featured-product';
 import { Newsletter } from '@/components/landing/newsletter';
 import { Footer } from '@/components/landing/footer';
+import { Reveal } from '@/components/landing/reveal';
 
 export const metadata: Metadata = {
   title: 'Future Baller — The World of Future Baller',
@@ -19,18 +21,33 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#070b09] text-white selection:bg-emerald-500/30">
+    <div className="min-h-screen overflow-x-hidden bg-[#070b09] text-white selection:bg-emerald-500/30">
+      <Intro />
       <Navbar />
       <main>
         <Hero />
         <Marquee />
-        <Mission />
-        <Offerings />
-        <Gallery />
-        <Founders />
-        <FeaturedEvent />
-        <FeaturedProduct />
-        <Newsletter />
+        <Reveal>
+          <Mission />
+        </Reveal>
+        <Reveal>
+          <Offerings />
+        </Reveal>
+        <Reveal>
+          <Gallery />
+        </Reveal>
+        <Reveal>
+          <Founders />
+        </Reveal>
+        <Reveal>
+          <FeaturedEvent />
+        </Reveal>
+        <Reveal>
+          <FeaturedProduct />
+        </Reveal>
+        <Reveal>
+          <Newsletter />
+        </Reveal>
       </main>
       <Footer />
     </div>

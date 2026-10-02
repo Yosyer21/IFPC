@@ -9,6 +9,8 @@ const WORDS = [
   'Train · Grow · Believe',
 ];
 
+const COLORS = ['text-emerald-400/70', 'text-cyan-400/70', 'text-violet-400/70', 'text-lime-400/70'];
+
 export function Marquee() {
   const items = [...WORDS, ...WORDS];
   return (
@@ -21,7 +23,7 @@ export function Marquee() {
               className="flex items-center gap-6 pr-6 text-sm font-bold uppercase tracking-[0.25em] text-white/40"
             >
               {word}
-              <IconBall className="h-4 w-4 shrink-0 text-emerald-400/70" />
+              <IconBall className={`h-4 w-4 shrink-0 ${COLORS[index % COLORS.length]}`} />
             </span>
           ))}
         </div>

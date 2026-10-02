@@ -5,18 +5,21 @@ import { IconArrowRight } from './icons';
 const OFFERINGS = [
   {
     n: '01',
+    accent: 'text-emerald-400/20',
     title: 'Inclusive Football Clinics',
     text: 'Immersive 5-hour sessions focused on technical skills, tactical awareness, speed & agility and the mindset to succeed at any level. Open to all abilities and delivered by elite coaches and guest players.',
     image: '/images/football-02.jpg',
   },
   {
     n: '02',
+    accent: 'text-cyan-400/20',
     title: 'Super Sessions & Squad Experiences',
     text: 'Exclusive training brought directly to your club or team — on-pitch focus with off-pitch leadership development, tailored to your squad and schedule.',
     image: '/images/football-04.jpg',
   },
   {
     n: '03',
+    accent: 'text-violet-400/20',
     title: 'Future Baller Planner',
     text: 'A professional goal-setting journal inspired by the performance processes of elite players, to stay organised, intentional and focused all season long.',
     image: '/images/football-08.jpg',
@@ -54,7 +57,7 @@ export function Offerings() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#070b09]/60 via-transparent to-transparent" />
               </div>
               <div className="relative">
-                <span className="block text-7xl font-black leading-none text-white/[0.08] sm:text-8xl">
+                <span className={`block text-7xl font-black leading-none sm:text-8xl ${offer.accent}`}>
                   {offer.n}
                 </span>
                 <h3 className="-mt-5 text-3xl font-black tracking-tight text-white sm:text-4xl">

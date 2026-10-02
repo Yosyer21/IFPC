@@ -2,7 +2,9 @@ export function Mission() {
   return (
     <section className="relative overflow-hidden py-28 sm:py-36">
       <div className="bg-grid-faint pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
-      <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[120px]" />
+      <div className="animate-drift absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-500/12 blur-[120px]" />
+      <div className="animate-drift-slow absolute -left-10 bottom-0 h-64 w-64 rounded-full bg-cyan-500/12 blur-[120px]" />
+      <div className="animate-drift absolute -right-10 top-10 h-64 w-64 rounded-full bg-violet-500/12 blur-[120px]" />
 
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
         <p className="mb-6 text-xs font-bold uppercase tracking-[0.3em] text-emerald-400/80">
