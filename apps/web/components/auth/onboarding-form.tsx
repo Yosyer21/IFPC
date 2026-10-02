@@ -7,7 +7,8 @@ import { Button, Input } from '@ifpc/ui';
 export interface OnboardingField {
   name: string;
   label: string;
-  type?: 'text' | 'number' | 'date' | 'textarea';
+  type?: 'text' | 'number' | 'date' | 'textarea' | 'select';
+  options?: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
 }
@@ -35,6 +36,25 @@ export function OnboardingForm({ role, fields }: { role: string; fields: Onboard
               rows={4}
               className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring"
             />
+          </div>
+        ) : field.type === 'select' ? (
+          <div key={field.name} className="flex flex-col gap-1.5">
+            <label htmlFor={field.name} className="text-sm font-medium">
+              {field.label}
+            </label>
+            <select
+              id={field.name}
+              name={field.name}
+              required={field.required}
+              defaultValue={field.options?.[0]?.value}
+              className="h-9 w-full rounded-md border border-border bg-background px-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring"
+            >
+              {(field.options ?? []).map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         ) : (
           <Input

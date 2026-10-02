@@ -7,6 +7,7 @@ export * from './agent';
 export * from './club';
 export * from './academy';
 export * from './university';
+export * from './school';
 export * from './training';
 export * from './opportunity';
 export * from './recruitment';

@@ -8,6 +8,7 @@ export const ROLE_LINKS = [
   { role: 'AGENT', label: 'Agentes', href: '/dashboard/admin/users/agents' },
   { role: 'CLUB', label: 'Clubes', href: '/dashboard/admin/users/clubs' },
   { role: 'UNIVERSITY', label: 'Universidades', href: '/dashboard/admin/users/universities' },
+  { role: 'SCHOOL', label: 'Escuelas / Comunidad', href: '/dashboard/admin/users/schools' },
 ] as const;
 
 export function RoleLinks() {

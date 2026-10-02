@@ -76,7 +76,7 @@ function SidebarContent({
                 aria-expanded={open}
                 className={`flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
                   active
-                    ? 'text-primary'
+                    ? 'text-emerald-300'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
@@ -94,10 +94,10 @@ function SidebarContent({
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`flex items-center gap-2.5 rounded-md px-3 py-1.5 text-sm transition-colors ${
+                        className={`flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
                           itemActive
-                            ? 'bg-primary/10 font-medium text-primary'
-                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                            ? 'chip-gradient font-medium'
+                            : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
                         }`}
                       >
                         {Icon ? (
@@ -124,7 +124,7 @@ function SidebarContent({
       <form action={signOutAction} className="mt-6">
         <button
           type="submit"
-          className="flex w-full items-center gap-2.5 rounded-md border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="flex w-full items-center gap-2.5 rounded-lg border border-white/10 px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
         >
           <IconLogout className="h-4 w-4" />
           Sign out
@@ -147,16 +147,16 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
   return (
     <>
       {/* Top bar on mobile */}
-      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-card px-4 py-3 md:hidden">
+      <header className="sticky top-0 z-40 flex items-center justify-between border-b border-white/10 bg-[#0b0f0d]/80 px-4 py-3 backdrop-blur-xl md:hidden">
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
-          className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:bg-muted"
+          className="rounded-lg border border-white/10 p-2 text-muted-foreground transition-colors hover:bg-white/5"
         >
           <IconMenu className="h-5 w-5" />
         </button>
-        <Link href="/" className="text-base font-bold">
+        <Link href="/" className="text-gradient-brand text-base font-black tracking-tight">
           Future Baller
         </Link>
         <span className="w-9" />
@@ -170,16 +170,16 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
-          <aside className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-border bg-card p-4">
+          <aside className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-white/10 bg-[#0b0f0d]/95 p-4 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
-              <Link href="/" className="text-lg font-bold">
+              <Link href="/" className="text-gradient-brand text-lg font-black tracking-tight">
                 Future Baller
               </Link>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
                 aria-label="Close menu"
-                className="rounded-md border border-border p-2 text-muted-foreground transition-colors hover:bg-muted"
+                className="rounded-lg border border-white/10 p-2 text-muted-foreground transition-colors hover:bg-white/5"
               >
                 <IconX className="h-5 w-5" />
               </button>
@@ -190,8 +190,8 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
       ) : null}
 
       {/* Sidebar de escritorio */}
-      <aside className="hidden w-64 shrink-0 overflow-y-auto border-r border-border bg-card p-4 md:flex md:flex-col">
-        <Link href="/" className="mb-6 block text-lg font-bold">
+      <aside className="hidden w-64 shrink-0 overflow-y-auto border-r border-white/10 bg-white/[0.02] p-4 backdrop-blur-xl md:flex md:flex-col">
+        <Link href="/" className="text-gradient-brand mb-6 block text-lg font-black tracking-tight">
           Future Baller
         </Link>
         <SidebarContent sections={sections} pathname={pathname} unreadCount={unreadCount} />

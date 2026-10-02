@@ -26,6 +26,7 @@ const ROLE_LABELS: Record<string, string> = {
   AGENT: 'Agentes',
   CLUB: 'Clubes',
   UNIVERSITY: 'Universidades',
+  SCHOOL: 'Escuelas / Comunidad',
   ADMIN: 'Admins',
 };
 

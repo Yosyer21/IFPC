@@ -23,3 +23,8 @@ export const CAMP_STATUS_LABELS: Record<string, string> = {
   CANCELLED: 'Cancelled',
   FINISHED: 'Finished',
 };
+
+export const SCHOOL_TYPE_LABELS: Record<string, string> = {
+  SCHOOL: 'Escuela / Colegio',
+  COMMUNITY_SERVICE: 'Servicio comunitario',
+};

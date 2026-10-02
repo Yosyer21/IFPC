@@ -1,4 +1,14 @@
-export const ROLES = ['PLAYER', 'PARENT', 'COACH', 'SCOUT', 'AGENT', 'CLUB', 'UNIVERSITY', 'ADMIN'] as const;
+export const ROLES = [
+  'PLAYER',
+  'PARENT',
+  'COACH',
+  'SCOUT',
+  'AGENT',
+  'CLUB',
+  'UNIVERSITY',
+  'SCHOOL',
+  'ADMIN',
+] as const;
 
 export type Role = (typeof ROLES)[number];
 

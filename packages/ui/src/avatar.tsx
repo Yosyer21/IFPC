@@ -19,7 +19,7 @@ export function Avatar({
   const fallback = initials ?? (alt ? alt.charAt(0).toUpperCase() : '?');
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-full bg-primary/10 font-semibold text-primary ${sizes[size]} ${src ? 'bg-cover bg-center' : ''} ${className}`}
+      className={`inline-flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-500/25 to-lime-500/15 font-semibold text-emerald-300 ring-1 ring-emerald-500/25 ${sizes[size]} ${src ? 'bg-cover bg-center' : ''} ${className}`}
       style={src ? { backgroundImage: `url(${src})` } : undefined}
       {...props}
     >

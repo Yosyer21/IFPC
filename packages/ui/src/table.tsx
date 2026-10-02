@@ -2,22 +2,22 @@ import type { HTMLAttributes, TdHTMLAttributes, ThHTMLAttributes } from 'react';
 
 export function Table({ className = '', ...props }: HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
+    <div className="glass-card overflow-x-auto rounded-2xl">
       <table className={`w-full text-sm ${className}`} {...props} />
     </div>
   );
 }
 
 export function TableHeader({ className = '', ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={`border-b border-border bg-muted/50 ${className}`} {...props} />;
+  return <thead className={`border-b border-border/60 bg-white/[0.03] ${className}`} {...props} />;
 }
 
 export function TableBody({ className = '', ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className={`divide-y divide-border ${className}`} {...props} />;
+  return <tbody className={`divide-y divide-border/60 ${className}`} {...props} />;
 }
 
 export function TableRow({ className = '', ...props }: HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={`transition-colors hover:bg-muted/40 ${className}`} {...props} />;
+  return <tr className={`transition-colors hover:bg-white/[0.04] ${className}`} {...props} />;
 }
 
 export function TableHead({ className = '', ...props }: ThHTMLAttributes<HTMLTableCellElement>) {

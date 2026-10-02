@@ -8,7 +8,7 @@ export function Progress({ value, className = '' }: ProgressProps) {
   return (
     <div className={`h-2 w-full overflow-hidden rounded-full bg-muted ${className}`}>
       <div
-        className="h-full rounded-full bg-primary transition-all"
+        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-lime-400 transition-all"
         style={{ width: `${clamped}%` }}
       />
     </div>

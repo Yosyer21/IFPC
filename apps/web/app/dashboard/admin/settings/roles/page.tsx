@@ -43,6 +43,12 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
     description: 'Academic-sports recruitment and scholarships.',
     prefix: '/dashboard/university',
   },
+  SCHOOL: {
+    label: 'Escuela / Servicio comunitario',
+    description:
+      'Colegios, clubes escolares y servicios comunitarios: programas, grupos y clínicas inclusivas.',
+    prefix: '/dashboard/school',
+  },
   ADMIN: {
     label: 'Administrador',
     description: 'Control center: moderation, content and global configuration.',

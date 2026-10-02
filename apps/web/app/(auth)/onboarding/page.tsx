@@ -4,8 +4,15 @@ const ROLES = [
   { href: '/onboarding/player', label: 'Jugador/a', description: 'Profile deportivo' },
   { href: '/onboarding/parent', label: 'Familiar', description: 'Cuenta de padre/madre/tutor' },
   { href: '/onboarding/coach', label: 'Entrenador/a', description: 'Datos de entrenador' },
+  { href: '/onboarding/scout', label: 'Ojeador/a', description: 'Agencia y cobertura' },
   { href: '/onboarding/agent', label: 'Agente', description: 'Agencia y licencia' },
   { href: '/onboarding/club', label: 'Club', description: 'Datos del club' },
+  { href: '/onboarding/university', label: 'Universidad', description: 'Institución académico-deportiva' },
+  {
+    href: '/onboarding/school',
+    label: 'Escuela / Servicio comunitario',
+    description: 'Colegios, clubes escolares y programas comunitarios',
+  },
 ];
 
 export default function OnboardingPage() {

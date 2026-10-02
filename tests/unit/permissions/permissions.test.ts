@@ -16,6 +16,7 @@ describe('canAccessDashboard', () => {
     expect(canAccessDashboard('AGENT', '/dashboard/agent/submissions')).toBe(true);
     expect(canAccessDashboard('CLUB', '/dashboard/club/players')).toBe(true);
     expect(canAccessDashboard('UNIVERSITY', '/dashboard/university/players')).toBe(true);
+    expect(canAccessDashboard('SCHOOL', '/dashboard/school/participants')).toBe(true);
     expect(canAccessDashboard('ADMIN', '/dashboard/admin/users')).toBe(true);
   });
 

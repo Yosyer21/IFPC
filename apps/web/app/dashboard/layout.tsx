@@ -21,9 +21,17 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   }
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="relative flex min-h-screen flex-col md:flex-row">
+      <div
+        className="app-ambient pointer-events-none fixed inset-0 -z-10 bg-[#070b09]"
+        aria-hidden="true"
+      />
+      <div
+        className="bg-grid-faint pointer-events-none fixed inset-0 -z-10 opacity-30"
+        aria-hidden="true"
+      />
       <DashboardSidebar role={role} unreadCount={unreadCount} />
-      <main className="flex-1 p-6">{children}</main>
+      <main className="relative flex-1 p-6">{children}</main>
     </div>
   );
 }

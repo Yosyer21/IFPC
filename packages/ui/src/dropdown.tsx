@@ -29,7 +29,7 @@ export function Dropdown({ trigger, children, align = 'right' }: DropdownProps) 
       </button>
       {open ? (
         <div
-          className={`absolute z-40 mt-2 min-w-40 rounded-lg border border-border bg-card p-1 shadow-lg ${align === 'right' ? 'right-0' : 'left-0'}`}
+          className={`glass-card absolute z-40 mt-2 min-w-40 rounded-xl p-1 shadow-2xl ${align === 'right' ? 'right-0' : 'left-0'}`}
         >
           {children}
         </div>

@@ -1,12 +1,13 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '@ifpc/database';
 
-const USERS: { email: string; name: string; role: 'PLAYER' | 'PARENT' | 'CLUB' | 'AGENT' | 'SCOUT'; password: string }[] = [
+const USERS: { email: string; name: string; role: 'PLAYER' | 'PARENT' | 'CLUB' | 'AGENT' | 'SCOUT' | 'SCHOOL'; password: string }[] = [
   { email: 'player@demo.com', name: 'Jugador Demo', role: 'PLAYER', password: 'player123' },
   { email: 'parent@demo.com', name: 'Familiar Demo', role: 'PARENT', password: 'parent123' },
   { email: 'club@demo.com', name: 'Club Demo', role: 'CLUB', password: 'club123' },
   { email: 'agent@demo.com', name: 'Agente Demo', role: 'AGENT', password: 'agent123' },
   { email: 'scout@demo.com', name: 'Ojeador Demo', role: 'SCOUT', password: 'scout123' },
+  { email: 'school@demo.com', name: 'Escuela Demo', role: 'SCHOOL', password: 'school123' },
 ];
 
 async function main() {
@@ -22,6 +23,19 @@ async function main() {
         where: { userId: user.id },
         update: {},
         create: { userId: user.id, firstName: 'Jugador', lastName: 'Demo' },
+      });
+    }
+    if (entry.role === 'SCHOOL') {
+      await prisma.school.upsert({
+        where: { userId: user.id },
+        update: {},
+        create: {
+          userId: user.id,
+          name: 'Escuela Demo',
+          type: 'SCHOOL',
+          country: 'Spain',
+          city: 'Valencia',
+        },
       });
     }
   }

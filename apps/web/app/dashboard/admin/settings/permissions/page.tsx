@@ -15,6 +15,12 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
   AGENT: ['Vincular jugadores', 'Enviar jugadores a clubes', 'Gestionar pruebas, negociaciones y contratos'],
   CLUB: ['Publicar oportunidades', 'Crear requisitos', 'Revisar solicitudes', 'Responder consultas', 'Gestionar staff'],
   UNIVERSITY: ['View players', 'Ver oportunidades y becas'],
+  SCHOOL: [
+    'Ver participantes disponibles',
+    'Explorar clínicas y programas',
+    'Inscribir grupos en camps',
+    'Ver oportunidades para sus alumnas',
+  ],
   ADMIN: ['Acceso total', 'Verificar jugadores y clubes', 'Gestionar usuarios y roles', 'Publicar contenido', 'Ver analytics', 'System settings'],
 };
 

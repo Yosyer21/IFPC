@@ -16,7 +16,7 @@ export function Input({ label, error, className = '', id, ...props }: InputProps
       ) : null}
       <input
         id={inputId}
-        className={`h-9 w-full rounded-md border border-border bg-background px-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring ${error ? 'border-destructive' : ''} ${className}`}
+        className={`h-10 w-full rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40 ${error ? 'border-destructive' : ''} ${className}`}
         {...props}
       />
       {error ? <p className="text-xs text-destructive">{error}</p> : null}

@@ -9,6 +9,7 @@
 | **Agent** | Representante legal de jugadores | `/dashboard/agent` |
 | **Club** | Entidad que publica oportunidades y recluta | `/dashboard/club` |
 | **University** | Institución académico-deportiva | `/dashboard/university` |
+| **School** | Escuela, colegio o servicio comunitario que ofrece programas y clínicas | `/dashboard/school` |
 | **Admin** | Gestión global de la plataforma | `/dashboard/admin` |
 
 ## Permisos

@@ -9,6 +9,7 @@ export const ROLE_DASHBOARD_PREFIXES: Record<Role, string> = {
   AGENT: '/dashboard/agent',
   CLUB: '/dashboard/club',
   UNIVERSITY: '/dashboard/university',
+  SCHOOL: '/dashboard/school',
   ADMIN: '/dashboard/admin',
 };
 

@@ -9,8 +9,11 @@ const ROLES: { value: Role; label: string; description: string }[] = [
   { value: 'PLAYER', label: 'Player', description: 'I am a footballer' },
   { value: 'PARENT', label: 'Parent', description: 'Father, mother or guardian' },
   { value: 'COACH', label: 'Coach', description: 'I coach players' },
+  { value: 'SCOUT', label: 'Scout', description: 'I discover talent' },
   { value: 'AGENT', label: 'Agent', description: 'I represent players' },
   { value: 'CLUB', label: 'Club', description: 'I represent a club' },
+  { value: 'UNIVERSITY', label: 'University', description: 'I represent a university' },
+  { value: 'SCHOOL', label: 'School / Community', description: 'School or community service' },
 ];
 
 export function RegisterForm({ initialRole }: { initialRole?: string }) {
@@ -18,7 +21,7 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
   const [role, setRole] = useState<Role>(
     ROLES.some((item) => item.value === initialRole) ? (initialRole as Role) : 'PLAYER'
   );
-  const isClub = role === 'CLUB';
+  const needsCountry = role === 'CLUB' || role === 'UNIVERSITY' || role === 'SCHOOL';
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
@@ -59,7 +62,7 @@ export function RegisterForm({ initialRole }: { initialRole?: string }) {
         autoComplete="new-password"
       />
 
-      {isClub ? (
+      {needsCountry ? (
         <div className="grid grid-cols-2 gap-3">
           <Input name="country" label="Country" placeholder="Spain" required />
           <Input name="city" label="City" placeholder="Madrid" />

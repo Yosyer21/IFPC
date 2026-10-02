@@ -10,6 +10,9 @@ import {
   coachOnboardingSchema,
   agentOnboardingSchema,
   clubOnboardingSchema,
+  scoutOnboardingSchema,
+  universityOnboardingSchema,
+  schoolOnboardingSchema,
 } from '@ifpc/validation';
 import type { Role } from '@ifpc/types';
 import { createHash, randomBytes } from 'node:crypto';
@@ -100,6 +103,19 @@ export async function registerAction(
         case 'CLUB':
           await tx.club.create({
             data: { userId: user.id, email, name: parsed.data.name, country },
+          });
+          break;
+        case 'SCOUT':
+          await tx.scout.create({ data: { userId: user.id } });
+          break;
+        case 'UNIVERSITY':
+          await tx.university.create({
+            data: { userId: user.id, name: parsed.data.name, country },
+          });
+          break;
+        case 'SCHOOL':
+          await tx.school.create({
+            data: { userId: user.id, name: parsed.data.name, country },
           });
           break;
         default:
@@ -225,6 +241,41 @@ export async function completeOnboardingAction(
       case 'parent':
         // Sin campos obligatorios en esta fase.
         break;
+      case 'scout': {
+        const parsed = scoutOnboardingSchema.safeParse({ agency: str('agency') });
+        if (!parsed.success) return { error: 'Invalid data.' };
+        await prisma.scout.update({ where: { userId }, data: parsed.data });
+        break;
+      }
+      case 'university': {
+        const parsed = universityOnboardingSchema.safeParse({
+          name: str('name') ?? undefined,
+          country: str('country') ?? undefined,
+          city: str('city'),
+          description: str('description'),
+        });
+        if (!parsed.success) return { error: 'Revisa los datos de la universidad.' };
+        await prisma.university.update({ where: { userId }, data: parsed.data });
+        break;
+      }
+      case 'school': {
+        const parsed = schoolOnboardingSchema.safeParse({
+          name: str('name') ?? undefined,
+          type: str('type'),
+          country: str('country') ?? undefined,
+          city: str('city'),
+          contactName: str('contactName'),
+          website: str('website'),
+          description: str('description'),
+        });
+        if (!parsed.success) return { error: 'Revisa los datos de la escuela.' };
+        const { type, ...schoolData } = parsed.data;
+        await prisma.school.update({
+          where: { userId },
+          data: { ...schoolData, ...(type ? { type } : {}) },
+        });
+        break;
+      }
       default:
         return { error: 'Invalid onboarding role.' };
     }

@@ -22,7 +22,7 @@ export function StatCard({
     <Link href={href} className="animate-fade-up group block" style={{ animationDelay: `${delay}ms` }}>
       <Card className="card-hover h-full">
         <CardContent className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+          <span className="chip-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105">
             <Icon className="h-5 w-5" />
           </span>
           <div className="min-w-0">

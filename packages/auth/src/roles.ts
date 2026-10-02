@@ -10,6 +10,7 @@ export const ROLES: readonly Role[] = [
   'AGENT',
   'CLUB',
   'UNIVERSITY',
+  'SCHOOL',
   'ADMIN',
 ];
 

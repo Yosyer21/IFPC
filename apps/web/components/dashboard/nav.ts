@@ -157,6 +157,22 @@ export const NAV: Record<string, NavSection[]> = {
       ],
     },
   ],
+  school: [
+    {
+      label: 'General',
+      items: [
+        { href: '/dashboard/school', label: 'Overview', icon: 'home' },
+        { href: '/dashboard/school/profile', label: 'Organization profile', icon: 'user' },
+      ],
+    },
+    {
+      label: 'Programme',
+      items: [
+        { href: '/dashboard/school/participants', label: 'Participants', icon: 'users' },
+        { href: '/dashboard/school/opportunities', label: 'Opportunities', icon: 'target' },
+      ],
+    },
+  ],
   admin: [
     {
       label: 'General',

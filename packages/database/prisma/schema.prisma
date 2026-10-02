@@ -15,7 +15,13 @@ enum Role {
   AGENT
   CLUB
   UNIVERSITY
+  SCHOOL
   ADMIN
+}
+
+enum SchoolType {
+  SCHOOL
+  COMMUNITY_SERVICE
 }
 
 enum PlayerStatus {
@@ -100,6 +106,7 @@ model User {
   agent         Agent?
   club          Club?
   university    University?
+  school        School?
   memberships   Membership[]
   payments      Payment[]
   notifications Notification[]
@@ -278,6 +285,24 @@ model University {
   updatedAt DateTime @updatedAt
 
   opportunities Opportunity[]
+}
+
+model School {
+  id          String     @id @default(cuid())
+  userId      String     @unique
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  type        SchoolType @default(SCHOOL)
+  country     String
+  city        String?
+  contactName String?
+  website     String?
+  description String?
+  verified    Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([country])
 }
 
 model Opportunity {

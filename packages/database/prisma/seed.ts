@@ -98,6 +98,30 @@ export async function main() {
     },
   });
 
+  const schoolHash = await bcrypt.hash('school123', 10);
+  const schoolUser = await prisma.user.upsert({
+    where: { email: 'school@demo.com' },
+    update: {},
+    create: {
+      email: 'school@demo.com',
+      name: 'Demo School',
+      role: 'SCHOOL',
+      passwordHash: schoolHash,
+    },
+  });
+  await prisma.school.upsert({
+    where: { userId: schoolUser.id },
+    update: {},
+    create: {
+      userId: schoolUser.id,
+      name: 'Ballarat Grammar',
+      type: 'SCHOOL',
+      country: 'Australia',
+      city: 'Ballarat',
+      contactName: 'Sports Department',
+    },
+  });
+
   const clubHash = await bcrypt.hash('club123', 10);
   const clubUser = await prisma.user.upsert({
     where: { email: 'club@demo.com' },

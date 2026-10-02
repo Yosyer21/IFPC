@@ -13,7 +13,7 @@ export function Select({ label, options, placeholder, className = '', ...props }
     <div className="flex flex-col gap-1.5">
       {label ? <label className="text-sm font-medium">{label}</label> : null}
       <select
-        className={`h-9 w-full rounded-md border border-border bg-background px-3 text-sm ${className}`}
+        className={`h-10 w-full rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40 ${className}`}
         {...props}
       >
         {placeholder ? <option value="">{placeholder}</option> : null}
