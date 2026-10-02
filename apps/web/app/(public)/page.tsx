@@ -3,6 +3,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Hero } from '@/components/landing/hero';
 import { Mission } from '@/components/landing/mission';
 import { Offerings } from '@/components/landing/offerings';
+import { Gallery } from '@/components/landing/gallery';
 import { Positioning } from '@/components/landing/positioning';
 import { Founders } from '@/components/landing/founders';
 import { FeaturedEvent } from '@/components/landing/featured-event';
@@ -24,6 +25,7 @@ export default function HomePage() {
         <Hero />
         <Mission />
         <Offerings />
+        <Gallery />
         <Positioning />
         <Founders />
         <FeaturedEvent />

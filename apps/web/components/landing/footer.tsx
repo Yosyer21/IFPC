@@ -83,7 +83,9 @@ export function Footer() {
           <p className="text-sm text-white/35">
             © {new Date().getFullYear()} Future Buller. All rights reserved.
           </p>
-          <p className="text-sm text-white/35">Empowering the next generation</p>
+          <p className="text-xs text-white/25">
+            Photography: Wikimedia Commons contributors (CC BY-SA)
+          </p>
         </div>
       </div>
     </footer>

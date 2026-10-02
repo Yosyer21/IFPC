@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { IconArrowRight, IconCalendar, IconMapPin, IconTicket } from './icons';
 
 export function FeaturedEvent() {
@@ -56,9 +57,17 @@ export function FeaturedEvent() {
               </div>
             </div>
 
-            <div className="relative min-h-[260px] border-t border-white/10 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.12),transparent_60%)] lg:border-l lg:border-t-0">
-              <div className="absolute inset-0 flex items-center justify-center text-8xl font-black tracking-tight text-white/5">
-                CL
+            <div className="relative min-h-[280px] overflow-hidden border-t border-white/10 lg:border-l lg:border-t-0">
+              <Image
+                src="/images/football-03.jpg"
+                alt="Elite football training session"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e0c] via-[#0a0e0c]/25 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-[#0a0e0c]/50" />
+              <div className="absolute bottom-6 left-6 rounded-full border border-white/20 bg-black/40 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
+                Ballarat Grammar · 3 days
               </div>
             </div>
           </div>

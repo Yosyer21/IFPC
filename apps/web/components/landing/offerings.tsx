@@ -1,23 +1,25 @@
-import { IconBook, IconUsers, IconWhistle } from './icons';
+import Image from 'next/image';
+import Link from 'next/link';
+import { IconArrowRight } from './icons';
 
 const OFFERINGS = [
   {
     title: 'Inclusive Football Clinics',
     description:
       'Immersive 5-hour sessions focused on technical skills, tactical awareness, speed & agility and the mindset to succeed at any level. Open to all abilities, delivered by elite coaches, guest players and performance-focused content.',
-    icon: IconWhistle,
+    image: '/images/football-02.jpg',
   },
   {
     title: 'Super Sessions & Squad Experiences',
     description:
       'Exclusive training brought directly to your club or team — on-pitch focus with off-pitch leadership development.',
-    icon: IconUsers,
+    image: '/images/football-04.jpg',
   },
   {
     title: 'Future Buller Planner',
     description:
       'A professional goal-setting journal inspired by the performance processes of elite players, to stay organised, intentional and focused all season long.',
-    icon: IconBook,
+    image: '/images/football-08.jpg',
   },
 ];
 
@@ -37,15 +39,33 @@ export function Offerings() {
           </p>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 lg:grid-cols-3">
+        <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {OFFERINGS.map((item) => (
-            <div key={item.title} className="bg-[#0a0e0c] p-8 transition-colors hover:bg-[#101512]">
-              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/30 text-emerald-400">
-                <item.icon className="h-5 w-5" />
+            <article
+              key={item.title}
+              className="card-hover group overflow-hidden rounded-2xl border border-white/10 bg-[#101512]"
+            >
+              <div className="relative h-52 w-full overflow-hidden">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#101512] via-[#101512]/20 to-transparent" />
               </div>
-              <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/50">{item.description}</p>
-            </div>
+              <div className="p-7">
+                <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/55">{item.description}</p>
+                <Link
+                  href="/activities"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300"
+                >
+                  Learn more <IconArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </article>
           ))}
         </div>
       </div>
