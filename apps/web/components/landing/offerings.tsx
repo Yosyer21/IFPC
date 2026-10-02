@@ -17,7 +17,7 @@ const OFFERINGS = [
   },
   {
     n: '03',
-    title: 'Future Buller Planner',
+    title: 'Future Baller Planner',
     text: 'A professional goal-setting journal inspired by the performance processes of elite players, to stay organised, intentional and focused all season long.',
     image: '/images/football-08.jpg',
   },

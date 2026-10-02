@@ -7,14 +7,14 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
-    default: 'Future Buller',
-    template: '%s | Future Buller',
+    default: 'Future Baller',
+    template: '%s | Future Baller',
   },
   description:
-    'Future Buller — holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik. Clinics, squad super sessions and mindset tools.',
-  applicationName: 'Future Buller',
+    'Future Baller — holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik. Clinics, squad super sessions and mindset tools.',
+  applicationName: 'Future Baller',
   keywords: [
-    'Future Buller',
+    'Future Baller',
     'girls football',
     'football clinics',
     'soccer',
@@ -26,15 +26,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_AU',
-    siteName: 'Future Buller',
-    title: 'Future Buller',
+    siteName: 'Future Baller',
+    title: 'Future Baller',
     description:
       'Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
     url: APP_URL,
   },
   twitter: {
     card: 'summary',
-    title: 'Future Buller',
+    title: 'Future Baller',
     description:
       'Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
   },

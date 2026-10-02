@@ -1,4 +1,4 @@
-# Future Buller Platform
+# Future Baller Platform
 
 Global football platform for player development and professional recruitment:
 player profiles, videos, training, scouting, trials, negotiations, contracts,
@@ -32,7 +32,7 @@ pnpm db:setup-pglite          # Prisma client + schema + demo data (one command)
 pnpm dev                      # http://localhost:3000
 ```
 
-> `PGLITE_DIR` must be an **absolute** path (e.g. `/home/you/Future Buller/.pglite`) and the
+> `PGLITE_DIR` must be an **absolute** path (e.g. `/home/you/Future Baller/.pglite`) and the
 > same value in the root `.env` and in `apps/web/.env.local`. To reset the DB,
 > delete `.pglite/` and run `pnpm db:setup-pglite` again.
 >

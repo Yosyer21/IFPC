@@ -3,8 +3,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Privacy — Future Buller',
-  description: 'How Future Buller handles your personal information.',
+  title: 'Privacy — Future Baller',
+  description: 'How Future Baller handles your personal information.',
 };
 
 export default function PrivacyPage() {
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
           <p>
             For participants under 18, a parent or guardian is responsible for consent and for
             managing the account. To access, correct or delete your data, contact us at
-            hello@futurebuller.com.
+            hello@futureballer.com.
           </p>
         </div>
       </main>

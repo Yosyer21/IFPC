@@ -3,8 +3,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Disclaimer — Future Buller',
-  description: 'Disclaimer for the Future Buller website and programs.',
+  title: 'Disclaimer — Future Baller',
+  description: 'Disclaimer for the Future Baller website and programs.',
 };
 
 export default function DisclaimerPage() {
@@ -16,12 +16,12 @@ export default function DisclaimerPage() {
         <h1 className="mt-2 text-3xl font-bold tracking-tight">Disclaimer</h1>
         <div className="mt-6 flex flex-col gap-4 text-sm leading-relaxed text-white/60">
           <p>
-            The information on this website is provided for general information about Future Buller
+            The information on this website is provided for general information about Future Baller
             programs, activities and products. It is not professional advice and should not be relied
             upon as such.
           </p>
           <p>
-            Participation in football activities involves inherent risks. Future Buller works with
+            Participation in football activities involves inherent risks. Future Baller works with
             qualified coaches to provide a safe environment, but each participant and their
             guardian are responsible for ensuring they are physically able to take part.
           </p>

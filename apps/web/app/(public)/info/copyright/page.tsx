@@ -3,8 +3,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Copyright — Future Buller',
-  description: 'Copyright notice for the Future Buller website and content.',
+  title: 'Copyright — Future Baller',
+  description: 'Copyright notice for the Future Baller website and content.',
 };
 
 export default function CopyrightPage() {
@@ -16,7 +16,7 @@ export default function CopyrightPage() {
         <h1 className="mt-2 text-3xl font-bold tracking-tight">Copyright</h1>
         <div className="mt-6 flex flex-col gap-4 text-sm leading-relaxed text-white/60">
           <p>
-            © {new Date().getFullYear()} Future Buller. All rights reserved. The Future Buller name,
+            © {new Date().getFullYear()} Future Baller. All rights reserved. The Future Baller name,
             logo, program names and original content are protected.
           </p>
           <p>

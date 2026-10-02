@@ -7,8 +7,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Jugadores — Future Buller',
-  description: 'Descubre jugadores disponibles con perfil deportivo verificado en Future Buller.',
+  title: 'Jugadores — Future Baller',
+  description: 'Descubre jugadores disponibles con perfil deportivo verificado en Future Baller.',
 };
 
 export default async function PublicPlayersPage() {

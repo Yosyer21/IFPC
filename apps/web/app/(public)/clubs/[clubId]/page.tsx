@@ -7,7 +7,7 @@ import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Club — Future Buller' };
+export const metadata: Metadata = { title: 'Club — Future Baller' };
 
 export default async function PublicClubDetailPage({
   params,

@@ -5,7 +5,7 @@ import { Footer } from '@/components/landing/footer';
 import { IconArrowRight, IconCheck, IconUsers, IconWhistle } from '@/components/landing/icons';
 
 export const metadata: Metadata = {
-  title: 'Activities — Future Buller',
+  title: 'Activities — Future Baller',
   description:
     'Inclusive football clinics, squad super sessions and mindset tools for girls aged 10–18.',
 };
@@ -26,7 +26,7 @@ const ACTIVITIES = [
   },
   {
     tag: 'Squad',
-    title: 'Future Buller Squad Super Session',
+    title: 'Future Baller Squad Super Session',
     price: 'Price on application',
     icon: IconUsers,
     description:
@@ -48,7 +48,7 @@ export default function ActivitiesPage() {
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">
             Activities
           </p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">Train with Future Buller</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">Train with Future Baller</h1>
           <p className="mt-4 max-w-2xl text-white/55">
             Experiences designed to elevate your journey — holistic sessions that develop the whole
             player, on and off the pitch.

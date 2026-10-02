@@ -3,25 +3,25 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Contact — Future Buller',
-  description: 'Get in touch with the Future Buller team.',
+  title: 'Contact — Future Baller',
+  description: 'Get in touch with the Future Baller team.',
 };
 
 const CHANNELS = [
   {
     label: 'General enquiries',
-    value: 'hello@futurebuller.com',
-    href: 'mailto:hello@futurebuller.com',
+    value: 'hello@futureballer.com',
+    href: 'mailto:hello@futureballer.com',
   },
   {
     label: 'Clinics & squad sessions',
-    value: 'clinics@futurebuller.com',
-    href: 'mailto:clinics@futurebuller.com',
+    value: 'clinics@futureballer.com',
+    href: 'mailto:clinics@futureballer.com',
   },
   {
     label: 'Events & tickets',
-    value: 'events@futurebuller.com',
-    href: 'mailto:events@futurebuller.com',
+    value: 'events@futureballer.com',
+    href: 'mailto:events@futureballer.com',
   },
 ];
 

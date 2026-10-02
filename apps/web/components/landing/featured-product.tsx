@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { IconBook, IconCheck } from './icons';
 
@@ -14,21 +13,15 @@ export function FeaturedProduct() {
     <section className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="relative h-80 overflow-hidden rounded-[2rem] border border-white/10 sm:h-[30rem]">
-            <Image
-              src="/images/football-08.jpg"
-              alt="Future Buller Planner mindset journal"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#070b09]/85 via-[#070b09]/20 to-transparent" />
-            <div className="glass absolute bottom-5 left-5 flex items-center gap-3 rounded-2xl px-4 py-3">
-              <IconBook className="h-6 w-6 text-emerald-400" />
-              <div>
-                <p className="text-sm font-bold text-white">Future Buller Planner</p>
-                <p className="text-xs text-white/55">By Migoals</p>
-              </div>
+          <div className="relative flex h-80 items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-emerald-500/20 via-[#0c110e] to-lime-500/10 sm:h-[30rem]">
+            <div className="absolute -top-16 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-emerald-500/25 blur-[100px]" />
+            <div className="bg-grid-faint pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
+            <div className="relative flex flex-col items-center text-center">
+              <span className="flex h-24 w-24 items-center justify-center rounded-3xl border border-emerald-500/30 bg-[#070b09]/60">
+                <IconBook className="h-12 w-12 text-emerald-400" />
+              </span>
+              <p className="mt-5 text-lg font-black text-white">Future Baller Planner</p>
+              <p className="text-sm text-white/55">By Migoals</p>
             </div>
           </div>
 

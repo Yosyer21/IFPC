@@ -5,9 +5,9 @@ import { Footer } from '@/components/landing/footer';
 import { IconBook, IconCheck } from '@/components/landing/icons';
 
 export const metadata: Metadata = {
-  title: 'Products — Future Buller',
+  title: 'Products — Future Baller',
   description:
-    'The Future Buller Planner — a goal-setting journal to train your mind like a Matilda.',
+    'The Future Baller Planner — a goal-setting journal to train your mind like a Matilda.',
 };
 
 const LEARN = [
@@ -38,7 +38,7 @@ export default function ProductsPage() {
             <IconBook className="h-16 w-16 text-emerald-400/80" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-white">Future Buller Planner</h2>
+            <h2 className="text-2xl font-bold text-white">Future Baller Planner</h2>
             <p className="mt-1 text-sm font-medium text-white/60">
               By Migoals · Train your mind like a Matilda
             </p>

@@ -38,7 +38,7 @@ export function Founders() {
               World-class experience, led by international players
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-white/60">
-              Future Buller is led by accomplished international players{' '}
+              Future Baller is led by accomplished international players{' '}
               <strong className="text-white/85">Chloe Logarzo</strong> and{' '}
               <strong className="text-white/85">Emily Gielnik</strong>, who share their knowledge and
               expertise to equip young girls with holistic football skills and cultivate mental

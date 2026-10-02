@@ -23,7 +23,7 @@ export function Logo({ className = '' }: { className?: string }) {
         </svg>
       </span>
       <span className="text-lg font-bold leading-none tracking-tight text-white">
-        Future<span className="text-emerald-400">Buller</span>
+        Future<span className="text-emerald-400">Baller</span>
       </span>
     </Link>
   );

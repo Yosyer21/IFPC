@@ -16,7 +16,7 @@ export function Mission() {
           training, mindset, leadership and personal growth.
         </p>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/45">
-          More than a clinic, Future Buller is a pathway — building confidence, resilience and
+          More than a clinic, Future Baller is a pathway — building confidence, resilience and
           self-belief through events, tools and a community that loves the game.
         </p>
       </div>

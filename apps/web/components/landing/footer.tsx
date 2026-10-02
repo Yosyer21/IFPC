@@ -42,7 +42,7 @@ export function Footer() {
             </p>
             <div className="mt-6 flex items-center gap-3 text-white/40">
               <a
-                href="mailto:hello@futurebuller.com"
+                href="mailto:hello@futureballer.com"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 transition-colors hover:border-emerald-500/40 hover:text-emerald-400"
                 aria-label="Email"
               >
@@ -81,7 +81,7 @@ export function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/[0.06] pt-7 sm:flex-row">
           <p className="text-sm text-white/35">
-            © {new Date().getFullYear()} Future Buller. All rights reserved.
+            © {new Date().getFullYear()} Future Baller. All rights reserved.
           </p>
           <p className="text-xs text-white/25">
             Photography: Wikimedia Commons contributors (CC BY-SA)

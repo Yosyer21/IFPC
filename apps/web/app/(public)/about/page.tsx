@@ -4,9 +4,9 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'About — Future Buller',
+  title: 'About — Future Baller',
   description:
-    'Future Buller is a holistic football development pathway for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
+    'Future Baller is a holistic football development pathway for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
 };
 
 const VALUES = [
@@ -34,9 +34,9 @@ export default function AboutPage() {
       <main className="mx-auto w-full max-w-5xl px-4 py-16">
         <div className="mb-12">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">About</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">The World of Future Buller</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">The World of Future Baller</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Future Buller is dedicated to empowering girls aged 10–18 through holistic football
+            Future Baller is dedicated to empowering girls aged 10–18 through holistic football
             development — combining technical training, mindset, leadership and personal growth so
             every player can perform their best both on and off the pitch.
           </p>

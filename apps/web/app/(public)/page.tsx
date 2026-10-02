@@ -12,7 +12,7 @@ import { Newsletter } from '@/components/landing/newsletter';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Future Buller — The World of Future Buller',
+  title: 'Future Baller — The World of Future Baller',
   description:
     'Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik. Clinics, squad super sessions and mindset tools.',
 };

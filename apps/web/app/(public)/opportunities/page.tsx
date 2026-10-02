@@ -7,7 +7,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Oportunidades — Future Buller',
+  title: 'Oportunidades — Future Baller',
   description: 'Pruebas, becas y convocatorias abiertas de clubes y universidades.',
 };
 

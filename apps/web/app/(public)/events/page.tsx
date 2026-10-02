@@ -5,7 +5,7 @@ import { Footer } from '@/components/landing/footer';
 import { IconArrowRight, IconCalendar, IconMapPin, IconTicket } from '@/components/landing/icons';
 
 export const metadata: Metadata = {
-  title: 'Events — Future Buller',
+  title: 'Events — Future Baller',
   description: 'Train with a Matilda — elite football masterclasses with international players.',
 };
 

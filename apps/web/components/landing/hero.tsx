@@ -36,7 +36,7 @@ export function Hero() {
           <h1 className="mt-7 text-5xl font-black leading-[0.94] tracking-tight text-white sm:text-7xl lg:text-8xl">
             The World of
             <br />
-            <span className="text-gradient">Future Buller</span>
+            <span className="text-gradient">Future Baller</span>
           </h1>
 
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/75 sm:text-xl">

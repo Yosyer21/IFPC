@@ -1,6 +1,6 @@
 # Modelo de negocio
 
-**Future Buller** operates as a two-sided platform:
+**Future Baller** operates as a two-sided platform:
 
 - **Lado jugador/familia**: servicio premium para destacar el perfil, más visibilidad y herramientas
   de desarrollo (vídeos ilimitados, estadísticas).
