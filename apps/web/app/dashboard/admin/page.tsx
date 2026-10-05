@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
+import { ROLE_LABELS } from '@ifpc/config';
 import { StatCard } from '@/components/player/stat-card';
 import { PlayerAvatar } from '@/components/player/avatar';
 import {
@@ -17,18 +18,6 @@ import {
 } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'Control center' };
-
-const ROLE_LABELS: Record<string, string> = {
-  PLAYER: 'Jugadores',
-  PARENT: 'Familiares',
-  COACH: 'Entrenadores',
-  SCOUT: 'Ojeadores',
-  AGENT: 'Agentes',
-  CLUB: 'Clubes',
-  UNIVERSITY: 'Universidades',
-  SCHOOL: 'Escuelas / Comunidad',
-  ADMIN: 'Admins',
-};
 
 export default async function AdminDashboardPage() {
   const session = await auth();

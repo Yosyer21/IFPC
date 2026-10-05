@@ -780,6 +780,27 @@ export async function main() {
     },
   });
 
+  // ─── Visitas al perfil del jugador demo (métricas de interés) ───
+  if (playerProfile) {
+    const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const profileViews = [
+      { viewerUserId: clubUser.id, viewerRole: 'CLUB', viewCount: 3, firstViewedAt: daysAgo(1), lastViewedAt: daysAgo(0.05) },
+      { viewerUserId: scoutUser.id, viewerRole: 'SCOUT', viewCount: 1, firstViewedAt: daysAgo(2), lastViewedAt: daysAgo(0.2) },
+      { viewerUserId: agentUser.id, viewerRole: 'AGENT', viewCount: 1, firstViewedAt: daysAgo(3), lastViewedAt: daysAgo(1.5) },
+      { viewerUserId: coachUser.id, viewerRole: 'COACH', viewCount: 1, firstViewedAt: daysAgo(5), lastViewedAt: daysAgo(5) },
+      { viewerUserId: universityUser.id, viewerRole: 'UNIVERSITY', viewCount: 2, firstViewedAt: daysAgo(21), lastViewedAt: daysAgo(9) },
+    ];
+    for (const view of profileViews) {
+      await prisma.profileView.upsert({
+        where: {
+          playerId_viewerUserId: { playerId: playerProfile.id, viewerUserId: view.viewerUserId },
+        },
+        update: {},
+        create: { playerId: playerProfile.id, ...view },
+      });
+    }
+  }
+
   console.log('Seed completado:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- jugador: player@demo.com / player123`);

@@ -9,6 +9,7 @@ import {
   FOOT_LABELS,
   PLAYER_STATUS_LABELS,
   POSITION_LABELS,
+  ROLE_LABELS,
 } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { ProfileGrid } from '@/components/player/profile-grid';
@@ -16,6 +17,7 @@ import { PhotoUploadForm } from '@/components/player/photo-upload-form';
 import { StatusToggle } from '@/components/player/status-toggle';
 import { DonutChart } from '@/components/player/charts';
 import { playerProfileCompletion } from '@/lib/player';
+import { getProfileViewStats } from '@/lib/profile-views';
 import { removePlayerPhotoAction } from '@/app/actions/player';
 import { IconTarget, IconTrendingUp, IconTrophy, IconWhistle } from '@/components/dashboard/icons';
 
@@ -46,6 +48,7 @@ export default async function PlayerProfilePage() {
 
   const { percent, completed: completedFields, total: totalFields } =
     playerProfileCompletion(player);
+  const viewStats = await getProfileViewStats(player.id);
 
   const rows: [string, string][] = [
     ['Nombre', `${player.firstName} ${player.lastName}`],
@@ -136,6 +139,48 @@ export default async function PlayerProfilePage() {
                   </button>
                 </form>
               ) : null}
+            </CardContent>
+          </Card>
+
+          <Card className="animate-fade-up" style={{ animationDelay: '150ms' }}>
+            <CardContent className="flex flex-col gap-3">
+              <h2 className="font-semibold">Interés en tu perfil</h2>
+              {viewStats.viewers === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Todavía nadie ha visto tu perfil. Compártelo y mantén tus datos y vídeos al día
+                  para que clubes y ojeadores te encuentren.
+                </p>
+              ) : (
+                <>
+                  <div className="flex flex-wrap gap-5">
+                    <div>
+                      <div className="text-2xl font-bold tabular-nums">{viewStats.viewers}</div>
+                      <div className="text-xs text-muted-foreground">Interesados</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold tabular-nums">{viewStats.views}</div>
+                      <div className="text-xs text-muted-foreground">Visitas</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold tabular-nums">{viewStats.newThisWeek}</div>
+                      <div className="text-xs text-muted-foreground">Nuevos (7 días)</div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col divide-y divide-border/60">
+                    {viewStats.byRole.map((entry) => (
+                      <div
+                        key={entry.role}
+                        className="flex items-center justify-between py-1.5 text-sm"
+                      >
+                        <span className="text-muted-foreground">
+                          {ROLE_LABELS[entry.role] ?? entry.role}
+                        </span>
+                        <span className="font-medium tabular-nums">{entry.viewers}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 

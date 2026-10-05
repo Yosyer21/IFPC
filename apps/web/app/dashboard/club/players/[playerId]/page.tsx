@@ -5,6 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
+import { trackProfileView } from '@/lib/profile-views';
 
 export const metadata: Metadata = { title: 'Jugador' };
 
@@ -22,6 +23,9 @@ export default async function ClubPlayerDetailPage({
     include: { user: true, videos: { orderBy: { createdAt: 'desc' } }, evaluations: true },
   });
   if (!player) notFound();
+
+  // Interés de terceros: visita registrada para las métricas del jugador.
+  await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const positionLabel = player.position
     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position)

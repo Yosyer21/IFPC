@@ -8,6 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 import { PlayerAvatar } from '@/components/player/avatar';
+import { trackProfileView } from '@/lib/profile-views';
 
 function positionLabelOf(position: string | null): string {
   return position
@@ -70,6 +71,9 @@ export default async function PublicPlayerProfilePage({
 
   const player = await getPlayer(playerId);
   if (!player || !isPublicProfile(player.status)) notFound();
+
+  // Interés de terceros: visita registrada para las métricas del jugador.
+  await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const positionLabel = positionLabelOf(player.position);
 

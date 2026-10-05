@@ -7,6 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
+import { trackProfileView } from '@/lib/profile-views';
 
 export const metadata: Metadata = { title: 'Jugador' };
 
@@ -42,6 +43,9 @@ export default async function CoachPlayerDetailPage({
     },
   });
   if (!player) notFound();
+
+  // Interés de terceros: visita registrada para las métricas del jugador.
+  await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const age = player.dateOfBirth
     ? Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))

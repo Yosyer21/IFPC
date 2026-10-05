@@ -13,6 +13,8 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 - **Contacto**: `Inquiry`, `Requirement`.
 - **Negocio**: `Membership`, `Payment`.
 - **Sistema**: `Notification`, `PasswordResetToken`.
+- **Métricas**: `ProfileView` (visitas de terceros al perfil de un jugador: visitante, su rol,
+  contador de visitas y fechas de primera/última visita).
 
 ## Convenciones
 

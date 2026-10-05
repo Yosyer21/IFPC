@@ -6,6 +6,7 @@ export * from './leagues';
 export * from './competition-levels';
 export * from './feet';
 export * from './player-status';
+export * from './roles';
 export * from './opportunity-types';
 export * from './recruitment-status';
 export * from './progress';
