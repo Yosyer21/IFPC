@@ -12,13 +12,16 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   const role = session.user.role.toLowerCase();
 
-  // Unread notifications counter only for the player area (dynamic badge).
-  let unreadCount: number | undefined;
-  if (role === 'player') {
-    unreadCount = await prisma.notification.count({
-      where: { userId: session.user.id, read: false },
-    });
-  }
+  // Cabecera del sidebar (nombre + foto) y contador de avisos del área de jugador.
+  const [user, unreadCount] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { name: true, image: true },
+    }),
+    role === 'player'
+      ? prisma.notification.count({ where: { userId: session.user.id, read: false } })
+      : Promise.resolve(undefined),
+  ]);
 
   return (
     <div className="relative flex min-h-screen flex-col md:flex-row">
@@ -30,7 +33,12 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         className="bg-grid-faint pointer-events-none fixed inset-0 -z-10 opacity-30"
         aria-hidden="true"
       />
-      <DashboardSidebar role={role} unreadCount={unreadCount} />
+      <DashboardSidebar
+        role={role}
+        unreadCount={unreadCount}
+        userName={user?.name ?? session.user.name ?? ''}
+        userImage={user?.image ?? null}
+      />
       <main className="relative flex-1 p-6">{children}</main>
     </div>
   );

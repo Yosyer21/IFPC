@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOutAction } from '@/app/actions/auth';
+import { PhotoUploadForm } from '@/components/account/photo-upload-form';
+import { PlayerAvatar } from '@/components/player/avatar';
 import { FALLBACK_NAV, NAV, type NavSection } from './nav';
 import { ICONS, IconChevronDown, IconLogout, IconMenu, IconX } from './icons';
 
@@ -13,10 +15,14 @@ function SidebarContent({
   sections,
   pathname,
   unreadCount,
+  userName,
+  userImage,
 }: {
   sections: NavSection[];
   pathname: string;
   unreadCount?: number;
+  userName: string;
+  userImage?: string | null;
 }) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
@@ -121,6 +127,34 @@ function SidebarContent({
         })}
       </nav>
 
+      {/* Cuenta: avatar del usuario y cambio de foto (válido para cualquier rol). */}
+      <div className="mt-4 border-t border-white/10 pt-4">
+        <div className="flex items-center gap-2.5">
+          <PlayerAvatar
+            firstName={userName.trim().split(/\s+/)[0] ?? ''}
+            lastName={userName.trim().split(/\s+/).at(-1) ?? ''}
+            imageUrl={userImage}
+            size="sm"
+          />
+          <div className="min-w-0">
+            <div className="truncate text-sm font-medium">{userName}</div>
+          </div>
+        </div>
+        <details className="mt-2">
+          <summary className="cursor-pointer text-xs text-muted-foreground transition-colors hover:text-foreground">
+            Cambiar foto
+          </summary>
+          <div className="mt-3">
+            <PhotoUploadForm
+              name={userName}
+              imageUrl={userImage}
+              redirectTo={pathname}
+              compact
+            />
+          </div>
+        </details>
+      </div>
+
       <form action={signOutAction} className="mt-6">
         <button
           type="submit"
@@ -134,7 +168,17 @@ function SidebarContent({
   );
 }
 
-export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCount?: number }) {
+export function DashboardSidebar({
+  role,
+  unreadCount,
+  userName,
+  userImage,
+}: {
+  role: string;
+  unreadCount?: number;
+  userName: string;
+  userImage?: string | null;
+}) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const sections = NAV[role] ?? FALLBACK_NAV;
@@ -184,7 +228,13 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
                 <IconX className="h-5 w-5" />
               </button>
             </div>
-            <SidebarContent sections={sections} pathname={pathname} unreadCount={unreadCount} />
+            <SidebarContent
+              sections={sections}
+              pathname={pathname}
+              unreadCount={unreadCount}
+              userName={userName}
+              userImage={userImage}
+            />
           </aside>
         </div>
       ) : null}
@@ -194,7 +244,13 @@ export function DashboardSidebar({ role, unreadCount }: { role: string; unreadCo
         <Link href="/" className="text-gradient-brand mb-6 block text-lg font-black tracking-tight">
           Future Baller
         </Link>
-        <SidebarContent sections={sections} pathname={pathname} unreadCount={unreadCount} />
+        <SidebarContent
+          sections={sections}
+          pathname={pathname}
+          unreadCount={unreadCount}
+          userName={userName}
+          userImage={userImage}
+        />
       </aside>
     </>
   );

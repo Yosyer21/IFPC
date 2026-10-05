@@ -13,12 +13,12 @@ import {
 } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { ProfileGrid } from '@/components/player/profile-grid';
-import { PhotoUploadForm } from '@/components/player/photo-upload-form';
+import { PhotoUploadForm } from '@/components/account/photo-upload-form';
 import { StatusToggle } from '@/components/player/status-toggle';
 import { DonutChart } from '@/components/player/charts';
 import { playerProfileCompletion } from '@/lib/player';
 import { getProfileViewStats } from '@/lib/profile-views';
-import { removePlayerPhotoAction } from '@/app/actions/player';
+import { removeProfilePhotoAction } from '@/app/actions/account';
 import { IconTarget, IconTrendingUp, IconTrophy, IconWhistle } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'My profile' };
@@ -128,12 +128,13 @@ export default async function PlayerProfilePage() {
             <CardContent className="flex flex-col items-center gap-3">
               <h2 className="self-start font-semibold">Foto de perfil</h2>
               <PhotoUploadForm
-                firstName={player.firstName}
-                lastName={player.lastName}
+                name={`${player.firstName} ${player.lastName}`}
                 imageUrl={player.user.image}
+                redirectTo="/dashboard/player/profile"
               />
               {player.user.image ? (
-                <form action={removePlayerPhotoAction}>
+                <form action={removeProfilePhotoAction}>
+                  <input type="hidden" name="redirectTo" value="/dashboard/player/profile" />
                   <button type="submit" className="text-xs text-muted-foreground hover:underline">
                     Quitar foto
                   </button>
