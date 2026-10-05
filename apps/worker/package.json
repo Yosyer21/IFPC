@@ -12,9 +12,7 @@
   "dependencies": {
     "@ifpc/database": "workspace:*",
     "@ifpc/matching": "workspace:*",
-    "@ifpc/types": "workspace:*",
-    "bullmq": "^5.34.0",
-    "ioredis": "^5.4.2"
+    "bullmq": "^5.34.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

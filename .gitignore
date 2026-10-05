@@ -32,6 +32,7 @@ apps/web/.pglite/
 
 # Logs del servidor de desarrollo
 .dev-server*.log
+nohup.out
 
 # Prisma
 packages/database/prisma/dev.db

@@ -40,7 +40,6 @@
     "@ifpc/database": "workspace:*",
     "@playwright/test": "^1.49.1",
     "bcryptjs": "^2.4.3",
-    "pglite-prisma-adapter": "^0.7.2",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "turbo": "^2.3.3",

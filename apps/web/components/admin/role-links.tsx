@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const ROLE_LINKS = [
+const ROLE_LINKS = [
   { role: 'PLAYER', label: 'Jugadores', href: '/dashboard/admin/users/players' },
   { role: 'PARENT', label: 'Familiares', href: '/dashboard/admin/users/parents' },
   { role: 'COACH', label: 'Entrenadores', href: '/dashboard/admin/users/coaches' },

@@ -8,20 +8,12 @@ export async function requireUser() {
   return session;
 }
 
-export function unauthorized(message = 'Unauthorized'): NextResponse {
-  return NextResponse.json({ ok: false, error: message }, { status: 401 });
-}
-
 export function forbidden(message = 'Access denied'): NextResponse {
   return NextResponse.json({ ok: false, error: message }, { status: 403 });
 }
 
 export function badRequest(message = 'Invalid request'): NextResponse {
   return NextResponse.json({ ok: false, error: message }, { status: 400 });
-}
-
-export function notFound(message = 'Not found'): NextResponse {
-  return NextResponse.json({ ok: false, error: message }, { status: 404 });
 }
 
 export function methodNotAllowed(): NextResponse {

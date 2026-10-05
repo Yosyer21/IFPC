@@ -23,9 +23,6 @@ importers:
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
-      pglite-prisma-adapter:
-        specifier: ^0.7.2
-        version: 0.7.2(@electric-sql/pglite@0.5.5)(@prisma/client@7.9.1(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3))
       prettier:
         specifier: ^3.4.2
         version: 3.9.6
@@ -74,12 +71,6 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
-      zod:
-        specifier: ^3.24.1
-        version: 3.25.76
-      zustand:
-        specifier: ^5.0.2
-        version: 5.0.15(@types/react@19.2.18)(react@19.2.8)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.2.0
@@ -111,9 +102,6 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
-      vitest:
-        specifier: ^2.1.8
-        version: 2.1.9(@types/node@22.20.1)(supports-color@7.2.0)
 
   apps/worker:
     dependencies:
@@ -123,15 +111,9 @@ importers:
       '@ifpc/matching':
         specifier: workspace:*
         version: link:../../packages/matching
-      '@ifpc/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       bullmq:
         specifier: ^5.34.0
         version: 5.81.3(supports-color@7.2.0)
-      ioredis:
-        specifier: ^5.4.2
-        version: 5.11.1(supports-color@7.2.0)
     devDependencies:
       '@types/node':
         specifier: ^22.10.2
@@ -940,27 +922,12 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  '@prisma/client-runtime-utils@7.9.1':
-    resolution: {integrity: sha512-mVIBGYdO5CFmK0HvjxrtfIyQQcPdb88pSCeVQriVQPVZyDovIWblpHfOgcS8QO187j3QF0ePArH8qPhp0AU2vg==}
-
   '@prisma/client@6.19.3':
     resolution: {integrity: sha512-mKq3jQFhjvko5LTJFHGilsuQs+W+T3Gm451NzuTDGQxwCzwXHYnIu2zGkRoW+Exq3Rob7yp2MfzSrdIiZVhrBg==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
       typescript: '>=5.1.0'
-    peerDependenciesMeta:
-      prisma:
-        optional: true
-      typescript:
-        optional: true
-
-  '@prisma/client@7.9.1':
-    resolution: {integrity: sha512-+xgrh2EhJVF79wC0yX5G4PI1Rdcm7Qn/nekNQ+t/O153wtNggruHal+fXHSa0QE+Tp/Cw5wvxeCEhZZ59xGm8Q==}
-    engines: {node: ^20.19 || ^22.12 || >=24.0}
-    peerDependencies:
-      prisma: '*'
-      typescript: '>=5.4.0'
     peerDependenciesMeta:
       prisma:
         optional: true
@@ -1897,6 +1864,7 @@ packages:
   eslint@9.39.5:
     resolution: {integrity: sha512-DgZS62aPLXKlnxILS/AYCoRvHaZeXceIzlXPkkGGzJWSow1aEk0lbTlxUSlyjC8jcaKxAdOnTDz+o1JFSBsyjw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -3066,24 +3034,6 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zustand@5.0.15:
-    resolution: {integrity: sha512-MpSEjRiBkA9crSYeOUH32rJC7SVqAbm0Fqcqge/bUi2PPoLcBWKOsG+C8mevmpr8TwXHBVkChbbJiyvkE+i/3A==}
-    engines: {node: '>=12.20.0'}
-    peerDependencies:
-      '@types/react': '>=18.0.0'
-      immer: '>=9.0.6'
-      react: '>=18.0.0'
-      use-sync-external-store: '>=1.2.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
-      use-sync-external-store:
-        optional: true
-
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -3519,16 +3469,7 @@ snapshots:
     dependencies:
       playwright: 1.62.1
 
-  '@prisma/client-runtime-utils@7.9.1': {}
-
   '@prisma/client@6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)':
-    optionalDependencies:
-      prisma: 6.19.3(typescript@5.9.3)
-      typescript: 5.9.3
-
-  '@prisma/client@7.9.1(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)':
-    dependencies:
-      '@prisma/client-runtime-utils': 7.9.1
     optionalDependencies:
       prisma: 6.19.3(typescript@5.9.3)
       typescript: 5.9.3
@@ -5223,13 +5164,6 @@ snapshots:
       '@prisma/driver-adapter-utils': 7.2.0
       postgres-array: 3.0.4
 
-  pglite-prisma-adapter@0.7.2(@electric-sql/pglite@0.5.5)(@prisma/client@7.9.1(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)):
-    dependencies:
-      '@electric-sql/pglite': 0.5.5
-      '@prisma/client': 7.9.1(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
-      '@prisma/driver-adapter-utils': 7.2.0
-      postgres-array: 3.0.4
-
   picocolors@1.1.1: {}
 
   picomatch@2.3.2: {}
@@ -5938,8 +5872,3 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   zod@3.25.76: {}
-
-  zustand@5.0.15(@types/react@19.2.18)(react@19.2.8):
-    optionalDependencies:
-      '@types/react': 19.2.18
-      react: 19.2.8

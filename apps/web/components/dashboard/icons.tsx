@@ -19,7 +19,7 @@ function Base({ children, ...props }: IconProps & { children: React.ReactNode })
   );
 }
 
-export function IconHome(props: IconProps) {
+function IconHome(props: IconProps) {
   return (
     <Base {...props}>
       <path d="M3 10.5 12 3l9 7.5" />
@@ -76,7 +76,7 @@ export function IconBell(props: IconProps) {
   );
 }
 
-export function IconSettings(props: IconProps) {
+function IconSettings(props: IconProps) {
   return (
     <Base {...props}>
       <circle cx="12" cy="12" r="3" />
