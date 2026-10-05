@@ -10,8 +10,10 @@ import {
   PLAYER_STATUS_LABELS,
   POSITION_LABELS,
 } from '@ifpc/config';
+import { ProfileGrid } from '@/components/player/profile-grid';
 import { StatusToggle } from '@/components/player/status-toggle';
 import { DonutChart } from '@/components/player/charts';
+import { playerProfileCompletion } from '@/lib/player';
 import { IconTarget, IconTrendingUp, IconUser, IconWhistle } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'My profile' };
@@ -39,22 +41,8 @@ export default async function PlayerProfilePage() {
       player.competitionLevel)
     : '—';
 
-  // % de perfil completado
-  const fields = [
-    player.firstName,
-    player.lastName,
-    player.dateOfBirth,
-    player.nationality,
-    player.position,
-    player.foot,
-    player.heightCm,
-    player.weightKg,
-    player.competitionLevel,
-    player.clubName,
-    player.bio,
-  ];
-  const completedFields = fields.filter(Boolean).length;
-  const percent = Math.round((completedFields / fields.length) * 100);
+  const { percent, completed: completedFields, total: totalFields } =
+    playerProfileCompletion(player);
 
   const rows: [string, string][] = [
     ['Nombre', `${player.firstName} ${player.lastName}`],
@@ -111,14 +99,7 @@ export default async function PlayerProfilePage() {
 
           <Card className="animate-fade-up" style={{ animationDelay: '120ms' }}>
             <CardContent>
-              <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {rows.map(([label, value]) => (
-                  <div key={label} className="rounded-md border border-border p-3">
-                    <dt className="text-xs text-muted-foreground">{label}</dt>
-                    <dd className="mt-1 font-medium">{value}</dd>
-                  </div>
-                ))}
-              </dl>
+              <ProfileGrid rows={rows} />
             </CardContent>
           </Card>
 
@@ -139,7 +120,7 @@ export default async function PlayerProfilePage() {
               <DonutChart
                 value={percent}
                 label={`${percent}%`}
-                sublabel={`${completedFields}/${fields.length} campos`}
+                sublabel={`${completedFields}/${totalFields} campos`}
               />
               {percent < 100 ? (
                 <Link

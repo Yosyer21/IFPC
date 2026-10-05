@@ -5,6 +5,7 @@ import { Badge } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
+import { PlayerAvatar } from '@/components/player/avatar';
 
 export const metadata: Metadata = {
   title: 'Jugadores — Future Baller',
@@ -49,10 +50,12 @@ export default async function PublicPlayersPage() {
                 className="group rounded-2xl border border-border/60 bg-card p-6 transition-all hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/15 text-sm font-bold text-emerald-400">
-                    {player.firstName[0]}
-                    {player.lastName[0]}
-                  </div>
+                  <PlayerAvatar
+                    firstName={player.firstName}
+                    lastName={player.lastName}
+                    imageUrl={player.user.image}
+                    size="md"
+                  />
                   <div className="min-w-0">
                     <h2 className="truncate font-semibold group-hover:text-emerald-400">
                       {player.firstName} {player.lastName}

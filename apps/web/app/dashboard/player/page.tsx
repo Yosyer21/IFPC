@@ -12,6 +12,8 @@ import {
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
 import { StatCard } from '@/components/player/stat-card';
+import { CATEGORY_LABELS, GOAL_STATUS_LABELS } from '@/lib/labels';
+import { playerProfileCompletion } from '@/lib/player';
 import {
   IconPlay,
   IconRoute,
@@ -22,19 +24,6 @@ import {
 } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'My area' };
-
-const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Technique',
-  physical: 'Physical',
-  tactical: 'Tactics',
-  psychological: 'Psychological',
-};
-
-const GOAL_STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
-  in_progress: 'En curso',
-  completed: 'Completed',
-};
 
 function greeting(): string {
   const hour = new Date().getHours();
@@ -53,22 +42,42 @@ export default async function PlayerDashboardPage() {
   });
   if (!player) notFound();
 
-  const [videos, pendingGoals, opportunities, unreadNotifications, membership, evaluations, recentGoals] =
-    await Promise.all([
-      prisma.video.count({ where: { playerId: player.id } }),
-      prisma.playerGoal.count({
-        where: { playerId: player.id, status: { in: ['pending', 'in_progress'] } },
-      }),
-      prisma.opportunity.count({ where: { status: 'OPEN' } }),
-      prisma.notification.count({ where: { userId: session.user.id, read: false } }),
-      prisma.membership.findUnique({ where: { userId: session.user.id } }),
-      prisma.evaluation.findMany({ where: { playerId: player.id }, orderBy: { createdAt: 'desc' } }),
-      prisma.playerGoal.findMany({
-        where: { playerId: player.id },
-        orderBy: { createdAt: 'desc' },
-        take: 3,
-      }),
-    ]);
+  const [
+    videos,
+    pendingGoals,
+    opportunities,
+    unreadNotifications,
+    membership,
+    evaluationCount,
+    evaluationStats,
+    recentEvaluations,
+    recentGoals,
+  ] = await Promise.all([
+    prisma.video.count({ where: { playerId: player.id } }),
+    prisma.playerGoal.count({
+      where: { playerId: player.id, status: { in: ['pending', 'in_progress'] } },
+    }),
+    prisma.opportunity.count({ where: { status: 'OPEN' } }),
+    prisma.notification.count({ where: { userId: session.user.id, read: false } }),
+    prisma.membership.findUnique({ where: { userId: session.user.id } }),
+    prisma.evaluation.count({ where: { playerId: player.id } }),
+    // Averages per category for the radar without loading every evaluation row.
+    prisma.evaluation.groupBy({
+      by: ['category'],
+      where: { playerId: player.id },
+      _avg: { score: true },
+    }),
+    prisma.evaluation.findMany({
+      where: { playerId: player.id },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    }),
+    prisma.playerGoal.findMany({
+      where: { playerId: player.id },
+      orderBy: { createdAt: 'desc' },
+      take: 3,
+    }),
+  ]);
 
   const statusLabel =
     (PLAYER_STATUS_LABELS as Record<string, string | undefined>)[player.status] ?? player.status;
@@ -80,41 +89,21 @@ export default async function PlayerDashboardPage() {
       player.competitionLevel)
     : null;
 
-  // % de perfil completado
-  const fields = [
-    player.firstName,
-    player.lastName,
-    player.dateOfBirth,
-    player.nationality,
-    player.position,
-    player.foot,
-    player.heightCm,
-    player.weightKg,
-    player.competitionLevel,
-    player.clubName,
-    player.bio,
-  ];
-  const completedFields = fields.filter(Boolean).length;
-  const percent = Math.round((completedFields / fields.length) * 100);
+  const { percent, completed: completedFields, total: totalFields } =
+    playerProfileCompletion(player);
 
-  // Average by category para el radar
-  const byCategory = new Map<string, number[]>();
-  for (const evaluation of evaluations) {
-    const list = byCategory.get(evaluation.category) ?? [];
-    list.push(evaluation.score);
-    byCategory.set(evaluation.category, list);
-  }
-  const radarCategories: string[] = [];
-  const radarValues: number[] = [];
-  for (const [category, scores] of byCategory) {
-    radarCategories.push(CATEGORY_LABELS[category] ?? category);
-    radarValues.push(Math.round((scores.reduce((s, n) => s + n, 0) / scores.length) * 10) / 10);
-  }
+  // Average per category for the radar (aggregated in the DB via groupBy).
+  const radarCategories = evaluationStats.map(
+    (stat) => CATEGORY_LABELS[stat.category] ?? stat.category
+  );
+  const radarValues = evaluationStats.map(
+    (stat) => Math.round((stat._avg.score ?? 0) * 10) / 10
+  );
 
   const stats = [
     { href: '/dashboard/player/videos', icon: IconVideo, label: 'Videos', value: videos },
     { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
-    { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluations.length },
+    { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluationCount },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Oportunidades abiertas', value: opportunities },
   ];
 
@@ -133,7 +122,7 @@ export default async function PlayerDashboardPage() {
       meta: `Objetivo · ${GOAL_STATUS_LABELS[goal.status] ?? goal.status}`,
       date: goal.createdAt,
     })),
-    ...evaluations.slice(0, 3).map((evaluation) => ({
+    ...recentEvaluations.map((evaluation) => ({
       key: evaluation.id,
       icon: IconWhistle,
       title: CATEGORY_LABELS[evaluation.category] ?? evaluation.category,
@@ -151,7 +140,12 @@ export default async function PlayerDashboardPage() {
       {/* Hero */}
       <section className="animate-fade-up mb-6 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-card via-card to-primary/5 p-6">
         <div className="flex flex-wrap items-center gap-5">
-          <PlayerAvatar firstName={player.firstName} lastName={player.lastName} size="lg" />
+          <PlayerAvatar
+            firstName={player.firstName}
+            lastName={player.lastName}
+            imageUrl={player.user.image}
+            size="lg"
+          />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold tracking-tight">
@@ -219,7 +213,7 @@ export default async function PlayerDashboardPage() {
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Level by category</h2>
-              {evaluations.length > 0 ? (
+              {evaluationCount > 0 ? (
                 <Link
                   href="/dashboard/player/development/evaluations"
                   className="text-sm text-primary hover:underline"
@@ -261,7 +255,7 @@ export default async function PlayerDashboardPage() {
             <DonutChart
               value={percent}
               label={`${percent}%`}
-              sublabel={`${completedFields}/${fields.length} campos`}
+              sublabel={`${completedFields}/${totalFields} campos`}
             />
             <div className="flex flex-col items-center gap-2">
               <p className="text-center text-sm text-muted-foreground">

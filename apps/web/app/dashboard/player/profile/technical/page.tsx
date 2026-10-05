@@ -3,15 +3,9 @@ import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
+import { CATEGORY_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Technical level' };
-
-const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Technique',
-  physical: 'Physical',
-  tactical: 'Tactics',
-  psychological: 'Psychological',
-};
 
 export default async function PlayerTechnicalPage() {
   const session = await auth();
@@ -19,7 +13,7 @@ export default async function PlayerTechnicalPage() {
 
   const player = await prisma.player.findUnique({
     where: { userId: session.user.id },
-    include: { evaluations: { orderBy: { createdAt: 'desc' } } },
+    include: { evaluations: { orderBy: { createdAt: 'desc' }, take: 50 } },
   });
   if (!player) notFound();
 

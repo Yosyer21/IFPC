@@ -28,3 +28,18 @@ export const SCHOOL_TYPE_LABELS: Record<string, string> = {
   SCHOOL: 'Escuela / Colegio',
   COMMUNITY_SERVICE: 'Servicio comunitario',
 };
+
+/** Player development categories (`Evaluation.category`). */
+export const CATEGORY_LABELS: Record<string, string> = {
+  technical: 'Technique',
+  physical: 'Physical',
+  tactical: 'Tactics',
+  psychological: 'Psychological',
+};
+
+/** Player goal status (`PlayerGoal.status`). */
+export const GOAL_STATUS_LABELS: Record<string, string> = {
+  pending: 'Pendiente',
+  in_progress: 'En curso',
+  completed: 'Completed',
+};

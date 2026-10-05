@@ -5,8 +5,8 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Card, CardContent, Progress } from '@ifpc/ui';
 
-import { profileCompletionPercentage } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
+import { playerProfileCompletion } from '@/lib/player';
 
 export const metadata: Metadata = { title: 'Mi desarrollo' };
 
@@ -17,20 +17,7 @@ export default async function PlayerDevelopmentPage() {
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) notFound();
 
-  const fields = [
-    player.firstName,
-    player.lastName,
-    player.dateOfBirth,
-    player.nationality,
-    player.position,
-    player.foot,
-    player.heightCm,
-    player.weightKg,
-    player.competitionLevel,
-    player.clubName,
-    player.bio,
-  ];
-  const percent = profileCompletionPercentage(fields);
+  const { percent } = playerProfileCompletion(player);
 
   const [pendingGoals, evaluationCount, videoCount] = await Promise.all([
     prisma.playerGoal.count({

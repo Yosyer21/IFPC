@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
+import { PLAYER_STATUSES, type PlayerStatus } from '@ifpc/config';
 import { prisma } from '@ifpc/database';
 import { playerProfileSchema } from '@ifpc/validation';
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -70,14 +71,14 @@ export async function updatePlayerStatusAction(
   }
 
   const status = str(formData, 'status');
-  if (!status || !['PENDING_VERIFICATION', 'ACTIVE', 'AVAILABLE', 'INACTIVE'].includes(status)) {
+  if (!status || !PLAYER_STATUSES.some((value) => value === status)) {
     return { error: 'Invalid status.' };
   }
 
   try {
     await prisma.player.update({
       where: { userId: session.user.id },
-      data: { status: status as 'AVAILABLE' | 'INACTIVE' | 'ACTIVE' | 'PENDING_VERIFICATION' },
+      data: { status: status as PlayerStatus },
     });
   } catch {
     return { error: 'Could not update your status.' };

@@ -6,6 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
+import { ProfileGrid } from '@/components/player/profile-grid';
 
 export const metadata: Metadata = { title: 'My profile de scouting' };
 
@@ -54,14 +55,7 @@ export default async function PlayerScoutingPage() {
 
       <Card>
         <CardContent>
-          <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {rows.map(([label, value]) => (
-              <div key={label} className="rounded-md border border-border p-3">
-                <dt className="text-xs text-muted-foreground">{label}</dt>
-                <dd className="mt-1 font-medium">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <ProfileGrid rows={rows} />
         </CardContent>
       </Card>
 

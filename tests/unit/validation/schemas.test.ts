@@ -57,4 +57,51 @@ describe('playerProfileSchema', () => {
     const result = playerProfileSchema.safeParse({ firstName: 'Ana', lastName: 'G', heightCm: -5 });
     expect(result.success).toBe(false);
   });
+
+  it('rechaza una altura fuera de rango', () => {
+    const result = playerProfileSchema.safeParse({ firstName: 'Ana', lastName: 'G', heightCm: 300 });
+    expect(result.success).toBe(false);
+  });
+
+  it('rechaza un peso fuera de rango', () => {
+    const result = playerProfileSchema.safeParse({ firstName: 'Ana', lastName: 'G', weightKg: 20 });
+    expect(result.success).toBe(false);
+  });
+
+  it('acepta altura y peso dentro de rango', () => {
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      heightCm: 168,
+      weightKg: 58,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('acepta una fecha de nacimiento válida', () => {
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      dateOfBirth: '2010-05-20',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rechaza una fecha de nacimiento inválida', () => {
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      dateOfBirth: 'ayer',
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rechaza una fecha de nacimiento en el futuro', () => {
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      dateOfBirth: '2999-01-01',
+    });
+    expect(result.success).toBe(false);
+  });
 });

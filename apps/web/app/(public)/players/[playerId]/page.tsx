@@ -1,13 +1,64 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import { prisma } from '@ifpc/database';
 import { Badge } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
+import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Profile de jugador — Future Baller' };
+function positionLabelOf(position: string | null): string {
+  return position
+    ? ((POSITION_LABELS as Record<string, string | undefined>)[position] ?? position)
+    : '—';
+}
+
+/** Only available/active players expose a public profile. */
+function isPublicProfile(status: string): boolean {
+  return status === 'AVAILABLE' || status === 'ACTIVE';
+}
+
+/** Cached so `generateMetadata` and the page share a single query per request. */
+const getPlayer = cache((playerId: string) =>
+  prisma.player.findUnique({
+    where: { id: playerId },
+    include: {
+      user: true,
+      // Only the score column is needed for the overall rating.
+      evaluations: { select: { score: true } },
+      _count: { select: { videos: true } },
+    },
+  })
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ playerId: string }>;
+}): Promise<Metadata> {
+  const { playerId } = await params;
+  const player = await getPlayer(playerId);
+  if (!player || !isPublicProfile(player.status)) {
+    // The root layout appends "| Future Baller".
+    return { title: 'Jugador no encontrado' };
+  }
+
+  const name = `${player.firstName} ${player.lastName}`;
+  const position = positionLabelOf(player.position);
+  const description =
+    player.bio?.slice(0, 155) ??
+    `Perfil deportivo de ${name} (${position}${
+      player.nationality ? `, ${player.nationality}` : ''
+    }) en Future Baller.`;
+
+  return {
+    title: `${name} · ${position}`,
+    description,
+    openGraph: { title: name, description, type: 'profile' },
+  };
+}
 
 export default async function PublicPlayerProfilePage({
   params,
@@ -16,18 +67,10 @@ export default async function PublicPlayerProfilePage({
 }) {
   const { playerId } = await params;
 
-  const player = await prisma.player.findUnique({
-    where: { id: playerId },
-    include: {
-      evaluations: true,
-      _count: { select: { videos: true } },
-    },
-  });
-  if (!player || (player.status !== 'AVAILABLE' && player.status !== 'ACTIVE')) notFound();
+  const player = await getPlayer(playerId);
+  if (!player || !isPublicProfile(player.status)) notFound();
 
-  const positionLabel = player.position
-    ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position)
-    : '—';
+  const positionLabel = positionLabelOf(player.position);
 
   const overall =
     player.evaluations.length > 0
@@ -50,10 +93,12 @@ export default async function PublicPlayerProfilePage({
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
           <div className="flex flex-wrap items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/15 text-xl font-bold text-emerald-400">
-              {player.firstName[0]}
-              {player.lastName[0]}
-            </div>
+            <PlayerAvatar
+              firstName={player.firstName}
+              lastName={player.lastName}
+              imageUrl={player.user.image}
+              size="lg"
+            />
             <div className="min-w-0">
               <h1 className="text-2xl font-bold tracking-tight">
                 {player.firstName} {player.lastName}
