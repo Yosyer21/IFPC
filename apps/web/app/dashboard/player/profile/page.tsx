@@ -17,7 +17,7 @@ import { StatusToggle } from '@/components/player/status-toggle';
 import { DonutChart } from '@/components/player/charts';
 import { playerProfileCompletion } from '@/lib/player';
 import { removePlayerPhotoAction } from '@/app/actions/player';
-import { IconTarget, IconTrendingUp, IconWhistle } from '@/components/dashboard/icons';
+import { IconTarget, IconTrendingUp, IconTrophy, IconWhistle } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'My profile' };
 
@@ -64,6 +64,7 @@ export default async function PlayerProfilePage() {
     { href: '/dashboard/player/profile/football', label: 'Football profile', icon: IconTarget },
     { href: '/dashboard/player/profile/physical', label: 'Physical data', icon: IconTrendingUp },
     { href: '/dashboard/player/profile/technical', label: 'Technical level', icon: IconWhistle },
+    { href: '/dashboard/player/career', label: 'Career history', icon: IconTrophy },
   ];
 
 

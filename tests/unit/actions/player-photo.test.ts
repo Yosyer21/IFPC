@@ -22,23 +22,10 @@ vi.mock('node:fs/promises', () => ({
 }));
 vi.mock('@/lib/notifications/notify', () => ({ notifyUser: vi.fn() }));
 
+import { captureRedirect } from '../../helpers/redirect';
 import { removePlayerPhotoAction, updatePlayerPhotoAction } from '@/app/actions/player';
 
 const REDIRECT_TARGET = '/dashboard/player/profile';
-
-/** `redirect()` signals via a thrown NEXT_REDIRECT error; returns its target URL. */
-async function captureRedirect(run: () => Promise<unknown>): Promise<string | null> {
-  try {
-    await run();
-    return null;
-  } catch (error) {
-    const digest = (error as { digest?: string }).digest;
-    if (typeof digest === 'string' && digest.startsWith('NEXT_REDIRECT')) {
-      return digest.split(';')[2] ?? null;
-    }
-    throw error;
-  }
-}
 
 function photo(type: string, bytes = 1024, name = 'photo.png'): File {
   return new File([new Uint8Array(bytes)], name, { type });

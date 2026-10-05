@@ -5,7 +5,7 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 ## Main models
 
 - **Cuentas**: `User` (rol, hash de contraseña), `Player`, `Parent`, `Coach`, `Scout`, `Agent`, `Club`, `University`, `Academy`, `ClubStaff`.
-- **Desarrollo**: `TrainingContent`, `Pathway`, `PlayerGoal`, `Evaluation`, `Document`.
+- **Desarrollo**: `TrainingContent`, `Pathway`, `PlayerGoal`, `Evaluation`, `CareerEntry` (trayectoria: club, categoría y estadísticas por temporada), `Document`.
 - **Video**: `Video` (estado: uploading/processing/ready/failed).
 - **Opportunities**: `Opportunity`, `Application`.
 - **Reclutamiento**: `Submission`, `Trial`, `Negotiation`, `Contract` (pipeline enlazado).
@@ -26,3 +26,5 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 - Desarrollo: `pnpm db:migrate` (prisma migrate dev).
 - Script de despliegue: `pnpm scripts:migrate` (migrate deploy).
 - Verificación: `pnpm scripts:verify`.
+- **PGlite local**: `pnpm scripts:apply-delta [ref]` aplica a la base embebida el delta SQL
+  entre el esquema del árbol de trabajo y otra versión (por defecto `HEAD`), sin recrearla.

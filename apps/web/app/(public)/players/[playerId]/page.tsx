@@ -28,6 +28,7 @@ const getPlayer = cache((playerId: string) =>
       user: true,
       // Only the score column is needed for the overall rating.
       evaluations: { select: { score: true } },
+      career: { orderBy: [{ isCurrent: 'desc' }, { season: 'desc' }] },
       _count: { select: { videos: true } },
     },
   })
@@ -130,6 +131,40 @@ export default async function PublicPlayerProfilePage({
 
           {player.bio ? (
             <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{player.bio}</p>
+          ) : null}
+
+          {player.career.length > 0 ? (
+            <div className="mt-8">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
+                Trayectoria
+              </h2>
+              <div className="mt-2 flex flex-col divide-y divide-border/60">
+                {player.career.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="flex flex-wrap items-center justify-between gap-2 py-3"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium">
+                        {entry.clubName}
+                        {entry.isCurrent ? (
+                          <span className="ml-2 text-[10px] uppercase tracking-wide text-emerald-400">
+                            actual
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {entry.season}
+                        {entry.category ? ` · ${entry.category}` : ''}
+                      </div>
+                    </div>
+                    <div className="text-xs tabular-nums text-muted-foreground">
+                      {entry.appearances} PJ · {entry.goals} G · {entry.assists} A
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           ) : null}
 
           <div className="mt-8 rounded-xl border border-border/60 p-5 text-center">

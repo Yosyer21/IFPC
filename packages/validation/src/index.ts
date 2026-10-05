@@ -1,5 +1,6 @@
 export * from './user';
 export * from './player';
+export * from './career';
 export * from './club';
 export * from './opportunity';
 export * from './recruitment';

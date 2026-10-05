@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { registerSchema, loginSchema, playerProfileSchema } from '@ifpc/validation';
+import {
+  careerEntrySchema,
+  loginSchema,
+  playerProfileSchema,
+  registerSchema,
+} from '@ifpc/validation';
 
 describe('registerSchema', () => {
   it('accepts valid data', () => {
@@ -103,5 +108,49 @@ describe('playerProfileSchema', () => {
       dateOfBirth: '2999-01-01',
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe('careerEntrySchema', () => {
+  const valid = {
+    clubName: 'Future Baller Academy',
+    category: 'Sub-17',
+    season: '2025/26',
+    appearances: 18,
+    goals: 12,
+    assists: 7,
+  };
+
+  it('acepta una temporada válida', () => {
+    expect(careerEntrySchema.safeParse(valid).success).toBe(true);
+  });
+
+  it('acepta un año suelto como temporada', () => {
+    expect(careerEntrySchema.safeParse({ ...valid, season: '2024' }).success).toBe(true);
+  });
+
+  it('rechaza una temporada mal formada', () => {
+    expect(careerEntrySchema.safeParse({ ...valid, season: 'verano 2025' }).success).toBe(false);
+    expect(careerEntrySchema.safeParse({ ...valid, season: '25/26' }).success).toBe(false);
+  });
+
+  it('exige el club', () => {
+    expect(careerEntrySchema.safeParse({ ...valid, clubName: '  ' }).success).toBe(false);
+  });
+
+  it('rechaza estadísticas fuera de rango', () => {
+    expect(careerEntrySchema.safeParse({ ...valid, goals: -1 }).success).toBe(false);
+    expect(careerEntrySchema.safeParse({ ...valid, appearances: 501 }).success).toBe(false);
+  });
+
+  it('acepta estadísticas vacías (null)', () => {
+    const result = careerEntrySchema.safeParse({
+      clubName: 'Ballarat City FC',
+      season: '2024/25',
+      appearances: null,
+      goals: null,
+      assists: null,
+    });
+    expect(result.success).toBe(true);
   });
 });

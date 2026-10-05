@@ -16,7 +16,7 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
+    "db:seed": "node --env-file-if-exists=../../.env --import=tsx prisma/seed.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

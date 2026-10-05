@@ -24,6 +24,7 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/player/opportunities', label: 'Opportunities', icon: 'target' },
         { href: '/dashboard/player/scouting', label: 'Scouting profile', icon: 'search' },
+        { href: '/dashboard/player/career', label: 'Career history', icon: 'trophy' },
         { href: '/dashboard/player/membership', label: 'Membership', icon: 'star' },
       ],
     },

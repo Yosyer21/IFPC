@@ -156,9 +156,30 @@ model Player {
   parents       ParentChild[]
   liveSessions  LiveSession[]
   campRegistrations CampRegistration[]
+  career        CareerEntry[]
 
   @@index([status])
   @@index([position])
+}
+
+/// Trayectoria deportiva: club, categoría y estadísticas por temporada.
+model CareerEntry {
+  id          String   @id @default(cuid())
+  playerId    String
+  player      Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  clubName    String
+  category    String? // Sub-14, Sub-17, First team, School…
+  season      String // 2024/25
+  appearances Int      @default(0)
+  goals       Int      @default(0)
+  assists     Int      @default(0)
+  isCurrent   Boolean  @default(false)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([playerId, clubName, season])
+  @@index([playerId, isCurrent])
 }
 
 model Parent {

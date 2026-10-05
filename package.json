@@ -32,6 +32,7 @@
     "scripts:create-admin": "node --env-file=.env --import=tsx scripts/development/create-admin.ts",
     "scripts:create-test-users": "node --env-file=.env --import=tsx scripts/development/create-test-users.ts",
     "scripts:seed-demo": "node --env-file=.env --import=tsx scripts/development/seed-demo-data.ts",
+    "scripts:apply-delta": "node --env-file=.env --import=tsx scripts/development/apply-schema-delta.ts",
     "db:setup-pglite": "node --env-file=.env --import=tsx scripts/development/setup-pglite.ts"
   },
   "devDependencies": {

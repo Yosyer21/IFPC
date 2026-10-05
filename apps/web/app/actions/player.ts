@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { PLAYER_STATUSES, type PlayerStatus } from '@ifpc/config';
 import { prisma } from '@ifpc/database';
-import { playerProfileSchema } from '@ifpc/validation';
+import { careerEntrySchema, playerProfileSchema } from '@ifpc/validation';
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { ActionState } from './auth';
@@ -283,6 +283,108 @@ export async function removePlayerPhotoAction(): Promise<void> {
   await removeLocalPhoto(user?.image ?? null);
 
   redirect('/dashboard/player/profile');
+}
+
+/**
+ * Crea (sin `entryId`) o actualiza (con `entryId`) una entrada de trayectoria del
+ * jugador autenticado. Solo puede haber un club "actual": al marcarlo, se
+ * desmarca el resto y se sincroniza `Player.clubName`.
+ */
+export async function saveCareerEntryAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
+  if (!player) {
+    return { error: 'Profile de jugador no encontrado.' };
+  }
+
+  const parsed = careerEntrySchema.safeParse({
+    clubName: str(formData, 'clubName') ?? '',
+    category: str(formData, 'category'),
+    season: str(formData, 'season') ?? '',
+    appearances: num(formData, 'appearances'),
+    goals: num(formData, 'goals'),
+    assists: num(formData, 'assists'),
+    isCurrent: formData.get('isCurrent') === 'on',
+    notes: str(formData, 'notes'),
+  });
+  if (!parsed.success) {
+    return { error: 'Revisa los datos de la trayectoria (temporada tipo 2024/25).' };
+  }
+
+  const entryId = str(formData, 'entryId');
+  const data = {
+    clubName: parsed.data.clubName,
+    category: parsed.data.category ?? null,
+    season: parsed.data.season,
+    appearances: parsed.data.appearances ?? 0,
+    goals: parsed.data.goals ?? 0,
+    assists: parsed.data.assists ?? 0,
+    isCurrent: parsed.data.isCurrent ?? false,
+    notes: parsed.data.notes ?? null,
+  };
+
+  try {
+    // Solo un club actual a la vez + club del perfil siempre en sincronía.
+    if (data.isCurrent) {
+      await prisma.careerEntry.updateMany({
+        where: { playerId: player.id, isCurrent: true },
+        data: { isCurrent: false },
+      });
+      await prisma.player.update({
+        where: { id: player.id },
+        data: { clubName: data.clubName },
+      });
+    }
+
+    if (entryId) {
+      const existing = await prisma.careerEntry.findUnique({ where: { id: entryId } });
+      if (!existing || existing.playerId !== player.id) {
+        return { error: 'Entrada no encontrada.' };
+      }
+      await prisma.careerEntry.update({ where: { id: entryId }, data });
+    } else {
+      await prisma.careerEntry.create({ data: { playerId: player.id, ...data } });
+    }
+  } catch {
+    return { error: 'No se pudo guardar la trayectoria.' };
+  }
+
+  redirect('/dashboard/player/career');
+}
+
+/** Elimina una entrada de trayectoria (solo si es del jugador autenticado). */
+export async function removeCareerEntryAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return;
+  }
+
+  const entryId = str(formData, 'entryId');
+  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
+  if (!entryId || !player) {
+    return;
+  }
+
+  const entry = await prisma.careerEntry.findFirst({
+    where: { id: entryId, playerId: player.id },
+  });
+  if (!entry) {
+    return;
+  }
+
+  await prisma.careerEntry.deleteMany({ where: { id: entry.id, playerId: player.id } });
+  if (entry.isCurrent) {
+    await prisma.player.update({ where: { id: player.id }, data: { clubName: null } });
+  }
+
+  redirect('/dashboard/player/career');
 }
 
 export async function applyToOpportunityAction(

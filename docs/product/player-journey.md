@@ -2,7 +2,9 @@
 
 1. **Registration**: crear cuenta seleccionando el rol *jugador*.
 2. **Onboarding**: completar datos deportivos (posición, pierna, altura, peso, nacionalidad).
-3. **Profile**: completar ficha futbolística, física y biografía; añadir club actual.
+3. **Profile**: completar ficha futbolística, física y biografía; añadir club actual y
+   **trayectoria** (clubes, categorías y estadísticas por temporada), que se muestra en el
+   perfil público para clubes y ojeadores.
 4. **Videos**: subir highlights (almacenamiento local en fase actual).
 5. **Training**: seguir contenidos de técnica, fuerza y psicología.
 6. **Desarrollo**: revisar la ruta (pathway), objetivos y evaluaciones; monitorizar el progreso.

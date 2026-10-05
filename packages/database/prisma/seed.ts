@@ -147,6 +147,33 @@ export async function main() {
 
   const playerProfile = await prisma.player.findUnique({ where: { userId: playerUser.id } });
 
+  // ─── Trayectoria deportiva del jugador demo ──────────────
+  if (playerProfile) {
+    const career = [
+      { clubName: 'Future Baller Academy', category: 'Sub-17', season: '2025/26', appearances: 18, goals: 12, assists: 7, isCurrent: true },
+      { clubName: 'Ballarat City FC', category: 'Sub-16', season: '2024/25', appearances: 22, goals: 9, assists: 5, isCurrent: false },
+      { clubName: 'Ballarat Grammar', category: 'School', season: '2023/24', appearances: 15, goals: 4, assists: 3, isCurrent: false },
+    ];
+    for (const entry of career) {
+      await prisma.careerEntry.upsert({
+        where: {
+          playerId_clubName_season: {
+            playerId: playerProfile.id,
+            clubName: entry.clubName,
+            season: entry.season,
+          },
+        },
+        update: {},
+        create: { playerId: playerProfile.id, ...entry },
+      });
+    }
+    // El club "actual" de la trayectoria manda en el `clubName` del perfil.
+    await prisma.player.update({
+      where: { id: playerProfile.id },
+      data: { clubName: 'Future Baller Academy' },
+    });
+  }
+
   // Demo coach linked to the demo player (for assessments and goals)
   const coachProfile = await prisma.coach.findUnique({ where: { userId: coachUser.id } });
   if (coachProfile && playerProfile) {
