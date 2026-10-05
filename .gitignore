@@ -29,6 +29,8 @@ apps/web/public/uploads/
 # Base de datos embebida PGlite
 .pglite/
 apps/web/.pglite/
+# Copias de seguridad de una base corrupta (se pueden borrar)
+.pglite.corrupt-*/
 
 # Logs del servidor de desarrollo
 .dev-server*.log

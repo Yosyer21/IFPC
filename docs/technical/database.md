@@ -22,6 +22,9 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 - Relaciones con borrado en cascada cuando el padre define el ciclo de vida.
 - Enums como `Role`, `PlayerStatus`, `OpportunityType`, `PaymentStatus`.
 - Acceso solo desde `packages/database` (singleton de `PrismaClient`).
+- El cliente es **perezoso**: importar el módulo no abre ninguna conexión. Es lo que evita que
+  `next build` (que evalúa las páginas en varios workers) abra varias instancias de PGlite a la
+  vez y corrompa el directorio de datos embebido.
 
 ## Migraciones
 
