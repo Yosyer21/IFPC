@@ -20,4 +20,9 @@ Implementación: `packages/matching/src/engine.ts` (función pura, testeada con 
 ## Uso
 
 - Página de matching del club y del agente (orden por score, breakdown por criterio).
+- **Área del jugador**: `/dashboard/player/opportunities` ordena las ofertas abiertas por
+  encaje (badge `% match` + breakdown por criterio en el detalle) y el dashboard muestra
+  "Oportunidades para ti" (score ≥ 60). El mapeo vive en `apps/web/lib/matching.ts`.
+  `Opportunity` no tiene nivel competitivo ni país, así que esos criterios quedan neutrales
+  en vez de penalizar a todos los jugadores.
 - Job `calculate-matches` del worker (mejores coincidencias ≥60).

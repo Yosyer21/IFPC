@@ -117,16 +117,23 @@ const PROFILES: TestProfile[] = [
   },
 ];
 
+/** Birth date for a player of the given age, so demo data stays valid over time. */
+function birthDateForAge(age: number): Date {
+  const now = new Date();
+  return new Date(now.getFullYear() - age, now.getMonth(), Math.min(now.getDate(), 28));
+}
+
 async function createProfileRecord(profile: TestProfile, userId: string) {
   switch (profile.role) {
     case 'PLAYER':
       await prisma.player.upsert({
         where: { userId },
-        update: { status: 'AVAILABLE' },
+        update: { status: 'AVAILABLE', dateOfBirth: birthDateForAge(17) },
         create: {
           userId,
           firstName: 'Demo',
           lastName: 'Player',
+          dateOfBirth: birthDateForAge(17),
           nationality: 'Spain',
           position: 'DEL',
           foot: 'Derecha',

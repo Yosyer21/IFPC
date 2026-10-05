@@ -6,6 +6,9 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { ApplyForm } from '@/components/player/apply-form';
+import { ProfileGrid } from '@/components/player/profile-grid';
+import { MatchBreakdown, MatchScoreBadge } from '@/components/player/match-score';
+import { matchOpportunity } from '@/lib/matching';
 import { saveOpportunityAction, unsaveOpportunityAction } from '@/app/actions/player';
 
 export const metadata: Metadata = { title: 'Oportunidad' };
@@ -39,6 +42,8 @@ export default async function PlayerOpportunityDetailPage({
     }),
   ]);
   if (!opportunity) notFound();
+
+  const match = matchOpportunity(player, opportunity);
 
   const typeLabel =
     (OPPORTUNITY_TYPE_LABELS as Record<string, string | undefined>)[opportunity.type] ??
@@ -89,19 +94,23 @@ export default async function PlayerOpportunityDetailPage({
 
       <Card className="mb-6">
         <CardContent>
-          <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {details.map(([label, value]) => (
-              <div key={label} className="rounded-md border border-border p-3">
-                <dt className="text-xs text-muted-foreground">{label}</dt>
-                <dd className="mt-1 font-medium">{value}</dd>
-              </div>
-            ))}
-          </dl>
+          <ProfileGrid rows={details} />
           {opportunity.description ? (
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {opportunity.description}
             </p>
           ) : null}
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardContent>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-semibold">Encaje con tu perfil</h2>
+            <MatchScoreBadge score={match.total} />
+          </div>
+          <p className="mb-4 text-sm text-muted-foreground">{match.summary}</p>
+          <MatchBreakdown result={match} />
         </CardContent>
       </Card>
 

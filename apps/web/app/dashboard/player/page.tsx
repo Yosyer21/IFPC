@@ -14,6 +14,7 @@ import { DonutChart, RadarChart } from '@/components/player/charts';
 import { StatCard } from '@/components/player/stat-card';
 import { CATEGORY_LABELS, GOAL_STATUS_LABELS } from '@/lib/labels';
 import { playerProfileCompletion } from '@/lib/player';
+import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from '@/lib/matching';
 import {
   IconPlay,
   IconRoute,
@@ -45,7 +46,7 @@ export default async function PlayerDashboardPage() {
   const [
     videos,
     pendingGoals,
-    opportunities,
+    openOpportunities,
     unreadNotifications,
     membership,
     evaluationCount,
@@ -57,7 +58,11 @@ export default async function PlayerDashboardPage() {
     prisma.playerGoal.count({
       where: { playerId: player.id, status: { in: ['pending', 'in_progress'] } },
     }),
-    prisma.opportunity.count({ where: { status: 'OPEN' } }),
+    // Only the fields the matching engine needs for the "for you" counter.
+    prisma.opportunity.findMany({
+      where: { status: 'OPEN' },
+      select: { position: true, ageMin: true, ageMax: true },
+    }),
     prisma.notification.count({ where: { userId: session.user.id, read: false } }),
     prisma.membership.findUnique({ where: { userId: session.user.id } }),
     prisma.evaluation.count({ where: { playerId: player.id } }),
@@ -92,6 +97,11 @@ export default async function PlayerDashboardPage() {
   const { percent, completed: completedFields, total: totalFields } =
     playerProfileCompletion(player);
 
+  // Open opportunities whose match score is good enough to apply to.
+  const matchedOpportunities = openOpportunities.filter(
+    (opportunity) => matchOpportunity(player, opportunity).total >= PLAYER_MATCH_THRESHOLD
+  ).length;
+
   // Average per category for the radar (aggregated in the DB via groupBy).
   const radarCategories = evaluationStats.map(
     (stat) => CATEGORY_LABELS[stat.category] ?? stat.category
@@ -104,7 +114,7 @@ export default async function PlayerDashboardPage() {
     { href: '/dashboard/player/videos', icon: IconVideo, label: 'Videos', value: videos },
     { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluationCount },
-    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Oportunidades abiertas', value: opportunities },
+    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Oportunidades para ti', value: matchedOpportunities },
   ];
 
   const quickActions = [
