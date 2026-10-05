@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true
+    "noEmit": true,
+    // Alias de la app web, para ficheros de la raíz (tests, scripts, configs).
+    // apps/web/tsconfig.json define su propio `@/*` y lo sobreescribe.
+    "paths": {
+      "@/*": ["./apps/web/*"]
+    }
   },
   "exclude": ["node_modules"]
 }

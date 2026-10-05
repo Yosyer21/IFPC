@@ -2,6 +2,8 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 const packages = ['auth', 'config', 'database', 'matching', 'types', 'validation', 'ui'];
+// Alias `@/*` de la app web (tsconfig paths), para poder testear sus server actions.
+const webRoot = fileURLToPath(new URL('./apps/web/', import.meta.url));
 
 export default defineConfig({
   resolve: {
@@ -10,6 +12,7 @@ export default defineConfig({
         find: `@ifpc/${name}`,
         replacement: fileURLToPath(new URL(`./packages/${name}/src/index.ts`, import.meta.url)),
       })),
+      { find: /^@\/(.*)$/, replacement: `${webRoot}$1` },
       // next no declara "exports" para "./server": en Node ESM el import extensionless
       // de next-auth/lib/env.js falla, así que se resuelve contra server.js.
       { find: /^next\/server$/, replacement: 'next/server.js' },

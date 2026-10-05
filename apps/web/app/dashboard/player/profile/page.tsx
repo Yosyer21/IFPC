@@ -10,11 +10,14 @@ import {
   PLAYER_STATUS_LABELS,
   POSITION_LABELS,
 } from '@ifpc/config';
+import { PlayerAvatar } from '@/components/player/avatar';
 import { ProfileGrid } from '@/components/player/profile-grid';
+import { PhotoUploadForm } from '@/components/player/photo-upload-form';
 import { StatusToggle } from '@/components/player/status-toggle';
 import { DonutChart } from '@/components/player/charts';
 import { playerProfileCompletion } from '@/lib/player';
-import { IconTarget, IconTrendingUp, IconUser, IconWhistle } from '@/components/dashboard/icons';
+import { removePlayerPhotoAction } from '@/app/actions/player';
+import { IconTarget, IconTrendingUp, IconWhistle } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'My profile' };
 
@@ -69,9 +72,12 @@ export default async function PlayerProfilePage() {
       {/* Cabecera */}
       <div className="animate-fade-up mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <IconUser className="h-5 w-5" />
-          </span>
+          <PlayerAvatar
+            firstName={player.firstName}
+            lastName={player.lastName}
+            imageUrl={player.user.image}
+            size="md"
+          />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">My profile</h1>
             <p className="text-sm text-muted-foreground">
@@ -114,6 +120,24 @@ export default async function PlayerProfilePage() {
         </div>
 
         <div className="flex flex-col gap-4">
+          <Card className="animate-fade-up" style={{ animationDelay: '140ms' }}>
+            <CardContent className="flex flex-col items-center gap-3">
+              <h2 className="self-start font-semibold">Foto de perfil</h2>
+              <PhotoUploadForm
+                firstName={player.firstName}
+                lastName={player.lastName}
+                imageUrl={player.user.image}
+              />
+              {player.user.image ? (
+                <form action={removePlayerPhotoAction}>
+                  <button type="submit" className="text-xs text-muted-foreground hover:underline">
+                    Quitar foto
+                  </button>
+                </form>
+              ) : null}
+            </CardContent>
+          </Card>
+
           <Card className="animate-fade-up flex flex-col items-center" style={{ animationDelay: '160ms' }}>
             <CardContent className="flex w-full flex-col items-center gap-4">
               <h2 className="self-start font-semibold">Profile complete</h2>
