@@ -20,6 +20,11 @@ logros.
 - **Interacción**: me gusta **al instante** (sin esperar al servidor), comentarios
   con **respuestas y edición** del propio texto, compartir (copia el enlace
   directo de la publicación) y denunciar.
+- **Privacidad y convivencia**: cualquier perfil puede **seguir**, **silenciar**
+  (deja de ver sin avisar) o **bloquear** (ninguno de los dos se ve ni puede
+  interactuar, y se cancelan los seguimientos) a cualquier otro, y cada
+  publicación decide **quién puede comentarla** (cualquiera, solo quien me sigue
+  o nadie).
 - **Avisos**: bandeja con contador en el sidebar para **todos los perfiles**, con
   avisos **agrupados** ("A 3 personas les gusta tu publicación") y aviso correcto
   al autor de la publicación o a quien escribió el comentario que respondes.

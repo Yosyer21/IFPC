@@ -20,6 +20,12 @@ import {
   postSchema,
 } from '@ifpc/validation';
 import { extractTags, parseFeedFilters, resolveEmbed, type FeedPost } from '@/lib/discovery-content';
+import {
+  canComment,
+  hasBlockBetween,
+  togglePrivacyRule,
+  type PrivacyKind,
+} from '@/lib/discovery-privacy';
 import { listFeed } from '@/lib/discovery';
 import {
   GUARDRAIL_MESSAGES,
@@ -115,6 +121,7 @@ export async function createPostAction(
     body: str(formData, 'body'),
     linkUrl: str(formData, 'linkUrl'),
     opportunityId: str(formData, 'opportunityId'),
+    commentsPolicy: str(formData, 'commentsPolicy') ?? undefined,
     tags: extractTags(str(formData, 'body'), splitTags(str(formData, 'tags'))),
   });
   if (!parsed.success) {
@@ -180,6 +187,7 @@ export async function createPostAction(
         linkUrl: parsed.data.linkUrl || null,
         opportunityId,
         tags: parsed.data.tags ?? [],
+        commentsPolicy: parsed.data.commentsPolicy ?? 'EVERYONE',
       },
     });
   } catch {
@@ -361,10 +369,20 @@ export async function createCommentAction(
 
   const post = await prisma.post.findUnique({
     where: { id: parsed.data.postId },
-    select: { authorId: true, status: true },
+    select: { authorId: true, status: true, commentsPolicy: true },
   });
   if (!post || post.status !== 'PUBLISHED') {
     return { error: 'Publication not found.' };
+  }
+
+  // Política de comentarios del autor + bloqueos entre ambos perfiles.
+  const allowed = await canComment({
+    viewerId: session.user.id,
+    authorId: post.authorId,
+    policy: post.commentsPolicy ?? 'EVERYONE',
+  });
+  if (!allowed) {
+    return { error: 'No puedes comentar en esta publicación.' };
   }
 
   try {
@@ -661,6 +679,11 @@ export async function toggleFollowAction(formData: FormData): Promise<void> {
     return;
   }
 
+  // Con un bloqueo por medio no hay seguimiento posible.
+  if (await hasBlockBetween(user.id, targetId)) {
+    return;
+  }
+
   const existing = await prisma.follow.findUnique({
     where: { followerId_followingId: { followerId: user.id, followingId: targetId } },
     select: { id: true },
@@ -686,4 +709,38 @@ export async function toggleFollowAction(formData: FormData): Promise<void> {
   } catch {
     // El aviso nunca debe romper el seguimiento.
   }
+}
+
+/** Bloquea o desbloquea a un perfil (corta los seguimientos en ambos sentidos). */
+export async function toggleBlockAction(formData: FormData): Promise<void> {
+  await togglePrivacy(formData, 'BLOCK');
+}
+
+/** Silencia o desilencia a un perfil (solo deja de ver su contenido). */
+export async function toggleMuteAction(formData: FormData): Promise<void> {
+  await togglePrivacy(formData, 'MUTE');
+}
+
+/** Base compartida por bloquear y silenciar. */
+async function togglePrivacy(formData: FormData, kind: PrivacyKind): Promise<void> {
+  const session = await auth();
+  const user = session?.user;
+  if (!user?.id) {
+    return;
+  }
+
+  const targetId = str(formData, 'userId');
+  if (!targetId || targetId === user.id) {
+    return;
+  }
+
+  const target = await prisma.user.findUnique({
+    where: { id: targetId },
+    select: { id: true },
+  });
+  if (!target) {
+    return;
+  }
+
+  await togglePrivacyRule({ ownerId: user.id, targetId, kind });
 }

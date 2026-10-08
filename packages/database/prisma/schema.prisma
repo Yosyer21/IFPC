@@ -122,6 +122,8 @@ model User {
   moderationLogs    ModerationLog[]
   following         Follow[] @relation("FollowFollower")
   followers         Follow[] @relation("FollowFollowing")
+  privacyOwned      PrivacyRule[] @relation("PrivacyOwner")
+  privacyReceived   PrivacyRule[] @relation("PrivacyTarget")
 
   @@index([role])
 }
@@ -848,6 +850,13 @@ enum PostStatus {
   HIDDEN
 }
 
+/// Quién puede comentar una publicación.
+enum CommentsPolicy {
+  EVERYONE
+  FOLLOWERS
+  NOBODY
+}
+
 /// Publicación del feed. `authorId` es el usuario de cualquier rol.
 model Post {
   id            String        @id @default(cuid())
@@ -861,11 +870,13 @@ model Post {
   mediaKind     String? // image | video | embed
   linkUrl       String?
   opportunityId String?
-  opportunity   Opportunity?  @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
-  tags          String[]      @default([])
+  opportunity   Opportunity?   @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+  tags          String[]       @default([])
+  /// Quién puede comentar esta publicación (el autor decide).
+  commentsPolicy CommentsPolicy @default(EVERYONE)
   pinnedAt      DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   likes    PostLike[]
   comments PostComment[]
@@ -966,6 +977,22 @@ model Follow {
 
   @@unique([followerId, followingId])
   @@index([followingId])
+}
+
+/// Preferencias de privacidad entre perfiles: bloquear (no nos vemos ni
+/// interactuamos) o silenciar (solo dejo de ver su contenido).
+model PrivacyRule {
+  id        String   @id @default(cuid())
+  ownerId   String
+  owner     User     @relation("PrivacyOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  targetId  String
+  target    User     @relation("PrivacyTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  /// BLOCK | MUTE
+  kind      String
+  createdAt DateTime @default(now())
+
+  @@unique([ownerId, targetId])
+  @@index([targetId, kind])
 }
 
 

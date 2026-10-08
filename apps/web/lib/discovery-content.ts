@@ -59,6 +59,8 @@ export interface FeedPost {
   opportunity: { id: string; title: string } | null;
   counts: { likes: number; comments: number; views: number };
   likedByMe: boolean;
+  /** Quién puede comentar (`EVERYONE` | `FOLLOWERS` | `NOBODY`). */
+  commentsPolicy: string;
   /** Solo lo rellena la pestaña "Para ti": encaje con el perfil (0-100). */
   relevance?: number | null;
 }
@@ -99,6 +101,7 @@ interface FeedRow {
   mediaKind: string | null;
   linkUrl: string | null;
   tags: string[];
+  commentsPolicy: string;
   pinnedAt: Date | null;
   createdAt: Date;
   author: { id: string; name: string; role: string; image: string | null };
@@ -249,6 +252,7 @@ export function toFeedPost(row: FeedRow): FeedPost {
     mediaKind: row.mediaKind,
     linkUrl: row.linkUrl,
     tags: row.tags,
+    commentsPolicy: row.commentsPolicy,
     pinned: row.pinnedAt !== null,
     createdAt: row.createdAt,
     author: row.author,

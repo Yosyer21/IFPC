@@ -5,6 +5,7 @@ import { createPostAction } from '@/app/actions/discovery';
 import { POST_TYPE_LABELS } from '@ifpc/config';
 import { POST_BODY_MAX, POST_TAGS_MAX } from '@ifpc/validation';
 import { Button, Input } from '@ifpc/ui';
+import { COMMENTS_POLICY_LABELS } from '@/lib/labels';
 
 const fieldClass =
   'w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
@@ -22,6 +23,7 @@ export function PostComposer() {
   const tagsId = useId();
   const fileId = useId();
   const urlId = useId();
+  const policyId = useId();
 
   return (
     <form action={formAction} className="glass-card mb-6 flex flex-col gap-3 rounded-2xl p-4">
@@ -101,6 +103,24 @@ export function PostComposer() {
           placeholder={`#sub17 #portero (máx. ${POST_TAGS_MAX})`}
           className={fieldClass}
         />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <label htmlFor={policyId} className="text-sm font-medium">
+          Comentarios
+        </label>
+        <select
+          id={policyId}
+          name="commentsPolicy"
+          defaultValue="EVERYONE"
+          className={`${fieldClass} w-auto`}
+        >
+          {Object.entries(COMMENTS_POLICY_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}

@@ -55,6 +55,26 @@ relación, para que borrar un usuario no arrastre métricas.
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.
 
+## Privacidad y convivencia
+
+`apps/web/lib/discovery-privacy.ts` resuelve **bloquear** y **silenciar**:
+
+- `BLOCK` es **mutuo**: `hiddenAuthorIds` oculta a los bloqueados en los dos
+  sentidos (el que bloquea deja de ver y el bloqueado también), y bloquearte corta
+  los seguimientos de ambos en `togglePrivacyRule`. Abrir una publicación por
+  enlace directo de alguien que te bloqueó devuelve **404** (`getPostForViewer`).
+- `MUTE` es **unilateral**: solo dejo de ver su contenido.
+- La política de comentarios es del autor (`Post.commentsPolicy`):
+  *cualquiera · solo quien me sigue · nadie*, y `canComment` la combina con los
+  bloqueos. En el detalle, quien no puede comentar ve el motivo en lugar de la
+  caja de comentario (el autor siempre puede comentar en lo suyo).
+- El muro (`/dashboard/discovery/u/<id>`) muestra los botones **Seguir**,
+  **Silenciar** y **Bloquear** (con confirmación) o, si ya le bloqueaste, el
+  aviso y el botón para deshacerlo; si te bloqueó él, el muro responde
+  "Este perfil no está disponible".
+- **Límite conocido**: en el espejo público no hay espectador identificable, así
+  que los bloqueos no filtran ahí.
+
 ## Módulos y carga incremental
 
 - `apps/web/lib/discovery-content.ts` es **client-safe** (tipos, filtros, ranking,

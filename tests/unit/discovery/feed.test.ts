@@ -11,6 +11,8 @@ const mocks = vi.hoisted(() => ({
   followCount: vi.fn(),
   followFindUnique: vi.fn(),
   followGroupBy: vi.fn(),
+  privacyFindMany: vi.fn(),
+  privacyFindFirst: vi.fn(),
   userFindMany: vi.fn(),
 }));
 
@@ -26,6 +28,7 @@ vi.mock('@ifpc/database', () => ({
       findUnique: mocks.followFindUnique,
       groupBy: mocks.followGroupBy,
     },
+    privacyRule: { findMany: mocks.privacyFindMany, findFirst: mocks.privacyFindFirst },
     user: { findMany: mocks.userFindMany },
   },
 }));
@@ -85,6 +88,8 @@ beforeEach(() => {
   mocks.followCount.mockResolvedValue(0);
   mocks.followFindUnique.mockResolvedValue(null);
   mocks.followGroupBy.mockResolvedValue([]);
+  mocks.privacyFindMany.mockResolvedValue([]);
+  mocks.privacyFindFirst.mockResolvedValue(null);
   mocks.userFindMany.mockResolvedValue([]);
 });
 
@@ -503,6 +508,26 @@ describe('espejo público (sin sesión)', () => {
     await listPinnedPosts();
 
     expect(mocks.postFindMany.mock.calls[0][0].include.likes).toBeUndefined();
+  });
+
+  it('las fijadas también respetan bloqueos y silencios', async () => {
+    mocks.privacyFindMany.mockResolvedValue([
+      { ownerId: 'viewer-1', targetId: 'bloqueado', kind: 'BLOCK' },
+    ]);
+    mocks.postFindMany.mockResolvedValue([]);
+
+    await listPinnedPosts('viewer-1');
+
+    expect(mocks.postFindMany.mock.calls[0][0].where.authorId).toEqual({ notIn: ['bloqueado'] });
+  });
+
+  it('el detalle por enlace directo no muestra a quien bloqueaste', async () => {
+    mocks.postFindFirst.mockResolvedValue(row('post-1'));
+    mocks.privacyFindMany.mockResolvedValue([
+      { ownerId: 'viewer-1', targetId: 'author-1', kind: 'BLOCK' },
+    ]);
+
+    await expect(getPostForViewer('post-1', 'viewer-1')).resolves.toBeNull();
   });
 
   it('el detalle público solo alcanza publicaciones publicadas', async () => {

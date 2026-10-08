@@ -7,6 +7,7 @@ import {
 } from '@ifpc/config';
 import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from './matching';
 import { toFeedPost, type FeedPost } from './discovery';
+import { hiddenAuthorIds } from './discovery-privacy';
 
 /**
  * "Para ti": ordena el feed con el motor de matching que ya usan las
@@ -144,8 +145,15 @@ export async function listForYouFeed(input: {
   viewerRole: string;
 }): Promise<FeedPost[]> {
   const since = new Date(Date.now() - DISCOVERY_FORYOU_DAYS * 24 * 60 * 60 * 1000);
+  // Lo bloqueado o silenciado por el espectador tampoco entra en "Para ti".
+  const hidden = await hiddenAuthorIds(input.viewerId);
+
   const rows = await prisma.post.findMany({
-    where: { status: 'PUBLISHED', createdAt: { gte: since } },
+    where: {
+      status: 'PUBLISHED',
+      createdAt: { gte: since },
+      ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
+    },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
     take: DISCOVERY_FORYOU_CANDIDATES,
     include: {

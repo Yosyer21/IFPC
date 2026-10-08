@@ -44,6 +44,13 @@ export const GOAL_STATUS_LABELS: Record<string, string> = {
   completed: 'Completed',
 };
 
+/** Política de comentarios de una publicación (`Post.commentsPolicy`). */
+export const COMMENTS_POLICY_LABELS: Record<string, string> = {
+  EVERYONE: 'Cualquiera',
+  FOLLOWERS: 'Solo quien me sigue',
+  NOBODY: 'Nadie',
+};
+
 /** Acciones de la traza de moderación de Discovery (`ModerationLog.action`). */
 export const MODERATION_ACTION_LABELS: Record<string, string> = {
   HIDDEN: 'Ocultada',

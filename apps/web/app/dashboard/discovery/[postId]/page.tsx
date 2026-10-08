@@ -16,6 +16,7 @@ import {
   listComments,
   trackPostView,
 } from '@/lib/discovery';
+import { canComment } from '@/lib/discovery-privacy';
 
 export const metadata: Metadata = { title: 'Publicación' };
 
@@ -36,9 +37,14 @@ export default async function PostDetailPage({
   await trackPostView({ postId, authorUserId: post.author.id });
 
   const isAuthor = post.author.id === session.user.id;
-  const [comments, stats] = await Promise.all([
-    listComments(postId),
+  const [comments, stats, mayComment] = await Promise.all([
+    listComments(postId, session.user.id),
     isAuthor ? getPostViewStats(postId) : Promise.resolve(null),
+    canComment({
+      viewerId: session.user.id,
+      authorId: post.author.id,
+      policy: post.commentsPolicy,
+    }),
   ]);
 
   return (
@@ -117,7 +123,15 @@ export default async function PostDetailPage({
             viewerRole={session.user.role}
             postAuthorId={post.author.id}
           />
-          <CommentForm postId={post.id} />
+          {mayComment ? (
+            <CommentForm postId={post.id} />
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {post.commentsPolicy === 'NOBODY'
+                ? 'El autor ha cerrado los comentarios de esta publicación.'
+                : 'No puedes comentar en esta publicación.'}
+            </p>
+          )}
         </CardContent>
       </Card>
     </div>

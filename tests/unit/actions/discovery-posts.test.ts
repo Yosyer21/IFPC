@@ -24,6 +24,13 @@ const mocks = vi.hoisted(() => ({
   followFindUnique: vi.fn(),
   followCreate: vi.fn(),
   followDelete: vi.fn(),
+  followDeleteMany: vi.fn(),
+  privacyFindMany: vi.fn(),
+  privacyFindFirst: vi.fn(),
+  privacyFindUnique: vi.fn(),
+  privacyCreate: vi.fn(),
+  privacyUpdate: vi.fn(),
+  privacyDelete: vi.fn(),
   userFindUnique: vi.fn(),
   notifyUser: vi.fn(),
   notifyGrouped: vi.fn(),
@@ -62,6 +69,15 @@ vi.mock('@ifpc/database', () => ({
       findUnique: mocks.followFindUnique,
       create: mocks.followCreate,
       delete: mocks.followDelete,
+      deleteMany: mocks.followDeleteMany,
+    },
+    privacyRule: {
+      findMany: mocks.privacyFindMany,
+      findFirst: mocks.privacyFindFirst,
+      findUnique: mocks.privacyFindUnique,
+      create: mocks.privacyCreate,
+      update: mocks.privacyUpdate,
+      delete: mocks.privacyDelete,
     },
     user: { findUnique: mocks.userFindUnique },
   },
@@ -86,7 +102,9 @@ import {
   reportPostAction,
   resolveReportsAction,
   toggleFollowAction,
+  toggleBlockAction,
   toggleLikeAction,
+  toggleMuteAction,
   updateCommentAction,
   updatePostAction,
 } from '@/app/actions/discovery';
@@ -131,6 +149,13 @@ beforeEach(() => {
   mocks.followFindUnique.mockResolvedValue(null);
   mocks.followCreate.mockResolvedValue({});
   mocks.followDelete.mockResolvedValue({});
+  mocks.followDeleteMany.mockResolvedValue({ count: 0 });
+  mocks.privacyFindMany.mockResolvedValue([]);
+  mocks.privacyFindFirst.mockResolvedValue(null);
+  mocks.privacyFindUnique.mockResolvedValue(null);
+  mocks.privacyCreate.mockResolvedValue({});
+  mocks.privacyUpdate.mockResolvedValue({});
+  mocks.privacyDelete.mockResolvedValue({});
   mocks.userFindUnique.mockResolvedValue({ id: 'otro' });
   mocks.notifyGrouped.mockResolvedValue(undefined);
   mocks.mkdir.mockResolvedValue(undefined);
@@ -529,6 +554,47 @@ describe('createCommentAction', () => {
     expect(result.error).toContain('demasiado seguido');
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
+
+  it('no comenta si hay un bloqueo con el autor', async () => {
+    mocks.postFindUnique.mockResolvedValue({
+      authorId: 'otro',
+      status: 'PUBLISHED',
+      commentsPolicy: 'EVERYONE',
+    });
+    mocks.privacyFindFirst.mockResolvedValue({ id: 'regla' });
+
+    const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
+
+    expect(result).toEqual({ error: 'No puedes comentar en esta publicación.' });
+    expect(mocks.commentCreate).not.toHaveBeenCalled();
+  });
+
+  it('respeta la política NOBODY del autor', async () => {
+    mocks.postFindUnique.mockResolvedValue({
+      authorId: 'otro',
+      status: 'PUBLISHED',
+      commentsPolicy: 'NOBODY',
+    });
+
+    const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
+
+    expect(result).toEqual({ error: 'No puedes comentar en esta publicación.' });
+    expect(mocks.commentCreate).not.toHaveBeenCalled();
+  });
+
+  it('la política FOLLOWERS deja comentar a quien sigue al autor', async () => {
+    mocks.postFindUnique.mockResolvedValue({
+      authorId: 'otro',
+      status: 'PUBLISHED',
+      commentsPolicy: 'FOLLOWERS',
+    });
+    mocks.followFindUnique.mockResolvedValue({ id: 'follow-1' });
+
+    const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
+
+    expect(result).toEqual({ success: 'Comment published.' });
+    expect(mocks.commentCreate).toHaveBeenCalled();
+  });
 });
 
 describe('deleteCommentAction', () => {
@@ -800,5 +866,53 @@ describe('toggleFollowAction', () => {
 
     await expect(toggleFollowAction(form({ userId: 'otro' }))).resolves.toBeUndefined();
     expect(mocks.followCreate).toHaveBeenCalled();
+  });
+
+  it('con un bloqueo por medio no se puede seguir', async () => {
+    mocks.privacyFindFirst.mockResolvedValue({ id: 'regla' });
+
+    await toggleFollowAction(form({ userId: 'otro' }));
+
+    expect(mocks.followCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('toggleBlockAction y toggleMuteAction', () => {
+  it('sin sesión no hacen nada', async () => {
+    mocks.auth.mockResolvedValue(null);
+
+    await toggleBlockAction(form({ userId: 'otro' }));
+    await toggleMuteAction(form({ userId: 'otro' }));
+
+    expect(mocks.privacyCreate).not.toHaveBeenCalled();
+  });
+
+  it('no te dejas bloquear a ti mismo', async () => {
+    await toggleBlockAction(form({ userId: 'user-1' }));
+    expect(mocks.privacyCreate).not.toHaveBeenCalled();
+  });
+
+  it('ignora perfiles que no existen', async () => {
+    mocks.userFindUnique.mockResolvedValue(null);
+    await toggleBlockAction(form({ userId: 'fantasma' }));
+    expect(mocks.privacyCreate).not.toHaveBeenCalled();
+  });
+
+  it('bloquear crea la regla y corta los seguimientos', async () => {
+    await toggleBlockAction(form({ userId: 'otro' }));
+
+    expect(mocks.privacyCreate).toHaveBeenCalledWith({
+      data: { ownerId: 'user-1', targetId: 'otro', kind: 'BLOCK' },
+    });
+    expect(mocks.followDeleteMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('silenciar crea la regla sin tocar los seguimientos', async () => {
+    await toggleMuteAction(form({ userId: 'otro' }));
+
+    expect(mocks.privacyCreate).toHaveBeenCalledWith({
+      data: { ownerId: 'user-1', targetId: 'otro', kind: 'MUTE' },
+    });
+    expect(mocks.followDeleteMany).not.toHaveBeenCalled();
   });
 });

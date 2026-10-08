@@ -1,6 +1,7 @@
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { DISCOVERY_PAGE_SIZE, DISCOVERY_SUGGESTED_PROFILES } from '@ifpc/config';
+import { hiddenAuthorIds } from './discovery-privacy';
 import {
   POST_INCLUDE,
   rankTrendingPosts,
@@ -40,8 +41,12 @@ export async function listFeed(input: {
     return { posts: [], nextCursor: null };
   }
 
+  // Lo que el espectador ha bloqueado o silenciado (y quien le bloqueó) no aparece.
+  const hidden = await hiddenAuthorIds(viewerId);
+
   const where = {
     status: 'PUBLISHED' as const,
+    ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
     ...(filters.tag ? { tags: { has: filters.tag } } : {}),
     ...(filters.tab === 'announcements' ? { type: 'ANNOUNCEMENT' as const } : {}),
     ...(filters.tab === 'videos' ? { type: 'VIDEO' as const } : {}),
@@ -100,8 +105,14 @@ export async function listPinnedPosts(
   viewerId?: string | null,
   limit = 3
 ): Promise<FeedPost[]> {
+  const hidden = await hiddenAuthorIds(viewerId);
+
   const rows = await prisma.post.findMany({
-    where: { status: 'PUBLISHED', pinnedAt: { not: null } },
+    where: {
+      status: 'PUBLISHED',
+      pinnedAt: { not: null },
+      ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
+    },
     orderBy: { pinnedAt: 'desc' },
     take: limit,
     include: {
@@ -132,13 +143,29 @@ export async function getPostForViewer(
       ...(viewerId ? { likes: { where: { userId: viewerId }, select: { id: true } } } : {}),
     },
   });
-  return row ? toFeedPost(row) : null;
+  if (!row) return null;
+
+  // Un bloqueo también cierra el acceso por enlace directo.
+  if (viewerId && row.author.id !== viewerId) {
+    const hidden = await hiddenAuthorIds(viewerId);
+    if (hidden.includes(row.author.id)) return null;
+  }
+
+  return toFeedPost(row);
 }
 
 /** Comentarios de una publicación, del más antiguo al más nuevo. */
-export async function listComments(postId: string): Promise<FeedComment[]> {
+export async function listComments(
+  postId: string,
+  viewerId?: string | null
+): Promise<FeedComment[]> {
+  const hidden = await hiddenAuthorIds(viewerId);
+
   return prisma.postComment.findMany({
-    where: { postId },
+    where: {
+      postId,
+      ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
+    },
     orderBy: { createdAt: 'asc' },
     take: 200,
     select: {
@@ -151,11 +178,15 @@ export async function listComments(postId: string): Promise<FeedComment[]> {
   });
 }
 
-/** Publicaciones publicadas de un autor. */
+/** Publicaciones publicadas de un autor (vacío si el espectador no puede verlas). */
 export async function listPostsByAuthor(
   authorId: string,
-  take = DISCOVERY_PAGE_SIZE
+  take = DISCOVERY_PAGE_SIZE,
+  viewerId?: string | null
 ): Promise<FeedPost[]> {
+  const hidden = await hiddenAuthorIds(viewerId);
+  if (hidden.includes(authorId)) return [];
+
   const rows = await prisma.post.findMany({
     where: { authorId, status: 'PUBLISHED' },
     orderBy: { createdAt: 'desc' },

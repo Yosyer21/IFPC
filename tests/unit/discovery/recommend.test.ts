@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   clubFindUnique: vi.fn(),
   universityFindUnique: vi.fn(),
   opportunityFindMany: vi.fn(),
+  privacyFindMany: vi.fn(),
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
@@ -18,6 +19,7 @@ vi.mock('@ifpc/database', () => ({
     club: { findUnique: mocks.clubFindUnique },
     university: { findUnique: mocks.universityFindUnique },
     opportunity: { findMany: mocks.opportunityFindMany },
+    privacyRule: { findMany: mocks.privacyFindMany },
   },
 }));
 
@@ -56,6 +58,7 @@ beforeEach(() => {
   mocks.clubFindUnique.mockResolvedValue(null);
   mocks.universityFindUnique.mockResolvedValue(null);
   mocks.opportunityFindMany.mockResolvedValue([]);
+  mocks.privacyFindMany.mockResolvedValue([]);
 });
 
 describe('relevanceForPlayer', () => {
