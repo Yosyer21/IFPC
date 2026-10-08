@@ -8,7 +8,12 @@ import { PostCard } from '@/components/discovery/post-card';
 import { PostComposer } from '@/components/discovery/post-composer';
 import { SuggestedProfiles } from '@/components/discovery/suggested-profiles';
 import { PageHeader } from '@/components/player/page-header';
-import { listFeed, listPinnedPosts, listSuggestedProfiles, parseFeedFilters } from '@/lib/discovery';
+import {
+  listFeed,
+  listPinnedPosts,
+  listSuggestedProfiles,
+  parseFeedFilters,
+} from '@/lib/discovery';
 import { listForYouFeed } from '@/lib/discovery-recommend';
 
 export const metadata: Metadata = { title: 'Discovery' };

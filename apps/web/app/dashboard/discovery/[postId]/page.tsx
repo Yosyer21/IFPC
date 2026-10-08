@@ -101,6 +101,7 @@ export default async function PostDetailPage({
           <h2 className="font-semibold">Comentarios ({comments.length})</h2>
           <CommentList
             comments={comments}
+            postId={post.id}
             viewerId={session.user.id}
             viewerRole={session.user.role}
             postAuthorId={post.author.id}

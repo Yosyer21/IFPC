@@ -80,6 +80,7 @@ export default async function PublicPostPage({
             <h2 className="font-semibold">Comentarios ({comments.length})</h2>
             <CommentList
               comments={comments}
+              postId={post.id}
               viewerId=""
               viewerRole=""
               postAuthorId={post.author.id}

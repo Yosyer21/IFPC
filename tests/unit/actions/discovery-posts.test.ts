@@ -13,6 +13,7 @@ const mocks = vi.hoisted(() => ({
   commentCreate: vi.fn(),
   commentFindUnique: vi.fn(),
   commentDelete: vi.fn(),
+  commentUpdate: vi.fn(),
   reportUpsert: vi.fn(),
   reportUpdateMany: vi.fn(),
   moderationLogCreate: vi.fn(),
@@ -22,6 +23,7 @@ const mocks = vi.hoisted(() => ({
   followDelete: vi.fn(),
   userFindUnique: vi.fn(),
   notifyUser: vi.fn(),
+  notifyGrouped: vi.fn(),
   mkdir: vi.fn(),
   writeFile: vi.fn(),
   unlink: vi.fn(),
@@ -45,6 +47,7 @@ vi.mock('@ifpc/database', () => ({
       create: mocks.commentCreate,
       findUnique: mocks.commentFindUnique,
       delete: mocks.commentDelete,
+      update: mocks.commentUpdate,
     },
     postReport: { upsert: mocks.reportUpsert, updateMany: mocks.reportUpdateMany },
     moderationLog: { create: mocks.moderationLogCreate },
@@ -57,7 +60,10 @@ vi.mock('@ifpc/database', () => ({
     user: { findUnique: mocks.userFindUnique },
   },
 }));
-vi.mock('@/lib/notifications/notify', () => ({ notifyUser: mocks.notifyUser }));
+vi.mock('@/lib/notifications/notify', () => ({
+  notifyUser: mocks.notifyUser,
+  notifyGrouped: mocks.notifyGrouped,
+}));
 vi.mock('node:fs/promises', () => ({
   mkdir: mocks.mkdir,
   writeFile: mocks.writeFile,
@@ -75,6 +81,7 @@ import {
   resolveReportsAction,
   toggleFollowAction,
   toggleLikeAction,
+  updateCommentAction,
   updatePostAction,
 } from '@/app/actions/discovery';
 
@@ -106,6 +113,8 @@ beforeEach(() => {
   mocks.likeFindUnique.mockResolvedValue(null);
   mocks.likeCreate.mockResolvedValue({});
   mocks.commentCreate.mockResolvedValue({ id: 'comment-1' });
+  mocks.commentFindUnique.mockResolvedValue(null);
+  mocks.commentUpdate.mockResolvedValue({});
   mocks.reportUpsert.mockResolvedValue({});
   mocks.reportUpdateMany.mockResolvedValue({ count: 2 });
   mocks.moderationLogCreate.mockResolvedValue({});
@@ -114,7 +123,7 @@ beforeEach(() => {
   mocks.followCreate.mockResolvedValue({});
   mocks.followDelete.mockResolvedValue({});
   mocks.userFindUnique.mockResolvedValue({ id: 'otro' });
-  mocks.notifyUser.mockResolvedValue(undefined);
+  mocks.notifyGrouped.mockResolvedValue(undefined);
   mocks.mkdir.mockResolvedValue(undefined);
   mocks.writeFile.mockResolvedValue(undefined);
   mocks.unlink.mockResolvedValue(undefined);
@@ -358,7 +367,7 @@ describe('toggleLikeAction', () => {
     await toggleLikeAction(form({ postId: 'post-1' }));
 
     expect(mocks.likeCreate).toHaveBeenCalledWith({ data: { postId: 'post-1', userId: 'user-1' } });
-    expect(mocks.notifyUser).toHaveBeenCalledWith(
+    expect(mocks.notifyGrouped).toHaveBeenCalledWith(
       expect.objectContaining({ userId: 'otro', link: '/dashboard/discovery/post-1' })
     );
   });
@@ -371,13 +380,13 @@ describe('toggleLikeAction', () => {
 
     expect(mocks.likeDelete).toHaveBeenCalledWith({ where: { id: 'like-1' } });
     expect(mocks.likeCreate).not.toHaveBeenCalled();
-    expect(mocks.notifyUser).not.toHaveBeenCalled();
+    expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 
   it('no avisa al darse me gusta en la propia publicación', async () => {
     await toggleLikeAction(form({ postId: 'post-1' }));
     expect(mocks.likeCreate).toHaveBeenCalled();
-    expect(mocks.notifyUser).not.toHaveBeenCalled();
+    expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 });
 
@@ -414,7 +423,7 @@ describe('createCommentAction', () => {
         body: 'Muy bueno',
       },
     });
-    expect(mocks.notifyUser).toHaveBeenCalledWith(
+    expect(mocks.notifyGrouped).toHaveBeenCalledWith(
       expect.objectContaining({ userId: 'otro', type: 'post_comment' })
     );
     expect(result).toEqual({ success: 'Comment published.' });
@@ -423,6 +432,37 @@ describe('createCommentAction', () => {
   it('acepta respuestas indicando el comentario padre', async () => {
     await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
     expect(mocks.commentCreate.mock.calls[0][0].data.parentId).toBe('comment-9');
+  });
+
+  it('una respuesta avisa a quien comentó, no al autor de la publicación', async () => {
+    mocks.postFindUnique.mockResolvedValue({ authorId: 'autor-post', status: 'PUBLISHED' });
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'autor-comentario', postId: 'post-1' });
+
+    await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
+
+    expect(mocks.notifyGrouped).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: 'autor-comentario', type: 'comment_reply' })
+    );
+  });
+
+  it('ignora un padre que pertenece a otra publicación', async () => {
+    mocks.postFindUnique.mockResolvedValue({ authorId: 'autor-post', status: 'PUBLISHED' });
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'ajeno', postId: 'post-OTRO' });
+
+    await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
+
+    expect(mocks.notifyGrouped).toHaveBeenCalledWith(
+      expect.objectContaining({ userId: 'autor-post', type: 'comment_reply' })
+    );
+  });
+
+  it('responder a tu propio comentario no genera aviso', async () => {
+    mocks.postFindUnique.mockResolvedValue({ authorId: 'otro', status: 'PUBLISHED' });
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'user-1', postId: 'post-1' });
+
+    await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
+
+    expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 });
 
@@ -458,6 +498,41 @@ describe('deleteCommentAction', () => {
 
     await deleteCommentAction(form({ commentId: 'comment-1' }));
     expect(mocks.commentDelete).not.toHaveBeenCalled();
+  });
+});
+
+describe('updateCommentAction', () => {
+  it('exige sesión', async () => {
+    mocks.auth.mockResolvedValue(null);
+    const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: 'nuevo' }));
+    expect(result).toEqual({ error: 'Invalid session.' });
+  });
+
+  it('rechaza textos vacíos', async () => {
+    const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: '   ' }));
+    expect(result.error).toBeDefined();
+    expect(mocks.commentUpdate).not.toHaveBeenCalled();
+  });
+
+  it('solo edita comentarios propios', async () => {
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'otro' });
+
+    const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: 'nuevo' }));
+
+    expect(result).toEqual({ error: 'Solo puedes editar tus propios comentarios.' });
+    expect(mocks.commentUpdate).not.toHaveBeenCalled();
+  });
+
+  it('guarda el texto del comentario propio', async () => {
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'user-1' });
+
+    const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: '  nuevo ' }));
+
+    expect(mocks.commentUpdate).toHaveBeenCalledWith({
+      where: { id: 'comment-1' },
+      data: { body: 'nuevo' },
+    });
+    expect(result).toEqual({ success: 'Comentario actualizado.' });
   });
 });
 
@@ -636,11 +711,11 @@ describe('toggleFollowAction', () => {
     expect(mocks.followCreate).toHaveBeenCalledWith({
       data: { followerId: 'user-1', followingId: 'otro' },
     });
-    expect(mocks.notifyUser).toHaveBeenCalledWith(
+    expect(mocks.notifyGrouped).toHaveBeenCalledWith(
       expect.objectContaining({
         userId: 'otro',
         type: 'new_follower',
-        link: '/dashboard/discovery/u/user-1',
+        link: '/dashboard/discovery/u/otro',
       })
     );
   });
@@ -652,11 +727,11 @@ describe('toggleFollowAction', () => {
 
     expect(mocks.followDelete).toHaveBeenCalledWith({ where: { id: 'follow-1' } });
     expect(mocks.followCreate).not.toHaveBeenCalled();
-    expect(mocks.notifyUser).not.toHaveBeenCalled();
+    expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 
   it('el aviso no rompe el seguimiento si falla', async () => {
-    mocks.notifyUser.mockRejectedValue(new Error('boom'));
+    mocks.notifyGrouped.mockRejectedValue(new Error('boom'));
 
     await expect(toggleFollowAction(form({ userId: 'otro' }))).resolves.toBeUndefined();
     expect(mocks.followCreate).toHaveBeenCalled();

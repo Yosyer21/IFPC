@@ -55,6 +55,27 @@ relación, para que borrar un usuario no arrastre métricas.
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.
 
+## Avisos y tiempo real percibido
+
+- **Agrupación**: `notifyGrouped` (`lib/notifications/notify.ts`) reutiliza el
+  aviso pendiente del mismo `type` + `link` dentro de una ventana de 24 h y sube
+  su contador (`Notification.count`) en vez de crear uno por interacción. Si la
+  agrupación falla, cae al `notifyUser` simple: nunca se pierde el aviso.
+- **A quién avisa**: me gusta y comentarios van al autor de la publicación; una
+  **respuesta** (`parentId`) va a quien escribió el comentario —y solo si el padre
+  pertenece a la misma publicación—; los seguidores nuevos agrupan en el muro del
+  seguido.
+- **Bandeja**: `NotificationsBell` (cliente) vive en el bloque de cuenta del
+  sidebar, así que **todos los roles** ven sus avisos (antes el contador solo se
+  calculaba para `player`), con contador, agrupación visible `(3)` y "marcar como
+  leídos" reutilizando `markNotificationsReadAction`. `listNotifications` y
+  `countUnreadNotifications` resuelven la bandeja.
+- **Optimista**: el me gusta (`useOptimistic`) y el seguir se pintan al instante y
+  se confirman con la respuesta del servidor, con `aria-live` en el contador.
+- **Hilos**: los comentarios admiten un nivel de respuestas con UI propia
+  ("Responder" por comentario) y **edición** del texto propio
+  (`updateCommentAction` + `EditCommentForm`).
+
 ## Espejo público
 
 Las páginas de `apps/web/app/(public)/discovery/` (feed, `[postId]`, `u/[userId]`

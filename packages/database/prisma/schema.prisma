@@ -426,10 +426,13 @@ model Notification {
   title     String
   message   String?
   link      String?
+  /// Avisos agrupados (varias personas haciendo lo mismo sobre el mismo post).
+  count     Int      @default(1)
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 
   @@index([userId, read])
+  @@index([userId, type, link, read])
 }
 
 model Membership {

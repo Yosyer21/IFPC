@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useOptimistic, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { deletePostAction, reportPostAction, toggleLikeAction } from '@/app/actions/discovery';
 import { IconMessageCircle, IconStar } from '@/components/dashboard/icons';
@@ -30,6 +30,21 @@ export function PostActions({
 }) {
   const [copied, setCopied] = useState(false);
   const [reportState, reportAction, reporting] = useActionState(reportPostAction, {});
+  // El "me gusta" se pinta al instante y se confirma con la respuesta del servidor.
+  const [like, setLike] = useOptimistic({ liked: likedByMe, count: likes });
+  const [pending, startTransition] = useTransition();
+
+  const toggleLike = () => {
+    startTransition(async () => {
+      setLike({
+        liked: !like.liked,
+        count: Math.max(0, like.count + (like.liked ? -1 : 1)),
+      });
+      const data = new FormData();
+      data.set('postId', postId);
+      await toggleLikeAction(data);
+    });
+  };
 
   const share = async () => {
     const url = `${window.location.origin}/dashboard/discovery/${postId}`;
@@ -45,22 +60,21 @@ export function PostActions({
   return (
     <div className="mt-3 border-t border-white/10 pt-3">
       <div className="flex flex-wrap items-center gap-2">
-        <form action={toggleLikeAction}>
-          <input type="hidden" name="postId" value={postId} />
-          <button
-            type="submit"
-            aria-pressed={likedByMe}
-            aria-label="Me gusta"
-            className={`${actionClass} ${
-              likedByMe
-                ? 'bg-emerald-500/15 text-emerald-400'
-                : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
-            }`}
-          >
-            <IconStar className="h-3.5 w-3.5" />
-            {likes}
-          </button>
-        </form>
+        <button
+          type="button"
+          onClick={toggleLike}
+          disabled={pending}
+          aria-pressed={like.liked}
+          aria-label="Me gusta"
+          className={`${actionClass} disabled:opacity-70 ${
+            like.liked
+              ? 'bg-emerald-500/15 text-emerald-400'
+              : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+          }`}
+        >
+          <IconStar className="h-3.5 w-3.5" />
+          <span aria-live="polite">{like.count}</span>
+        </button>
 
         <Link
           href={`/dashboard/discovery/${postId}`}

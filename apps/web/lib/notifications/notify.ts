@@ -8,6 +8,9 @@ export interface NotifyInput {
   link?: string;
 }
 
+/** Ventana en la que los avisos del mismo tipo y destino se agrupan. */
+export const NOTIFICATION_GROUP_WINDOW_HOURS = 24;
+
 /**
  * Creates a notification synchronously and reliably.
  *
@@ -26,4 +29,49 @@ export async function notifyUser(input: NotifyInput): Promise<void> {
       link: input.link ?? null,
     },
   });
+}
+
+/**
+ * Crea el aviso o lo **agrupa** con el que ya esté pendiente del mismo tipo y
+ * destino dentro de la ventana, incrementando su contador en vez de llenar la
+ * bandeja con un aviso por interacción ("A 3 personas les gusta…").
+ *
+ * El `createdAt` del aviso agrupado se actualiza al último evento para que la
+ * bandeja quede ordenada por actividad reciente.
+ */
+export async function notifyGrouped(
+  input: NotifyInput & { groupMessage?: (count: number) => string }
+): Promise<void> {
+  const since = new Date(Date.now() - NOTIFICATION_GROUP_WINDOW_HOURS * 60 * 60 * 1000);
+
+  try {
+    const existing = await prisma.notification.findFirst({
+      where: {
+        userId: input.userId,
+        type: input.type,
+        link: input.link ?? null,
+        read: false,
+        createdAt: { gte: since },
+      },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, count: true },
+    });
+
+    if (existing) {
+      const count = existing.count + 1;
+      await prisma.notification.update({
+        where: { id: existing.id },
+        data: {
+          count,
+          message: input.groupMessage ? input.groupMessage(count) : (input.message ?? null),
+          createdAt: new Date(),
+        },
+      });
+      return;
+    }
+  } catch {
+    // Si la agrupación falla se cae al aviso simple: nunca se pierde el aviso.
+  }
+
+  await notifyUser(input);
 }

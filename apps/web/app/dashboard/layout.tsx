@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { DashboardSidebar } from '@/components/dashboard/sidebar';
+import { countUnreadNotifications, listNotifications } from '@/lib/discovery';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const session = await auth();
@@ -12,15 +13,14 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   const role = session.user.role.toLowerCase();
 
-  // Cabecera del sidebar (nombre + foto) y contador de avisos del área de jugador.
-  const [user, unreadCount] = await Promise.all([
+  // Cabecera del sidebar (nombre + foto) y bandeja de avisos, para **todos** los roles.
+  const [user, unreadCount, notifications] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
       select: { name: true, image: true },
     }),
-    role === 'player'
-      ? prisma.notification.count({ where: { userId: session.user.id, read: false } })
-      : Promise.resolve(undefined),
+    countUnreadNotifications(session.user.id),
+    listNotifications(session.user.id),
   ]);
 
   return (
@@ -38,6 +38,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
         unreadCount={unreadCount}
         userName={user?.name ?? session.user.name ?? ''}
         userImage={user?.image ?? null}
+        notifications={notifications}
       />
       <main className="relative flex-1 p-6">{children}</main>
     </div>

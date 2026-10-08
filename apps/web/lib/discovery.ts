@@ -437,6 +437,41 @@ export async function trackPostView(input: { postId: string; authorUserId: strin
   });
 }
 
+/** Avisos del usuario para la campana del feed (los más recientes primero). */
+export interface FeedNotification {
+  id: string;
+  type: string;
+  title: string;
+  message: string | null;
+  link: string | null;
+  count: number;
+  read: boolean;
+  createdAt: Date;
+}
+
+export async function listNotifications(userId: string, limit = 8): Promise<FeedNotification[]> {
+  return prisma.notification.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    take: limit,
+    select: {
+      id: true,
+      type: true,
+      title: true,
+      message: true,
+      link: true,
+      count: true,
+      read: true,
+      createdAt: true,
+    },
+  });
+}
+
+/** Avisos pendientes (para el contador de la campana). */
+export async function countUnreadNotifications(userId: string): Promise<number> {
+  return prisma.notification.count({ where: { userId, read: false } });
+}
+
 /** Alcance de una publicación (para el autor). */
 export async function getPostViewStats(postId: string): Promise<PostViewStats> {
   const rows = await prisma.postView.findMany({

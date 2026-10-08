@@ -58,6 +58,11 @@ export const postCommentSchema = z.object({
 
 export type PostCommentInput = z.infer<typeof postCommentSchema>;
 
+/** Edición del texto de un comentario propio. */
+export const postCommentEditSchema = z.object({
+  body: z.string().trim().min(1).max(POST_COMMENT_MAX),
+});
+
 export const postReportSchema = z.object({
   postId: z.string().trim().min(1).max(40),
   reason: z.string().trim().min(3).max(POST_REPORT_MAX),

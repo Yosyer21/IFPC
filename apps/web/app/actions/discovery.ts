@@ -13,6 +13,7 @@ import {
 } from '@ifpc/config';
 import { prisma } from '@ifpc/database';
 import {
+  postCommentEditSchema,
   postCommentSchema,
   postEditSchema,
   postReportSchema,
@@ -20,7 +21,7 @@ import {
 } from '@ifpc/validation';
 import { extractTags, resolveEmbed } from '@/lib/discovery';
 import { logModeration } from '@/lib/discovery-moderation';
-import { notifyUser } from '@/lib/notifications/notify';
+import { notifyGrouped } from '@/lib/notifications/notify';
 import { dashboardPath } from '@/lib/safe-redirect';
 import type { ActionState } from './auth';
 
@@ -288,12 +289,13 @@ export async function toggleLikeAction(formData: FormData): Promise<void> {
     await prisma.postLike.create({ data: { postId, userId: user.id } });
     if (post.authorId !== user.id) {
       try {
-        await notifyUser({
+        await notifyGrouped({
           userId: post.authorId,
           type: 'post_like',
-          title: 'New like',
+          title: 'Nuevos me gusta',
           message: `${user.name} liked your post.`,
           link: `/dashboard/discovery/${postId}`,
+          groupMessage: (count) => `A ${count} personas les gusta tu publicación.`,
         });
       } catch {
         // El aviso nunca debe romper la interacción.
@@ -342,14 +344,32 @@ export async function createCommentAction(
     return { error: 'No se pudo enviar el comentario.' };
   }
 
-  if (post.authorId !== session.user.id) {
+  // Una respuesta avisa a quien comentó; un comentario nuevo, al autor.
+  let targetUserId = post.authorId;
+  if (parsed.data.parentId) {
+    const parent = await prisma.postComment.findUnique({
+      where: { id: parsed.data.parentId },
+      select: { authorId: true, postId: true },
+    });
+    // Solo se acepta el padre si pertenece a la misma publicación.
+    if (parent && parent.postId === parsed.data.postId) {
+      targetUserId = parent.authorId;
+    }
+  }
+
+  if (targetUserId !== session.user.id) {
+    const isReply = Boolean(parsed.data.parentId);
     try {
-      await notifyUser({
-        userId: post.authorId,
-        type: 'post_comment',
-        title: 'New comment',
-        message: `${session.user.name} commented on your post.`,
+      await notifyGrouped({
+        userId: targetUserId,
+        type: isReply ? 'comment_reply' : 'post_comment',
+        title: isReply ? 'Nueva respuesta' : 'Nuevos comentarios',
+        message: `${session.user.name} comentó en Discovery.`,
         link: `/dashboard/discovery/${parsed.data.postId}`,
+        groupMessage: (count) =>
+          isReply
+            ? `${count} respuestas nuevas en la conversación.`
+            : `${count} comentarios nuevos en tu publicación.`,
       });
     } catch {
       // El aviso nunca debe romper el comentario.
@@ -357,6 +377,46 @@ export async function createCommentAction(
   }
 
   return { success: 'Comment published.' };
+}
+
+/** Edita el texto de un comentario propio. */
+export async function updateCommentAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const commentId = str(formData, 'commentId');
+  if (!commentId) {
+    return { error: 'Comment not found.' };
+  }
+
+  const parsed = postCommentEditSchema.safeParse({ body: str(formData, 'body') });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comentario.' };
+  }
+
+  const comment = await prisma.postComment.findUnique({
+    where: { id: commentId },
+    select: { authorId: true },
+  });
+  if (!comment) {
+    return { error: 'Comment not found.' };
+  }
+  if (comment.authorId !== session.user.id) {
+    return { error: 'Solo puedes editar tus propios comentarios.' };
+  }
+
+  try {
+    await prisma.postComment.update({ where: { id: commentId }, data: { body: parsed.data.body } });
+  } catch {
+    return { error: 'No se pudo guardar el comentario.' };
+  }
+
+  return { success: 'Comentario actualizado.' };
 }
 
 /** Borra un comentario propio (o cualquiera si eres el autor del post / admin). */
@@ -553,12 +613,14 @@ export async function toggleFollowAction(formData: FormData): Promise<void> {
   await prisma.follow.create({ data: { followerId: user.id, followingId: targetId } });
 
   try {
-    await notifyUser({
+    // El aviso agrupa seguidores y enlaza a tu propio muro.
+    await notifyGrouped({
       userId: targetId,
       type: 'new_follower',
-      title: 'Nuevo seguidor',
+      title: 'Nuevos seguidores',
       message: `${user.name} te sigue en Discovery.`,
-      link: `/dashboard/discovery/u/${user.id}`,
+      link: `/dashboard/discovery/u/${targetId}`,
+      groupMessage: (count) => `${count} personas te siguen en Discovery.`,
     });
   } catch {
     // El aviso nunca debe romper el seguimiento.

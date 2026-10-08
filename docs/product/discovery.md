@@ -17,8 +17,12 @@ logros.
 - **Contenido**: texto (con `#etiquetas`), título y enlace opcionales, imagen o
   vídeo propio (subido) o **vídeo externo de YouTube/Vimeo**, y compartir una
   **oportunidad** ya existente sin duplicarla.
-- **Interacción**: me gusta, comentarios (con un nivel de respuestas), compartir
-  (copia el enlace directo de la publicación) y denunciar.
+- **Interacción**: me gusta **al instante** (sin esperar al servidor), comentarios
+  con **respuestas y edición** del propio texto, compartir (copia el enlace
+  directo de la publicación) y denunciar.
+- **Avisos**: bandeja con contador en el sidebar para **todos los perfiles**, con
+  avisos **agrupados** ("A 3 personas les gusta tu publicación") y aviso correcto
+  al autor de la publicación o a quien escribió el comentario que respondes.
 - **Red social (F2)**: **seguir y dejar de seguir** cualquier perfil, pestaña
   **Siguiendo** (lo que publican los perfiles que sigues más lo tuyo), contador
   de seguidores/siguiendo en cada muro, aviso al recibir un seguidor nuevo y

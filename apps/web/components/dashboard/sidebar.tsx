@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOutAction } from '@/app/actions/auth';
 import { PhotoUploadForm } from '@/components/account/photo-upload-form';
+import { NotificationsBell } from '@/components/discovery/notifications-bell';
 import { PlayerAvatar } from '@/components/player/avatar';
+import type { FeedNotification } from '@/lib/discovery';
 import { FALLBACK_NAV, NAV, type NavSection } from './nav';
 import { ICONS, IconChevronDown, IconLogout, IconMenu, IconX } from './icons';
 
@@ -17,12 +19,14 @@ function SidebarContent({
   unreadCount,
   userName,
   userImage,
+  notifications,
 }: {
   sections: NavSection[];
   pathname: string;
   unreadCount?: number;
   userName: string;
   userImage?: string | null;
+  notifications: FeedNotification[];
 }) {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
 
@@ -127,7 +131,7 @@ function SidebarContent({
         })}
       </nav>
 
-      {/* Cuenta: avatar del usuario y cambio de foto (válido para cualquier rol). */}
+      {/* Cuenta: avatar del usuario, avisos y cambio de foto (válido para cualquier rol). */}
       <div className="mt-4 border-t border-white/10 pt-4">
         <div className="flex items-center gap-2.5">
           <PlayerAvatar
@@ -139,6 +143,9 @@ function SidebarContent({
           <div className="min-w-0">
             <div className="truncate text-sm font-medium">{userName}</div>
           </div>
+        </div>
+        <div className="mt-2">
+          <NotificationsBell notifications={notifications} unread={unreadCount ?? 0} compact />
         </div>
         <details className="mt-2">
           <summary className="cursor-pointer text-xs text-muted-foreground transition-colors hover:text-foreground">
@@ -173,11 +180,13 @@ export function DashboardSidebar({
   unreadCount,
   userName,
   userImage,
+  notifications,
 }: {
   role: string;
   unreadCount?: number;
   userName: string;
   userImage?: string | null;
+  notifications: FeedNotification[];
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -234,6 +243,7 @@ export function DashboardSidebar({
               unreadCount={unreadCount}
               userName={userName}
               userImage={userImage}
+              notifications={notifications}
             />
           </aside>
         </div>
@@ -250,6 +260,7 @@ export function DashboardSidebar({
           unreadCount={unreadCount}
           userName={userName}
           userImage={userImage}
+          notifications={notifications}
         />
       </aside>
     </>
