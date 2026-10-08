@@ -5,6 +5,7 @@ import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
+import { dashboardPath } from '@/lib/safe-redirect';
 import type { ActionState } from './auth';
 
 /** Accepted profile photo types mapped to the extension we store them with. */
@@ -27,19 +28,6 @@ async function removeLocalPhoto(image: string | null): Promise<void> {
   } catch {
     // The file may already be gone: nothing to clean up.
   }
-}
-
-/** Página de vuelta tras la acción: solo rutas internas del dashboard. */
-function dashboardPath(value: FormDataEntryValue | null): string {
-  const target = typeof value === 'string' ? value.trim() : '';
-  if (!target.startsWith('/dashboard/')) return '/dashboard';
-
-  // Sin protocolos, rutas absolutas ni escapes de directorio.
-  const rest = target.slice('/dashboard'.length);
-  if (rest.includes('//') || rest.includes('..') || rest.includes(':') || rest.includes('\\')) {
-    return '/dashboard';
-  }
-  return target;
 }
 
 /**

@@ -15,6 +15,7 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'Main',
       items: [
         { href: '/dashboard/player', label: 'Overview', icon: 'home' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/player/profile', label: 'My profile', icon: 'user' },
         { href: '/dashboard/player/development', label: 'My development', icon: 'trending' },
       ],
@@ -50,6 +51,7 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'General',
       items: [
         { href: '/dashboard/club', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/club/profile', label: 'Club profile' },
         { href: '/dashboard/club/staff', label: 'Staff' },
       ],
@@ -69,7 +71,10 @@ export const NAV: Record<string, NavSection[]> = {
   agent: [
     {
       label: 'General',
-      items: [{ href: '/dashboard/agent', label: 'Overview' }],
+      items: [
+        { href: '/dashboard/agent', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+      ],
     },
     {
       label: 'Players',
@@ -96,7 +101,10 @@ export const NAV: Record<string, NavSection[]> = {
   scout: [
     {
       label: 'General',
-      items: [{ href: '/dashboard/scout', label: 'Overview' }],
+      items: [
+        { href: '/dashboard/scout', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+      ],
     },
     {
       label: 'Scouting',
@@ -111,7 +119,10 @@ export const NAV: Record<string, NavSection[]> = {
   coach: [
     {
       label: 'General',
-      items: [{ href: '/dashboard/coach', label: 'Overview' }],
+      items: [
+        { href: '/dashboard/coach', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+      ],
     },
     {
       label: 'Training',
@@ -128,6 +139,7 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'General',
       items: [
         { href: '/dashboard/parent', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/parent/settings', label: 'Settings' },
       ],
     },
@@ -147,6 +159,7 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'General',
       items: [
         { href: '/dashboard/university', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/university/profile', label: 'Profile' },
       ],
     },
@@ -163,6 +176,7 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'General',
       items: [
         { href: '/dashboard/school', label: 'Overview', icon: 'home' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/school/profile', label: 'Organization profile', icon: 'user' },
       ],
     },
@@ -177,7 +191,10 @@ export const NAV: Record<string, NavSection[]> = {
   admin: [
     {
       label: 'General',
-      items: [{ href: '/dashboard/admin', label: 'Overview' }],
+      items: [
+        { href: '/dashboard/admin', label: 'Overview' },
+        { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+      ],
     },
     {
       label: 'Management',

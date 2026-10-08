@@ -801,6 +801,143 @@ export async function main() {
     }
   }
 
+  // ─── Discovery: publicaciones de ejemplo (una por tipo de perfil) ───
+  const opportunity = await prisma.opportunity.findFirst({ where: { creatorType: 'CLUB' } });
+  const daysAgoPost = (days: number, hours = 0) =>
+    new Date(Date.now() - (days * 24 + hours) * 60 * 60 * 1000);
+
+  const demoPosts = [
+    {
+      id: 'seed-post-1',
+      authorId: clubUser.id,
+      type: 'ANNOUNCEMENT' as const,
+      title: 'Buscamos lateral izquierdo sub-17',
+      body: 'Abrimos convocatoria para la próxima temporada. Entrenamientos en el club y posibilidad de beca deportiva. #sub17 #lateral',
+      opportunityId: opportunity?.id ?? null,
+      tags: ['sub17', 'lateral'],
+      createdAt: daysAgoPost(0, 2),
+    },
+    {
+      id: 'seed-post-2',
+      authorId: playerUser.id,
+      type: 'VIDEO' as const,
+      body: 'Mis mejores jugadas de la temporada. #highlights #delantero',
+      mediaUrl: 'https://www.youtube.com/embed/M7lc1UVf-VE',
+      mediaKind: 'embed',
+      tags: ['highlights', 'delantero'],
+      createdAt: daysAgoPost(1),
+    },
+    {
+      id: 'seed-post-3',
+      authorId: universityUser.id,
+      type: 'ANNOUNCEMENT' as const,
+      title: 'Becas deportivas 2026',
+      body: 'Ya está abierta la convocatoria de becas para deportistas: matrícula completa y alojamiento. #becas #universidad',
+      linkUrl: 'https://example.com/becas',
+      tags: ['becas', 'universidad'],
+      createdAt: daysAgoPost(2),
+    },
+    {
+      id: 'seed-post-4',
+      authorId: schoolUser.id,
+      type: 'ACHIEVEMENT' as const,
+      body: 'Nuestro equipo escolar se lleva el torneo regional tras una final increíble. ¡Enhorabuena a todo el grupo! #escuela #torneo',
+      tags: ['escuela', 'torneo'],
+      createdAt: daysAgoPost(3),
+    },
+    {
+      id: 'seed-post-5',
+      authorId: coachUser.id,
+      type: 'PHOTO' as const,
+      body: 'Sesión de finalización en el entrenamiento de hoy. #entrenamiento',
+      mediaUrl: '/images/football-03.jpg',
+      mediaKind: 'image',
+      tags: ['entrenamiento'],
+      createdAt: daysAgoPost(4),
+    },
+    {
+      id: 'seed-post-6',
+      authorId: scoutUser.id,
+      type: 'ANNOUNCEMENT' as const,
+      body: 'Preparando la ronda de seguimiento de enero. Las familias pueden escribirme por la plataforma. #ojeadores #seguimiento',
+      tags: ['ojeadores', 'seguimiento'],
+      createdAt: daysAgoPost(5),
+    },
+    {
+      id: 'seed-post-7',
+      authorId: parentUser.id,
+      type: 'ACHIEVEMENT' as const,
+      body: 'Orgullosos del primer contrato formativo de nuestro hijo. Gracias a todos los que han acompañado el camino. #familia',
+      tags: ['familia'],
+      createdAt: daysAgoPost(6),
+    },
+  ];
+
+  for (const post of demoPosts) {
+    await prisma.post.upsert({ where: { id: post.id }, update: {}, create: post });
+  }
+
+  // Reacciones de ejemplo sobre las publicaciones de demo.
+  const demoLikes = [
+    { postId: 'seed-post-1', userId: playerUser.id },
+    { postId: 'seed-post-1', userId: scoutUser.id },
+    { postId: 'seed-post-1', userId: agentUser.id },
+    { postId: 'seed-post-2', userId: clubUser.id },
+    { postId: 'seed-post-2', userId: coachUser.id },
+    { postId: 'seed-post-2', userId: scoutUser.id },
+    { postId: 'seed-post-2', userId: universityUser.id },
+    { postId: 'seed-post-4', userId: parentUser.id },
+    { postId: 'seed-post-5', userId: playerUser.id },
+  ];
+  for (const like of demoLikes) {
+    await prisma.postLike.upsert({
+      where: { postId_userId: { postId: like.postId, userId: like.userId } },
+      update: {},
+      create: like,
+    });
+  }
+
+  const demoComments = [
+    {
+      id: 'seed-comment-1',
+      postId: 'seed-post-1',
+      authorId: parentUser.id,
+      body: '¿Hay opción de prueba antes de la convocatoria?',
+      createdAt: daysAgoPost(0, 1),
+    },
+    {
+      id: 'seed-comment-2',
+      postId: 'seed-post-1',
+      authorId: clubUser.id,
+      body: 'Sí, escribimos por privado a las familias interesadas.',
+      createdAt: daysAgoPost(0, 1),
+    },
+    {
+      id: 'seed-comment-3',
+      postId: 'seed-post-2',
+      authorId: scoutUser.id,
+      body: 'Buen primer toque y desmarque. Lo seguimos.',
+      createdAt: daysAgoPost(0, 20),
+    },
+  ];
+  for (const comment of demoComments) {
+    await prisma.postComment.upsert({ where: { id: comment.id }, update: {}, create: comment });
+  }
+
+  // Alcance del anuncio del club (métricas del autor).
+  const demoPostViews = [
+    { viewerUserId: scoutUser.id, viewerRole: 'SCOUT', viewCount: 4, firstViewedAt: daysAgoPost(1), lastViewedAt: daysAgoPost(0, 1) },
+    { viewerUserId: agentUser.id, viewerRole: 'AGENT', viewCount: 2, firstViewedAt: daysAgoPost(1), lastViewedAt: daysAgoPost(0, 3) },
+    { viewerUserId: universityUser.id, viewerRole: 'UNIVERSITY', viewCount: 1, firstViewedAt: daysAgoPost(2), lastViewedAt: daysAgoPost(2) },
+  ];
+  for (const view of demoPostViews) {
+    await prisma.postView.upsert({
+      where: { postId_viewerUserId: { postId: 'seed-post-1', viewerUserId: view.viewerUserId } },
+      update: {},
+      create: { postId: 'seed-post-1', ...view },
+    });
+  }
+
   console.log('Seed completado:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- jugador: player@demo.com / player123`);

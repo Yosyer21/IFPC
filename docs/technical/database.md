@@ -15,6 +15,10 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 - **Sistema**: `Notification`, `PasswordResetToken`.
 - **Métricas**: `ProfileView` (visitas de terceros al perfil de un jugador: visitante, su rol,
   contador de visitas y fechas de primera/última visita).
+- **Discovery** (feed social interno): `Post` (autor de cualquier rol, tipo, estado, texto,
+  medio, etiquetas y oportunidad compartida), `PostLike`, `PostComment` (un nivel de
+  respuestas), `PostView` (alcance por espectador, mismo patrón que `ProfileView`) y
+  `PostReport`. Ver `docs/technical/discovery.md`.
 
 ## Convenciones
 
@@ -33,3 +37,8 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 - Verificación: `pnpm scripts:verify`.
 - **PGlite local**: `pnpm scripts:apply-delta [ref]` aplica a la base embebida el delta SQL
   entre el esquema del árbol de trabajo y otra versión (por defecto `HEAD`), sin recrearla.
+- **Nota**: `prisma/migrations` está vacío (no hay historial), así que `migrate deploy` no
+  reconstruye el esquema desde cero. Mientras siga así, cualquier cambio de esquema —como los
+  modelos de Discovery— se aplica en local con `scripts:apply-delta` y en producción con
+  `prisma db push`; crear una migración suelta que contenga solo las tablas nuevas daría un
+  `migrate deploy` incompleto.

@@ -91,11 +91,14 @@ export async function trackProfileView(input: {
 }
 
 /** Métricas de interés del perfil de un jugador. */
-export async function getProfileViewStats(playerId: string): Promise<ProfileViewStats> {
+export async function getProfileViewStats(
+  playerId: string,
+  now: Date = new Date()
+): Promise<ProfileViewStats> {
   const rows = await prisma.profileView.findMany({
     where: { playerId },
     orderBy: { lastViewedAt: 'desc' },
     select: { viewerRole: true, viewCount: true, firstViewedAt: true, lastViewedAt: true },
   });
-  return summarizeProfileViews(rows);
+  return summarizeProfileViews(rows, now);
 }

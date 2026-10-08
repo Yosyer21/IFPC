@@ -5,3 +5,4 @@ export * from './club';
 export * from './opportunity';
 export * from './recruitment';
 export * from './onboarding';
+export * from './discovery';

@@ -32,6 +32,7 @@ Cambiar estos archivos reestiliza **toda** la app:
 - `apps/web/components/player/page-header.tsx` — `PageHeader` (todas las páginas).
 - `apps/web/components/player/stat-card.tsx` — KPIs.
 - `apps/web/components/dashboard/sidebar.tsx` + `nav.ts` — navegación lateral.
+- `apps/web/components/discovery/*` — composer, tarjeta de publicación, comentarios y pestañas del feed.
 - `apps/web/app/dashboard/layout.tsx` — fondo ambiental del área privada.
 - `apps/web/app/(auth)/layout.tsx` — tarjeta glass de login/registro/onboarding.
 

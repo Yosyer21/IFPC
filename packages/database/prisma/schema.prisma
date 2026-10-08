@@ -115,6 +115,10 @@ model User {
   staffMemberships ClubStaff[]
   conversations     ConversationParticipant[]
   messagesSent      Message[]
+  posts             Post[]
+  postLikes         PostLike[]
+  postComments      PostComment[]
+  postReports       PostReport[]
 
   @@index([role])
 }
@@ -364,6 +368,9 @@ model Opportunity {
   applications Application[]
 
   savedBy SavedOpportunity[]
+
+  // Publicaciones de Discovery que comparten esta oportunidad.
+  posts Post[]
 
   @@index([status, type])
 }
@@ -815,6 +822,111 @@ model Message {
   createdAt      DateTime     @default(now())
 
   @@index([conversationId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Discovery: feed interno compartido por todos los perfiles.
+// Cuelga de `User` (no de `Player`) para que cualquier rol pueda publicar.
+// ---------------------------------------------------------------------------
+
+enum PostType {
+  ANNOUNCEMENT
+  VIDEO
+  PHOTO
+  ACHIEVEMENT
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+}
+
+/// Publicación del feed. `authorId` es el usuario de cualquier rol.
+model Post {
+  id            String        @id @default(cuid())
+  authorId      String
+  author        User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  type          PostType      @default(ANNOUNCEMENT)
+  status        PostStatus    @default(PUBLISHED)
+  title         String?
+  body          String?
+  mediaUrl      String? // /uploads/posts/... o URL externa
+  mediaKind     String? // image | video | embed
+  linkUrl       String?
+  opportunityId String?
+  opportunity   Opportunity?  @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+  tags          String[]      @default([])
+  pinnedAt      DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  likes    PostLike[]
+  comments PostComment[]
+  views    PostView[]
+  reports  PostReport[]
+
+  @@index([status, createdAt])
+  @@index([authorId, createdAt])
+  @@index([type, createdAt])
+}
+
+/// Un "me gusta" por usuario y publicación.
+model PostLike {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId])
+}
+
+/// Comentario (un nivel de respuestas).
+model PostComment {
+  id        String        @id @default(cuid())
+  postId    String
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    PostComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   PostComment[] @relation("CommentReplies")
+  body      String
+  createdAt DateTime      @default(now())
+
+  @@index([postId, createdAt])
+}
+
+/// Vistas de un post: un registro por espectador (mismo patrón que `ProfileView`).
+model PostView {
+  id            String   @id @default(cuid())
+  postId        String
+  post          Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  viewerUserId  String
+  viewerRole    String // Role del espectador en el momento de la vista
+  viewCount     Int      @default(1)
+  firstViewedAt DateTime @default(now())
+  lastViewedAt  DateTime @default(now())
+
+  @@unique([postId, viewerUserId])
+  @@index([postId, lastViewedAt])
+}
+
+/// Denuncia de una publicación (moderación).
+model PostReport {
+  id         String   @id @default(cuid())
+  postId     String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporterId String
+  reporter   User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  reason     String
+  createdAt  DateTime @default(now())
+
+  @@unique([postId, reporterId])
+  @@index([postId])
 }
 
 

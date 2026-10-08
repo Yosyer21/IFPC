@@ -278,6 +278,15 @@ export function IconMessageCircle(props: IconProps) {
   );
 }
 
+function IconCompass(props: IconProps) {
+  return (
+    <Base {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="m15.5 8.5-2.2 5.3-5.3 2.2 2.2-5.3 5.3-2.2Z" />
+    </Base>
+  );
+}
+
 export const ICONS: Record<string, (props: IconProps) => ReactElement> = {
   home: IconHome,
   trending: IconTrendingUp,
@@ -306,4 +315,5 @@ export const ICONS: Record<string, (props: IconProps) => ReactElement> = {
   calendar: IconCalendar,
   trophy: IconTrophy,
   check: IconCheckCircle,
+  compass: IconCompass,
 };

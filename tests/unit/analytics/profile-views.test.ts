@@ -123,7 +123,8 @@ describe('getProfileViewStats', () => {
   it('consulta las visitas del jugador y las resume', async () => {
     mocks.findMany.mockResolvedValue([row('CLUB', 2, 1), row('SCOUT', 1, 30)]);
 
-    const stats = await getProfileViewStats('p1');
+    // Se pasa el reloj explícitamente: si no, «nuevos esta semana» depende del día real del test.
+    const stats = await getProfileViewStats('p1', NOW);
 
     expect(mocks.findMany).toHaveBeenCalledWith({
       where: { playerId: 'p1' },

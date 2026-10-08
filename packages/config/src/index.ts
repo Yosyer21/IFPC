@@ -10,3 +10,4 @@ export * from './roles';
 export * from './opportunity-types';
 export * from './recruitment-status';
 export * from './progress';
+export * from './discovery';

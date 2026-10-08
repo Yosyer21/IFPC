@@ -4,6 +4,7 @@ import { useActionState, useId } from 'react';
 import { updateProfilePhotoAction } from '@/app/actions/account';
 import { Button } from '@ifpc/ui';
 import { PlayerAvatar } from '@/components/player/avatar';
+import { nameParts } from '@/lib/names';
 
 export interface PhotoUploadFormProps {
   /** Nombre completo; se usan las iniciales como respaldo de la foto. */
@@ -24,10 +25,7 @@ export function PhotoUploadForm({
 }: PhotoUploadFormProps) {
   const [state, formAction, pending] = useActionState(updateProfilePhotoAction, {});
   const inputId = useId();
-
-  const parts = name.trim().split(/\s+/);
-  const firstName = parts[0] ?? '';
-  const lastName = parts.length > 1 ? (parts[parts.length - 1] ?? '') : '';
+  const { firstName, lastName } = nameParts(name);
 
   return (
     <form action={formAction} className="flex w-full flex-col items-center gap-3">

@@ -1,4 +1,9 @@
-import { getToken } from '@ifpc/auth/edge';
+import {
+  canAccessDashboard,
+  getToken,
+  isRole,
+  ROLE_DASHBOARD_PREFIXES,
+} from '@ifpc/auth/edge';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
@@ -15,12 +20,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Guard por rol: /dashboard/<rol> solo para ese rol.
+  // Guard por rol. La regla vive en `@ifpc/auth` (una sola fuente de verdad,
+  // cubierta por tests): /dashboard/<rol> solo para ese rol, `/dashboard` y las
+  // áreas compartidas (p. ej. /dashboard/discovery) para cualquier sesión.
   if (pathname !== '/dashboard') {
-    const role = (token.role as string | undefined)?.toLowerCase();
-    const rolePrefix = role ? `/dashboard/${role}` : null;
-    if (rolePrefix && !pathname.startsWith(rolePrefix)) {
-      return NextResponse.redirect(new URL(rolePrefix, request.url));
+    const role = typeof token.role === 'string' ? token.role.toUpperCase() : '';
+    if (!isRole(role)) {
+      // Token sin rol reconocible: se falla cerrado en vez de abrir el área.
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+    if (!canAccessDashboard(role, pathname)) {
+      return NextResponse.redirect(new URL(ROLE_DASHBOARD_PREFIXES[role], request.url));
     }
   }
 

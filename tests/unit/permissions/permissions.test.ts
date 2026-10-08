@@ -26,6 +26,23 @@ describe('canAccessDashboard', () => {
     expect(canAccessDashboard('CLUB', '/dashboard/player')).toBe(false);
   });
 
+  it('abre las áreas compartidas a cualquier perfil', () => {
+    for (const role of ROLES) {
+      expect(canAccessDashboard(role, '/dashboard/discovery')).toBe(true);
+      expect(canAccessDashboard(role, '/dashboard/discovery/abc123')).toBe(true);
+    }
+  });
+
+  it('respeta el límite de segmento en las áreas compartidas', () => {
+    // `/dashboard/discovery-x` NO es la sección compartida `/dashboard/discovery`.
+    for (const role of ROLES) {
+      expect(canAccessDashboard(role, '/dashboard/discovery-evil')).toBe(false);
+    }
+    // Y una ruta bajo el área de otro rol sigue cerrada.
+    expect(canAccessDashboard('CLUB', '/dashboard/player/discovery')).toBe(false);
+    expect(canAccessDashboard('PLAYER', '/dashboard/club/discovery')).toBe(false);
+  });
+
   it('define un prefijo para todos los roles definidos', () => {
     for (const role of ROLES) {
       expect(ROLE_DASHBOARD_PREFIXES[role]).toMatch(/^\/dashboard\//);

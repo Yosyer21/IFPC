@@ -5,6 +5,9 @@
 - Uploaded videos se guardan en `apps/web/public/uploads/` (gitignored) y se sirven estáticamente.
 - URL generada con `crypto.randomUUID()` para evitar colisiones.
 - Documentos de ejemplo apuntan a rutas estáticas.
+- Discovery usa `public/uploads/posts/` para las imágenes (≤4 MB) y los vídeos cortos (≤25 MB)
+  publicados en el feed; los vídeos largos se recomiendan por URL externa
+  (YouTube/Vimeo, lista blanca en `resolveEmbed`).
 
 ## Objetivo (S3/MinIO)
 
