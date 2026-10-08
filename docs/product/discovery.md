@@ -39,8 +39,10 @@ logros.
 - **Convivencia**: topes anti-abuso (ritmo de publicación y comentario, enlaces
   por texto y duplicados recientes) y moderación automática del lenguaje no
   permitido, que deja la publicación **en revisión** en vez de borrarla.
-- **Exploración**: pestañas *Para ti · Siguiendo · Recientes · Tendencias ·
-  Anuncios · Vídeos*, filtro por etiqueta (`#sub17`) y paginación por cursor.
+- **Exploración**: pestañas *Para ti · Siguiendo · **Perfiles** · Recientes ·
+  Tendencias · Anuncios · Vídeos*, **buscador combinable** (texto, tipo de
+  publicación y rol del autor) con filtro por etiqueta (`#sub17`), **directorio de
+  perfiles** para encontrar a quién seguir y paginación por cursor.
 - **Métricas del autor**: cada publicación muestra a su autor cuántas personas
   distintas la han abierto (y cuántas aperturas anónimas llegan desde la web
   pública), y el panel **Mi rendimiento** añade alcance total, engagement, las

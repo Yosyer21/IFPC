@@ -7,11 +7,13 @@ import { FeedSearch } from '@/components/discovery/feed-search';
 import { FeedTabs } from '@/components/discovery/feed-tabs';
 import { PostCard } from '@/components/discovery/post-card';
 import { PostComposer } from '@/components/discovery/post-composer';
+import { ProfileCard } from '@/components/discovery/profile-card';
 import { SuggestedProfiles } from '@/components/discovery/suggested-profiles';
 import { PageHeader } from '@/components/player/page-header';
 import {
   listFeed,
   listPinnedPosts,
+  listProfiles,
   listSuggestedProfiles,
   parseFeedFilters,
 } from '@/lib/discovery';
@@ -26,21 +28,42 @@ export const metadata: Metadata = { title: 'Discovery' };
 export default async function DiscoveryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; tag?: string; q?: string; cursor?: string }>;
+  searchParams: Promise<{
+    tab?: string;
+    tag?: string;
+    q?: string;
+    type?: string;
+    role?: string;
+    cursor?: string;
+  }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) return null;
 
   const params = await searchParams;
-  const filters = parseFeedFilters({ tab: params.tab, tag: params.tag, q: params.q });
+  const filters = parseFeedFilters({
+    tab: params.tab,
+    tag: params.tag,
+    q: params.q,
+    type: params.type,
+    role: params.role,
+  });
 
   // Las publicaciones fijadas se muestran aparte (y se excluyen del listado).
   const pinned =
     filters.tab === 'recent' && !filters.q ? await listPinnedPosts(session.user.id) : [];
 
+  // El directorio de perfiles no consulta publicaciones.
+  const profiles =
+    filters.tab === 'profiles'
+      ? await listProfiles({ q: filters.q, role: filters.role, viewerId: session.user.id })
+      : [];
+
   // "Para ti" se ordena con el motor de matching y no pagina (una sola página).
   const { posts, nextCursor } =
-    filters.tab === 'foryou'
+    filters.tab === 'profiles'
+      ? { posts: [], nextCursor: null }
+      : filters.tab === 'foryou'
       ? {
           posts: await listForYouFeed({
             viewerId: session.user.id,
@@ -84,11 +107,33 @@ export default async function DiscoveryPage({
         </Link>
       </PageHeader>
 
-      <PostComposer />
+      {filters.tab === 'profiles' ? null : <PostComposer />}
       <FeedTabs filters={filters} />
       <FeedSearch filters={filters} />
 
-      {pinned.length > 0 ? (
+      {filters.tab === 'profiles' ? (
+        profiles.length === 0 ? (
+          <Card>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                No hay perfiles que coincidan con los filtros.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {profiles.map((profile) => (
+              <ProfileCard
+                key={profile.id}
+                profile={profile}
+                viewerId={session.user.id}
+              />
+            ))}
+          </div>
+        )
+      ) : null}
+
+      {filters.tab === 'profiles' ? null : pinned.length > 0 ? (
         <div className="mb-4 flex flex-col gap-4">
           {pinned.map((post) => (
             <PostCard
@@ -101,7 +146,7 @@ export default async function DiscoveryPage({
         </div>
       ) : null}
 
-      {posts.length === 0 ? (
+      {filters.tab === 'profiles' ? null : posts.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">{emptyMessage}</p>
@@ -109,7 +154,7 @@ export default async function DiscoveryPage({
         </Card>
       ) : (
         <FeedList
-          key={`${filters.tab}:${filters.tag ?? ''}:${filters.q ?? ''}`}
+          key={`${filters.tab}:${filters.tag ?? ''}:${filters.q ?? ''}:${filters.type ?? ''}:${filters.role ?? ''}`}
           initialPosts={posts}
           initialCursor={nextCursor}
           filters={filters}
@@ -118,7 +163,7 @@ export default async function DiscoveryPage({
         />
       )}
 
-      <SuggestedProfiles profiles={suggested} />
+      {filters.tab === 'profiles' ? null : <SuggestedProfiles profiles={suggested} />}
     </div>
   );
 }

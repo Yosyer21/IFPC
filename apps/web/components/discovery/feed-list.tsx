@@ -36,6 +36,8 @@ export function FeedList({
         tab: filters.tab,
         tag: filters.tag,
         q: filters.q,
+        type: filters.type,
+        role: filters.role,
         cursor,
       });
       setExtra((current) => [...current, ...page.posts]);

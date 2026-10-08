@@ -13,7 +13,9 @@ import {
   type FeedNotification,
   type FeedPage,
   type FeedPost,
+  type FeedRoleFilter,
   type PostViewStats,
+  type ProfileSummary,
 } from './discovery-content';
 
 /** Tipos y funciones puras (client-safe) del feed. */
@@ -49,6 +51,8 @@ export async function listFeed(input: {
     status: 'PUBLISHED' as const,
     ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
     ...(filters.tag ? { tags: { has: filters.tag } } : {}),
+    ...(filters.type ? { type: filters.type } : {}),
+    ...(filters.role ? { author: { role: filters.role } } : {}),
     ...(filters.tab === 'announcements' ? { type: 'ANNOUNCEMENT' as const } : {}),
     ...(filters.tab === 'videos' ? { type: 'VIDEO' as const } : {}),
     ...(filters.tab === 'following' && viewerId ? { OR: await followingFilter(viewerId) } : {}),
@@ -99,6 +103,62 @@ export async function listFeed(input: {
     posts: page.map(toFeedPost),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
   };
+}
+
+/** Un perfil del directorio de Discovery (tipo en `discovery-content`). */
+export type { ProfileSummary } from './discovery-content';
+
+/**
+ * Directorio de perfiles: busca por nombre y filtra por rol, ordenando por
+ * actividad (publicaciones) y dejando fuera lo que el espectador bloqueó o silenció.
+ */
+export async function listProfiles(input: {
+  q?: string | null;
+  role?: FeedRoleFilter | null;
+  viewerId?: string | null;
+  limit?: number;
+}): Promise<ProfileSummary[]> {
+  const limit = input.limit ?? DISCOVERY_PAGE_SIZE;
+  const hidden = await hiddenAuthorIds(input.viewerId);
+
+  const users = await prisma.user.findMany({
+    where: {
+      ...(hidden.length > 0 ? { id: { notIn: hidden } } : {}),
+      ...(input.role ? { role: input.role } : {}),
+      ...(input.q ? { name: { contains: input.q, mode: 'insensitive' as const } } : {}),
+    },
+    orderBy: [{ posts: { _count: 'desc' } }, { createdAt: 'desc' }],
+    take: limit,
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      image: true,
+      _count: { select: { posts: true, followers: true } },
+    },
+  });
+
+  const follows =
+    input.viewerId && users.length > 0
+      ? await prisma.follow.findMany({
+          where: {
+            followerId: input.viewerId,
+            followingId: { in: users.map((user) => user.id) },
+          },
+          select: { followingId: true },
+        })
+      : [];
+  const followed = new Set(follows.map((follow) => follow.followingId));
+
+  return users.map((user) => ({
+    id: user.id,
+    name: user.name,
+    role: user.role,
+    image: user.image,
+    posts: user._count.posts,
+    followers: user._count.followers,
+    isFollowing: followed.has(user.id),
+  }));
 }
 
 /** Publicaciones fijadas por un admin (las más recientes primero). */

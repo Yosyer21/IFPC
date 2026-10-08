@@ -95,7 +95,24 @@ beforeEach(() => {
 
 describe('parseFeedFilters', () => {
   it('sin parámetros usa "recent", sin etiqueta y sin búsqueda', () => {
-    expect(parseFeedFilters({})).toEqual({ tab: 'recent', tag: null, q: null });
+    expect(parseFeedFilters({})).toEqual({
+      tab: 'recent',
+      tag: null,
+      q: null,
+      type: null,
+      role: null,
+    });
+  });
+
+  it('normaliza los filtros de tipo y rol', () => {
+    expect(parseFeedFilters({ type: 'video', role: 'club' })).toMatchObject({
+      type: 'VIDEO',
+      role: 'CLUB',
+    });
+    expect(parseFeedFilters({ type: 'inventado', role: 'inventado' })).toMatchObject({
+      type: null,
+      role: null,
+    });
   });
 
   it('acepta pestañas conocidas y descarta las desconocidas', () => {
@@ -310,12 +327,35 @@ describe('listFeed', () => {
   it('combina la búsqueda con la pestaña (AND, no sustituye)', async () => {
     await listFeed({
       viewerId: 'viewer-1',
-      filters: { tab: 'videos', tag: null, q: 'highlights' },
+      filters: { tab: 'videos', tag: null, q: 'highlights', type: null, role: null },
     });
 
     const where = mocks.postFindMany.mock.calls[0][0].where;
     expect(where).toMatchObject({ type: 'VIDEO' });
     expect(where.AND).toBeDefined();
+  });
+
+  it('filtra por tipo de publicación y por rol del autor', async () => {
+    await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'recent', tag: null, q: null, type: 'PHOTO', role: 'CLUB' },
+    });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({
+      type: 'PHOTO',
+      author: { role: 'CLUB' },
+    });
+  });
+
+  it('sin filtros de tipo ni rol no los añade', async () => {
+    await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'recent', tag: null, q: null, type: null, role: null },
+    });
+
+    const where = mocks.postFindMany.mock.calls[0][0].where;
+    expect(where.type).toBeUndefined();
+    expect(where.author).toBeUndefined();
   });
 
   it('excluye las publicaciones que ya se muestran aparte (fijadas)', async () => {
@@ -498,7 +538,17 @@ describe('espejo público (sin sesión)', () => {
   it('conserva etiqueta y búsqueda al ajustar los filtros públicos', () => {
     expect(
       publicFeedFilters(parseFeedFilters({ tab: 'trending', tag: '#sub17', q: 'becas' }))
-    ).toEqual({ tab: 'trending', tag: 'sub17', q: 'becas' });
+    ).toEqual({
+      tab: 'trending',
+      tag: 'sub17',
+      q: 'becas',
+      type: null,
+      role: null,
+    });
+  });
+
+  it('permite el directorio de perfiles sin sesión', () => {
+    expect(publicFeedFilters(parseFeedFilters({ tab: 'profiles' })).tab).toBe('profiles');
   });
 
   it('el feed sin espectador no pide "me gusta" ni marca likedByMe', async () => {

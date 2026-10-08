@@ -548,6 +548,8 @@ export async function loadMoreFeedAction(input: {
   tab: string;
   tag: string | null;
   q: string | null;
+  type: string | null;
+  role: string | null;
   cursor: string;
 }): Promise<{ posts: FeedPost[]; nextCursor: string | null }> {
   const session = await auth();
@@ -559,6 +561,8 @@ export async function loadMoreFeedAction(input: {
     tab: input.tab,
     tag: input.tag ?? undefined,
     q: input.q ?? undefined,
+    type: input.type ?? undefined,
+    role: input.role ?? undefined,
   });
   const page = await listFeed({ viewerId: session.user.id, filters, cursor: input.cursor });
 

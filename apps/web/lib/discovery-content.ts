@@ -15,23 +15,61 @@ import {
 } from '@ifpc/config';
 import { POST_TAGS_MAX, POST_TAG_MAX } from '@ifpc/validation';
 
-/** Filtros activos del feed (provienen de `?tab=`, `?tag=` y `?q=`). */
+/** Filtros activos del feed (provienen de `?tab=`, `?tag=`, `?q=`, `?type=` y `?role=`). */
 export interface FeedFilters {
   tab: DiscoveryTab;
   tag: string | null;
   /** Búsqueda por texto: título, cuerpo o autor. */
   q: string | null;
+  /** Tipo de publicación (`PostType`). */
+  type: FeedTypeFilter | null;
+  /** Rol del autor (`Role`). */
+  role: FeedRoleFilter | null;
 }
 
 /** Longitud máxima (y mínima) de la búsqueda del feed. */
 export const FEED_QUERY_MAX = 60;
 const FEED_QUERY_MIN = 2;
 
+/** Tipos y roles aceptados como filtro del feed (mismos valores que los enums). */
+export const FEED_TYPE_FILTERS = ['ANNOUNCEMENT', 'VIDEO', 'PHOTO', 'ACHIEVEMENT'] as const;
+export const FEED_ROLE_FILTERS = [
+  'PLAYER',
+  'PARENT',
+  'COACH',
+  'SCOUT',
+  'AGENT',
+  'CLUB',
+  'UNIVERSITY',
+  'SCHOOL',
+  'ADMIN',
+] as const;
+export type FeedRoleFilter = (typeof FEED_ROLE_FILTERS)[number];
+type FeedTypeFilter = (typeof FEED_TYPE_FILTERS)[number];
+
+/** Un perfil del directorio de Discovery. */
+export interface ProfileSummary {
+  id: string;
+  name: string;
+  role: string;
+  image: string | null;
+  posts: number;
+  followers: number;
+  /** Solo se rellena cuando hay espectador con sesión. */
+  isFollowing: boolean;
+}
+
 /**
  * Pestañas disponibles **sin sesión** (espejo público): "Para ti" y "Siguiendo"
  * necesitan saber quién mira.
  */
-export const PUBLIC_DISCOVERY_TABS = ['recent', 'trending', 'announcements', 'videos'] as const;
+export const PUBLIC_DISCOVERY_TABS = [
+  'profiles',
+  'recent',
+  'trending',
+  'announcements',
+  'videos',
+] as const;
 
 /** Ajusta los filtros al espejo público: descarta las pestañas que exigen sesión. */
 export function publicFeedFilters(filters: FeedFilters): FeedFilters {
@@ -114,20 +152,24 @@ interface FeedRow {
 // Funciones puras
 // ---------------------------------------------------------------------------
 
-/** Normaliza `?tab=`, `?tag=` y `?q=` (valores desconocidos → por defecto / sin filtro). */
+/** Normaliza `?tab=`, `?tag=`, `?q=`, `?type=` y `?role=` (desconocidos → sin filtro). */
 export function parseFeedFilters(
-  params: { tab?: string; tag?: string; q?: string } = {}
+  params: { tab?: string; tag?: string; q?: string; type?: string; role?: string } = {}
 ): FeedFilters {
   const tab = DISCOVERY_TABS.find((value) => value === params.tab) ?? DEFAULT_DISCOVERY_TAB;
   const raw = (params.tag ?? '').trim().replace(/^#+/, '').toLowerCase();
   const valid = raw.length > 0 && raw.length <= POST_TAG_MAX && /^[a-z0-9][a-z0-9_-]*$/.test(raw);
   // La búsqueda se limita y se colapsa el espacio para no golpear la base con textos absurdos.
   const query = (params.q ?? '').replace(/\s+/g, ' ').trim().slice(0, FEED_QUERY_MAX);
+  const type = (params.type ?? '').toUpperCase();
+  const role = (params.role ?? '').toUpperCase();
 
   return {
     tab,
     tag: valid ? raw : null,
     q: query.length >= FEED_QUERY_MIN ? query : null,
+    type: FEED_TYPE_FILTERS.find((value) => value === type) ?? null,
+    role: FEED_ROLE_FILTERS.find((value) => value === role) ?? null,
   };
 }
 

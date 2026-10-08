@@ -4,6 +4,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { FeedSearch } from '@/components/discovery/feed-search';
 import { FeedTabs } from '@/components/discovery/feed-tabs';
 import { PostCard } from '@/components/discovery/post-card';
+import { ProfileCard } from '@/components/discovery/profile-card';
 import { Footer } from '@/components/landing/footer';
 import { Navbar } from '@/components/landing/navbar';
 import { PageHeader } from '@/components/player/page-header';
@@ -11,6 +12,7 @@ import {
   PUBLIC_DISCOVERY_TABS,
   listFeed,
   listPinnedPosts,
+  listProfiles,
   parseFeedFilters,
   publicFeedFilters,
 } from '@/lib/discovery';
@@ -36,24 +38,42 @@ const BASE = '/discovery';
 export default async function PublicDiscoveryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; tag?: string; q?: string; cursor?: string }>;
+  searchParams: Promise<{ tab?: string; tag?: string; q?: string; type?: string; role?: string; cursor?: string }>;
 }) {
   const params = await searchParams;
   const filters = publicFeedFilters(
-    parseFeedFilters({ tab: params.tab, tag: params.tag, q: params.q })
+    parseFeedFilters({
+      tab: params.tab,
+      tag: params.tag,
+      q: params.q,
+      type: params.type,
+      role: params.role,
+    })
   );
 
-  const pinned = filters.tab === 'recent' && !filters.q ? await listPinnedPosts(null) : [];
-  const { posts, nextCursor } = await listFeed({
-    filters,
-    cursor: params.cursor ?? null,
-    excludeIds: pinned.map((post) => post.id),
-  });
+  // El directorio de perfiles no consulta publicaciones ni fijadas.
+  const profiles =
+    filters.tab === 'profiles'
+      ? await listProfiles({ q: filters.q, role: filters.role })
+      : [];
+
+  const pinned =
+    filters.tab === 'recent' && !filters.q ? await listPinnedPosts(null) : [];
+  const { posts, nextCursor } =
+    filters.tab === 'profiles'
+      ? { posts: [], nextCursor: null }
+      : await listFeed({
+          filters,
+          cursor: params.cursor ?? null,
+          excludeIds: pinned.map((post) => post.id),
+        });
 
   const moreQuery = new URLSearchParams();
   if (filters.tab !== 'recent') moreQuery.set('tab', filters.tab);
   if (filters.tag) moreQuery.set('tag', filters.tag);
   if (filters.q) moreQuery.set('q', filters.q);
+  if (filters.type) moreQuery.set('type', filters.type);
+  if (filters.role) moreQuery.set('role', filters.role);
   if (nextCursor) moreQuery.set('cursor', nextCursor);
 
   const emptyMessage = filters.q
@@ -106,7 +126,23 @@ export default async function PublicDiscoveryPage({
           </div>
         ) : null}
 
-        {posts.length === 0 ? (
+        {filters.tab === 'profiles' ? (
+          profiles.length === 0 ? (
+            <Card>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  No hay perfiles que coincidan con los filtros.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {profiles.map((profile) => (
+                <ProfileCard key={profile.id} profile={profile} base={BASE} readOnly />
+              ))}
+            </div>
+          )
+        ) : posts.length === 0 ? (
           <Card>
             <CardContent>
               <p className="text-sm text-muted-foreground">{emptyMessage}</p>

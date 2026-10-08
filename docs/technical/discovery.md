@@ -51,6 +51,15 @@ relación, para que borrar un usuario no arrastre métricas.
   con `mode: 'insensitive'`. Se combina con la pestaña y la etiqueta en lugar de
   sustituirlas, y se normaliza (espacios colapsados, 2-60 caracteres) en
   `parseFeedFilters`.
+- **Filtros combinables**: `?type=` (tipo de publicación) y `?role=` (rol del
+  autor) se validan contra `FEED_TYPE_FILTERS`/`FEED_ROLE_FILTERS` y entran en el
+  mismo `where`, así que se pueden combinar con pestaña, etiqueta y búsqueda.
+  Viajan también en la paginación (`loadMoreFeedAction` recibe los cinco filtros).
+- **Directorio de perfiles** (`?tab=profiles`, también en el público):
+  `listProfiles` busca por nombre y filtra por rol, ordena por actividad
+  (`_count.posts`) y respeta bloqueos/silencios; marca `isFollowing` con una
+  consulta de seguimientos del espectador (sin sesión no consulta nada).
+  `ProfileCard` muestra avatar, rol, contadores y botón de seguir.
 - **Fijadas**: `listPinnedPosts` las trae aparte (máx. 3, por `pinnedAt desc`) y
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.

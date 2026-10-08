@@ -35,6 +35,7 @@ export const POSTING_ROLES = [
 export const DISCOVERY_TABS = [
   'foryou',
   'following',
+  'profiles',
   'recent',
   'trending',
   'announcements',
@@ -46,6 +47,7 @@ export const DEFAULT_DISCOVERY_TAB: DiscoveryTab = 'recent';
 export const DISCOVERY_TAB_LABELS: Record<string, string> = {
   foryou: 'Para ti',
   following: 'Siguiendo',
+  profiles: 'Perfiles',
   recent: 'Recientes',
   trending: 'Tendencias',
   announcements: 'Anuncios',

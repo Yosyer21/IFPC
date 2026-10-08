@@ -124,6 +124,7 @@ model User {
   followers         Follow[] @relation("FollowFollowing")
   privacyOwned      PrivacyRule[] @relation("PrivacyOwner")
   privacyReceived   PrivacyRule[] @relation("PrivacyTarget")
+  pollVotes         PostPollVote[]
 
   @@index([role])
 }
@@ -868,6 +869,14 @@ model Post {
   body          String?
   mediaUrl      String? // /uploads/posts/... o URL externa
   mediaKind     String? // image | video | embed
+  /// Galería de imágenes subidas (hasta 4); `mediaUrl` sigue siendo la principal.
+  mediaUrls     String[]      @default([])
+  /// Texto alternativo del medio (accesibilidad).
+  mediaAlt      String?
+  /// Publicación programada: se publica al llegar la fecha (script/cron).
+  publishAt     DateTime?
+  /// Opciones de encuesta (hasta 4); vacío cuando no hay encuesta.
+  pollOptions   String[]      @default([])
   linkUrl       String?
   opportunityId String?
   opportunity   Opportunity?   @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
@@ -882,6 +891,7 @@ model Post {
   comments PostComment[]
   views    PostView[]
   reports  PostReport[]
+  pollVotes PostPollVote[]
 
   @@index([status, createdAt])
   @@index([authorId, createdAt])
@@ -977,6 +987,20 @@ model Follow {
 
   @@unique([followerId, followingId])
   @@index([followingId])
+}
+
+/// Voto de una encuesta: uno por persona y publicación.
+model PostPollVote {
+  id          String   @id @default(cuid())
+  postId      String
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  optionIndex Int
+  createdAt   DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([postId])
 }
 
 /// Preferencias de privacidad entre perfiles: bloquear (no nos vemos ni
