@@ -22,6 +22,21 @@ export interface FeedFilters {
 export const FEED_QUERY_MAX = 60;
 const FEED_QUERY_MIN = 2;
 
+/**
+ * Pestañas disponibles **sin sesión** (espejo público): "Para ti" y "Siguiendo"
+ * necesitan saber quién mira.
+ */
+export const PUBLIC_DISCOVERY_TABS = ['recent', 'trending', 'announcements', 'videos'] as const;
+
+/** Ajusta los filtros al espejo público: descarta las pestañas que exigen sesión. */
+export function publicFeedFilters(filters: FeedFilters): FeedFilters {
+  const tab = PUBLIC_DISCOVERY_TABS.some((value) => value === filters.tab)
+    ? filters.tab
+    : DEFAULT_DISCOVERY_TAB;
+
+  return { ...filters, tab: tab as DiscoveryTab };
+}
+
 /** Publicación ya normalizada para la UI. */
 export interface FeedPost {
   id: string;
@@ -250,19 +265,26 @@ export function toFeedPost(row: FeedRow): FeedPost {
 
 /** Feed paginado (cursor = id del último post). Filtra por pestaña y etiqueta. */
 export async function listFeed(input: {
-  viewerId: string;
+  /** `null`/`undefined` en el espejo público (no hay "me gusta" del espectador). */
+  viewerId?: string | null;
   filters: FeedFilters;
   cursor?: string | null;
   /** Publicaciones ya mostradas fuera del listado (p. ej. las fijadas). */
   excludeIds?: string[];
 }): Promise<FeedPage> {
   const { filters, viewerId, cursor, excludeIds } = input;
+
+  // Sin sesión no existe "Siguiendo": se devuelve una página vacía en vez de todo el feed.
+  if (filters.tab === 'following' && !viewerId) {
+    return { posts: [], nextCursor: null };
+  }
+
   const where = {
     status: 'PUBLISHED' as const,
     ...(filters.tag ? { tags: { has: filters.tag } } : {}),
     ...(filters.tab === 'announcements' ? { type: 'ANNOUNCEMENT' as const } : {}),
     ...(filters.tab === 'videos' ? { type: 'VIDEO' as const } : {}),
-    ...(filters.tab === 'following' ? { OR: await followingFilter(viewerId) } : {}),
+    ...(filters.tab === 'following' && viewerId ? { OR: await followingFilter(viewerId) } : {}),
     // La búsqueda se añade con AND: combina con la pestaña en vez de sustituirla.
     ...(filters.q
       ? {
@@ -279,7 +301,10 @@ export async function listFeed(input: {
       : {}),
     ...(excludeIds && excludeIds.length > 0 ? { id: { notIn: excludeIds } } : {}),
   };
-  const include = { ...POST_INCLUDE, likes: { where: { userId: viewerId }, select: { id: true } } };
+  const include = {
+    ...POST_INCLUDE,
+    ...(viewerId ? { likes: { where: { userId: viewerId }, select: { id: true } } } : {}),
+  };
 
   if (filters.tab === 'trending') {
     const since = new Date(Date.now() - TRENDING_DAYS * 24 * 60 * 60 * 1000);
@@ -310,21 +335,41 @@ export async function listFeed(input: {
 }
 
 /** Publicaciones fijadas por un admin (las más recientes primero). */
-export async function listPinnedPosts(viewerId: string, limit = 3): Promise<FeedPost[]> {
+export async function listPinnedPosts(
+  viewerId?: string | null,
+  limit = 3
+): Promise<FeedPost[]> {
   const rows = await prisma.post.findMany({
     where: { status: 'PUBLISHED', pinnedAt: { not: null } },
     orderBy: { pinnedAt: 'desc' },
     take: limit,
-    include: { ...POST_INCLUDE, likes: { where: { userId: viewerId }, select: { id: true } } },
+    include: {
+      ...POST_INCLUDE,
+      ...(viewerId ? { likes: { where: { userId: viewerId }, select: { id: true } } } : {}),
+    },
   });
   return rows.map(toFeedPost);
 }
 
-/** Una publicación visible para el espectador (o `null` si no existe/sin permiso). */
-export async function getPostForViewer(postId: string, viewerId: string): Promise<FeedPost | null> {
+/**
+ * Una publicación visible para el espectador. Sin sesión (espejo público) solo
+ * se devuelven las publicadas.
+ */
+export async function getPostForViewer(
+  postId: string,
+  viewerId?: string | null
+): Promise<FeedPost | null> {
   const row = await prisma.post.findFirst({
-    where: { id: postId, OR: [{ status: 'PUBLISHED' }, { authorId: viewerId }] },
-    include: { ...POST_INCLUDE, likes: { where: { userId: viewerId }, select: { id: true } } },
+    where: {
+      id: postId,
+      ...(viewerId
+        ? { OR: [{ status: 'PUBLISHED' as const }, { authorId: viewerId }] }
+        : { status: 'PUBLISHED' as const }),
+    },
+    include: {
+      ...POST_INCLUDE,
+      ...(viewerId ? { likes: { where: { userId: viewerId }, select: { id: true } } } : {}),
+    },
   });
   return row ? toFeedPost(row) : null;
 }
@@ -427,16 +472,19 @@ export interface FollowStats {
 }
 
 /** Contadores del muro y estado del botón "Seguir" para el espectador. */
-export async function getFollowStats(userId: string, viewerId: string): Promise<FollowStats> {
+export async function getFollowStats(
+  userId: string,
+  viewerId?: string | null
+): Promise<FollowStats> {
   const [followers, following, link] = await Promise.all([
     prisma.follow.count({ where: { followingId: userId } }),
     prisma.follow.count({ where: { followerId: userId } }),
-    userId === viewerId
-      ? Promise.resolve(null)
-      : prisma.follow.findUnique({
+    viewerId && userId !== viewerId
+      ? prisma.follow.findUnique({
           where: { followerId_followingId: { followerId: viewerId, followingId: userId } },
           select: { id: true },
-        }),
+        })
+      : Promise.resolve(null),
   ]);
 
   return { followers, following, isFollowing: link !== null };

@@ -63,9 +63,24 @@ badge (`82% match`) en las publicaciones que encajan.
    (`/dashboard/discovery/u/<userId>`).
 5. Tocar una etiqueta para filtrar el feed por `#etiqueta`.
 
+## Espejo público (`/discovery`)
+
+La misma página, **sin sesión y en solo lectura**, para que el contenido se pueda
+compartir, encontrar en buscadores y servir de puerta de entrada al registro:
+
+- `/discovery` — feed público (pestañas *Recientes · Tendencias · Anuncios ·
+  Vídeos*, buscador, etiquetas y publicaciones fijadas) con un aviso de que está
+  en modo lectura y CTAs a *Crear cuenta* / *Entrar*.
+- `/discovery/<postId>` — publicación y sus comentarios, sin caja de comentario.
+- `/discovery/u/<userId>` — muro del autor con sus contadores, sin botón de seguir.
+- `/discovery/tag/<tag>` — redirige al feed filtrado.
+
+En público **no** hay *Para ti* ni *Siguiendo* (hacen falta saber quién mira), no
+se puede dar me gusta, comentar, denunciar ni reportar, y **no se cuentan vistas**
+(el alcance mide espectadores identificables). Todo el contenido publicado es
+visible: no hay contenido restringido ni se filtra por edad.
+
 ## Qué NO hace (todavía)
 
-- Versión pública indexable (`/discovery` sin sesión) y control de visibilidad
-  por publicación: requiere decidir qué se expone de los perfiles de menores.
 - Almacenamiento en S3 con URLs firmadas (hoy las subidas viven en el sistema de
   ficheros, ver `docs/technical/storage.md`).

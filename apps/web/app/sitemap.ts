@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 const BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [players, clubs, opportunities, content] = await Promise.all([
+  const [players, clubs, opportunities, content, posts, authors] = await Promise.all([
     prisma.player.findMany({
       where: { status: { in: ['AVAILABLE', 'ACTIVE'] } },
       select: { id: true, updatedAt: true },
@@ -28,6 +28,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       select: { id: true, updatedAt: true },
       take: 200,
     }),
+    // Discovery público: publicaciones y muros de autor con contenido.
+    prisma.post.findMany({
+      where: { status: 'PUBLISHED' },
+      select: { id: true, updatedAt: true },
+      take: 500,
+    }),
+    prisma.user.findMany({
+      where: { posts: { some: { status: 'PUBLISHED' } } },
+      select: { id: true, updatedAt: true },
+      take: 300,
+    }),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -41,6 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/training',
     '/parent-hub',
     '/pathways',
+    '/discovery',
     '/register',
     '/login',
   ].map((route) => ({ url: `${BASE}${route}`, changeFrequency: 'weekly' }));
@@ -62,6 +74,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...content.map((item) => ({
       url: `${BASE}/training/${item.id}`,
       lastModified: item.updatedAt,
+    })),
+    ...posts.map((post) => ({
+      url: `${BASE}/discovery/${post.id}`,
+      lastModified: post.updatedAt,
+    })),
+    ...authors.map((author) => ({
+      url: `${BASE}/discovery/u/${author.id}`,
+      lastModified: author.updatedAt,
     })),
   ];
 }

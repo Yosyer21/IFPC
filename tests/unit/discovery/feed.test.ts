@@ -35,11 +35,13 @@ import {
   extractTags,
   formatRelativeTime,
   getFollowStats,
+  getPostForViewer,
   getPostViewStats,
   listFeed,
   listPinnedPosts,
   listSuggestedProfiles,
   parseFeedFilters,
+  publicFeedFilters,
   rankTrendingPosts,
   recordPostView,
   resolveEmbed,
@@ -462,6 +464,63 @@ describe('listSuggestedProfiles', () => {
   it('sin candidatos no llega a consultar usuarios', async () => {
     await expect(listSuggestedProfiles('viewer-1')).resolves.toEqual([]);
     expect(mocks.userFindMany).not.toHaveBeenCalled();
+  });
+});
+
+describe('espejo público (sin sesión)', () => {
+  it('descarta las pestañas que exigen saber quién mira', () => {
+    expect(publicFeedFilters(parseFeedFilters({ tab: 'following' })).tab).toBe('recent');
+    expect(publicFeedFilters(parseFeedFilters({ tab: 'foryou' })).tab).toBe('recent');
+    expect(publicFeedFilters(parseFeedFilters({ tab: 'videos' })).tab).toBe('videos');
+  });
+
+  it('conserva etiqueta y búsqueda al ajustar los filtros públicos', () => {
+    expect(
+      publicFeedFilters(parseFeedFilters({ tab: 'trending', tag: '#sub17', q: 'becas' }))
+    ).toEqual({ tab: 'trending', tag: 'sub17', q: 'becas' });
+  });
+
+  it('el feed sin espectador no pide "me gusta" ni marca likedByMe', async () => {
+    mocks.postFindMany.mockResolvedValue([row('post-1')]);
+
+    const { posts } = await listFeed({ filters: { tab: 'recent', tag: null, q: null } });
+
+    expect(mocks.postFindMany.mock.calls[0][0].include.likes).toBeUndefined();
+    expect(posts[0]?.likedByMe).toBe(false);
+  });
+
+  it('la pestaña Siguiendo sin sesión devuelve vacío en vez del feed entero', async () => {
+    const page = await listFeed({ filters: { tab: 'following', tag: null, q: null } });
+
+    expect(page.posts).toEqual([]);
+    expect(page.nextCursor).toBeNull();
+    expect(mocks.postFindMany).not.toHaveBeenCalled();
+  });
+
+  it('las publicaciones fijadas públicas tampoco piden "me gusta"', async () => {
+    mocks.postFindMany.mockResolvedValue([row('post-1', { pinnedAt: new Date() })]);
+
+    await listPinnedPosts();
+
+    expect(mocks.postFindMany.mock.calls[0][0].include.likes).toBeUndefined();
+  });
+
+  it('el detalle público solo alcanza publicaciones publicadas', async () => {
+    mocks.postFindFirst.mockResolvedValue(null);
+
+    await getPostForViewer('post-1');
+
+    expect(mocks.postFindFirst.mock.calls[0][0].where).toEqual({
+      id: 'post-1',
+      status: 'PUBLISHED',
+    });
+  });
+
+  it('los contadores públicos no consultan el seguimiento del espectador', async () => {
+    const stats = await getFollowStats('author-1');
+
+    expect(stats.isFollowing).toBe(false);
+    expect(mocks.followFindUnique).not.toHaveBeenCalled();
   });
 });
 

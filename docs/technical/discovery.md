@@ -55,6 +55,31 @@ relación, para que borrar un usuario no arrastre métricas.
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.
 
+## Espejo público
+
+Las páginas de `apps/web/app/(public)/discovery/` (feed, `[postId]`, `u/[userId]`
+y `tag/[tag]`) reutilizan los mismos componentes y consultas con **`viewerId`
+ausente**:
+
+- `publicFeedFilters` descarta las pestañas que exigen sesión (*Para ti*,
+  *Siguiendo*) y deja el resto con sus etiquetas y búsqueda.
+- `listFeed`, `listPinnedPosts` y `getPostForViewer` **omiten el `include` de
+  `likes`** cuando no hay espectador (`likedByMe` queda en `false`) y el detalle
+  público solo alcanza `status: PUBLISHED`.
+- `listFeed` con la pestaña *Siguiendo* y sin espectador devuelve una página
+  **vacía** en lugar del feed completo.
+- `getFollowStats` sin espectador devuelve los contadores con `isFollowing:
+  false` y no consulta la relación.
+- `PostCard`, `CommentList`, `FeedTabs` y `FeedSearch` aceptan `readOnly` / `base`
+  para no pintar acciones y enlazar a las rutas públicas.
+- **No se cuentan vistas**: sin sesión no hay espectador identificable, así que el
+  alcance sigue midiendo solo visitas atribuibles.
+
+SEO: el grupo `(public)` ya es `force-dynamic` (PGlite no puede prerenderizar),
+`generateMetadata` construye título, descripción y `canonical` por publicación y
+por perfil, `app/sitemap.ts` incluye `/discovery`, cada publicación publicada y
+cada autor con contenido, y `app/robots.ts` bloquea `/dashboard`.
+
 ## Moderación
 
 - **Cola**: `listReportedPosts` agrupa las denuncias **pendientes**

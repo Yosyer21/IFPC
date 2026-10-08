@@ -3,22 +3,33 @@ import { Button } from '@ifpc/ui';
 import { FEED_QUERY_MAX, type FeedFilters } from '@/lib/discovery';
 
 /** URL del feed conservando pestaña y etiqueta (sin búsqueda). */
-function clearHref(filters: FeedFilters): string {
+function clearHref(filters: FeedFilters, base: string): string {
   const query = new URLSearchParams();
   if (filters.tab !== 'recent') query.set('tab', filters.tab);
   if (filters.tag) query.set('tag', filters.tag);
   const search = query.toString();
-  return `/dashboard/discovery${search ? `?${search}` : ''}`;
+  return `${base}${search ? `?${search}` : ''}`;
 }
 
 /**
  * Buscador del feed. Es un formulario GET, así que funciona sin JavaScript y la
- * búsqueda queda en la URL (compartible).
+ * búsqueda queda en la URL (compartible). Sirve igual dentro y fuera de la sesión.
  */
-export function FeedSearch({ filters }: { filters: FeedFilters }) {
+export function FeedSearch({
+  filters,
+  base = '/dashboard/discovery',
+  tab,
+}: {
+  filters: FeedFilters;
+  base?: string;
+  /** Pestaña que se conserva al buscar (el público no tiene "Siguiendo"). */
+  tab?: string;
+}) {
+  const keepTab = tab ?? filters.tab;
+
   return (
-    <form action="/dashboard/discovery" method="get" className="mb-4 flex flex-wrap items-center gap-2">
-      {filters.tab !== 'recent' ? <input type="hidden" name="tab" value={filters.tab} /> : null}
+    <form action={base} method="get" className="mb-4 flex flex-wrap items-center gap-2">
+      {keepTab !== 'recent' ? <input type="hidden" name="tab" value={keepTab} /> : null}
       {filters.tag ? <input type="hidden" name="tag" value={filters.tag} /> : null}
       <input
         type="search"
@@ -34,7 +45,7 @@ export function FeedSearch({ filters }: { filters: FeedFilters }) {
       </Button>
       {filters.q ? (
         <Link
-          href={clearHref(filters)}
+          href={clearHref(filters, base)}
           className="text-xs text-muted-foreground hover:text-foreground"
         >
           Quitar búsqueda

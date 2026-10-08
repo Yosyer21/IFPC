@@ -14,21 +14,25 @@ export function PostCard({
   post,
   viewerId,
   viewerRole,
+  readOnly = false,
 }: {
   post: FeedPost;
   viewerId: string;
   viewerRole: string;
+  /** Espejo público: sin acciones (solo el resumen de interacción) y enlaces públicos. */
+  readOnly?: boolean;
 }) {
   const { firstName, lastName } = nameParts(post.author.name);
   const embed = post.mediaKind === 'embed' ? resolveEmbed(post.mediaUrl) : null;
   const isAuthor = post.author.id === viewerId;
-  const canDelete = isAuthor || viewerRole === 'ADMIN';
+  const canDelete = !readOnly && (isAuthor || viewerRole === 'ADMIN');
+  const base = readOnly ? '/discovery' : '/dashboard/discovery';
 
   return (
     <Card className="animate-fade-up">
       <CardContent>
         <div className="flex items-start gap-3">
-          <Link href={`/dashboard/discovery/u/${post.author.id}`} aria-label={post.author.name}>
+          <Link href={`${base}/u/${post.author.id}`} aria-label={post.author.name}>
             <PlayerAvatar
               firstName={firstName}
               lastName={lastName}
@@ -39,7 +43,7 @@ export function PostCard({
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <Link
-                href={`/dashboard/discovery/u/${post.author.id}`}
+                href={`${base}/u/${post.author.id}`}
                 className="truncate font-semibold hover:text-emerald-400"
               >
                 {post.author.name}
@@ -119,7 +123,7 @@ export function PostCard({
                 {post.tags.map((tag) => (
                   <Link
                     key={tag}
-                    href={`/dashboard/discovery/tag/${tag}`}
+                    href={`${base}/tag/${tag}`}
                     className="text-xs text-emerald-400/80 hover:text-emerald-300"
                   >
                     #{tag}
@@ -136,14 +140,23 @@ export function PostCard({
           </div>
         </div>
 
-        <PostActions
-          postId={post.id}
-          likes={post.counts.likes}
-          comments={post.counts.comments}
-          likedByMe={post.likedByMe}
-          canDelete={canDelete}
-          canReport={!isAuthor}
-        />
+        {readOnly ? (
+          <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-white/10 pt-3 text-xs text-muted-foreground">
+            <span>{post.counts.likes} me gusta</span>
+            <Link href={`${base}/${post.id}`} className="hover:text-foreground">
+              {post.counts.comments} comentarios
+            </Link>
+          </div>
+        ) : (
+          <PostActions
+            postId={post.id}
+            likes={post.counts.likes}
+            comments={post.counts.comments}
+            likedByMe={post.likedByMe}
+            canDelete={canDelete}
+            canReport={!isAuthor}
+          />
+        )}
       </CardContent>
     </Card>
   );
