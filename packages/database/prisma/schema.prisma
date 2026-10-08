@@ -119,6 +119,8 @@ model User {
   postLikes         PostLike[]
   postComments      PostComment[]
   postReports       PostReport[]
+  following         Follow[] @relation("FollowFollower")
+  followers         Follow[] @relation("FollowFollowing")
 
   @@index([role])
 }
@@ -927,6 +929,20 @@ model PostReport {
 
   @@unique([postId, reporterId])
   @@index([postId])
+}
+
+/// Relación social entre perfiles: quién sigue a quién (cualquier rol).
+/// Habilita la pestaña "Siguiendo" del feed y los avisos de nuevo seguidor.
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  follower    User     @relation("FollowFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("FollowFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followingId])
 }
 
 

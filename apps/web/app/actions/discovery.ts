@@ -431,3 +431,52 @@ export async function moderatePostAction(formData: FormData): Promise<void> {
 
   await prisma.post.update({ where: { id: postId }, data: { status } });
 }
+
+/**
+ * Sigue o deja de seguir a un perfil (cualquier rol puede seguir a cualquier
+ * otro). Nunca se puede seguir a uno mismo y avisa al seguido la primera vez.
+ */
+export async function toggleFollowAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const user = session?.user;
+  if (!user?.id) {
+    return;
+  }
+
+  const targetId = str(formData, 'userId');
+  if (!targetId || targetId === user.id) {
+    return;
+  }
+
+  const target = await prisma.user.findUnique({
+    where: { id: targetId },
+    select: { id: true },
+  });
+  if (!target) {
+    return;
+  }
+
+  const existing = await prisma.follow.findUnique({
+    where: { followerId_followingId: { followerId: user.id, followingId: targetId } },
+    select: { id: true },
+  });
+
+  if (existing) {
+    await prisma.follow.delete({ where: { id: existing.id } });
+    return;
+  }
+
+  await prisma.follow.create({ data: { followerId: user.id, followingId: targetId } });
+
+  try {
+    await notifyUser({
+      userId: targetId,
+      type: 'new_follower',
+      title: 'Nuevo seguidor',
+      message: `${user.name} te sigue en Discovery.`,
+      link: `/dashboard/discovery/u/${user.id}`,
+    });
+  } catch {
+    // El aviso nunca debe romper el seguimiento.
+  }
+}

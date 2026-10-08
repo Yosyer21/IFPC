@@ -15,6 +15,10 @@ const mocks = vi.hoisted(() => ({
   commentDelete: vi.fn(),
   reportUpsert: vi.fn(),
   opportunityFindUnique: vi.fn(),
+  followFindUnique: vi.fn(),
+  followCreate: vi.fn(),
+  followDelete: vi.fn(),
+  userFindUnique: vi.fn(),
   notifyUser: vi.fn(),
   mkdir: vi.fn(),
   writeFile: vi.fn(),
@@ -42,6 +46,12 @@ vi.mock('@ifpc/database', () => ({
     },
     postReport: { upsert: mocks.reportUpsert },
     opportunity: { findUnique: mocks.opportunityFindUnique },
+    follow: {
+      findUnique: mocks.followFindUnique,
+      create: mocks.followCreate,
+      delete: mocks.followDelete,
+    },
+    user: { findUnique: mocks.userFindUnique },
   },
 }));
 vi.mock('@/lib/notifications/notify', () => ({ notifyUser: mocks.notifyUser }));
@@ -58,6 +68,7 @@ import {
   deletePostAction,
   moderatePostAction,
   reportPostAction,
+  toggleFollowAction,
   toggleLikeAction,
   updatePostAction,
 } from '@/app/actions/discovery';
@@ -87,6 +98,10 @@ beforeEach(() => {
   mocks.commentCreate.mockResolvedValue({ id: 'comment-1' });
   mocks.reportUpsert.mockResolvedValue({});
   mocks.opportunityFindUnique.mockResolvedValue({ id: 'opp-1' });
+  mocks.followFindUnique.mockResolvedValue(null);
+  mocks.followCreate.mockResolvedValue({});
+  mocks.followDelete.mockResolvedValue({});
+  mocks.userFindUnique.mockResolvedValue({ id: 'otro' });
   mocks.notifyUser.mockResolvedValue(undefined);
   mocks.mkdir.mockResolvedValue(undefined);
   mocks.writeFile.mockResolvedValue(undefined);
@@ -459,5 +474,57 @@ describe('moderatePostAction', () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     await moderatePostAction(form({ postId: 'post-1', status: 'DRAFT' }));
     expect(mocks.postUpdate).not.toHaveBeenCalled();
+  });
+});
+
+describe('toggleFollowAction', () => {
+  it('no hace nada sin sesión', async () => {
+    mocks.auth.mockResolvedValue(null);
+    await toggleFollowAction(form({ userId: 'otro' }));
+    expect(mocks.followCreate).not.toHaveBeenCalled();
+  });
+
+  it('no permite seguirse a uno mismo', async () => {
+    await toggleFollowAction(form({ userId: 'user-1' }));
+    expect(mocks.followCreate).not.toHaveBeenCalled();
+    expect(mocks.userFindUnique).not.toHaveBeenCalled();
+  });
+
+  it('ignora un perfil que no existe', async () => {
+    mocks.userFindUnique.mockResolvedValue(null);
+    await toggleFollowAction(form({ userId: 'fantasma' }));
+    expect(mocks.followCreate).not.toHaveBeenCalled();
+  });
+
+  it('crea el seguimiento y avisa al seguido', async () => {
+    await toggleFollowAction(form({ userId: 'otro' }));
+
+    expect(mocks.followCreate).toHaveBeenCalledWith({
+      data: { followerId: 'user-1', followingId: 'otro' },
+    });
+    expect(mocks.notifyUser).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: 'otro',
+        type: 'new_follower',
+        link: '/dashboard/discovery/u/user-1',
+      })
+    );
+  });
+
+  it('si ya lo seguía, lo deja de seguir sin avisar', async () => {
+    mocks.followFindUnique.mockResolvedValue({ id: 'follow-1' });
+
+    await toggleFollowAction(form({ userId: 'otro' }));
+
+    expect(mocks.followDelete).toHaveBeenCalledWith({ where: { id: 'follow-1' } });
+    expect(mocks.followCreate).not.toHaveBeenCalled();
+    expect(mocks.notifyUser).not.toHaveBeenCalled();
+  });
+
+  it('el aviso no rompe el seguimiento si falla', async () => {
+    mocks.notifyUser.mockRejectedValue(new Error('boom'));
+
+    await expect(toggleFollowAction(form({ userId: 'otro' }))).resolves.toBeUndefined();
+    expect(mocks.followCreate).toHaveBeenCalled();
   });
 });

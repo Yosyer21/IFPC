@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { POST_TYPE_LABELS } from '@ifpc/config';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PlayerAvatar } from '@/components/player/avatar';
+import { MatchScoreBadge } from '@/components/player/match-score';
 import { formatRelativeTime, resolveEmbed, type FeedPost } from '@/lib/discovery';
+import { PLAYER_MATCH_THRESHOLD } from '@/lib/matching';
 import { nameParts } from '@/lib/names';
 import { PostActions } from './post-actions';
 
@@ -43,6 +45,11 @@ export function PostCard({
                 {post.author.name}
               </Link>
               <Badge variant="outline">{POST_TYPE_LABELS[post.type] ?? post.type}</Badge>
+              {post.relevance !== null &&
+              post.relevance !== undefined &&
+              post.relevance >= PLAYER_MATCH_THRESHOLD ? (
+                <MatchScoreBadge score={post.relevance} />
+              ) : null}
               <span className="text-xs text-muted-foreground">
                 {formatRelativeTime(post.createdAt)}
               </span>

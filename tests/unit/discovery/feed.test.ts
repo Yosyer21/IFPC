@@ -7,6 +7,11 @@ const mocks = vi.hoisted(() => ({
   commentFindMany: vi.fn(),
   viewUpsert: vi.fn(),
   viewFindMany: vi.fn(),
+  followFindMany: vi.fn(),
+  followCount: vi.fn(),
+  followFindUnique: vi.fn(),
+  followGroupBy: vi.fn(),
+  userFindMany: vi.fn(),
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
@@ -15,6 +20,13 @@ vi.mock('@ifpc/database', () => ({
     post: { findMany: mocks.postFindMany, findFirst: mocks.postFindFirst },
     postComment: { findMany: mocks.commentFindMany },
     postView: { upsert: mocks.viewUpsert, findMany: mocks.viewFindMany },
+    follow: {
+      findMany: mocks.followFindMany,
+      count: mocks.followCount,
+      findUnique: mocks.followFindUnique,
+      groupBy: mocks.followGroupBy,
+    },
+    user: { findMany: mocks.userFindMany },
   },
 }));
 
@@ -22,8 +34,10 @@ import {
   engagementScore,
   extractTags,
   formatRelativeTime,
+  getFollowStats,
   getPostViewStats,
   listFeed,
+  listSuggestedProfiles,
   parseFeedFilters,
   rankTrendingPosts,
   recordPostView,
@@ -64,6 +78,11 @@ beforeEach(() => {
   mocks.commentFindMany.mockResolvedValue([]);
   mocks.viewUpsert.mockResolvedValue({});
   mocks.viewFindMany.mockResolvedValue([]);
+  mocks.followFindMany.mockResolvedValue([]);
+  mocks.followCount.mockResolvedValue(0);
+  mocks.followFindUnique.mockResolvedValue(null);
+  mocks.followGroupBy.mockResolvedValue([]);
+  mocks.userFindMany.mockResolvedValue([]);
 });
 
 describe('parseFeedFilters', () => {
@@ -289,6 +308,92 @@ describe('métricas de una publicación', () => {
         { role: 'CLUB', viewers: 1 },
       ],
     });
+  });
+});
+
+describe('pestaña Siguiendo', () => {
+  it('filtra por los perfiles seguidos y por las publicaciones propias', async () => {
+    mocks.followFindMany.mockResolvedValue([
+      { followingId: 'author-2' },
+      { followingId: 'author-3' },
+    ]);
+
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null } });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({
+      status: 'PUBLISHED',
+      OR: [{ authorId: { in: ['author-2', 'author-3'] } }, { authorId: 'viewer-1' }],
+    });
+  });
+
+  it('sin seguir a nadie solo muestra las publicaciones propias', async () => {
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null } });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({
+      OR: [{ authorId: 'viewer-1' }],
+    });
+  });
+
+  it('combina los perfiles seguidos con el filtro de etiqueta', async () => {
+    mocks.followFindMany.mockResolvedValue([{ followingId: 'author-2' }]);
+
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: 'sub17' } });
+
+    const where = mocks.postFindMany.mock.calls[0][0].where;
+    expect(where).toMatchObject({ tags: { has: 'sub17' } });
+    expect(where.OR).toBeDefined();
+  });
+});
+
+describe('getFollowStats', () => {
+  it('devuelve contadores y si el espectador le sigue', async () => {
+    mocks.followCount.mockResolvedValueOnce(3).mockResolvedValueOnce(5);
+    mocks.followFindUnique.mockResolvedValue({ id: 'follow-1' });
+
+    await expect(getFollowStats('author-1', 'viewer-1')).resolves.toEqual({
+      followers: 3,
+      following: 5,
+      isFollowing: true,
+    });
+  });
+
+  it('en el muro propio nunca se es seguidor de uno mismo', async () => {
+    const stats = await getFollowStats('viewer-1', 'viewer-1');
+
+    expect(stats.isFollowing).toBe(false);
+    expect(mocks.followFindUnique).not.toHaveBeenCalled();
+  });
+
+  it('sin seguimiento el estado es falso', async () => {
+    await expect(getFollowStats('author-1', 'viewer-1')).resolves.toMatchObject({
+      isFollowing: false,
+    });
+  });
+});
+
+describe('listSuggestedProfiles', () => {
+  it('excluye los perfiles ya seguidos y a uno mismo', async () => {
+    mocks.followFindMany.mockResolvedValue([{ followingId: 'ya-sigo' }]);
+    mocks.followGroupBy.mockResolvedValue([
+      { followingId: 'ya-sigo', _count: { followingId: 9 } },
+      { followingId: 'viewer-1', _count: { followingId: 8 } },
+      { followingId: 'nuevo', _count: { followingId: 7 } },
+    ]);
+    mocks.userFindMany.mockResolvedValue([
+      { id: 'nuevo', name: 'Nuevo Perfil', role: 'CLUB', image: null, _count: { posts: 4 } },
+    ]);
+
+    const suggestions = await listSuggestedProfiles('viewer-1');
+
+    expect(suggestions).toEqual([
+      { id: 'nuevo', name: 'Nuevo Perfil', role: 'CLUB', image: null, followers: 7, posts: 4 },
+    ]);
+    expect(mocks.userFindMany.mock.calls[0][0].where).toEqual({ id: { in: ['nuevo'] } });
+  });
+
+  it('sin candidatos no llega a consultar usuarios', async () => {
+    await expect(listSuggestedProfiles('viewer-1')).resolves.toEqual([]);
+    expect(mocks.userFindMany).not.toHaveBeenCalled();
   });
 });
 

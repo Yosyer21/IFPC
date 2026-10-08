@@ -938,6 +938,31 @@ export async function main() {
     });
   }
 
+  // Relaciones de seguimiento de ejemplo (pestaña "Siguiendo" y sugerencias).
+  const demoFollows: { followerId: string; followingId: string }[] = [
+    { followerId: playerUser.id, followingId: clubUser.id },
+    { followerId: playerUser.id, followingId: universityUser.id },
+    { followerId: playerUser.id, followingId: scoutUser.id },
+    { followerId: parentUser.id, followingId: clubUser.id },
+    { followerId: parentUser.id, followingId: schoolUser.id },
+    { followerId: scoutUser.id, followingId: playerUser.id },
+    { followerId: agentUser.id, followingId: playerUser.id },
+    { followerId: coachUser.id, followingId: schoolUser.id },
+    { followerId: universityUser.id, followingId: playerUser.id },
+  ];
+  for (const follow of demoFollows) {
+    await prisma.follow.upsert({
+      where: {
+        followerId_followingId: {
+          followerId: follow.followerId,
+          followingId: follow.followingId,
+        },
+      },
+      update: {},
+      create: follow,
+    });
+  }
+
   console.log('Seed completado:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- jugador: player@demo.com / player123`);

@@ -11,6 +11,7 @@ Cuelga de `User` (no de `Player`) para que **cualquier rol** pueda publicar.
 | `PostComment` | Comentario; `parentId` da un nivel de respuestas (auto-relación).           |
 | `PostView`    | Alcance: un registro por publicación + espectador, con contador y fechas.   |
 | `PostReport`  | Denuncia (una por persona y publicación).                                   |
+| `Follow`      | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera). |
 
 Enums: `PostType` (`ANNOUNCEMENT · VIDEO · PHOTO · ACHIEVEMENT`) y `PostStatus`
 (`DRAFT · PUBLISHED · HIDDEN`; `HIDDEN` solo lo aplica un admin).
@@ -42,7 +43,33 @@ relación, para que borrar un usuario no arrastre métricas.
   20 por página, cursor = id del último elemento.
 - **Tendencias**: candidatos de los últimos 30 días (máximo 60) puntuados en
   memoria con `likes*3 + comments*2 + views`; una sola página.
+- **Siguiendo**: publicaciones de los perfiles seguidos **más las propias**
+  (`OR` sobre `authorId`); sin seguir a nadie solo aparecen las tuyas.
 - **Anuncios / Vídeos**: filtran por `type`. **Etiqueta**: `tags: { has }`.
+
+## Recomendación ("Para ti")
+
+`apps/web/lib/discovery-recommend.ts` reutiliza el motor de `@ifpc/matching`:
+
+- Puro: `relevanceForPlayer` (encaje entre el perfil del espectador y la
+  oportunidad que comparte la publicación), `relevanceForOpportunities` (mejor
+  encaje del autor jugador con las oportunidades del espectador) y `rankForYou`
+  (los que superan el umbral `PLAYER_MATCH_THRESHOLD`, de mayor a menor, y
+  después el resto conservando el orden reciente).
+- Datos: `listForYouFeed` resuelve el contexto del espectador (`player` si es
+  jugador; `recruiter` con sus oportunidades abiertas si es club o universidad;
+  `none` en el resto) y una única consulta de candidatos (45 días, máx. 60), más
+  una segunda consulta para los perfiles de jugador de los autores cuando hace
+  falta. Sin contexto puntuable **no se puntúa nada**: se devuelve el orden
+  reciente.
+
+El resultado se muestra con `MatchScoreBadge` (`82% match`) en las publicaciones
+que encajan, así que la recomendación es explicable, no una caja negra.
+
+El grafo social vive en `apps/web/lib/discovery.ts`: `getFollowStats`
+(seguidores, siguiendo y si el espectador sigue) y `listSuggestedProfiles`
+(los más seguidos que aún no sigues, excluyéndote a ti y a los ya seguidos),
+con `toggleFollowAction` en las acciones.
 
 El estado de los filtros vive en la URL (`?tab=`, `?tag=`, `?cursor=`), así que
 son enlaces normales (funcionan sin JS y son compartibles).
@@ -78,7 +105,8 @@ son enlaces normales (funcionan sin JS y son compartibles).
 
 Componentes en `apps/web/components/discovery/`: `post-composer` (cliente),
 `post-card` (servidor, presentacional), `post-actions` (cliente),
-`comment-form` / `comment-list`, `edit-post-form`, `feed-tabs` (enlaces).
+`comment-form` / `comment-list`, `edit-post-form`, `feed-tabs` (enlaces),
+`follow-button` (cliente, con `useFormStatus`) y `suggested-profiles`.
 
 Páginas: `app/dashboard/discovery/page.tsx` (feed),
 `[postId]/page.tsx` (detalle, comentarios, alcance y moderación),
@@ -91,8 +119,9 @@ Reutiliza el diseño compartido (`PageHeader`, `Card`, `Badge`, `Button`,
 ## Datos de demo
 
 `packages/database/prisma/seed.ts` crea siete publicaciones (una por tipo de
-perfil), con likes, comentarios y alcance, mediante `upsert` con ids fijos
-(`seed-post-*`, `seed-comment-*`), por lo que `pnpm db:seed` es idempotente.
+perfil), con likes, comentarios, alcance y relaciones de seguimiento, mediante
+`upsert` con ids fijos (`seed-post-*`, `seed-comment-*`) o claves compuestas, por
+lo que `pnpm db:seed` es idempotente.
 
 ## Notas
 

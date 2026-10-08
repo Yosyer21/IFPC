@@ -32,16 +32,39 @@ export const POSTING_ROLES = [
 ] as const;
 
 /** Pestañas del feed (`?tab=`). */
-export const DISCOVERY_TABS = ['recent', 'trending', 'announcements', 'videos'] as const;
+export const DISCOVERY_TABS = [
+  'foryou',
+  'following',
+  'recent',
+  'trending',
+  'announcements',
+  'videos',
+] as const;
 export type DiscoveryTab = (typeof DISCOVERY_TABS)[number];
 export const DEFAULT_DISCOVERY_TAB: DiscoveryTab = 'recent';
 
 export const DISCOVERY_TAB_LABELS: Record<string, string> = {
+  foryou: 'Para ti',
+  following: 'Siguiendo',
   recent: 'Recientes',
   trending: 'Tendencias',
   announcements: 'Anuncios',
   videos: 'Vídeos',
 };
+
+/** Perfiles sugeridos que se muestran en el feed. */
+export const DISCOVERY_SUGGESTED_PROFILES = 4;
+
+/** Candidatos que se puntúan (y ventana temporal, en días) para "Para ti" y tendencias. */
+export const DISCOVERY_FORYOU_CANDIDATES = 60;
+export const DISCOVERY_FORYOU_DAYS = 45;
+
+/**
+ * Roles que ven "Para ti" ordenado por el motor de matching: puntúan las
+ * publicaciones de jugadores según el encaje con sus oportunidades abiertas.
+ * (El jugador lo ve al revés: su encaje con las oportunidades que se comparten.)
+ */
+export const DISCOVERY_RECRUITER_ROLES = ['CLUB', 'UNIVERSITY'] as const;
 
 /** Tamaño de página del feed (cursor-based). */
 export const DISCOVERY_PAGE_SIZE = 20;

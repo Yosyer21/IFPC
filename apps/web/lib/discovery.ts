@@ -3,6 +3,7 @@ import { prisma } from '@ifpc/database';
 import {
   DEFAULT_DISCOVERY_TAB,
   DISCOVERY_PAGE_SIZE,
+  DISCOVERY_SUGGESTED_PROFILES,
   DISCOVERY_TABS,
   EMBED_ALLOWED_HOSTS,
   type DiscoveryTab,
@@ -32,6 +33,8 @@ export interface FeedPost {
   opportunity: { id: string; title: string } | null;
   counts: { likes: number; comments: number; views: number };
   likedByMe: boolean;
+  /** Solo lo rellena la pestaña "Para ti": encaje con el perfil (0-100). */
+  relevance?: number | null;
 }
 
 export interface FeedComment {
@@ -203,7 +206,7 @@ export function summarizePostViews(rows: PostViewRow[]): PostViewStats {
   };
 }
 
-function toFeedPost(row: FeedRow): FeedPost {
+export function toFeedPost(row: FeedRow): FeedPost {
   return {
     id: row.id,
     type: row.type,
@@ -243,6 +246,7 @@ export async function listFeed(input: {
     ...(filters.tag ? { tags: { has: filters.tag } } : {}),
     ...(filters.tab === 'announcements' ? { type: 'ANNOUNCEMENT' as const } : {}),
     ...(filters.tab === 'videos' ? { type: 'VIDEO' as const } : {}),
+    ...(filters.tab === 'following' ? { OR: await followingFilter(viewerId) } : {}),
   };
   const include = { ...POST_INCLUDE, likes: { where: { userId: viewerId }, select: { id: true } } };
 
@@ -353,4 +357,98 @@ export async function getPostViewStats(postId: string): Promise<PostViewStats> {
     select: { viewerRole: true, viewCount: true },
   });
   return summarizePostViews(rows);
+}
+
+// ---------------------------------------------------------------------------
+// Relación social (seguir / seguidores)
+// ---------------------------------------------------------------------------
+
+/** Filtro de la pestaña "Siguiendo": publicaciones de los perfiles seguidos + las propias. */
+type FollowingFilter = { authorId: string } | { authorId: { in: string[] } };
+
+async function followingFilter(viewerId: string): Promise<FollowingFilter[]> {
+  const follows = await prisma.follow.findMany({
+    where: { followerId: viewerId },
+    select: { followingId: true },
+    take: 500,
+  });
+  const ids = follows.map((follow) => follow.followingId);
+  return ids.length > 0
+    ? [{ authorId: { in: ids } }, { authorId: viewerId }]
+    : [{ authorId: viewerId }];
+}
+
+export interface FollowStats {
+  followers: number;
+  following: number;
+  isFollowing: boolean;
+}
+
+/** Contadores del muro y estado del botón "Seguir" para el espectador. */
+export async function getFollowStats(userId: string, viewerId: string): Promise<FollowStats> {
+  const [followers, following, link] = await Promise.all([
+    prisma.follow.count({ where: { followingId: userId } }),
+    prisma.follow.count({ where: { followerId: userId } }),
+    userId === viewerId
+      ? Promise.resolve(null)
+      : prisma.follow.findUnique({
+          where: { followerId_followingId: { followerId: viewerId, followingId: userId } },
+          select: { id: true },
+        }),
+  ]);
+
+  return { followers, following, isFollowing: link !== null };
+}
+
+export interface SuggestedProfile {
+  id: string;
+  name: string;
+  role: string;
+  image: string | null;
+  followers: number;
+  posts: number;
+}
+
+/**
+ * Perfiles sugeridos: los más seguidos que el espectador aún no sigue, con su
+ * número de publicaciones para dar contexto.
+ */
+export async function listSuggestedProfiles(
+  viewerId: string,
+  limit = DISCOVERY_SUGGESTED_PROFILES
+): Promise<SuggestedProfile[]> {
+  const [followed, ranking] = await Promise.all([
+    prisma.follow.findMany({ where: { followerId: viewerId }, select: { followingId: true } }),
+    prisma.follow.groupBy({
+      by: ['followingId'],
+      _count: { followingId: true },
+      orderBy: { _count: { followingId: 'desc' } },
+      take: 40,
+    }),
+  ]);
+
+  const excluded = new Set([viewerId, ...followed.map((follow) => follow.followingId)]);
+  const candidates = ranking.filter((row) => !excluded.has(row.followingId)).slice(0, limit);
+  if (candidates.length === 0) return [];
+
+  const users = await prisma.user.findMany({
+    where: { id: { in: candidates.map((row) => row.followingId) } },
+    select: { id: true, name: true, role: true, image: true, _count: { select: { posts: true } } },
+  });
+  const byId = new Map(users.map((user) => [user.id, user]));
+
+  return candidates.flatMap((row) => {
+    const user = byId.get(row.followingId);
+    if (!user) return [];
+    return [
+      {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        image: user.image,
+        followers: row._count.followingId,
+        posts: user._count.posts,
+      },
+    ];
+  });
 }
