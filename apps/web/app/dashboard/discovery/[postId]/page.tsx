@@ -54,6 +54,17 @@ export default async function PostDetailPage({
         <PostCard post={post} viewerId={session.user.id} viewerRole={session.user.role} />
       </div>
 
+      {isAuthor && post.status === 'HIDDEN' ? (
+        <Card className="mt-4">
+          <CardContent>
+            <p className="text-sm text-amber-400">
+              Tu publicación está en revisión por el equipo de moderación y todavía no es visible
+              para el resto.
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
+
       {isAuthor && stats ? (
         <Card className="mt-4">
           <CardContent className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">

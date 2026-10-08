@@ -66,6 +66,37 @@ export const DISCOVERY_FORYOU_DAYS = 45;
  */
 export const DISCOVERY_RECRUITER_ROLES = ['CLUB', 'UNIVERSITY'] as const;
 
+/** Límites anti-abuso del feed (por usuario y ventana de una hora). */
+export const FEED_RATE_LIMITS = {
+  postsPerHour: 10,
+  commentsPerHour: 30,
+  /** Enlaces permitidos en el texto de una publicación. */
+  maxLinks: 3,
+  /** Ventana en la que el mismo texto se considera duplicado (minutos). */
+  duplicateWindowMinutes: 10,
+} as const;
+
+/**
+ * Palabras prohibidas de la moderación automática (lista semilla: amplíala o
+ * muévela a configuración de operaciones cuando haga falta). La comparación es
+ * por palabra completa y sin distinguir mayúsculas.
+ */
+export const FEED_BANNED_WORDS: readonly string[] = [
+  'cabron',
+  'cabrona',
+  'estupido',
+  'estupida',
+  'gilipollas',
+  'idiota',
+  'imbecil',
+  'maricon',
+  'mierda',
+  'puta',
+  'puto',
+  'retrasado',
+  'retrasada',
+];
+
 /** Tamaño de página del feed (cursor-based). */
 export const DISCOVERY_PAGE_SIZE = 20;
 

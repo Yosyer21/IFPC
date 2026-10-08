@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { DISCOVERY_TAB_LABELS, DISCOVERY_TABS } from '@ifpc/config';
-import type { FeedFilters } from '@/lib/discovery';
+import type { FeedFilters } from '@/lib/discovery-content';
 
 /** URL de una pestaña conservando etiqueta y búsqueda. */
 function hrefFor(base: string, tab: string, filters: FeedFilters): string {

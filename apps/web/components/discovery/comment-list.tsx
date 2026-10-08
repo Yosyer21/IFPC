@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { deleteCommentAction } from '@/app/actions/discovery';
 import { PlayerAvatar } from '@/components/player/avatar';
-import { formatRelativeTime, type FeedComment } from '@/lib/discovery';
+import { formatRelativeTime, type FeedComment } from '@/lib/discovery-content';
 import { nameParts } from '@/lib/names';
 import { CommentForm } from './comment-form';
 import { EditCommentForm } from './edit-comment-form';

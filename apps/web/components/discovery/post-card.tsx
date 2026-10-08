@@ -4,7 +4,7 @@ import { POST_TYPE_LABELS } from '@ifpc/config';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { MatchScoreBadge } from '@/components/player/match-score';
-import { formatRelativeTime, resolveEmbed, type FeedPost } from '@/lib/discovery';
+import { formatRelativeTime, resolveEmbed, type FeedPost } from '@/lib/discovery-content';
 import { PLAYER_MATCH_THRESHOLD } from '@/lib/matching';
 import { nameParts } from '@/lib/names';
 import { PostActions } from './post-actions';

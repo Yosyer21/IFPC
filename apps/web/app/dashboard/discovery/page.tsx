@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { Card, CardContent } from '@ifpc/ui';
+import { FeedList } from '@/components/discovery/feed-list';
 import { FeedSearch } from '@/components/discovery/feed-search';
 import { FeedTabs } from '@/components/discovery/feed-tabs';
 import { PostCard } from '@/components/discovery/post-card';
@@ -68,11 +68,6 @@ export default async function DiscoveryPage({
         ? 'Aquí verás lo que publican los perfiles que sigues. Empieza siguiendo a alguien.'
         : 'Todavía no hay publicaciones. Publica la primera.';
 
-  const moreQuery = new URLSearchParams();
-  if (filters.tab !== 'recent') moreQuery.set('tab', filters.tab);
-  if (filters.tag) moreQuery.set('tag', filters.tag);
-  if (nextCursor) moreQuery.set('cursor', nextCursor);
-
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
@@ -105,28 +100,15 @@ export default async function DiscoveryPage({
           </CardContent>
         </Card>
       ) : (
-        <div className="flex flex-col gap-4">
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              viewerId={session.user.id}
-              viewerRole={session.user.role}
-            />
-          ))}
-        </div>
+        <FeedList
+          key={`${filters.tab}:${filters.tag ?? ''}:${filters.q ?? ''}`}
+          initialPosts={posts}
+          initialCursor={nextCursor}
+          filters={filters}
+          viewerId={session.user.id}
+          viewerRole={session.user.role}
+        />
       )}
-
-      {nextCursor ? (
-        <div className="mt-6 flex justify-center">
-          <Link
-            href={`/dashboard/discovery?${moreQuery.toString()}`}
-            className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
-          >
-            Ver más
-          </Link>
-        </div>
-      ) : null}
 
       <SuggestedProfiles profiles={suggested} />
     </div>

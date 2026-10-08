@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@ifpc/ui';
-import { FEED_QUERY_MAX, type FeedFilters } from '@/lib/discovery';
+import { FEED_QUERY_MAX, type FeedFilters } from '@/lib/discovery-content';
 
 /** URL del feed conservando pestaña y etiqueta (sin búsqueda). */
 function clearHref(filters: FeedFilters, base: string): string {

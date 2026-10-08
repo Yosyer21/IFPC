@@ -29,6 +29,11 @@ logros.
   bloque de **perfiles sugeridos** (los más seguidos que aún no sigues).
 - **Pestaña Para ti (F2)**: ordena el feed con el **motor de matching** que ya
   usan las oportunidades (ver más abajo).
+- **Lectura fluida**: "Ver más" carga la página siguiente **sin recargar** (y sin
+  perder el scroll), y el me gusta no espera al servidor.
+- **Convivencia**: topes anti-abuso (ritmo de publicación y comentario, enlaces
+  por texto y duplicados recientes) y moderación automática del lenguaje no
+  permitido, que deja la publicación **en revisión** en vez de borrarla.
 - **Exploración**: pestañas *Para ti · Siguiendo · Recientes · Tendencias ·
   Anuncios · Vídeos*, filtro por etiqueta (`#sub17`) y paginación por cursor.
 - **Métricas del autor**: cada publicación muestra a su autor cuántas personas

@@ -55,6 +55,26 @@ relación, para que borrar un usuario no arrastre métricas.
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.
 
+## Módulos y carga incremental
+
+- `apps/web/lib/discovery-content.ts` es **client-safe** (tipos, filtros, ranking,
+  formato, `resolveEmbed`, `toFeedPost`): no importa Prisma ni la sesión. Los
+  componentes de cliente (`post-card`, `comment-list`, `feed-tabs`, `feed-search`,
+  `notifications-bell`, `feed-list`) importan de ahí, y `lib/discovery.ts`
+  —que sí consulta— **reexporta** todo para no cambiar ningún import existente.
+- `FeedList` (cliente) implementa "Ver más" **sin recargar**: acumula las páginas
+  siguientes que devuelve `loadMoreFeedAction`, manteniendo como fuente de verdad
+  las publicaciones del servidor (así un refresco de ruta tras un me gusta no
+  pierde lo cargado). El espejo público mantiene el enlace con cursor, que
+  funciona sin JavaScript.
+- `apps/web/lib/discovery-guardrails.ts` (server) aplica los topes anti-abuso de
+  `FEED_RATE_LIMITS` (publicaciones y comentarios por hora, enlaces por texto,
+  ventana de duplicados) contando en la propia base —sin Redis— y la lista
+  `FEED_BANNED_WORDS`. El ritmo, el duplicado y los enlaces **rechazan** con un
+  mensaje claro; el lenguaje prohibido **no se pierde**: la publicación se crea
+  `HIDDEN`, queda en la traza como automática y el autor ve el aviso de
+  "en revisión" en el detalle.
+
 ## Avisos y tiempo real percibido
 
 - **Agrupación**: `notifyGrouped` (`lib/notifications/notify.ts`) reutiliza el

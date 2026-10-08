@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { markNotificationsReadAction } from '@/app/actions/player';
 import { IconBell } from '@/components/dashboard/icons';
-import { formatRelativeTime, type FeedNotification } from '@/lib/discovery';
+import { formatRelativeTime, type FeedNotification } from '@/lib/discovery-content';
 
 /**
  * Campana de avisos del feed. Los avisos llegan ya resueltos del servidor y

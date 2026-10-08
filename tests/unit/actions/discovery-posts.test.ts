@@ -5,6 +5,8 @@ const mocks = vi.hoisted(() => ({
   auth: vi.fn(),
   postCreate: vi.fn(),
   postFindUnique: vi.fn(),
+  postFindFirst: vi.fn(),
+  postCount: vi.fn(),
   postUpdate: vi.fn(),
   postDelete: vi.fn(),
   likeFindUnique: vi.fn(),
@@ -14,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   commentFindUnique: vi.fn(),
   commentDelete: vi.fn(),
   commentUpdate: vi.fn(),
+  commentCount: vi.fn(),
   reportUpsert: vi.fn(),
   reportUpdateMany: vi.fn(),
   moderationLogCreate: vi.fn(),
@@ -35,6 +38,8 @@ vi.mock('@ifpc/database', () => ({
     post: {
       create: mocks.postCreate,
       findUnique: mocks.postFindUnique,
+      findFirst: mocks.postFindFirst,
+      count: mocks.postCount,
       update: mocks.postUpdate,
       delete: mocks.postDelete,
     },
@@ -48,6 +53,7 @@ vi.mock('@ifpc/database', () => ({
       findUnique: mocks.commentFindUnique,
       delete: mocks.commentDelete,
       update: mocks.commentUpdate,
+      count: mocks.commentCount,
     },
     postReport: { upsert: mocks.reportUpsert, updateMany: mocks.reportUpdateMany },
     moderationLog: { create: mocks.moderationLogCreate },
@@ -110,6 +116,9 @@ beforeEach(() => {
   });
   mocks.postUpdate.mockResolvedValue({});
   mocks.postDelete.mockResolvedValue({});
+  mocks.postFindFirst.mockResolvedValue(null);
+  mocks.postCount.mockResolvedValue(0);
+  mocks.commentCount.mockResolvedValue(0);
   mocks.likeFindUnique.mockResolvedValue(null);
   mocks.likeCreate.mockResolvedValue({});
   mocks.commentCreate.mockResolvedValue({ id: 'comment-1' });
@@ -244,6 +253,46 @@ describe('createPostAction', () => {
       createPostAction({}, form({ body: 'Buscamos', opportunityId: 'opp-1' }))
     );
     expect(mocks.postCreate.mock.calls[0][0].data.opportunityId).toBe('opp-1');
+  });
+
+  it('corta por ritmo de publicación', async () => {
+    mocks.postCount.mockResolvedValue(99);
+
+    const result = await createPostAction({}, form({ body: 'otra vez' }));
+
+    expect(result.error).toContain('demasiado seguido');
+    expect(mocks.postCreate).not.toHaveBeenCalled();
+  });
+
+  it('rechaza el mismo texto repetido hace un momento', async () => {
+    mocks.postFindFirst.mockResolvedValue({ id: 'post-1' });
+
+    const result = await createPostAction({}, form({ body: 'igual' }));
+
+    expect(result.error).toContain('Ya has publicado');
+    expect(mocks.postCreate).not.toHaveBeenCalled();
+  });
+
+  it('rechaza textos con demasiados enlaces', async () => {
+    const result = await createPostAction(
+      {},
+      form({ body: 'a https://a.com b https://b.com c https://c.com d https://d.com' })
+    );
+
+    expect(result.error).toContain('enlaces');
+    expect(mocks.postCreate).not.toHaveBeenCalled();
+  });
+
+  it('deja a revisión (oculta) el lenguaje prohibido en vez de perderlo', async () => {
+    const target = await captureRedirect(() =>
+      createPostAction({}, form({ body: 'eres un idiota' }))
+    );
+
+    expect(mocks.postCreate.mock.calls[0][0].data.status).toBe('HIDDEN');
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ action: 'HIDDEN' }) })
+    );
+    expect(target).toBe('/dashboard/discovery/post-1');
   });
 });
 
@@ -463,6 +512,22 @@ describe('createCommentAction', () => {
     await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
 
     expect(mocks.notifyGrouped).not.toHaveBeenCalled();
+  });
+
+  it('rechaza comentarios con lenguaje prohibido', async () => {
+    const result = await createCommentAction({}, form({ postId: 'post-1', body: 'eres un idiota' }));
+
+    expect(result.error).toContain('lenguaje');
+    expect(mocks.commentCreate).not.toHaveBeenCalled();
+  });
+
+  it('corta por ritmo de comentarios', async () => {
+    mocks.commentCount.mockResolvedValue(99);
+
+    const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
+
+    expect(result.error).toContain('demasiado seguido');
+    expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 });
 

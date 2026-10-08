@@ -19,7 +19,13 @@ import {
   postReportSchema,
   postSchema,
 } from '@ifpc/validation';
-import { extractTags, resolveEmbed } from '@/lib/discovery';
+import { extractTags, parseFeedFilters, resolveEmbed, type FeedPost } from '@/lib/discovery-content';
+import { listFeed } from '@/lib/discovery';
+import {
+  GUARDRAIL_MESSAGES,
+  reviewComment,
+  reviewPost,
+} from '@/lib/discovery-guardrails';
 import { logModeration } from '@/lib/discovery-moderation';
 import { notifyGrouped } from '@/lib/notifications/notify';
 import { dashboardPath } from '@/lib/safe-redirect';
@@ -138,6 +144,18 @@ export async function createPostAction(
   // El medio manda: un vídeo o una imagen nunca queda clasificado como anuncio.
   const type = mediaKind === 'image' ? 'PHOTO' : mediaKind ? 'VIDEO' : parsed.data.type;
 
+  // Guardarraíles anti-abuso: ritmo, duplicados, enlaces y lenguaje prohibido.
+  const review = await reviewPost({
+    userId: poster.id,
+    title: parsed.data.title ?? null,
+    body: parsed.data.body ?? null,
+  });
+  if (review && 'reason' in review) {
+    return { error: GUARDRAIL_MESSAGES[review.reason] };
+  }
+  // El lenguaje no permitido no se pierde: la publicación queda a revisión.
+  const needsReview = review !== null;
+
   // Solo se adjunta la oportunidad si existe (el FK no admite referencias sueltas).
   const opportunityId = parsed.data.opportunityId
     ? ((
@@ -148,11 +166,13 @@ export async function createPostAction(
       )?.id ?? null)
     : null;
 
+  let created: { id: string };
   try {
-    await prisma.post.create({
+    created = await prisma.post.create({
       data: {
         authorId: poster.id,
         type,
+        status: needsReview ? 'HIDDEN' : 'PUBLISHED',
         title: parsed.data.title || null,
         body: parsed.data.body || null,
         mediaUrl,
@@ -164,6 +184,16 @@ export async function createPostAction(
     });
   } catch {
     return { error: 'No se pudo publicar.' };
+  }
+
+  if (needsReview) {
+    await logModeration({
+      actorId: poster.id,
+      postId: created.id,
+      action: 'HIDDEN',
+      notes: 'Automático: el texto contiene lenguaje no permitido.',
+    });
+    redirect(`/dashboard/discovery/${created.id}`);
   }
 
   redirect('/dashboard/discovery');
@@ -321,6 +351,12 @@ export async function createCommentAction(
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Revisa el comentario.' };
+  }
+
+  // Guardarraíles: ritmo y lenguaje prohibido.
+  const review = await reviewComment({ userId: session.user.id, body: parsed.data.body });
+  if (review) {
+    return { error: GUARDRAIL_MESSAGES[review.reason] };
   }
 
   const post = await prisma.post.findUnique({
@@ -484,6 +520,31 @@ export async function reportPostAction(
   }
 
   return { success: 'Thanks, our team will review it.' };
+}
+
+/**
+ * Carga la siguiente página del feed para "Ver más" sin recargar la página.
+ * Devuelve solo lo que necesita el cliente (publicaciones + cursor).
+ */
+export async function loadMoreFeedAction(input: {
+  tab: string;
+  tag: string | null;
+  q: string | null;
+  cursor: string;
+}): Promise<{ posts: FeedPost[]; nextCursor: string | null }> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { posts: [], nextCursor: null };
+  }
+
+  const filters = parseFeedFilters({
+    tab: input.tab,
+    tag: input.tag ?? undefined,
+    q: input.q ?? undefined,
+  });
+  const page = await listFeed({ viewerId: session.user.id, filters, cursor: input.cursor });
+
+  return { posts: page.posts, nextCursor: page.nextCursor };
 }
 
 /** Oculta o vuelve a publicar contenido (solo ADMIN). Al ocultar, atiende las denuncias. */
