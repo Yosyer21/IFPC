@@ -13,6 +13,7 @@ import {
 import { ActionSubmit } from '@/components/discovery/action-submit';
 import { PageHeader } from '@/components/player/page-header';
 import { formatRelativeTime } from '@/lib/discovery';
+import { getFeedHealth } from '@/lib/discovery-analytics';
 import { listModerationLog, listReportedPosts } from '@/lib/discovery-moderation';
 import { MODERATION_ACTION_LABELS } from '@/lib/labels';
 
@@ -24,7 +25,11 @@ export default async function AdminDiscoveryPage() {
   if (!session?.user?.id) return null;
   if (session.user.role !== 'ADMIN') notFound();
 
-  const [reported, log] = await Promise.all([listReportedPosts(), listModerationLog()]);
+  const [reported, log, health] = await Promise.all([
+    listReportedPosts(),
+    listModerationLog(),
+    getFeedHealth(),
+  ]);
   const pendingReports = reported.reduce((sum, entry) => sum + entry.reports.length, 0);
 
   return (
@@ -131,6 +136,62 @@ export default async function AdminDiscoveryPage() {
           ))}
         </div>
       )}
+
+      <Card className="mt-6">
+        <CardContent className="flex flex-col gap-3">
+          <h2 className="text-sm font-semibold">Salud del feed</h2>
+          <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+            <div>
+              <div className="text-lg font-bold tabular-nums">{health.published}</div>
+              <div className="text-xs text-muted-foreground">Publicadas</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold tabular-nums">{health.hidden}</div>
+              <div className="text-xs text-muted-foreground">Ocultas</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold tabular-nums">{health.activeAuthors}</div>
+              <div className="text-xs text-muted-foreground">Autores activos (30 d)</div>
+            </div>
+            <div>
+              <div className="text-lg font-bold tabular-nums">
+                {health.averageResolutionHours !== null
+                  ? `${health.averageResolutionHours} h`
+                  : '—'}
+              </div>
+              <div className="text-xs text-muted-foreground">Resolución media de denuncias</div>
+            </div>
+          </div>
+
+          <div className="flex items-end gap-1" aria-hidden="true">
+            {health.postsByDay.map((day) => (
+              <div
+                key={day.day}
+                title={`${day.day}: ${day.posts} publicaciones`}
+                className="w-full rounded-t bg-emerald-500/40"
+                style={{ height: `${Math.max(4, day.posts * 12)}px` }}
+              />
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Publicaciones por día en las dos últimas semanas · {health.pendingReports} denuncias
+            pendientes ({health.reportRatePer100} por cada 100 publicaciones)
+          </p>
+
+          {health.topTags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {health.topTags.map((tag) => (
+                <span
+                  key={tag.tag}
+                  className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground"
+                >
+                  #{tag.tag} · {tag.posts}
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
 
       <Card className="mt-6">
         <CardContent className="flex flex-col gap-3">

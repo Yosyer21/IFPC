@@ -84,6 +84,9 @@ export default async function PostDetailPage({
                 ({stats.byRole.map((row) => `${row.viewers} ${ROLE_LABELS[row.role] ?? row.role}`).join(', ')})
               </span>
             ) : null}
+            {stats.anonymousViews > 0 ? (
+              <span>· {stats.anonymousViews} aperturas anónimas (web pública)</span>
+            ) : null}
           </CardContent>
         </Card>
       ) : null}

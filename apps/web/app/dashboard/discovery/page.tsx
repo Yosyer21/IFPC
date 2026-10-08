@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { Card, CardContent } from '@ifpc/ui';
 import { FeedList } from '@/components/discovery/feed-list';
@@ -74,7 +75,14 @@ export default async function DiscoveryPage({
         title="Discovery"
         subtitle="Anuncios, vídeos y logros de todos los perfiles"
         icon="compass"
-      />
+      >
+        <Link
+          href="/dashboard/discovery/analytics"
+          className="text-sm text-muted-foreground hover:underline"
+        >
+          Mi rendimiento →
+        </Link>
+      </PageHeader>
 
       <PostComposer />
       <FeedTabs filters={filters} />

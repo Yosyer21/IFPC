@@ -55,6 +55,25 @@ relación, para que borrar un usuario no arrastre métricas.
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.
 
+## Analítica
+
+- **Alcance**: `PostView` guarda un registro por espectador identificable y **uno
+  compartido** para las visitas anónimas (`ANON_VIEWER_ID`), que el detalle
+  público incrementa con `recordAnonymousView`. `summarizePostViews` separa
+  `viewers` (identificables) de `anonymousViews`, así que el alcance ya no ignora
+  la web pública sin inventarse identidades.
+- **Autor** (`/dashboard/discovery/analytics`, enlazado desde el feed):
+  `getAuthorAnalytics` agrega alcance, aperturas anónimas, likes, comentarios,
+  engagement, las 5 publicaciones con más interacción, las etiquetas más usadas y
+  la **mejor hora** para publicar (hora del servidor, por engagement medio).
+- **Feed** (admin): `getFeedHealth` resume publicadas/ocultas, autores activos de
+  los últimos 30 días, publicaciones por día de las dos semanas, etiquetas más
+  usadas, denuncias por cada 100 publicaciones y **tiempo medio de resolución**
+  (calculado con `PostReport.createdAt` → `resolvedAt`).
+- Las funciones puras (`summarizeAuthorAnalytics`, `bestPostingHour`, `countTags`,
+  `bucketPostsByDay`, `averageResolutionHours`) viven en
+  `apps/web/lib/discovery-analytics.ts` y están cubiertas por tests.
+
 ## Privacidad y convivencia
 
 `apps/web/lib/discovery-privacy.ts` resuelve **bloquear** y **silenciar**:

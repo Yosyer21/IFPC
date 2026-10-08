@@ -215,28 +215,44 @@ export function formatRelativeTime(date: Date, now: Date = new Date()): string {
 export interface PostViewRow {
   viewerRole: string;
   viewCount: number;
+  /** `anonymous` en las aperturas del espejo público (sin espectador identificable). */
+  viewerUserId?: string;
 }
 
 export interface PostViewStats {
-  /** Personas distintas que han abierto la publicación. */
+  /** Personas distintas que han abierto la publicación (sin contar el anónimo). */
   viewers: number;
   /** Aperturas totales (incluye repetidas de la misma persona). */
   views: number;
+  /** Aperturas desde el espejo público, donde no hay espectador identificable. */
+  anonymousViews: number;
   byRole: { role: string; viewers: number }[];
 }
 
-/** Agrega el alcance de un post por rol (mismo criterio que `ProfileView`). */
+/** Clave con la que se agrupan las aperturas anónimas del espejo público. */
+export const ANON_VIEWER_ID = 'anonymous';
+
+/** Agrega el alcance de un post por rol, separando las aperturas anónimas. */
 export function summarizePostViews(rows: PostViewRow[]): PostViewStats {
   const byRole = new Map<string, number>();
+  let viewers = 0;
+  let anonymousViews = 0;
+
   for (const row of rows) {
+    if (row.viewerUserId === ANON_VIEWER_ID) {
+      anonymousViews += row.viewCount;
+      continue;
+    }
+    viewers += 1;
     byRole.set(row.viewerRole, (byRole.get(row.viewerRole) ?? 0) + 1);
   }
 
   return {
-    viewers: rows.length,
+    viewers,
     views: rows.reduce((sum, row) => sum + row.viewCount, 0),
+    anonymousViews,
     byRole: [...byRole.entries()]
-      .map(([role, viewers]) => ({ role, viewers }))
+      .map(([role, roleViewers]) => ({ role, viewers: roleViewers }))
       .sort((a, b) => b.viewers - a.viewers),
   };
 }

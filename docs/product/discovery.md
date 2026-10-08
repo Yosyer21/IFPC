@@ -42,8 +42,11 @@ logros.
 - **Exploración**: pestañas *Para ti · Siguiendo · Recientes · Tendencias ·
   Anuncios · Vídeos*, filtro por etiqueta (`#sub17`) y paginación por cursor.
 - **Métricas del autor**: cada publicación muestra a su autor cuántas personas
-  distintas la han abierto y el desglose por rol (mismo criterio que las
-  visitas al perfil de jugador).
+  distintas la han abierto (y cuántas aperturas anónimas llegan desde la web
+  pública), y el panel **Mi rendimiento** añade alcance total, engagement, las
+  publicaciones con más interacción, las etiquetas que mejor funcionan y la mejor
+  hora para publicar. El admin tiene además la **salud del feed** (actividad,
+  autores, etiquetas, denuncias y tiempo medio de resolución).
 - **Moderación (F3)**: el autor edita y borra lo suyo; el autor de una publicación
   puede borrar comentarios de su hilo; `ADMIN` puede ocultar/republicar, **fijar
   en el feed**, borrar y **atender denuncias** desde el panel

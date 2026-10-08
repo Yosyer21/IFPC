@@ -210,10 +210,25 @@ describe('summarizePostViews', () => {
     ).toEqual({
       viewers: 3,
       views: 6,
+      anonymousViews: 0,
       byRole: [
         { role: 'SCOUT', viewers: 2 },
         { role: 'CLUB', viewers: 1 },
       ],
+    });
+  });
+
+  it('separa las aperturas anónimas del espejo público', () => {
+    expect(
+      summarizePostViews([
+        { viewerRole: 'CLUB', viewCount: 2, viewerUserId: 'viewer-1' },
+        { viewerRole: 'ANON', viewCount: 7, viewerUserId: 'anonymous' },
+      ])
+    ).toEqual({
+      viewers: 1,
+      views: 9,
+      anonymousViews: 7,
+      byRole: [{ role: 'CLUB', viewers: 1 }],
     });
   });
 });
@@ -378,6 +393,7 @@ describe('métricas de una publicación', () => {
     await expect(getPostViewStats('post-1')).resolves.toEqual({
       viewers: 2,
       views: 3,
+      anonymousViews: 0,
       byRole: [
         { role: 'SCOUT', viewers: 1 },
         { role: 'CLUB', viewers: 1 },

@@ -7,6 +7,7 @@ import {
   rankTrendingPosts,
   summarizePostViews,
   toFeedPost,
+  ANON_VIEWER_ID,
   type FeedComment,
   type FeedFilters,
   type FeedNotification,
@@ -256,9 +257,26 @@ export async function countUnreadNotifications(userId: string): Promise<number> 
 export async function getPostViewStats(postId: string): Promise<PostViewStats> {
   const rows = await prisma.postView.findMany({
     where: { postId },
-    select: { viewerRole: true, viewCount: true },
+    select: { viewerRole: true, viewerUserId: true, viewCount: true },
   });
   return summarizePostViews(rows);
+}
+
+/**
+ * Suma una apertura anónima del espejo público. Sin sesión no hay espectador
+ * identificable, así que todas las visitas anónimas comparten fila y solo se
+ * acumula el número de aperturas.
+ */
+export async function recordAnonymousView(postId: string): Promise<void> {
+  try {
+    await prisma.postView.upsert({
+      where: { postId_viewerUserId: { postId, viewerUserId: ANON_VIEWER_ID } },
+      update: { viewCount: { increment: 1 }, lastViewedAt: new Date() },
+      create: { postId, viewerUserId: ANON_VIEWER_ID, viewerRole: 'ANON' },
+    });
+  } catch {
+    // Las métricas nunca deben romper la página.
+  }
 }
 
 // ---------------------------------------------------------------------------

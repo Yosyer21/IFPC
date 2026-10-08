@@ -7,7 +7,7 @@ import { CommentList } from '@/components/discovery/comment-list';
 import { PostCard } from '@/components/discovery/post-card';
 import { Footer } from '@/components/landing/footer';
 import { Navbar } from '@/components/landing/navbar';
-import { getPostForViewer, listComments } from '@/lib/discovery';
+import { getPostForViewer, listComments, recordAnonymousView } from '@/lib/discovery';
 
 const BASE = '/discovery';
 
@@ -47,7 +47,8 @@ export default async function PublicPostPage({
   if (!post) notFound();
 
   const comments = await listComments(postId);
-  // Sin sesión no se cuentan vistas: el alcance solo suma espectadores identificables.
+  // El espejo público no identifica a nadie: se cuenta como apertura anónima.
+  await recordAnonymousView(postId);
 
   return (
     <div className="min-h-screen bg-[#0a0e0c] text-white">
