@@ -43,3 +43,13 @@ export const GOAL_STATUS_LABELS: Record<string, string> = {
   in_progress: 'En curso',
   completed: 'Completed',
 };
+
+/** Acciones de la traza de moderación de Discovery (`ModerationLog.action`). */
+export const MODERATION_ACTION_LABELS: Record<string, string> = {
+  HIDDEN: 'Ocultada',
+  PUBLISHED: 'Republicada',
+  PINNED: 'Fijada',
+  UNPINNED: 'Desfijada',
+  DELETED: 'Borrada',
+  RESOLVED: 'Denuncias atendidas',
+};

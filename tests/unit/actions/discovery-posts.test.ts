@@ -14,6 +14,8 @@ const mocks = vi.hoisted(() => ({
   commentFindUnique: vi.fn(),
   commentDelete: vi.fn(),
   reportUpsert: vi.fn(),
+  reportUpdateMany: vi.fn(),
+  moderationLogCreate: vi.fn(),
   opportunityFindUnique: vi.fn(),
   followFindUnique: vi.fn(),
   followCreate: vi.fn(),
@@ -44,7 +46,8 @@ vi.mock('@ifpc/database', () => ({
       findUnique: mocks.commentFindUnique,
       delete: mocks.commentDelete,
     },
-    postReport: { upsert: mocks.reportUpsert },
+    postReport: { upsert: mocks.reportUpsert, updateMany: mocks.reportUpdateMany },
+    moderationLog: { create: mocks.moderationLogCreate },
     opportunity: { findUnique: mocks.opportunityFindUnique },
     follow: {
       findUnique: mocks.followFindUnique,
@@ -67,7 +70,9 @@ import {
   deleteCommentAction,
   deletePostAction,
   moderatePostAction,
+  pinPostAction,
   reportPostAction,
+  resolveReportsAction,
   toggleFollowAction,
   toggleLikeAction,
   updatePostAction,
@@ -90,13 +95,20 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.auth.mockResolvedValue({ user: { id: 'user-1', name: 'Ana Ruiz', role: 'CLUB' } });
   mocks.postCreate.mockResolvedValue({ id: 'post-1' });
-  mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'user-1', status: 'PUBLISHED' });
+  mocks.postFindUnique.mockResolvedValue({
+    id: 'post-1',
+    authorId: 'user-1',
+    status: 'PUBLISHED',
+    pinnedAt: null,
+  });
   mocks.postUpdate.mockResolvedValue({});
   mocks.postDelete.mockResolvedValue({});
   mocks.likeFindUnique.mockResolvedValue(null);
   mocks.likeCreate.mockResolvedValue({});
   mocks.commentCreate.mockResolvedValue({ id: 'comment-1' });
   mocks.reportUpsert.mockResolvedValue({});
+  mocks.reportUpdateMany.mockResolvedValue({ count: 2 });
+  mocks.moderationLogCreate.mockResolvedValue({});
   mocks.opportunityFindUnique.mockResolvedValue({ id: 'opp-1' });
   mocks.followFindUnique.mockResolvedValue(null);
   mocks.followCreate.mockResolvedValue({});
@@ -291,6 +303,30 @@ describe('deletePostAction', () => {
     expect(mocks.postDelete).toHaveBeenCalled();
   });
 
+  it('un admin que retira contenido ajeno deja traza', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null });
+
+    await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
+
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith({
+      data: { actorId: 'admin-1', postId: 'post-1', action: 'DELETED', notes: null },
+    });
+  });
+
+  it('borrar la publicación propia no se registra como moderación', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+    mocks.postFindUnique.mockResolvedValue({
+      id: 'post-1',
+      authorId: 'admin-1',
+      mediaUrl: null,
+    });
+
+    await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
+    expect(mocks.postDelete).toHaveBeenCalled();
+    expect(mocks.moderationLogCreate).not.toHaveBeenCalled();
+  });
+
   it('no borra ficheros que no son del feed', async () => {
     mocks.postFindUnique.mockResolvedValue({
       id: 'post-1',
@@ -474,6 +510,104 @@ describe('moderatePostAction', () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     await moderatePostAction(form({ postId: 'post-1', status: 'DRAFT' }));
     expect(mocks.postUpdate).not.toHaveBeenCalled();
+  });
+
+  it('ocultar cierra las denuncias pendientes y deja traza', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+
+    await moderatePostAction(form({ postId: 'post-1', status: 'HIDDEN' }));
+
+    expect(mocks.reportUpdateMany).toHaveBeenCalledWith({
+      where: { postId: 'post-1', resolvedAt: null },
+      data: { resolvedAt: expect.any(Date) },
+    });
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith({
+      data: { actorId: 'admin-1', postId: 'post-1', action: 'HIDDEN', notes: null },
+    });
+  });
+
+  it('republicar no toca las denuncias pero sí deja traza', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+
+    await moderatePostAction(form({ postId: 'post-1', status: 'PUBLISHED', notes: 'revisado' }));
+
+    expect(mocks.reportUpdateMany).not.toHaveBeenCalled();
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith({
+      data: { actorId: 'admin-1', postId: 'post-1', action: 'PUBLISHED', notes: 'revisado' },
+    });
+  });
+});
+
+describe('pinPostAction', () => {
+  it('solo los admin pueden fijar publicaciones', async () => {
+    await pinPostAction(form({ postId: 'post-1' }));
+    expect(mocks.postUpdate).not.toHaveBeenCalled();
+  });
+
+  it('fija una publicación y lo registra', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+
+    await pinPostAction(form({ postId: 'post-1' }));
+
+    expect(mocks.postUpdate).toHaveBeenCalledWith({
+      where: { id: 'post-1' },
+      data: { pinnedAt: expect.any(Date) },
+    });
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ action: 'PINNED' }) })
+    );
+  });
+
+  it('desfija una publicación ya fijada', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', pinnedAt: new Date('2026-01-01') });
+
+    await pinPostAction(form({ postId: 'post-1' }));
+
+    expect(mocks.postUpdate).toHaveBeenCalledWith({
+      where: { id: 'post-1' },
+      data: { pinnedAt: null },
+    });
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ action: 'UNPINNED' }) })
+    );
+  });
+
+  it('ignora publicaciones que no existen', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+    mocks.postFindUnique.mockResolvedValue(null);
+
+    await pinPostAction(form({ postId: 'fantasma' }));
+    expect(mocks.postUpdate).not.toHaveBeenCalled();
+  });
+});
+
+describe('resolveReportsAction', () => {
+  it('solo los admin pueden atender denuncias', async () => {
+    await resolveReportsAction(form({ postId: 'post-1' }));
+    expect(mocks.reportUpdateMany).not.toHaveBeenCalled();
+  });
+
+  it('marca las denuncias pendientes y lo registra', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+
+    await resolveReportsAction(form({ postId: 'post-1' }));
+
+    expect(mocks.reportUpdateMany).toHaveBeenCalledWith({
+      where: { postId: 'post-1', resolvedAt: null },
+      data: { resolvedAt: expect.any(Date) },
+    });
+    expect(mocks.moderationLogCreate).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ action: 'RESOLVED' }) })
+    );
+  });
+
+  it('si no había denuncias pendientes no deja traza', async () => {
+    mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
+    mocks.reportUpdateMany.mockResolvedValue({ count: 0 });
+
+    await resolveReportsAction(form({ postId: 'post-1' }));
+    expect(mocks.moderationLogCreate).not.toHaveBeenCalled();
   });
 });
 

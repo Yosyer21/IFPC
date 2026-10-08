@@ -45,6 +45,7 @@ export function PostCard({
                 {post.author.name}
               </Link>
               <Badge variant="outline">{POST_TYPE_LABELS[post.type] ?? post.type}</Badge>
+              {post.pinned ? <Badge variant="success">Fijado</Badge> : null}
               {post.relevance !== null &&
               post.relevance !== undefined &&
               post.relevance >= PLAYER_MATCH_THRESHOLD ? (

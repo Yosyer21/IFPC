@@ -963,6 +963,31 @@ export async function main() {
     });
   }
 
+  // Denuncias de ejemplo (cola de moderación) y una publicación fijada.
+  const demoReports = [
+    {
+      postId: 'seed-post-6',
+      reporterId: parentUser.id,
+      reason: 'Contacto directo fuera de la plataforma',
+    },
+    { postId: 'seed-post-6', reporterId: coachUser.id, reason: 'Publicidad encubierta' },
+    { postId: 'seed-post-3', reporterId: playerUser.id, reason: 'El enlace no carga' },
+  ];
+  for (const report of demoReports) {
+    await prisma.postReport.upsert({
+      where: {
+        postId_reporterId: { postId: report.postId, reporterId: report.reporterId },
+      },
+      update: {},
+      create: report,
+    });
+  }
+
+  await prisma.post.updateMany({
+    where: { id: 'seed-post-1' },
+    data: { pinnedAt: daysAgoPost(0, 2) },
+  });
+
   console.log('Seed completado:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- jugador: player@demo.com / player123`);

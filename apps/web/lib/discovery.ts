@@ -10,11 +10,17 @@ import {
 } from '@ifpc/config';
 import { POST_TAGS_MAX, POST_TAG_MAX } from '@ifpc/validation';
 
-/** Filtros activos del feed (provienen de `?tab=` y `?tag=`). */
+/** Filtros activos del feed (provienen de `?tab=`, `?tag=` y `?q=`). */
 export interface FeedFilters {
   tab: DiscoveryTab;
   tag: string | null;
+  /** Búsqueda por texto: título, cuerpo o autor. */
+  q: string | null;
 }
+
+/** Longitud máxima (y mínima) de la búsqueda del feed. */
+export const FEED_QUERY_MAX = 60;
+const FEED_QUERY_MIN = 2;
 
 /** Publicación ya normalizada para la UI. */
 export interface FeedPost {
@@ -87,13 +93,21 @@ interface FeedRow {
 // Funciones puras
 // ---------------------------------------------------------------------------
 
-/** Normaliza `?tab=` y `?tag=` (valores desconocidos → por defecto / sin filtro). */
-export function parseFeedFilters(params: { tab?: string; tag?: string } = {}): FeedFilters {
+/** Normaliza `?tab=`, `?tag=` y `?q=` (valores desconocidos → por defecto / sin filtro). */
+export function parseFeedFilters(
+  params: { tab?: string; tag?: string; q?: string } = {}
+): FeedFilters {
   const tab = DISCOVERY_TABS.find((value) => value === params.tab) ?? DEFAULT_DISCOVERY_TAB;
   const raw = (params.tag ?? '').trim().replace(/^#+/, '').toLowerCase();
   const valid = raw.length > 0 && raw.length <= POST_TAG_MAX && /^[a-z0-9][a-z0-9_-]*$/.test(raw);
+  // La búsqueda se limita y se colapsa el espacio para no golpear la base con textos absurdos.
+  const query = (params.q ?? '').replace(/\s+/g, ' ').trim().slice(0, FEED_QUERY_MAX);
 
-  return { tab, tag: valid ? raw : null };
+  return {
+    tab,
+    tag: valid ? raw : null,
+    q: query.length >= FEED_QUERY_MIN ? query : null,
+  };
 }
 
 /** Extrae los `#hashtags` del texto y los une a las etiquetas ya declaradas. */
@@ -239,14 +253,31 @@ export async function listFeed(input: {
   viewerId: string;
   filters: FeedFilters;
   cursor?: string | null;
+  /** Publicaciones ya mostradas fuera del listado (p. ej. las fijadas). */
+  excludeIds?: string[];
 }): Promise<FeedPage> {
-  const { filters, viewerId, cursor } = input;
+  const { filters, viewerId, cursor, excludeIds } = input;
   const where = {
     status: 'PUBLISHED' as const,
     ...(filters.tag ? { tags: { has: filters.tag } } : {}),
     ...(filters.tab === 'announcements' ? { type: 'ANNOUNCEMENT' as const } : {}),
     ...(filters.tab === 'videos' ? { type: 'VIDEO' as const } : {}),
     ...(filters.tab === 'following' ? { OR: await followingFilter(viewerId) } : {}),
+    // La búsqueda se añade con AND: combina con la pestaña en vez de sustituirla.
+    ...(filters.q
+      ? {
+          AND: [
+            {
+              OR: [
+                { title: { contains: filters.q, mode: 'insensitive' as const } },
+                { body: { contains: filters.q, mode: 'insensitive' as const } },
+                { author: { name: { contains: filters.q, mode: 'insensitive' as const } } },
+              ],
+            },
+          ],
+        }
+      : {}),
+    ...(excludeIds && excludeIds.length > 0 ? { id: { notIn: excludeIds } } : {}),
   };
   const include = { ...POST_INCLUDE, likes: { where: { userId: viewerId }, select: { id: true } } };
 
@@ -276,6 +307,17 @@ export async function listFeed(input: {
     posts: page.map(toFeedPost),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
   };
+}
+
+/** Publicaciones fijadas por un admin (las más recientes primero). */
+export async function listPinnedPosts(viewerId: string, limit = 3): Promise<FeedPost[]> {
+  const rows = await prisma.post.findMany({
+    where: { status: 'PUBLISHED', pinnedAt: { not: null } },
+    orderBy: { pinnedAt: 'desc' },
+    take: limit,
+    include: { ...POST_INCLUDE, likes: { where: { userId: viewerId }, select: { id: true } } },
+  });
+  return rows.map(toFeedPost);
 }
 
 /** Una publicación visible para el espectador (o `null` si no existe/sin permiso). */

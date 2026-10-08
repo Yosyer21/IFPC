@@ -37,6 +37,7 @@ import {
   getFollowStats,
   getPostViewStats,
   listFeed,
+  listPinnedPosts,
   listSuggestedProfiles,
   parseFeedFilters,
   rankTrendingPosts,
@@ -86,8 +87,8 @@ beforeEach(() => {
 });
 
 describe('parseFeedFilters', () => {
-  it('sin parámetros usa "recent" y sin etiqueta', () => {
-    expect(parseFeedFilters({})).toEqual({ tab: 'recent', tag: null });
+  it('sin parámetros usa "recent", sin etiqueta y sin búsqueda', () => {
+    expect(parseFeedFilters({})).toEqual({ tab: 'recent', tag: null, q: null });
   });
 
   it('acepta pestañas conocidas y descarta las desconocidas', () => {
@@ -101,6 +102,13 @@ describe('parseFeedFilters', () => {
     expect(parseFeedFilters({ tag: 'no vale' }).tag).toBeNull();
     expect(parseFeedFilters({ tag: '-raro' }).tag).toBeNull();
     expect(parseFeedFilters({ tag: 'a'.repeat(40) }).tag).toBeNull();
+  });
+
+  it('normaliza la búsqueda y descarta textos demasiado cortos o largos', () => {
+    expect(parseFeedFilters({ q: '  Becas   deportivas  ' }).q).toBe('Becas deportivas');
+    expect(parseFeedFilters({ q: 'a' }).q).toBeNull();
+    expect(parseFeedFilters({}).q).toBeNull();
+    expect(parseFeedFilters({ q: 'x'.repeat(200) }).q).toHaveLength(60);
   });
 });
 
@@ -205,7 +213,7 @@ describe('summarizePostViews', () => {
 
 describe('listFeed', () => {
   it('filtra por etiqueta y pide una fila extra para el cursor', async () => {
-    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: 'sub17' } });
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: 'sub17', q: null } });
 
     const args = mocks.postFindMany.mock.calls[0][0];
     expect(args.where).toMatchObject({ status: 'PUBLISHED', tags: { has: 'sub17' } });
@@ -219,19 +227,19 @@ describe('listFeed', () => {
       Array.from({ length: 21 }, (_value, index) => row(`post-${index + 1}`))
     );
 
-    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null } });
+    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
     expect(page.posts).toHaveLength(20);
     expect(page.nextCursor).toBe('post-20');
   });
 
   it('sin más resultados no devuelve cursor', async () => {
     mocks.postFindMany.mockResolvedValue([row('post-1')]);
-    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null } });
+    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
     expect(page.nextCursor).toBeNull();
   });
 
   it('la pestaña de vídeos filtra por tipo', async () => {
-    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'videos', tag: null } });
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'videos', tag: null, q: null } });
     expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({ type: 'VIDEO' });
   });
 
@@ -241,7 +249,7 @@ describe('listFeed', () => {
       row('mucho', { _count: { likes: 5, comments: 1, views: 9 } }),
     ]);
 
-    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'trending', tag: null } });
+    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'trending', tag: null, q: null } });
     expect(page.posts.map((post) => post.id)).toEqual(['mucho', 'poco']);
     expect(page.nextCursor).toBeNull();
   });
@@ -254,10 +262,70 @@ describe('listFeed', () => {
       }),
     ]);
 
-    const [post] = (await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null } }))
+    const [post] = (await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } }))
       .posts;
     expect(post?.likedByMe).toBe(true);
     expect(post?.counts).toEqual({ likes: 4, comments: 2, views: 7 });
+  });
+
+  it('busca por título, texto o autor sin distinguir mayúsculas', async () => {
+    await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'recent', tag: null, q: 'Becas' },
+    });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where.AND).toEqual([
+      {
+        OR: [
+          { title: { contains: 'Becas', mode: 'insensitive' } },
+          { body: { contains: 'Becas', mode: 'insensitive' } },
+          { author: { name: { contains: 'Becas', mode: 'insensitive' } } },
+        ],
+      },
+    ]);
+  });
+
+  it('combina la búsqueda con la pestaña (AND, no sustituye)', async () => {
+    await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'videos', tag: null, q: 'highlights' },
+    });
+
+    const where = mocks.postFindMany.mock.calls[0][0].where;
+    expect(where).toMatchObject({ type: 'VIDEO' });
+    expect(where.AND).toBeDefined();
+  });
+
+  it('excluye las publicaciones que ya se muestran aparte (fijadas)', async () => {
+    await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'recent', tag: null, q: null },
+      excludeIds: ['post-1', 'post-2'],
+    });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where.id).toEqual({
+      notIn: ['post-1', 'post-2'],
+    });
+  });
+
+  it('sin exclusiones no añade el filtro por id', async () => {
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
+    expect(mocks.postFindMany.mock.calls[0][0].where.id).toBeUndefined();
+  });
+});
+
+describe('listPinnedPosts', () => {
+  it('pide solo las fijadas y publicadas, las más recientes primero', async () => {
+    mocks.postFindMany.mockResolvedValue([row('post-1', { pinnedAt: new Date() })]);
+
+    const pinned = await listPinnedPosts('viewer-1');
+
+    expect(pinned).toHaveLength(1);
+    const args = mocks.postFindMany.mock.calls[0][0];
+    expect(args.where).toEqual({ status: 'PUBLISHED', pinnedAt: { not: null } });
+    expect(args.orderBy).toEqual({ pinnedAt: 'desc' });
+    expect(args.take).toBe(3);
+    expect(args.include.likes).toEqual({ where: { userId: 'viewer-1' }, select: { id: true } });
   });
 });
 
@@ -318,7 +386,7 @@ describe('pestaña Siguiendo', () => {
       { followingId: 'author-3' },
     ]);
 
-    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null } });
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null, q: null } });
 
     expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({
       status: 'PUBLISHED',
@@ -327,7 +395,7 @@ describe('pestaña Siguiendo', () => {
   });
 
   it('sin seguir a nadie solo muestra las publicaciones propias', async () => {
-    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null } });
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null, q: null } });
 
     expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({
       OR: [{ authorId: 'viewer-1' }],
@@ -337,7 +405,7 @@ describe('pestaña Siguiendo', () => {
   it('combina los perfiles seguidos con el filtro de etiqueta', async () => {
     mocks.followFindMany.mockResolvedValue([{ followingId: 'author-2' }]);
 
-    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: 'sub17' } });
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: 'sub17', q: null } });
 
     const where = mocks.postFindMany.mock.calls[0][0].where;
     expect(where).toMatchObject({ tags: { has: 'sub17' } });

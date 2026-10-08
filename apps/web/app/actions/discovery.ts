@@ -19,6 +19,7 @@ import {
   postSchema,
 } from '@ifpc/validation';
 import { extractTags, resolveEmbed } from '@/lib/discovery';
+import { logModeration } from '@/lib/discovery-moderation';
 import { notifyUser } from '@/lib/notifications/notify';
 import { dashboardPath } from '@/lib/safe-redirect';
 import type { ActionState } from './auth';
@@ -242,6 +243,16 @@ export async function deletePostAction(formData: FormData): Promise<void> {
   await prisma.post.delete({ where: { id: postId } });
   await removeLocalMedia(post.mediaUrl);
 
+  // Si un admin retira el contenido de otra persona, queda en la traza.
+  if (user.role === 'ADMIN' && post.authorId !== user.id) {
+    await logModeration({
+      actorId: user.id,
+      postId,
+      action: 'DELETED',
+      notes: str(formData, 'notes'),
+    });
+  }
+
   redirect(dashboardPath(formData.get('redirectTo')));
 }
 
@@ -415,7 +426,7 @@ export async function reportPostAction(
   return { success: 'Thanks, our team will review it.' };
 }
 
-/** Oculta o vuelve a publicar contenido (solo ADMIN). */
+/** Oculta o vuelve a publicar contenido (solo ADMIN). Al ocultar, atiende las denuncias. */
 export async function moderatePostAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -430,6 +441,79 @@ export async function moderatePostAction(formData: FormData): Promise<void> {
   }
 
   await prisma.post.update({ where: { id: postId }, data: { status } });
+
+  // Ocultar contenido cierra las denuncias pendientes que lo señalaban.
+  if (status === 'HIDDEN') {
+    await prisma.postReport.updateMany({
+      where: { postId, resolvedAt: null },
+      data: { resolvedAt: new Date() },
+    });
+  }
+
+  await logModeration({
+    actorId: user.id,
+    postId,
+    action: status === 'HIDDEN' ? 'HIDDEN' : 'PUBLISHED',
+    notes: str(formData, 'notes'),
+  });
+}
+
+/** Fija o desfija una publicación en el feed (solo ADMIN). */
+export async function pinPostAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const user = session?.user;
+  if (!user?.id || user.role !== 'ADMIN') {
+    return;
+  }
+
+  const postId = str(formData, 'postId');
+  if (!postId) {
+    return;
+  }
+
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    select: { pinnedAt: true },
+  });
+  if (!post) {
+    return;
+  }
+
+  const pin = post.pinnedAt === null;
+  await prisma.post.update({
+    where: { id: postId },
+    data: { pinnedAt: pin ? new Date() : null },
+  });
+  await logModeration({ actorId: user.id, postId, action: pin ? 'PINNED' : 'UNPINNED' });
+}
+
+/** Da por atendidas las denuncias pendientes de una publicación (solo ADMIN). */
+export async function resolveReportsAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const user = session?.user;
+  if (!user?.id || user.role !== 'ADMIN') {
+    return;
+  }
+
+  const postId = str(formData, 'postId');
+  if (!postId) {
+    return;
+  }
+
+  const resolved = await prisma.postReport.updateMany({
+    where: { postId, resolvedAt: null },
+    data: { resolvedAt: new Date() },
+  });
+  if (resolved.count === 0) {
+    return;
+  }
+
+  await logModeration({
+    actorId: user.id,
+    postId,
+    action: 'RESOLVED',
+    notes: str(formData, 'notes'),
+  });
 }
 
 /**

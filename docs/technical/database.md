@@ -17,8 +17,9 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
   contador de visitas y fechas de primera/última visita).
 - **Discovery** (feed social interno): `Post` (autor de cualquier rol, tipo, estado, texto,
   medio, etiquetas y oportunidad compartida), `PostLike`, `PostComment` (un nivel de
-  respuestas), `PostView` (alcance por espectador, mismo patrón que `ProfileView`) y
-  `PostReport`. Ver `docs/technical/discovery.md`.
+  respuestas), `PostView` (alcance por espectador, mismo patrón que `ProfileView`),
+  `PostReport` (con `resolvedAt` y `ModerationLog` para la traza) y `Follow`. Ver
+  `docs/technical/discovery.md`.
 
 ## Convenciones
 

@@ -30,9 +30,15 @@ logros.
 - **Métricas del autor**: cada publicación muestra a su autor cuántas personas
   distintas la han abierto y el desglose por rol (mismo criterio que las
   visitas al perfil de jugador).
-- **Moderación**: el autor edita y borra lo suyo; el autor de una publicación
-  puede borrar comentarios de su hilo; `ADMIN` puede ocultar y volver a publicar
-  cualquier contenido, además de borrarlo.
+- **Moderación (F3)**: el autor edita y borra lo suyo; el autor de una publicación
+  puede borrar comentarios de su hilo; `ADMIN` puede ocultar/republicar, **fijar
+  en el feed**, borrar y **atender denuncias** desde el panel
+  `/dashboard/admin/discovery`, que además muestra la **traza** de todo lo hecho
+  (quién, qué publicación, cuándo).
+- **Búsqueda y fijados (F3)**: buscador por texto (título, cuerpo **y nombre del
+  autor**) que convive con pestañas y etiquetas, y publicaciones **fijadas** por
+  un admin, que aparecen destacadas al principio del feed con la etiqueta
+  *Fijado* y sin duplicarse en el listado.
 
 ## Significado de "Para ti"
 
@@ -59,5 +65,7 @@ badge (`82% match`) en las publicaciones que encajan.
 
 ## Qué NO hace (todavía)
 
-- Panel de moderación con reportes, destacar/fijar, búsqueda por texto (F3).
-- Versión pública indexable y almacenamiento en S3 (F3).
+- Versión pública indexable (`/discovery` sin sesión) y control de visibilidad
+  por publicación: requiere decidir qué se expone de los perfiles de menores.
+- Almacenamiento en S3 con URLs firmadas (hoy las subidas viven en el sistema de
+  ficheros, ver `docs/technical/storage.md`).

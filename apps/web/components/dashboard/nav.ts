@@ -212,6 +212,7 @@ export const NAV: Record<string, NavSection[]> = {
         { href: '/dashboard/admin/documents', label: 'Documents', icon: 'file' },
         { href: '/dashboard/admin/analytics', label: 'Analytics' },
         { href: '/dashboard/admin/content', label: 'Content' },
+        { href: '/dashboard/admin/discovery', label: 'Discovery moderation', icon: 'shield' },
         { href: '/dashboard/admin/notifications', label: 'Notifications' },
         { href: '/dashboard/admin/settings', label: 'Settings' },
       ],

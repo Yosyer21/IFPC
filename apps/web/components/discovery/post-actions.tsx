@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { deletePostAction, reportPostAction, toggleLikeAction } from '@/app/actions/discovery';
 import { IconMessageCircle, IconStar } from '@/components/dashboard/icons';
 import { Button } from '@ifpc/ui';
+import { ActionSubmit } from './action-submit';
 
 const actionClass =
   'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors';
@@ -82,15 +83,11 @@ export function PostActions({
           <form action={deletePostAction} className="ml-auto">
             <input type="hidden" name="postId" value={postId} />
             <input type="hidden" name="redirectTo" value={redirectTo} />
-            <button
-              type="submit"
-              onClick={(event) => {
-                if (!window.confirm('¿Borrar la publicación?')) event.preventDefault();
-              }}
-              className={`${actionClass} text-destructive hover:bg-destructive/10`}
-            >
-              Borrar
-            </button>
+            <ActionSubmit
+              label="Borrar"
+              variant="danger"
+              confirmText="¿Borrar la publicación?"
+            />
           </form>
         ) : null}
 

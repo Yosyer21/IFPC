@@ -10,7 +10,8 @@ Cuelga de `User` (no de `Player`) para que **cualquier rol** pueda publicar.
 | `PostLike`    | Un "me gusta" por persona y publicación (`@@unique([postId, userId])`).     |
 | `PostComment` | Comentario; `parentId` da un nivel de respuestas (auto-relación).           |
 | `PostView`    | Alcance: un registro por publicación + espectador, con contador y fechas.   |
-| `PostReport`  | Denuncia (una por persona y publicación).                                   |
+| `PostReport`  | Denuncia (una por persona y publicación); `resolvedAt` marca las atendidas.  |
+| `ModerationLog` | Traza de moderación: actor, `postId`, acción y notas. `postId` no es relación, para sobrevivir al borrado. |
 | `Follow`      | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera). |
 
 Enums: `PostType` (`ANNOUNCEMENT · VIDEO · PHOTO · ACHIEVEMENT`) y `PostStatus`
@@ -46,6 +47,31 @@ relación, para que borrar un usuario no arrastre métricas.
 - **Siguiendo**: publicaciones de los perfiles seguidos **más las propias**
   (`OR` sobre `authorId`); sin seguir a nadie solo aparecen las tuyas.
 - **Anuncios / Vídeos**: filtran por `type`. **Etiqueta**: `tags: { has }`.
+- **Búsqueda** (`?q=`): `AND` de un `OR` sobre título, cuerpo y nombre del autor
+  con `mode: 'insensitive'`. Se combina con la pestaña y la etiqueta en lugar de
+  sustituirlas, y se normaliza (espacios colapsados, 2-60 caracteres) en
+  `parseFeedFilters`.
+- **Fijadas**: `listPinnedPosts` las trae aparte (máx. 3, por `pinnedAt desc`) y
+  se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
+  vez** y la paginación por cursor no se rompe.
+
+## Moderación
+
+- **Cola**: `listReportedPosts` agrupa las denuncias **pendientes**
+  (`resolvedAt: null`) por publicación, las ordena por número de denuncias y
+  devuelve el autor, el estado y los motivos con quién los denunció.
+- **Acciones** (`apps/web/app/actions/discovery.ts`, todas solo `ADMIN`):
+  `moderatePostAction` (ocultar/republicar; al ocultar marca las denuncias como
+  atendidas), `pinPostAction` (fija/desfija), `resolveReportsAction` (atiende
+  sin tocar la publicación) y `deletePostAction` (que registra la retirada
+  cuando el admin borra contenido ajeno).
+- **Traza**: `logModeration` escribe en `ModerationLog` y es *best-effort*: si
+  falla, la moderación ya aplicada no se deshace. `MODERATION_ACTION_LABELS`
+  (`lib/labels.ts`) traduce las acciones en el panel.
+- **Panel**: `/dashboard/admin/discovery` (protegido por el prefijo de rol de
+  admin) con la cola, los botones de acción y la actividad reciente. Los botones
+  son `ActionSubmit` (cliente, `useFormStatus`, confirmación opcional para las
+  acciones destructivas).
 
 ## Recomendación ("Para ti")
 
@@ -66,10 +92,11 @@ relación, para que borrar un usuario no arrastre métricas.
 El resultado se muestra con `MatchScoreBadge` (`82% match`) en las publicaciones
 que encajan, así que la recomendación es explicable, no una caja negra.
 
-El grafo social vive en `apps/web/lib/discovery.ts`: `getFollowStats`
-(seguidores, siguiendo y si el espectador sigue) y `listSuggestedProfiles`
-(los más seguidos que aún no sigues, excluyéndote a ti y a los ya seguidos),
-con `toggleFollowAction` en las acciones.
+El grafo social y la moderación viven en `apps/web/lib/discovery.ts` (`getFollowStats`,
+`listSuggestedProfiles`, `listPinnedPosts`) y `apps/web/lib/discovery-moderation.ts`
+(`listReportedPosts`, `listModerationLog`, `logModeration`), con
+`toggleFollowAction`, `pinPostAction`, `resolveReportsAction` y
+`moderatePostAction` en las acciones.
 
 El estado de los filtros vive en la URL (`?tab=`, `?tag=`, `?cursor=`), así que
 son enlaces normales (funcionan sin JS y son compartibles).
@@ -106,7 +133,9 @@ son enlaces normales (funcionan sin JS y son compartibles).
 Componentes en `apps/web/components/discovery/`: `post-composer` (cliente),
 `post-card` (servidor, presentacional), `post-actions` (cliente),
 `comment-form` / `comment-list`, `edit-post-form`, `feed-tabs` (enlaces),
-`follow-button` (cliente, con `useFormStatus`) y `suggested-profiles`.
+`feed-search` (formulario GET, funciona sin JS), `follow-button` (cliente, con
+`useFormStatus`), `action-submit` (botón de action con confirmación opcional) y
+`suggested-profiles`.
 
 Páginas: `app/dashboard/discovery/page.tsx` (feed),
 `[postId]/page.tsx` (detalle, comentarios, alcance y moderación),

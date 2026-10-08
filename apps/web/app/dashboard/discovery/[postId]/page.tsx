@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { ROLE_LABELS } from '@ifpc/config';
 import { Badge, Card, CardContent } from '@ifpc/ui';
-import { moderatePostAction } from '@/app/actions/discovery';
+import { moderatePostAction, pinPostAction } from '@/app/actions/discovery';
+import { ActionSubmit } from '@/components/discovery/action-submit';
 import { CommentForm } from '@/components/discovery/comment-form';
 import { CommentList } from '@/components/discovery/comment-list';
 import { EditPostForm } from '@/components/discovery/edit-post-form';
@@ -75,20 +76,24 @@ export default async function PostDetailPage({
       ) : null}
 
       {session.user.role === 'ADMIN' ? (
-        <form action={moderatePostAction} className="mt-4">
-          <input type="hidden" name="postId" value={post.id} />
-          <input
-            type="hidden"
-            name="status"
-            value={post.status === 'HIDDEN' ? 'PUBLISHED' : 'HIDDEN'}
-          />
-          <button
-            type="submit"
-            className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
-          >
-            {post.status === 'HIDDEN' ? 'Volver a publicar' : 'Ocultar (moderación)'}
-          </button>
-        </form>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <form action={moderatePostAction}>
+            <input type="hidden" name="postId" value={post.id} />
+            <input
+              type="hidden"
+              name="status"
+              value={post.status === 'HIDDEN' ? 'PUBLISHED' : 'HIDDEN'}
+            />
+            <ActionSubmit
+              label={post.status === 'HIDDEN' ? 'Volver a publicar' : 'Ocultar (moderación)'}
+            />
+          </form>
+
+          <form action={pinPostAction}>
+            <input type="hidden" name="postId" value={post.id} />
+            <ActionSubmit label={post.pinned ? 'Desfijar del feed' : 'Fijar en el feed'} />
+          </form>
+        </div>
       ) : null}
 
       <Card className="mt-4">
