@@ -69,7 +69,9 @@ export function PostCard({
               </p>
             ) : null}
 
-            {post.mediaKind === 'image' && post.mediaUrls.length > 1 ? (
+            {/* Galería: se pinta siempre que haya varias imágenes, incluso si el
+                medio principal es un vídeo. */}
+            {post.mediaUrls.length > 1 ? (
               <div className="mt-3 grid grid-cols-2 gap-2">
                 {post.mediaUrls.map((url, index) => (
                   <Image
@@ -103,6 +105,7 @@ export function PostCard({
             {post.mediaKind === 'video' && post.mediaUrl ? (
               <video
                 src={post.mediaUrl}
+                poster={post.posterUrl ?? undefined}
                 controls
                 preload="metadata"
                 className="mt-3 aspect-video w-full rounded-xl border border-white/10 bg-black"

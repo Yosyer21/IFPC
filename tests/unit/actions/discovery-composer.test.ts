@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   pollUpsert: vi.fn(),
   moderationCreate: vi.fn(),
   userFindMany: vi.fn(),
+  extractVideoPoster: vi.fn(),
   notifyGrouped: vi.fn(),
   revalidatePath: vi.fn(),
   mkdir: vi.fn(),
@@ -35,6 +36,10 @@ vi.mock('@ifpc/database', () => ({
 vi.mock('@/lib/notifications/notify', () => ({
   notifyUser: vi.fn(),
   notifyGrouped: mocks.notifyGrouped,
+}));
+vi.mock('@/lib/media/video-poster', () => ({
+  extractVideoPoster: mocks.extractVideoPoster,
+  hasFfmpeg: vi.fn().mockResolvedValue(true),
 }));
 vi.mock('node:fs/promises', () => ({
   mkdir: mocks.mkdir,
@@ -76,6 +81,7 @@ beforeEach(() => {
   mocks.pollUpsert.mockResolvedValue({});
   mocks.moderationCreate.mockResolvedValue({});
   mocks.userFindMany.mockResolvedValue([]);
+  mocks.extractVideoPoster.mockResolvedValue(null);
   mocks.notifyGrouped.mockResolvedValue(undefined);
   mocks.mkdir.mockResolvedValue(undefined);
   mocks.writeFile.mockResolvedValue(undefined);
@@ -268,6 +274,42 @@ describe('createPostAction: menciones', () => {
 
     expect(mocks.postCreate).toHaveBeenCalled();
     expect(target).toBe('/dashboard/discovery');
+  });
+});
+
+describe('createPostAction: miniatura del vídeo', () => {
+  it('guarda la miniatura cuando ffmpeg la saca', async () => {
+    mocks.extractVideoPoster.mockResolvedValue(Buffer.from('jpeg'));
+
+    await captureRedirect(() =>
+      createPostAction({}, form({ body: 'Highlights', file: file('video/mp4', 2048, 'v.mp4') }))
+    );
+
+    const data = mocks.postCreate.mock.calls[0][0].data;
+    expect(data.mediaKind).toBe('video');
+    expect(data.posterUrl).toMatch(/^\/uploads\/posts\/.+\.jpg$/);
+    // El vídeo y su miniatura: dos archivos escritos.
+    expect(mocks.writeFile).toHaveBeenCalledTimes(2);
+  });
+
+  it('sin miniatura (ffmpeg no disponible) el vídeo se publica igual', async () => {
+    await captureRedirect(() =>
+      createPostAction({}, form({ body: 'Highlights', file: file('video/mp4', 2048, 'v.mp4') }))
+    );
+
+    expect(mocks.postCreate.mock.calls[0][0].data.posterUrl).toBeNull();
+    expect(mocks.writeFile).toHaveBeenCalledTimes(1);
+  });
+
+  it('una imagen no genera miniatura', async () => {
+    mocks.extractVideoPoster.mockResolvedValue(Buffer.from('jpeg'));
+
+    await captureRedirect(() =>
+      createPostAction({}, form({ body: 'Foto', file: file('image/png') }))
+    );
+
+    expect(mocks.extractVideoPoster).not.toHaveBeenCalled();
+    expect(mocks.postCreate.mock.calls[0][0].data.posterUrl).toBeNull();
   });
 });
 

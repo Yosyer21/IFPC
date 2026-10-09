@@ -28,11 +28,24 @@ export async function generateMetadata({
     (post.body ?? '').slice(0, 150) ||
     `Publicación de ${post.author.name} en Discovery (Future Baller).`;
 
+  // Imagen para compartir: la miniatura del vídeo, la foto o la primera de la
+  // galería. Un embed (YouTube/Vimeo) no sirve como imagen.
+  const image =
+    post.posterUrl ??
+    (post.mediaKind === 'image' ? post.mediaUrl : null) ??
+    post.mediaUrls[0] ??
+    null;
+
   return {
     title: `${title} — Future Baller`,
     description,
     alternates: { canonical: `${BASE}/${postId}` },
-    openGraph: { title, description, type: 'article' },
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      ...(image ? { images: [{ url: image, alt: post.mediaAlt ?? title }] } : {}),
+    },
   };
 }
 

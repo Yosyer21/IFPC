@@ -869,6 +869,8 @@ model Post {
   body          String?
   mediaUrl      String? // /uploads/posts/... o URL externa
   mediaKind     String? // image | video | embed
+  /// Miniatura del vídeo (fotograma extraído con ffmpeg), si se pudo generar.
+  posterUrl     String?
   /// Galería de imágenes subidas (hasta 4); `mediaUrl` sigue siendo la principal.
   mediaUrls     String[]      @default([])
   /// Texto alternativo del medio (accesibilidad).

@@ -1,8 +1,6 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { mkdir, unlink, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import { auth } from '@ifpc/auth';
 import {
   POSTING_ROLES,
@@ -34,22 +32,17 @@ import {
   type PrivacyKind,
 } from '@/lib/discovery-privacy';
 import { listFeed } from '@/lib/discovery';
-import {
-  containsBannedWord,
-  GUARDRAIL_MESSAGES,
-  reviewComment,
-  reviewPost,
-} from '@/lib/discovery-guardrails';
+import { GUARDRAIL_MESSAGES, containsBannedWord, reviewComment, reviewPost } from '@/lib/discovery-guardrails';
 import { logModeration } from '@/lib/discovery-moderation';
+import { extractVideoPoster } from '@/lib/media/video-poster';
 import { revalidatePaths } from '@/lib/revalidate';
 import { notifyGrouped } from '@/lib/notifications/notify';
 import { dashboardPath } from '@/lib/safe-redirect';
+import { resolveStorage } from '@/lib/storage';
 import type { ActionState } from './auth';
 
-/** Directorio de los medios subidos al feed dentro de `public/uploads`. */
-const MEDIA_DIR = path.join(process.cwd(), 'public', 'uploads', 'posts');
-/** Prefijo de las URLs locales (el resto son enlaces externos incrustados). */
-const MEDIA_PREFIX = '/uploads/posts/';
+/** Carpeta de los medios del feed dentro del almacén (`/uploads/posts/…`). */
+const MEDIA_KEY_PREFIX = 'posts/';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -92,23 +85,23 @@ async function resolveMentions(
   });
 }
 
-/** Borra el medio local de un post (best-effort, nunca lanza). */
-async function removeLocalMedia(url: string | null): Promise<void> {
-  if (!url?.startsWith(MEDIA_PREFIX)) return;
-  try {
-    await unlink(path.join(process.cwd(), 'public', url.replace(/^\//, '')));
-  } catch {
-    // El fichero ya no está: nada que limpiar.
-  }
+/** Borra el medio de una publicación (best-effort, nunca lanza). */
+async function removeMedia(url: string | null | undefined): Promise<void> {
+  await resolveStorage().remove(url);
 }
 
 /**
  * Guarda la imagen/vídeo subido y devuelve su URL pública y su tipo, o un error
- * si el fichero no es válido.
+ * si el fichero no es válido. El almacén lo decide `resolveStorage()`
+ * (disco por defecto, S3 con `STORAGE_DRIVER=s3`) y los vídeos llevan además una
+ * **miniatura** extraída con ffmpeg (si está disponible).
  */
 async function storeUpload(
   file: FormDataEntryValue | null
-): Promise<{ mediaUrl: string; mediaKind: 'image' | 'video' } | { error: string }> {
+): Promise<
+  | { mediaUrl: string; mediaKind: 'image' | 'video'; posterUrl: string | null }
+  | { error: string }
+> {
   const imageExt = file instanceof File ? POST_IMAGE_MIME_EXT[file.type] : undefined;
   const videoExt = file instanceof File ? POST_VIDEO_MIME_EXT[file.type] : undefined;
 
@@ -120,12 +113,40 @@ async function storeUpload(
     return { error: `El archivo supera el máximo de ${Math.round(max / 1024 / 1024)} MB.` };
   }
 
+  const ext = imageExt ?? videoExt;
+  const target = file as File;
+  const id = crypto.randomUUID();
+
   try {
-    await mkdir(MEDIA_DIR, { recursive: true });
-    const filename = `${crypto.randomUUID()}.${imageExt ?? videoExt}`;
-    const target = file as File;
-    await writeFile(path.join(MEDIA_DIR, filename), Buffer.from(await target.arrayBuffer()));
-    return { mediaUrl: `${MEDIA_PREFIX}${filename}`, mediaKind: imageExt ? 'image' : 'video' };
+    const buffer = Buffer.from(await target.arrayBuffer());
+    const storage = resolveStorage();
+    const { url } = await storage.save({
+      key: `${MEDIA_KEY_PREFIX}${id}.${ext}`,
+      body: buffer,
+      contentType: target.type,
+    });
+
+    // Miniatura del vídeo: mejor una portada real que un rectángulo negro. Si
+    // ffmpeg no está (o el vídeo no se puede leer) la publicación sale igual.
+    let posterUrl: string | null = null;
+    if (videoExt) {
+      const poster = await extractVideoPoster(buffer, videoExt);
+      if (poster) {
+        try {
+          posterUrl = (
+            await storage.save({
+              key: `${MEDIA_KEY_PREFIX}${id}-poster.jpg`,
+              body: poster,
+              contentType: 'image/jpeg',
+            })
+          ).url;
+        } catch {
+          posterUrl = null;
+        }
+      }
+    }
+
+    return { mediaUrl: url, mediaKind: imageExt ? 'image' : 'video', posterUrl };
   } catch {
     return { error: 'No se pudo guardar el archivo.' };
   }
@@ -192,11 +213,13 @@ export async function createPostAction(
 
   let mediaUrl: string | null = null;
   let mediaKind: string | null = null;
+  let posterUrl: string | null = null;
   if (hasFile) {
     const stored = await storeUpload(file);
     if ('error' in stored) return { error: stored.error };
     mediaUrl = stored.mediaUrl;
     mediaKind = stored.mediaKind;
+    posterUrl = stored.posterUrl;
   } else if (externalUrl) {
     const embed = resolveEmbed(externalUrl);
     if (!embed) {
@@ -270,6 +293,7 @@ export async function createPostAction(
         commentsPolicy: parsed.data.commentsPolicy ?? 'EVERYONE',
         mediaUrls: galleryUrls,
         mediaAlt,
+        posterUrl,
         pollOptions,
         publishAt,
         status: asDraft ? 'DRAFT' : needsReview ? 'HIDDEN' : 'PUBLISHED',
@@ -450,14 +474,17 @@ export async function deletePostAction(formData: FormData): Promise<void> {
 
   const post = await prisma.post.findUnique({
     where: { id: postId },
-    select: { authorId: true, mediaUrl: true },
+    select: { authorId: true, mediaUrl: true, mediaUrls: true, posterUrl: true },
   });
   if (!post || (post.authorId !== user.id && user.role !== 'ADMIN')) {
     return;
   }
 
   await prisma.post.delete({ where: { id: postId } });
-  await removeLocalMedia(post.mediaUrl);
+  // También la galería y la miniatura: si no, quedarían archivos huérfanos.
+  for (const url of new Set([post.mediaUrl, post.posterUrl, ...post.mediaUrls].filter(Boolean))) {
+    await removeMedia(url);
+  }
 
   // Si un admin retira el contenido de otra persona, queda en la traza.
   if (user.role === 'ADMIN' && post.authorId !== user.id) {

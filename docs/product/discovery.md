@@ -22,6 +22,9 @@ logros.
   perfiles y aviso a quien mencionas), **borradores** (guardas y publicas cuando
   quieras), **publicación programada** (sale sola a su hora) y **encuestas** de
   2 a 4 opciones con recuento en vivo y un voto por persona (se puede cambiar).
+- **Vídeos con portada**: al subir un vídeo se le extrae un fotograma que se
+  muestra antes de darle al play (y que se usa como imagen al compartir el
+  enlace), en vez del rectángulo negro de antes.
 - **Interacción**: me gusta **al instante** (sin esperar al servidor), comentarios
   con **respuestas y edición** del propio texto, compartir (copia el enlace
   directo de la publicación) y denunciar.

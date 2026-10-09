@@ -27,6 +27,8 @@ Campos relevantes de `Post`:
 - `tags String[]` (Postgres `TEXT[]`; se consultan con `tags: { has: tag }`).
 - `mediaUrls String[]` + `mediaAlt`: **galería** (hasta cuatro imágenes, la
   primera es también `mediaUrl`) y su **texto alternativo**.
+- `posterUrl`: miniatura del vídeo (fotograma extraído con ffmpeg al subirlo).
+  Se pinta como `poster` del reproductor y como `og:image` del espejo público.
 - `pollOptions String[]`: opciones de la **encuesta** (vacío = no hay encuesta);
   los votos viven en `PostPollVote` (`@@unique([postId, userId])`, `optionIndex`).
 - `publishAt`: hora a la que debe salir una publicación **programada** (mientras
@@ -125,6 +127,12 @@ duplica reglas, solo recoge datos.
   todas se guardan en `mediaUrls`. `mediaAlt` (máx. 200) acompaña a la galería y
   se usa en el `alt` de cada imagen (`"<alt> (2/4)"` cuando hay varias). El `POST_GALLERY_MAX`
   vive en `discovery-content.ts` para que formulario y acción compartan el tope.
+  La galería se pinta en cuanto hay **más de una** imagen, también cuando el medio
+  principal es un vídeo.
+- **Subidas**: `storeUpload` no escribe en disco directamente: usa
+  `resolveStorage()` (`lib/storage`), así que la misma acción funciona con el
+  driver local o con S3 (ver `docs/technical/storage.md`). El borrado de una
+  publicación limpia su medio, su galería y su miniatura.
 - **Menciones**: `extractMentions` (puro) saca los candidatos del texto —`@` que
   **no** venga pegado a una palabra (así los correos no cuentan), nombre
   empezando en mayúscula y **como máximo dos palabras** (los nombres del

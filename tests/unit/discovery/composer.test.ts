@@ -40,6 +40,7 @@ function row(overrides: Partial<FeedRow> = {}): FeedRow {
     commentsPolicy: 'EVERYONE',
     mediaUrls: [],
     mediaAlt: null,
+    posterUrl: null,
     publishAt: null,
     pollOptions: [],
     pinnedAt: null,
@@ -146,6 +147,18 @@ describe('toFeedPost con los campos del compositor', () => {
 
     expect(post.scheduledAt).toEqual(publishAt);
     expect(post.status).toBe('DRAFT');
+  });
+
+  it('la miniatura del vídeo llega al feed', () => {
+    const post = toFeedPost(
+      row({ mediaKind: 'video', posterUrl: '/uploads/posts/v-poster.jpg' })
+    );
+
+    expect(post.posterUrl).toBe('/uploads/posts/v-poster.jpg');
+  });
+
+  it('sin miniatura el feed recibe null', () => {
+    expect(toFeedPost(row({ mediaKind: 'video' })).posterUrl).toBeNull();
   });
 });
 

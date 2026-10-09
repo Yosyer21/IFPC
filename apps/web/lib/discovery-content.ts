@@ -89,6 +89,8 @@ export interface FeedPost {
   body: string | null;
   mediaUrl: string | null;
   mediaKind: string | null;
+  /** Miniatura del vídeo; se usa como `poster` del reproductor y en `og:image`. */
+  posterUrl: string | null;
   linkUrl: string | null;
   tags: string[];
   pinned: boolean;
@@ -150,6 +152,7 @@ interface FeedRow {
   body: string | null;
   mediaUrl: string | null;
   mediaKind: string | null;
+  posterUrl: string | null;
   linkUrl: string | null;
   tags: string[];
   commentsPolicy: string;
@@ -362,6 +365,7 @@ export function toFeedPost(row: FeedRow, viewerId?: string | null): FeedPost {
     body: row.body,
     mediaUrl: row.mediaUrl,
     mediaKind: row.mediaKind,
+    posterUrl: row.posterUrl ?? null,
     linkUrl: row.linkUrl,
     tags: row.tags,
     commentsPolicy: row.commentsPolicy,

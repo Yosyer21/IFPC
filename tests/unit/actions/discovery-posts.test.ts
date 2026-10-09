@@ -131,6 +131,7 @@ beforeEach(() => {
     authorId: 'user-1',
     status: 'PUBLISHED',
     pinnedAt: null,
+    mediaUrls: [],
   });
   mocks.postUpdate.mockResolvedValue({});
   mocks.postDelete.mockResolvedValue({});
@@ -357,7 +358,7 @@ describe('deletePostAction', () => {
   });
 
   it('no permite borrar publicaciones de otros', async () => {
-    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null });
+    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null, mediaUrls: [] });
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
     expect(mocks.postDelete).not.toHaveBeenCalled();
   });
@@ -367,6 +368,7 @@ describe('deletePostAction', () => {
       id: 'post-1',
       authorId: 'user-1',
       mediaUrl: '/uploads/posts/abc.png',
+      mediaUrls: [],
     });
 
     const target = await captureRedirect(() =>
@@ -380,7 +382,7 @@ describe('deletePostAction', () => {
 
   it('un admin puede borrar cualquier publicación', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
-    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null });
+    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null, mediaUrls: [] });
 
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
     expect(mocks.postDelete).toHaveBeenCalled();
@@ -388,7 +390,7 @@ describe('deletePostAction', () => {
 
   it('un admin que retira contenido ajeno deja traza', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
-    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null });
+    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null, mediaUrls: [] });
 
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
 
@@ -403,6 +405,7 @@ describe('deletePostAction', () => {
       id: 'post-1',
       authorId: 'admin-1',
       mediaUrl: null,
+      mediaUrls: [],
     });
 
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
@@ -410,11 +413,26 @@ describe('deletePostAction', () => {
     expect(mocks.moderationLogCreate).not.toHaveBeenCalled();
   });
 
+  it('borra también todas las imágenes de la galería', async () => {
+    mocks.postFindUnique.mockResolvedValue({
+      id: 'post-1',
+      authorId: 'user-1',
+      mediaUrl: '/uploads/posts/a.png',
+      mediaUrls: ['/uploads/posts/a.png', '/uploads/posts/b.png'],
+    });
+
+    await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
+
+    // `a.png` es también el medio principal: se borra una sola vez.
+    expect(mocks.unlink).toHaveBeenCalledTimes(2);
+  });
+
   it('no borra ficheros que no son del feed', async () => {
     mocks.postFindUnique.mockResolvedValue({
       id: 'post-1',
       authorId: 'user-1',
       mediaUrl: 'https://www.youtube.com/embed/M7lc1UVf-VE',
+      mediaUrls: [],
     });
 
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
