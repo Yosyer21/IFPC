@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { Card, CardContent } from '@ifpc/ui';
 import { FeedList } from '@/components/discovery/feed-list';
+import { DraftsCard } from '@/components/discovery/drafts-card';
 import { FeedSearch } from '@/components/discovery/feed-search';
 import { FeedTabs } from '@/components/discovery/feed-tabs';
 import { PostCard } from '@/components/discovery/post-card';
@@ -11,6 +12,7 @@ import { ProfileCard } from '@/components/discovery/profile-card';
 import { SuggestedProfiles } from '@/components/discovery/suggested-profiles';
 import { PageHeader } from '@/components/player/page-header';
 import {
+  listDrafts,
   listFeed,
   listPinnedPosts,
   listProfiles,
@@ -84,6 +86,13 @@ export default async function DiscoveryPage({
       ? await listSuggestedProfiles(session.user.id)
       : [];
 
+  // Compositor: borradores propios y perfiles a los que poder mencionar.
+  const showComposer = filters.tab !== 'profiles';
+  const drafts = showComposer ? await listDrafts(session.user.id) : [];
+  const mentionCandidates = showComposer
+    ? await listProfiles({ viewerId: session.user.id, limit: 6 })
+    : [];
+
   const emptyMessage = filters.q
     ? `No hay publicaciones que coincidan con “${filters.q}”.`
     : filters.tag
@@ -107,7 +116,15 @@ export default async function DiscoveryPage({
         </Link>
       </PageHeader>
 
-      {filters.tab === 'profiles' ? null : <PostComposer />}
+      {filters.tab === 'profiles' ? null : <DraftsCard drafts={drafts} />}
+      {filters.tab === 'profiles' ? null : (
+        <PostComposer
+          mentions={mentionCandidates.map((profile) => ({
+            id: profile.id,
+            name: profile.name,
+          }))}
+        />
+      )}
       <FeedTabs filters={filters} />
       <FeedSearch filters={filters} />
 

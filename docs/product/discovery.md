@@ -17,6 +17,11 @@ logros.
 - **Contenido**: texto (con `#etiquetas`), título y enlace opcionales, imagen o
   vídeo propio (subido) o **vídeo externo de YouTube/Vimeo**, y compartir una
   **oportunidad** ya existente sin duplicarla.
+- **Compositor completo**: **galería** de hasta cuatro imágenes con **texto
+  alternativo** (accesibilidad), **menciones** `@perfil` (con sugerencias de
+  perfiles y aviso a quien mencionas), **borradores** (guardas y publicas cuando
+  quieras), **publicación programada** (sale sola a su hora) y **encuestas** de
+  2 a 4 opciones con recuento en vivo y un voto por persona (se puede cambiar).
 - **Interacción**: me gusta **al instante** (sin esperar al servidor), comentarios
   con **respuestas y edición** del propio texto, compartir (copia el enlace
   directo de la publicación) y denunciar.

@@ -4,6 +4,7 @@ import { POST_TYPE_LABELS } from '@ifpc/config';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { MatchScoreBadge } from '@/components/player/match-score';
+import { votePollAction } from '@/app/actions/discovery';
 import { formatRelativeTime, resolveEmbed, type FeedPost } from '@/lib/discovery-content';
 import { PLAYER_MATCH_THRESHOLD } from '@/lib/matching';
 import { nameParts } from '@/lib/names';
@@ -27,6 +28,7 @@ export function PostCard({
   const isAuthor = post.author.id === viewerId;
   const canDelete = !readOnly && (isAuthor || viewerRole === 'ADMIN');
   const base = readOnly ? '/discovery' : '/dashboard/discovery';
+  const pollTotal = post.pollCounts.reduce((sum, count) => sum + count, 0);
 
   return (
     <Card className="animate-fade-up">
@@ -67,10 +69,30 @@ export function PostCard({
               </p>
             ) : null}
 
-            {post.mediaKind === 'image' && post.mediaUrl ? (
+            {post.mediaKind === 'image' && post.mediaUrls.length > 1 ? (
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {post.mediaUrls.map((url, index) => (
+                  <Image
+                    key={`${url}-${index}`}
+                    src={url}
+                    alt={
+                      post.mediaAlt
+                        ? `${post.mediaAlt} (${index + 1}/${post.mediaUrls.length})`
+                        : ''
+                    }
+                    width={512}
+                    height={512}
+                    unoptimized
+                    className="h-40 w-full rounded-xl border border-white/10 object-cover"
+                  />
+                ))}
+              </div>
+            ) : null}
+
+            {post.mediaKind === 'image' && post.mediaUrls.length <= 1 && post.mediaUrl ? (
               <Image
                 src={post.mediaUrl}
-                alt=""
+                alt={post.mediaAlt ?? ''}
                 width={1024}
                 height={576}
                 unoptimized
@@ -96,6 +118,64 @@ export function PostCard({
                 referrerPolicy="strict-origin-when-cross-origin"
                 className="mt-3 aspect-video w-full rounded-xl border border-white/10"
               />
+            ) : null}
+
+            {post.pollOptions.length > 0 ? (
+              <div className="mt-3 flex flex-col gap-2 rounded-xl border border-border/70 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Encuesta · {pollTotal} {pollTotal === 1 ? 'voto' : 'votos'}
+                </p>
+                <ul className="flex flex-col gap-1.5">
+                  {post.pollOptions.map((option, index) => {
+                    const votes = post.pollCounts[index] ?? 0;
+                    const percent = pollTotal > 0 ? Math.round((votes / pollTotal) * 100) : 0;
+                    const voted = post.myPollVote === index;
+                    const row = (
+                      <>
+                        <span aria-hidden className="absolute inset-y-0 left-0 rounded-lg bg-emerald-500/15" style={{ width: `${percent}%` }} />
+                        <span className="relative flex-1 text-left text-sm">
+                          {voted ? '✓ ' : ''}
+                          {option}
+                        </span>
+                        <span className="relative text-xs text-muted-foreground">
+                          {percent}% · {votes}
+                        </span>
+                      </>
+                    );
+
+                    return (
+                      <li key={`${option}-${index}`} className="overflow-hidden rounded-lg border border-border/60">
+                        {readOnly ? (
+                          <span className="relative flex items-center justify-between gap-2 px-3 py-2">
+                            {row}
+                          </span>
+                        ) : (
+                          <form
+                            action={votePollAction}
+                            className="relative flex items-center justify-between gap-2 px-3 py-2"
+                          >
+                            <input type="hidden" name="postId" value={post.id} />
+                            <input type="hidden" name="optionIndex" value={index} />
+                            <input type="hidden" name="from" value={base} />
+                            <button
+                              type="submit"
+                              className="relative flex flex-1 items-center justify-between gap-2 text-left"
+                              aria-label={`Votar ${option}`}
+                            >
+                              {row}
+                            </button>
+                          </form>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+                {readOnly ? null : (
+                  <p className="text-xs text-muted-foreground">
+                    Un voto por persona; puedes cambiarlo cuando quieras.
+                  </p>
+                )}
+              </div>
             ) : null}
 
             {post.opportunity ? (

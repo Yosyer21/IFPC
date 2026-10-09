@@ -99,6 +99,18 @@ export interface FeedPost {
   likedByMe: boolean;
   /** Quién puede comentar (`EVERYONE` | `FOLLOWERS` | `NOBODY`). */
   commentsPolicy: string;
+  /** Galería de imágenes subidas (sin incluir el medio principal). */
+  mediaUrls: string[];
+  /** Texto alternativo del medio (accesibilidad). */
+  mediaAlt: string | null;
+  /** Fecha programada de publicación (si sigue siendo un borrador). */
+  scheduledAt: Date | null;
+  /** Opciones de encuesta (vacío si no hay). */
+  pollOptions: string[];
+  /** Votos por opción (mismo orden que `pollOptions`). */
+  pollCounts: number[];
+  /** Opción votada por el espectador, o `null`. */
+  myPollVote: number | null;
   /** Solo lo rellena la pestaña "Para ti": encaje con el perfil (0-100). */
   relevance?: number | null;
 }
@@ -126,6 +138,7 @@ export const POST_INCLUDE = {
   author: AUTHOR_SELECT,
   opportunity: { select: { id: true, title: true } },
   _count: { select: { likes: true, comments: true, views: true } },
+  pollVotes: { select: { optionIndex: true, userId: true } },
 } as const;
 
 /** Forma (estructural) de las filas que devuelven las consultas del feed. */
@@ -140,6 +153,11 @@ interface FeedRow {
   linkUrl: string | null;
   tags: string[];
   commentsPolicy: string;
+  mediaUrls: string[];
+  mediaAlt: string | null;
+  publishAt: Date | null;
+  pollOptions: string[];
+  pollVotes?: { optionIndex: number; userId: string }[];
   pinnedAt: Date | null;
   createdAt: Date;
   author: { id: string; name: string; role: string; image: string | null };
@@ -274,6 +292,39 @@ export interface PostViewStats {
 /** Clave con la que se agrupan las aperturas anónimas del espejo público. */
 export const ANON_VIEWER_ID = 'anonymous';
 
+/** La galería admite hasta cuatro imágenes subidas. */
+export const POST_GALLERY_MAX = 4;
+
+/**
+ * Candidatos de mención (`@Nombre Apellido`): el `@` no puede venir pegado a
+ * una palabra (evita los correos) y el nombre empieza en mayúscula, hasta dos
+ * palabras. La resolución contra perfiles reales la hace la acción, que ignora
+ * lo que no exista.
+ */
+export function extractMentions(
+  text: string | null | undefined,
+  limit = 5
+): string[] {
+  if (!text) return [];
+
+  const found: string[] = [];
+  const pattern = /(?<![\p{L}\p{N}._-])@(\p{Lu}[\p{L}\p{N}._-]*(?:\s\p{Lu}[\p{L}\p{N}._-]*)?)/gu;
+  for (const match of text.matchAll(pattern)) {
+    const name = (match[1] ?? '').trim();
+    if (name && !found.some((value) => value.toLowerCase() === name.toLowerCase())) {
+      found.push(name);
+    }
+  }
+  return found.slice(0, limit);
+}
+
+/** Reparto de votos de una encuesta (mismo orden que las opciones). */
+export function countPollVotes(optionCount: number, votes: { optionIndex: number }[]): number[] {
+  return Array.from({ length: optionCount }, (_value, index) =>
+    votes.filter((vote) => vote.optionIndex === index).length
+  );
+}
+
 /** Agrega el alcance de un post por rol, separando las aperturas anónimas. */
 export function summarizePostViews(rows: PostViewRow[]): PostViewStats {
   const byRole = new Map<string, number>();
@@ -299,7 +350,10 @@ export function summarizePostViews(rows: PostViewRow[]): PostViewStats {
   };
 }
 
-export function toFeedPost(row: FeedRow): FeedPost {
+export function toFeedPost(row: FeedRow, viewerId?: string | null): FeedPost {
+  const pollVotes = row.pollVotes ?? [];
+  const pollOptions = row.pollOptions ?? [];
+
   return {
     id: row.id,
     type: row.type,
@@ -311,6 +365,14 @@ export function toFeedPost(row: FeedRow): FeedPost {
     linkUrl: row.linkUrl,
     tags: row.tags,
     commentsPolicy: row.commentsPolicy,
+    mediaUrls: row.mediaUrls ?? [],
+    mediaAlt: row.mediaAlt,
+    scheduledAt: row.publishAt,
+    pollOptions,
+    pollCounts: countPollVotes(pollOptions.length, pollVotes),
+    myPollVote: viewerId
+      ? (pollVotes.find((vote) => vote.userId === viewerId)?.optionIndex ?? null)
+      : null,
     pinned: row.pinnedAt !== null,
     createdAt: row.createdAt,
     author: row.author,

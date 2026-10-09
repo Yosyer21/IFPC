@@ -19,7 +19,14 @@ import {
   postReportSchema,
   postSchema,
 } from '@ifpc/validation';
-import { extractTags, parseFeedFilters, resolveEmbed, type FeedPost } from '@/lib/discovery-content';
+import {
+  extractMentions,
+  extractTags,
+  parseFeedFilters,
+  resolveEmbed,
+  POST_GALLERY_MAX,
+  type FeedPost,
+} from '@/lib/discovery-content';
 import {
   canComment,
   hasBlockBetween,
@@ -28,11 +35,13 @@ import {
 } from '@/lib/discovery-privacy';
 import { listFeed } from '@/lib/discovery';
 import {
+  containsBannedWord,
   GUARDRAIL_MESSAGES,
   reviewComment,
   reviewPost,
 } from '@/lib/discovery-guardrails';
 import { logModeration } from '@/lib/discovery-moderation';
+import { revalidatePaths } from '@/lib/revalidate';
 import { notifyGrouped } from '@/lib/notifications/notify';
 import { dashboardPath } from '@/lib/safe-redirect';
 import type { ActionState } from './auth';
@@ -48,11 +57,39 @@ const str = (formData: FormData, key: string): string | null => {
 };
 
 /** ¿El usuario autenticado tiene permiso de publicación? */
-async function requirePoster(): Promise<{ id: string; role: string } | null> {
+async function requirePoster(): Promise<{ id: string; name: string; role: string } | null> {
   const session = await auth();
   const user = session?.user;
   if (!user?.id || !POSTING_ROLES.some((role) => role === user.role)) return null;
-  return { id: user.id, role: user.role };
+  return { id: user.id, name: user.name ?? 'Un perfil', role: user.role };
+}
+
+/** Limpia las opciones de encuesta: sin repetir ni vacías, máximo cuatro y mínimo dos. */
+function pollOptionsFrom(values: string[]): string[] {
+  const cleaned = values
+    .map((value) => value.trim())
+    .filter((value, index, all) => value.length > 0 && all.indexOf(value) === index)
+    .slice(0, 4);
+
+  return cleaned.length >= 2 ? cleaned : [];
+}
+
+/** Resuelve menciones `@Nombre` contra perfiles reales (ignora lo que no exista). */
+async function resolveMentions(
+  text: string | null,
+  excludeUserId: string
+): Promise<{ id: string; name: string }[]> {
+  const candidates = extractMentions(text);
+  if (candidates.length === 0) return [];
+
+  return prisma.user.findMany({
+    where: {
+      id: { not: excludeUserId },
+      OR: candidates.map((name) => ({ name: { equals: name, mode: 'insensitive' as const } })),
+    },
+    select: { id: true, name: true },
+    take: candidates.length,
+  });
 }
 
 /** Borra el medio local de un post (best-effort, nunca lanza). */
@@ -114,6 +151,13 @@ export async function createPostAction(
   const file = formData.get('file');
   const hasFile = file instanceof File && file.size > 0;
   const externalUrl = str(formData, 'mediaUrl');
+  // El compositor envía siempre cuatro campos de encuesta: los vacíos no cuentan.
+  const rawPollOptions = formData
+    .getAll('pollOption')
+    .filter((entry): entry is string => typeof entry === 'string')
+    .map((entry) => entry.trim())
+    .filter((entry) => entry.length > 0)
+    .slice(0, 4);
 
   const parsed = postSchema.safeParse({
     type: str(formData, 'type') ?? 'ANNOUNCEMENT',
@@ -122,11 +166,29 @@ export async function createPostAction(
     linkUrl: str(formData, 'linkUrl'),
     opportunityId: str(formData, 'opportunityId'),
     commentsPolicy: str(formData, 'commentsPolicy') ?? undefined,
+    mediaAlt: str(formData, 'mediaAlt'),
+    publishAt: str(formData, 'publishAt'),
+    pollOptions: rawPollOptions,
     tags: extractTags(str(formData, 'body'), splitTags(str(formData, 'tags'))),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? 'Revisa el contenido.' };
   }
+
+  // Galería (hasta 4 imágenes), texto alternativo, programación y encuesta.
+  const galleryFiles = formData
+    .getAll('files')
+    .filter((entry): entry is File => entry instanceof File && entry.size > 0)
+    .slice(0, POST_GALLERY_MAX);
+  const mediaAlt = parsed.data.mediaAlt ?? null;
+  const intent = str(formData, 'intent');
+  const publishAtRaw = parsed.data.publishAt ?? null;
+  const publishAt = publishAtRaw ? new Date(publishAtRaw) : null;
+  if (publishAt && Number.isNaN(publishAt.getTime())) {
+    return { error: 'La fecha de programación no es válida.' };
+  }
+  // Con menos de dos opciones el campo no es una encuesta: se ignora.
+  const pollOptions = pollOptionsFrom(parsed.data.pollOptions ?? []);
 
   let mediaUrl: string | null = null;
   let mediaKind: string | null = null;
@@ -144,6 +206,21 @@ export async function createPostAction(
     mediaKind = 'embed';
   }
 
+  // Galería de imágenes: la primera pasa a ser el medio principal.
+  const galleryUrls: string[] = [];
+  for (const galleryFile of galleryFiles) {
+    const stored = await storeUpload(galleryFile);
+    if ('error' in stored) return { error: stored.error };
+    if (stored.mediaKind !== 'image') {
+      return { error: 'La galería solo admite imágenes.' };
+    }
+    galleryUrls.push(stored.mediaUrl);
+  }
+  if (!mediaKind && galleryUrls.length > 0) {
+    mediaKind = 'image';
+    mediaUrl = galleryUrls[0] ?? null;
+  }
+
   if (!mediaKind && (parsed.data.type === 'VIDEO' || parsed.data.type === 'PHOTO')) {
     return { error: 'Attach the file or the link of the media.' };
   }
@@ -151,7 +228,11 @@ export async function createPostAction(
   // El medio manda: un vídeo o una imagen nunca queda clasificado como anuncio.
   const type = mediaKind === 'image' ? 'PHOTO' : mediaKind ? 'VIDEO' : parsed.data.type;
 
+  // Borrador (a mano o programado): no se revisa ni se avisa hasta publicarse.
+  const asDraft = intent === 'draft' || (publishAt !== null && publishAt.getTime() > Date.now());
+
   // Guardarraíles anti-abuso: ritmo, duplicados, enlaces y lenguaje prohibido.
+  // El borrador sí respeta ritmo/duplicados, pero no se oculta: se revisa al publicarse.
   const review = await reviewPost({
     userId: poster.id,
     title: parsed.data.title ?? null,
@@ -161,7 +242,7 @@ export async function createPostAction(
     return { error: GUARDRAIL_MESSAGES[review.reason] };
   }
   // El lenguaje no permitido no se pierde: la publicación queda a revisión.
-  const needsReview = review !== null;
+  const needsReview = review !== null && !asDraft;
 
   // Solo se adjunta la oportunidad si existe (el FK no admite referencias sueltas).
   const opportunityId = parsed.data.opportunityId
@@ -179,7 +260,6 @@ export async function createPostAction(
       data: {
         authorId: poster.id,
         type,
-        status: needsReview ? 'HIDDEN' : 'PUBLISHED',
         title: parsed.data.title || null,
         body: parsed.data.body || null,
         mediaUrl,
@@ -188,10 +268,37 @@ export async function createPostAction(
         opportunityId,
         tags: parsed.data.tags ?? [],
         commentsPolicy: parsed.data.commentsPolicy ?? 'EVERYONE',
+        mediaUrls: galleryUrls,
+        mediaAlt,
+        pollOptions,
+        publishAt,
+        status: asDraft ? 'DRAFT' : needsReview ? 'HIDDEN' : 'PUBLISHED',
       },
     });
   } catch {
     return { error: 'No se pudo publicar.' };
+  }
+
+  // El borrador (manual o programado) no avisa a nadie: aún no es visible.
+  if (asDraft) {
+    revalidatePaths('/dashboard/discovery');
+    redirect('/dashboard/discovery');
+  }
+
+  // Menciones `@perfil`: se avisa a cada perfil real nombrado en el texto.
+  for (const mentioned of await resolveMentions(parsed.data.body ?? null, poster.id)) {
+    try {
+      await notifyGrouped({
+        userId: mentioned.id,
+        type: 'post_mention',
+        title: 'Te han mencionado',
+        message: `${poster.name} te mencionó en una publicación.`,
+        link: `/dashboard/discovery/${created.id}`,
+        groupMessage: (count) => `${count} menciones nuevas en Discovery.`,
+      });
+    } catch {
+      // El aviso nunca debe romper la publicación.
+    }
   }
 
   if (needsReview) {
@@ -205,6 +312,76 @@ export async function createPostAction(
   }
 
   redirect('/dashboard/discovery');
+}
+
+/** Vota (o cambia el voto) en la encuesta de una publicación. */
+export async function votePollAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+
+  const postId = str(formData, 'postId');
+  const optionIndex = Number(str(formData, 'optionIndex'));
+  if (!postId || !Number.isInteger(optionIndex) || optionIndex < 0) return;
+
+  const post = await prisma.post.findFirst({
+    where: { id: postId, status: 'PUBLISHED' },
+    select: { id: true, pollOptions: true },
+  });
+  if (!post || post.pollOptions.length === 0 || optionIndex >= post.pollOptions.length) return;
+
+  const from = str(formData, 'from');
+  const path = from ? dashboardPath(from) : '/dashboard/discovery';
+
+  try {
+    // Un voto por persona y encuesta: volver a votar cambia la opción elegida.
+    await prisma.postPollVote.upsert({
+      where: { postId_userId: { postId, userId } },
+      create: { postId, userId, optionIndex },
+      update: { optionIndex },
+    });
+  } catch {
+    return;
+  }
+
+  revalidatePaths(path, `/dashboard/discovery/${postId}`);
+}
+
+/** Publica un borrador propio (incluidos los programados que se adelantan). */
+export async function publishDraftAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+
+  const postId = str(formData, 'postId');
+  if (!postId) return;
+
+  const draft = await prisma.post.findFirst({
+    where: { id: postId, authorId: userId, status: 'DRAFT' },
+    select: { id: true, title: true, body: true },
+  });
+  if (!draft) return;
+
+  // Publicar un borrador no es una publicación nueva: el ritmo y los duplicados
+  // no aplican (el texto ya existe), pero sí el filtro de lenguaje prohibido.
+  const hidden = containsBannedWord(draft.title) || containsBannedWord(draft.body);
+
+  await prisma.post.update({
+    where: { id: draft.id },
+    data: { status: hidden ? 'HIDDEN' : 'PUBLISHED' },
+  });
+
+  if (hidden) {
+    await logModeration({
+      actorId: userId,
+      postId: draft.id,
+      action: 'HIDDEN',
+      notes: 'Automático al publicar un borrador: el texto contiene lenguaje no permitido.',
+    });
+  }
+
+  revalidatePaths('/dashboard/discovery');
+  redirect(`/dashboard/discovery/${draft.id}`);
 }
 
 /** Edita el texto de una publicación propia (el medio no se cambia). */

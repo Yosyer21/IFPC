@@ -10,6 +10,7 @@ Cuelga de `User` (no de `Player`) para que **cualquier rol** pueda publicar.
 | `PostLike`    | Un "me gusta" por persona y publicación (`@@unique([postId, userId])`).     |
 | `PostComment` | Comentario; `parentId` da un nivel de respuestas (auto-relación).           |
 | `PostView`    | Alcance: un registro por publicación + espectador, con contador y fechas.   |
+| `PostPollVote` | Voto en la encuesta de una publicación (uno por persona y publicación).    |
 | `PostReport`  | Denuncia (una por persona y publicación); `resolvedAt` marca las atendidas.  |
 | `ModerationLog` | Traza de moderación: actor, `postId`, acción y notas. `postId` no es relación, para sobrevivir al borrado. |
 | `Follow`      | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera). |
@@ -24,6 +25,12 @@ Campos relevantes de `Post`:
   ya la **URL canónica de incrustación**.
 - `linkUrl` (enlace libre) y `opportunityId` (oportunidad compartida).
 - `tags String[]` (Postgres `TEXT[]`; se consultan con `tags: { has: tag }`).
+- `mediaUrls String[]` + `mediaAlt`: **galería** (hasta cuatro imágenes, la
+  primera es también `mediaUrl`) y su **texto alternativo**.
+- `pollOptions String[]`: opciones de la **encuesta** (vacío = no hay encuesta);
+  los votos viven en `PostPollVote` (`@@unique([postId, userId])`, `optionIndex`).
+- `publishAt`: hora a la que debe salir una publicación **programada** (mientras
+  no llega se guarda como `DRAFT`).
 - `pinnedAt` reservado para destacar publicaciones (F3; hoy no ordena el feed).
 
 `PostView` sigue el patrón de `ProfileView`: el espectador es un `String`, no una
@@ -33,9 +40,12 @@ relación, para que borrar un usuario no arrastre métricas.
 
 `apps/web/lib/discovery.ts` separa lo puro de lo que consulta la base:
 
-- Puro (testeado en `tests/unit/discovery/feed.test.ts`): `parseFeedFilters`,
-  `extractTags`, `resolveEmbed`, `engagementScore`, `rankTrendingPosts`,
-  `formatRelativeTime`, `summarizePostViews`.
+- Puro (testeado en `tests/unit/discovery/feed.test.ts` y
+  `tests/unit/discovery/composer.test.ts`): `parseFeedFilters`, `extractTags`,
+  `extractMentions`, `countPollVotes`, `resolveEmbed`, `engagementScore`,
+  `rankTrendingPosts`, `formatRelativeTime`, `summarizePostViews`, `toFeedPost`.
+  `toFeedPost(row, viewerId)` recibe el espectador para poder marcar su propio
+  voto de encuesta; sin él (`null`/`undefined`) `myPollVote` es `null`.
 - Consultas: `listFeed` (cursor + `take: PAGE_SIZE + 1` + `_count`, sin N+1),
   `getPostForViewer`, `listComments`, `listPostsByAuthor`, `recordPostView`,
   `trackPostView`, `getPostViewStats`.
@@ -103,6 +113,58 @@ relación, para que borrar un usuario no arrastre métricas.
 - **Límite conocido**: en el espejo público no hay espectador identificable, así
   que los bloqueos no filtran ahí.
 
+## Compositor (galería, menciones, borradores, programación y encuestas)
+
+Todo se resuelve en `createPostAction` (`app/actions/discovery.ts`) desde un único
+formulario; el compositor (`components/discovery/post-composer.tsx`, cliente) no
+duplica reglas, solo recoge datos.
+
+- **Galería + texto alternativo**: el campo `files` (múltiple) sube **hasta cuatro
+  imágenes** con el mismo `storeUpload` de siempre (límite y tipos de
+  `POST_IMAGE_MIME_EXT`); la primera pasa a ser `mediaUrl`/`mediaKind = 'image'` y
+  todas se guardan en `mediaUrls`. `mediaAlt` (máx. 200) acompaña a la galería y
+  se usa en el `alt` de cada imagen (`"<alt> (2/4)"` cuando hay varias). El `POST_GALLERY_MAX`
+  vive en `discovery-content.ts` para que formulario y acción compartan el tope.
+- **Menciones**: `extractMentions` (puro) saca los candidatos del texto —`@` que
+  **no** venga pegado a una palabra (así los correos no cuentan), nombre
+  empezando en mayúscula y **como máximo dos palabras** (los nombres del
+  directorio son `Nombre Apellido`)—, y `resolveMentions` los cruza con `User`
+  (`name` exacto, sin distinguir mayúsculas; ignora lo que no exista y nunca se
+  menciona al autor). El compositor ofrece los perfiles más activos como chips
+  que insertan `@Nombre`, y cada mención resuelta recibe un aviso
+  `post_mention` agrupado. Las menciones **no** enlazan dentro del texto: el
+  cuerpo se sigue pintando como texto plano (sin HTML), así que no hay inyección.
+- **Borradores**: el botón `Guardar borrador` envía `intent=draft` y la
+  publicación se crea con `status: DRAFT` (el compositor ya no necesita una
+  segunda acción). El autor ve sus borradores en `DraftsCard` —solo él: el feed
+  filtra `PUBLISHED`— con "Publicar" (`publishDraftAction`) y "Borrar". Un
+  borrador **no avisa a nadie** ni pasa el filtro de lenguaje al guardarse (aún
+  no es visible), pero sí al publicarse: `publishDraftAction` revisa
+  `containsBannedWord` y lo deja `HIDDEN` con traza si toca. Publicar un borrador
+  no cuenta como publicación nueva, así que no aplican ritmo ni duplicados.
+- **Programación**: `publishAt` (input `datetime-local`) guarda la publicación
+  como `DRAFT` hasta su hora; si la fecha ya pasó, se publica al momento. El
+  barrido vive en `lib/discovery-scheduler.ts` (`publishDuePosts`) y se ejecuta a
+  mano o por cron:
+
+  ```bash
+  pnpm scripts:publish-scheduled   # DRAFT con publishAt <= ahora  →  PUBLISHED
+  ```
+
+  Vive aparte de `lib/discovery.ts` a propósito: solo depende de la base de
+  datos, así que el script (o un cron de Railway) no arrastra la sesión ni
+  NextAuth. Sin Redis ni workers.
+- **Encuestas**: el compositor manda cuatro campos `pollOption`; la acción
+  descarta vacíos, repite sin duplicados, corta a cuatro y, si quedan **menos de
+  dos**, ignora el campo (`pollOptions = []`). `votePollAction` valida que la
+  publicación esté publicada, que tenga encuesta y que el índice exista, y luego
+  hace `upsert` en `PostPollVote`: **un voto por persona** que se puede cambiar.
+  `toFeedPost(row, viewerId)` calcula `pollCounts` (con `countPollVotes`) y
+  `myPollVote` a partir de la relación `pollVotes` que incluye `POST_INCLUDE`; la
+  barra de cada opción y el ✓ del propio voto se pintan en `post-card`, y en el
+  espejo público (`readOnly`) la encuesta sale en solo lectura con los
+  porcentajes.
+
 ## Módulos y carga incremental
 
 - `apps/web/lib/discovery-content.ts` es **client-safe** (tipos, filtros, ranking,
@@ -132,7 +194,8 @@ relación, para que borrar un usuario no arrastre métricas.
 - **A quién avisa**: me gusta y comentarios van al autor de la publicación; una
   **respuesta** (`parentId`) va a quien escribió el comentario —y solo si el padre
   pertenece a la misma publicación—; los seguidores nuevos agrupan en el muro del
-  seguido.
+  seguido; una **mención** (`@Nombre`, tipo `post_mention`) va a cada perfil
+  mencionado en el texto, nunca al autor.
 - **Bandeja**: `NotificationsBell` (cliente) vive en el bloque de cuenta del
   sidebar, así que **todos los roles** ven sus avisos (antes el contador solo se
   calculaba para `player`), con contador, agrupación visible `(3)` y "marcar como
@@ -244,12 +307,16 @@ son enlaces normales (funcionan sin JS y son compartibles).
 
 ## UI
 
-Componentes en `apps/web/components/discovery/`: `post-composer` (cliente),
-`post-card` (servidor, presentacional), `post-actions` (cliente),
-`comment-form` / `comment-list`, `edit-post-form`, `feed-tabs` (enlaces),
-`feed-search` (formulario GET, funciona sin JS), `follow-button` (cliente, con
-`useFormStatus`), `action-submit` (botón de action con confirmación opcional) y
-`suggested-profiles`.
+Componentes en `apps/web/components/discovery/`: `post-composer` (cliente; tipo,
+texto, medios sueltos, **galería**, **texto alternativo**, etiquetas, **encuesta**,
+privacidad de comentarios, **programación**, chips de **menciones** y botón de
+**borrador**), `post-card` (servidor, presentacional; incluye la **galería** y el
+bloque de **encuesta** con barras y voto), `post-actions` (cliente),
+`drafts-card` (borradores y programadas del autor, con "Publicar"/"Borrar"),
+`comment-form` / `comment-list`, `edit-post-form`,
+`feed-tabs` (enlaces), `feed-search` (formulario GET, funciona sin JS),
+`follow-button` (cliente, con `useFormStatus`), `action-submit` (botón de action
+con confirmación opcional) y `suggested-profiles`.
 
 Páginas: `app/dashboard/discovery/page.tsx` (feed),
 `[postId]/page.tsx` (detalle, comentarios, alcance y moderación),
@@ -271,6 +338,18 @@ lo que `pnpm db:seed` es idempotente.
 - Las subidas viven en el sistema de ficheros: en producción (Railway) es
   efímero, así que los vídeos largos se recomiendan por URL externa. El paso a
   S3 con URLs firmadas está descrito en `docs/technical/storage.md`.
-- Tras una server action Next revalida la ruta actual, así que las acciones no
-  llaman a `revalidatePath` (evita depender del store de generación y hace los
-  tests unitarios triviales).
+- Tras una server action Next revalida la ruta actual, así que la mayoría de las
+  acciones no llaman a `revalidatePath`. Las excepciones son las que cambian datos
+  que el usuario ve **fuera** de la ruta donde actúa —`createPostAction` al guardar
+  un borrador, `votePollAction` (feed + detalle) y `publishDraftAction`—, y todas
+  pasan por `lib/revalidate.ts` (`revalidatePaths`): así el import de
+  `next/cache` queda aislado en un único módulo que los tests pueden mockear
+  (`revalidatePath` solo funciona dentro de una petición real de Next, fuera lanza
+  un invariante, y `next` se resuelve desde `apps/web/node_modules`, no desde la
+  raíz del repo).
+- El limpiador de ficheros huérfanos (`scripts/maintenance/cleanup.ts` y el job
+  `cleanup-files` del worker) conoce `Post.mediaUrl` **y** `Post.mediaUrls`, y
+  revisa también `uploads/posts/`, para no borrar las imágenes de una **galería**.
+- La galería y la encuesta se pintan igual en el dashboard y en el espejo público;
+  la única diferencia es que el espejo va en `readOnly` (sin formularios de voto
+  ni compositor).

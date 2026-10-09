@@ -27,6 +27,7 @@
     "scripts:migrate": "node --env-file=.env --import=tsx scripts/migration/migrate.ts",
     "scripts:verify": "node --env-file=.env --import=tsx scripts/migration/verify.ts",
     "scripts:cleanup": "node --env-file=.env --import=tsx scripts/maintenance/cleanup.ts",
+    "scripts:publish-scheduled": "node --env-file=.env --import=tsx scripts/maintenance/publish-scheduled.ts",
     "scripts:expire-memberships": "node --env-file=.env --import=tsx scripts/maintenance/expire-memberships.ts",
     "scripts:reports": "node --env-file=.env --import=tsx scripts/maintenance/generate-reports.ts",
     "scripts:create-admin": "node --env-file=.env --import=tsx scripts/development/create-admin.ts",

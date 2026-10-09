@@ -85,7 +85,10 @@ export async function listFeed(input: {
       take: TRENDING_WINDOW,
       include,
     });
-    const posts = rankTrendingPosts(rows.map(toFeedPost)).slice(0, DISCOVERY_PAGE_SIZE);
+    const posts = rankTrendingPosts(rows.map((row) => toFeedPost(row, viewerId))).slice(
+      0,
+      DISCOVERY_PAGE_SIZE
+    );
     return { posts, nextCursor: null };
   }
 
@@ -100,7 +103,7 @@ export async function listFeed(input: {
   const hasMore = rows.length > DISCOVERY_PAGE_SIZE;
   const page = hasMore ? rows.slice(0, DISCOVERY_PAGE_SIZE) : rows;
   return {
-    posts: page.map(toFeedPost),
+    posts: page.map((row) => toFeedPost(row, viewerId)),
     nextCursor: hasMore ? (page[page.length - 1]?.id ?? null) : null,
   };
 }
@@ -181,7 +184,7 @@ export async function listPinnedPosts(
       ...(viewerId ? { likes: { where: { userId: viewerId }, select: { id: true } } } : {}),
     },
   });
-  return rows.map(toFeedPost);
+  return rows.map((row) => toFeedPost(row, viewerId));
 }
 
 /**
@@ -212,7 +215,7 @@ export async function getPostForViewer(
     if (hidden.includes(row.author.id)) return null;
   }
 
-  return toFeedPost(row);
+  return toFeedPost(row, viewerId);
 }
 
 /** Comentarios de una publicación, del más antiguo al más nuevo. */
@@ -254,7 +257,18 @@ export async function listPostsByAuthor(
     take,
     include: POST_INCLUDE,
   });
-  return rows.map(toFeedPost);
+  return rows.map((row) => toFeedPost(row, viewerId));
+}
+
+/** Borradores del autor (incluye los programados), los más recientes primero. */
+export async function listDrafts(authorId: string, take = 10): Promise<FeedPost[]> {
+  const rows = await prisma.post.findMany({
+    where: { authorId, status: 'DRAFT' },
+    orderBy: { createdAt: 'desc' },
+    take,
+    include: { ...POST_INCLUDE, likes: { where: { userId: authorId }, select: { id: true } } },
+  });
+  return rows.map((row) => toFeedPost(row, authorId));
 }
 
 /** Suma una apertura al registro del espectador (un registro por post + persona). */

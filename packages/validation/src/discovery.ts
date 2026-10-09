@@ -33,6 +33,12 @@ export const postBaseSchema = z.object({
   tags: z.array(tagSchema).max(POST_TAGS_MAX, `Máximo ${POST_TAGS_MAX} etiquetas`).optional(),
   /** Quién puede comentar (mismo enum que `CommentsPolicy`). */
   commentsPolicy: z.enum(['EVERYONE', 'FOLLOWERS', 'NOBODY']).optional(),
+  /** Texto alternativo del medio (accesibilidad). */
+  mediaAlt: z.string().trim().max(200).optional().nullable(),
+  /** Fecha de publicación programada (ISO). */
+  publishAt: z.string().optional().nullable(),
+  /** Opciones de encuesta (2-4). */
+  pollOptions: z.array(z.string().trim().min(1).max(80)).max(4).optional(),
 });
 
 export const postSchema = postBaseSchema.refine(

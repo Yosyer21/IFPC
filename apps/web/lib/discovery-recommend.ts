@@ -168,7 +168,7 @@ export async function listForYouFeed(input: {
 
   const context = await viewerContext(input);
   if (context.kind === 'none') {
-    return rows.slice(0, DISCOVERY_PAGE_SIZE).map(toFeedPost);
+    return rows.slice(0, DISCOVERY_PAGE_SIZE).map((row) => toFeedPost(row, input.viewerId));
   }
 
   // Para el caso reclutador hace falta el perfil de jugador de cada autor.
@@ -195,7 +195,7 @@ export async function listForYouFeed(input: {
         ? relevanceForPlayer(row.opportunity, context.player)
         : relevanceForOpportunities(authorsById.get(row.author.id) ?? null, context.opportunities);
 
-    return { ...toFeedPost(row), relevance };
+    return { ...toFeedPost(row, input.viewerId), relevance };
   });
 
   return rankForYou(scored, (post) => post.relevance ?? null).slice(0, DISCOVERY_PAGE_SIZE);
