@@ -27,7 +27,10 @@ export function FeedTabs({
   base?: string;
 }) {
   return (
-    <nav className="mb-4 flex flex-wrap items-center gap-2">
+    <nav
+      aria-label="Secciones del feed"
+      className="mb-4 flex flex-wrap items-center gap-2"
+    >
       {tabs.map((tab) => {
         const active = tab === filters.tab;
         return (

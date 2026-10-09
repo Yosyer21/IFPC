@@ -125,6 +125,7 @@ model User {
   privacyOwned      PrivacyRule[] @relation("PrivacyOwner")
   privacyReceived   PrivacyRule[] @relation("PrivacyTarget")
   pollVotes         PostPollVote[]
+  notInterested     PostNotInterested[]
 
   @@index([role])
 }
@@ -894,6 +895,7 @@ model Post {
   views    PostView[]
   reports  PostReport[]
   pollVotes PostPollVote[]
+  notInterested PostNotInterested[]
 
   @@index([status, createdAt])
   @@index([authorId, createdAt])
@@ -992,6 +994,7 @@ model Follow {
 }
 
 /// Voto de una encuesta: uno por persona y publicación.
+/// Un voto por usuario y publicación. Se puede cambiar de opción.
 model PostPollVote {
   id          String   @id @default(cuid())
   postId      String
@@ -1003,6 +1006,21 @@ model PostPollVote {
 
   @@unique([postId, userId])
   @@index([postId])
+}
+
+/// "No me interesa": el espectador deja de ver esa publicación en los listados.
+/// (No es moderación ni privacidad: solo afecta a sus propios feeds y se puede
+/// deshacer desde el detalle de la publicación.)
+model PostNotInterested {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId])
+  @@index([userId])
 }
 
 /// Preferencias de privacidad entre perfiles: bloquear (no nos vemos ni

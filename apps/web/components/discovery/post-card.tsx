@@ -16,12 +16,15 @@ export function PostCard({
   viewerId,
   viewerRole,
   readOnly = false,
+  notInterested = false,
 }: {
   post: FeedPost;
   viewerId: string;
   viewerRole: string;
   /** Espejo público: sin acciones (solo el resumen de interacción) y enlaces públicos. */
   readOnly?: boolean;
+  /** El espectador marcó esta publicación como "no me interesa". */
+  notInterested?: boolean;
 }) {
   const { firstName, lastName } = nameParts(post.author.name);
   const embed = post.mediaKind === 'embed' ? resolveEmbed(post.mediaUrl) : null;
@@ -238,6 +241,7 @@ export function PostCard({
             likedByMe={post.likedByMe}
             canDelete={canDelete}
             canReport={!isAuthor}
+            notInterested={notInterested}
           />
         )}
       </CardContent>

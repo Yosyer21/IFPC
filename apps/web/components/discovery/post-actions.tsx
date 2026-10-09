@@ -2,7 +2,7 @@
 
 import { useActionState, useOptimistic, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { deletePostAction, reportPostAction, toggleLikeAction } from '@/app/actions/discovery';
+import { deletePostAction, notInterestedAction, reportPostAction, toggleLikeAction } from '@/app/actions/discovery';
 import { IconMessageCircle, IconStar } from '@/components/dashboard/icons';
 import { Button } from '@ifpc/ui';
 import { ActionSubmit } from './action-submit';
@@ -18,6 +18,7 @@ export function PostActions({
   likedByMe,
   canDelete,
   canReport,
+  notInterested = false,
   redirectTo = '/dashboard/discovery',
 }: {
   postId: string;
@@ -26,6 +27,8 @@ export function PostActions({
   likedByMe: boolean;
   canDelete: boolean;
   canReport: boolean;
+  /** El espectador ya la marcó como "no me interesa" (se puede deshacer). */
+  notInterested?: boolean;
   redirectTo?: string;
 }) {
   const [copied, setCopied] = useState(false);
@@ -92,6 +95,18 @@ export function PostActions({
         >
           {copied ? 'Enlace copiado' : 'Compartir'}
         </button>
+
+        {canReport ? (
+          <form action={notInterestedAction}>
+            <input type="hidden" name="postId" value={postId} />
+            <input type="hidden" name="value" value={notInterested ? 'off' : 'on'} />
+            <input type="hidden" name="from" value={redirectTo} />
+            <ActionSubmit
+              label={notInterested ? 'Volver a mostrar' : 'No me interesa'}
+              variant="ghost"
+            />
+          </form>
+        ) : null}
 
         {canDelete ? (
           <form action={deletePostAction} className="ml-auto">

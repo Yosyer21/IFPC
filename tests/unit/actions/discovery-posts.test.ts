@@ -32,6 +32,10 @@ const mocks = vi.hoisted(() => ({
   privacyUpdate: vi.fn(),
   privacyDelete: vi.fn(),
   userFindUnique: vi.fn(),
+  notInterestedFindMany: vi.fn(),
+  notInterestedUpsert: vi.fn(),
+  notInterestedDeleteMany: vi.fn(),
+  revalidatePaths: vi.fn(),
   notifyUser: vi.fn(),
   notifyGrouped: vi.fn(),
   mkdir: vi.fn(),
@@ -80,8 +84,14 @@ vi.mock('@ifpc/database', () => ({
       delete: mocks.privacyDelete,
     },
     user: { findUnique: mocks.userFindUnique },
+    postNotInterested: {
+      findMany: mocks.notInterestedFindMany,
+      upsert: mocks.notInterestedUpsert,
+      deleteMany: mocks.notInterestedDeleteMany,
+    },
   },
 }));
+vi.mock('@/lib/revalidate', () => ({ revalidatePaths: mocks.revalidatePaths }));
 vi.mock('@/lib/notifications/notify', () => ({
   notifyUser: mocks.notifyUser,
   notifyGrouped: mocks.notifyGrouped,
@@ -98,6 +108,7 @@ import {
   deleteCommentAction,
   deletePostAction,
   moderatePostAction,
+  notInterestedAction,
   pinPostAction,
   reportPostAction,
   resolveReportsAction,
@@ -158,6 +169,9 @@ beforeEach(() => {
   mocks.privacyUpdate.mockResolvedValue({});
   mocks.privacyDelete.mockResolvedValue({});
   mocks.userFindUnique.mockResolvedValue({ id: 'otro' });
+  mocks.notInterestedFindMany.mockResolvedValue([]);
+  mocks.notInterestedUpsert.mockResolvedValue({});
+  mocks.notInterestedDeleteMany.mockResolvedValue({ count: 1 });
   mocks.notifyGrouped.mockResolvedValue(undefined);
   mocks.mkdir.mockResolvedValue(undefined);
   mocks.writeFile.mockResolvedValue(undefined);
@@ -227,7 +241,7 @@ describe('createPostAction', () => {
       {},
       form({ body: 'x', file: file('application/pdf', 1024, 'doc.pdf') })
     );
-    expect(result.error).toContain('JPG, PNG, WebP');
+    expect(result.error).toContain('JPG, PNG o WebP');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
@@ -256,13 +270,13 @@ describe('createPostAction', () => {
       {},
       form({ body: 'x', mediaUrl: 'https://evil.example/watch?v=M7lc1UVf-VE' })
     );
-    expect(result.error).toContain('YouTube or Vimeo');
+    expect(result.error).toContain('YouTube o Vimeo');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
   it('no publica un tipo Foto o Vídeo sin medio adjunto', async () => {
     const result = await createPostAction({}, form({ body: 'solo texto', type: 'PHOTO' }));
-    expect(result.error).toContain('Attach the file');
+    expect(result.error).toContain('Adjunta el archivo');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
@@ -327,7 +341,7 @@ describe('updatePostAction', () => {
     mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro' });
 
     const result = await updatePostAction({}, form({ postId: 'post-1', body: 'editado' }));
-    expect(result).toEqual({ error: 'You can only edit your own posts.' });
+    expect(result).toEqual({ error: 'Solo puedes editar tus propias publicaciones.' });
     expect(mocks.postUpdate).not.toHaveBeenCalled();
   });
 
@@ -486,7 +500,7 @@ describe('createCommentAction', () => {
   it('exige sesión', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
-    expect(result).toEqual({ error: 'Invalid session.' });
+    expect(result).toEqual({ error: 'La sesión no es válida.' });
   });
 
   it('rechaza comentarios vacíos', async () => {
@@ -498,7 +512,7 @@ describe('createCommentAction', () => {
   it('rechaza comentar una publicación oculta o inexistente', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'otro', status: 'HIDDEN' });
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
-    expect(result).toEqual({ error: 'Publication not found.' });
+    expect(result).toEqual({ error: 'La publicación no existe.' });
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
@@ -518,7 +532,7 @@ describe('createCommentAction', () => {
     expect(mocks.notifyGrouped).toHaveBeenCalledWith(
       expect.objectContaining({ userId: 'otro', type: 'post_comment' })
     );
-    expect(result).toEqual({ success: 'Comment published.' });
+    expect(result).toEqual({ success: 'Comentario publicado.' });
   });
 
   it('acepta respuestas indicando el comentario padre', async () => {
@@ -610,7 +624,7 @@ describe('createCommentAction', () => {
 
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
 
-    expect(result).toEqual({ success: 'Comment published.' });
+    expect(result).toEqual({ success: 'Comentario publicado.' });
     expect(mocks.commentCreate).toHaveBeenCalled();
   });
 });
@@ -654,7 +668,7 @@ describe('updateCommentAction', () => {
   it('exige sesión', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: 'nuevo' }));
-    expect(result).toEqual({ error: 'Invalid session.' });
+    expect(result).toEqual({ error: 'La sesión no es válida.' });
   });
 
   it('rechaza textos vacíos', async () => {
@@ -689,7 +703,7 @@ describe('reportPostAction', () => {
   it('exige sesión', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await reportPostAction({}, form({ postId: 'post-1', reason: 'spam' }));
-    expect(result).toEqual({ error: 'Invalid session.' });
+    expect(result).toEqual({ error: 'La sesión no es válida.' });
   });
 
   it('exige un motivo con contenido', async () => {
@@ -709,7 +723,7 @@ describe('reportPostAction', () => {
       update: { reason: 'Contenido ofensivo' },
       create: { postId: 'post-1', reporterId: 'user-1', reason: 'Contenido ofensivo' },
     });
-    expect(result).toEqual({ success: 'Thanks, our team will review it.' });
+    expect(result).toEqual({ success: 'Gracias, lo revisaremos.' });
   });
 });
 
@@ -832,6 +846,45 @@ describe('resolveReportsAction', () => {
 
     await resolveReportsAction(form({ postId: 'post-1' }));
     expect(mocks.moderationLogCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('notInterestedAction', () => {
+  it('no hace nada sin sesión', async () => {
+    mocks.auth.mockResolvedValue(null);
+
+    await notInterestedAction(form({ postId: 'post-1' }));
+
+    expect(mocks.notInterestedUpsert).not.toHaveBeenCalled();
+  });
+
+  it('ignora publicaciones que no existen', async () => {
+    mocks.postFindUnique.mockResolvedValue(null);
+
+    await notInterestedAction(form({ postId: 'fantasma' }));
+
+    expect(mocks.notInterestedUpsert).not.toHaveBeenCalled();
+  });
+
+  it('marca la publicación y revalida feed y detalle', async () => {
+    await notInterestedAction(form({ postId: 'post-1' }));
+
+    expect(mocks.notInterestedUpsert).toHaveBeenCalledWith({
+      where: { postId_userId: { postId: 'post-1', userId: 'user-1' } },
+      create: { postId: 'post-1', userId: 'user-1' },
+      update: {},
+    });
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith('/dashboard/discovery');
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith('/dashboard/discovery/post-1');
+  });
+
+  it('con value=off deshace la marca', async () => {
+    await notInterestedAction(form({ postId: 'post-1', value: 'off' }));
+
+    expect(mocks.notInterestedDeleteMany).toHaveBeenCalledWith({
+      where: { postId: 'post-1', userId: 'user-1' },
+    });
+    expect(mocks.notInterestedUpsert).not.toHaveBeenCalled();
   });
 });
 

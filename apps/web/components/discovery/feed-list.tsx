@@ -49,7 +49,7 @@ export function FeedList({
 
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div aria-busy={pending} className="flex flex-col gap-4">
         {posts.map((post) => (
           <PostCard
             key={post.id}
@@ -66,6 +66,7 @@ export function FeedList({
             type="button"
             onClick={loadMore}
             disabled={pending}
+            aria-live="polite"
             className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground disabled:opacity-50"
           >
             {pending ? 'Cargando…' : 'Ver más'}

@@ -33,6 +33,9 @@ logros.
   interactuar, y se cancelan los seguimientos) a cualquier otro, y cada
   publicación decide **quién puede comentarla** (cualquiera, solo quien me sigue
   o nadie).
+- **«No me interesa»**: de cada publicación puedes quitarla de **tu** feed sin
+  afectar a nadie más (ni al autor ni a los demás). Se deshace desde el detalle
+  de la publicación, que sigue siendo accesible.
 - **Avisos**: bandeja con contador en el sidebar para **todos los perfiles**, con
   avisos **agrupados** ("A 3 personas les gusta tu publicación") y aviso correcto
   al autor de la publicación o a quien escribió el comentario que respondes.

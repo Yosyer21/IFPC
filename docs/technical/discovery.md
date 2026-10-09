@@ -11,6 +11,7 @@ Cuelga de `User` (no de `Player`) para que **cualquier rol** pueda publicar.
 | `PostComment` | Comentario; `parentId` da un nivel de respuestas (auto-relación).           |
 | `PostView`    | Alcance: un registro por publicación + espectador, con contador y fechas.   |
 | `PostPollVote` | Voto en la encuesta de una publicación (uno por persona y publicación).    |
+| `PostNotInterested` | «No me interesa»: el espectador quita esa publicación de **sus** listados. |
 | `PostReport`  | Denuncia (una por persona y publicación); `resolvedAt` marca las atendidas.  |
 | `ModerationLog` | Traza de moderación: actor, `postId`, acción y notas. `postId` no es relación, para sobrevivir al borrado. |
 | `Follow`      | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera). |
@@ -112,6 +113,12 @@ relación, para que borrar un usuario no arrastre métricas.
   **Silenciar** y **Bloquear** (con confirmación) o, si ya le bloqueaste, el
   aviso y el botón para deshacerlo; si te bloqueó él, el muro responde
   "Este perfil no está disponible".
+- **No me interesa** (`lib/discovery-interest.ts` + `PostNotInterested`): a
+  diferencia del bloqueo/silencio, es una decisión **por publicación** y solo
+  afecta a los listados de quien la toma (`listFeed` —también tendencias—,
+  `listPinnedPosts` y `listForYouFeed` la excluyen). El autor y el resto siguen
+  viéndola, y el detalle sigue accesible con el botón *Volver a mostrar*, que
+  borra la fila (`setNotInterested({ value: false })`).
 - **Límite conocido**: en el espejo público no hay espectador identificable, así
   que los bloqueos no filtran ahí.
 
@@ -174,6 +181,21 @@ duplica reglas, solo recoge datos.
   porcentajes.
 
 ## Módulos y carga incremental
+
+- **Streaming con `<Suspense>`**: la página del feed pinta de inmediato la
+  cabecera, las pestañas y el buscador; los datos van en dos secciones asíncronas
+  (`ComposerSection` con borradores y menciones, `FeedSection` con fijados,
+  publicaciones y sugerencias) cada una con su esqueleto
+  (`components/discovery/feed-skeleton.tsx`). La ruta tiene además
+  `loading.tsx` (privada y espejo público), así que al navegar nunca se ve una
+  pantalla en blanco.
+- **Accesibilidad**: las pestañas son un `<nav aria-label="Secciones del feed">`
+  con `aria-current="page"` en la activa (son enlaces que navegan, no *tabs* de
+  un panel, así que no se usa `role="tablist"`); el botón «Ver más» avisa con
+  `aria-live="polite"` y la lista marca `aria-busy` mientras carga; los
+  esqueletos se anuncian como `role="status"` sin que se lean formas vacías.
+- **Idioma**: todo lo que ve el usuario en Discovery está en español (mensajes de
+  error de las acciones incluidos).
 
 - `apps/web/lib/discovery-content.ts` es **client-safe** (tipos, filtros, ranking,
   formato, `resolveEmbed`, `toFeedPost`): no importa Prisma ni la sesión. Los

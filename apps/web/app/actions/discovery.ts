@@ -32,6 +32,7 @@ import {
   type PrivacyKind,
 } from '@/lib/discovery-privacy';
 import { listFeed } from '@/lib/discovery';
+import { setNotInterested } from '@/lib/discovery-interest';
 import { GUARDRAIL_MESSAGES, containsBannedWord, reviewComment, reviewPost } from '@/lib/discovery-guardrails';
 import { logModeration } from '@/lib/discovery-moderation';
 import { extractVideoPoster } from '@/lib/media/video-poster';
@@ -106,7 +107,7 @@ async function storeUpload(
   const videoExt = file instanceof File ? POST_VIDEO_MIME_EXT[file.type] : undefined;
 
   if (!imageExt && !videoExt) {
-    return { error: 'Only JPG, PNG, WebP images or MP4/WebM/MOV videos are allowed.' };
+    return { error: 'Solo se permiten imágenes JPG, PNG o WebP y vídeos MP4, WebM o MOV.' };
   }
   const max = imageExt ? POST_IMAGE_MAX_BYTES : POST_VIDEO_MAX_BYTES;
   if (file instanceof File && file.size > max) {
@@ -223,7 +224,7 @@ export async function createPostAction(
   } else if (externalUrl) {
     const embed = resolveEmbed(externalUrl);
     if (!embed) {
-      return { error: 'Only YouTube or Vimeo links can be embedded.' };
+      return { error: 'Solo se pueden incrustar enlaces de YouTube o Vimeo.' };
     }
     mediaUrl = embed;
     mediaKind = 'embed';
@@ -245,7 +246,7 @@ export async function createPostAction(
   }
 
   if (!mediaKind && (parsed.data.type === 'VIDEO' || parsed.data.type === 'PHOTO')) {
-    return { error: 'Attach the file or the link of the media.' };
+    return { error: 'Adjunta el archivo o el enlace del medio.' };
   }
 
   // El medio manda: un vídeo o una imagen nunca queda clasificado como anuncio.
@@ -338,6 +339,26 @@ export async function createPostAction(
   redirect('/dashboard/discovery');
 }
 
+/** Marca o desmarca una publicación como "no me interesa" (solo quien la ve). */
+export async function notInterestedAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+
+  const postId = str(formData, 'postId');
+  if (!postId) return;
+
+  const post = await prisma.post.findUnique({ where: { id: postId }, select: { id: true } });
+  if (!post) return;
+
+  // 'off' deshace la marca (desde el detalle de la publicación).
+  await setNotInterested({ postId, userId, value: str(formData, 'value') !== 'off' });
+
+  const from = str(formData, 'from');
+  revalidatePaths(from ? dashboardPath(from) : '/dashboard/discovery');
+  revalidatePaths(`/dashboard/discovery/${postId}`);
+}
+
 /** Vota (o cambia el voto) en la encuesta de una publicación. */
 export async function votePollAction(formData: FormData): Promise<void> {
   const session = await auth();
@@ -420,7 +441,7 @@ export async function updatePostAction(
 
   const postId = str(formData, 'postId');
   if (!postId) {
-    return { error: 'Publication not found.' };
+    return { error: 'La publicación no existe.' };
   }
 
   const post = await prisma.post.findUnique({
@@ -428,10 +449,10 @@ export async function updatePostAction(
     select: { authorId: true },
   });
   if (!post) {
-    return { error: 'Publication not found.' };
+    return { error: 'La publicación no existe.' };
   }
   if (post.authorId !== poster.id) {
-    return { error: 'You can only edit your own posts.' };
+    return { error: 'Solo puedes editar tus propias publicaciones.' };
   }
 
   const parsed = postEditSchema.safeParse({
@@ -535,7 +556,7 @@ export async function toggleLikeAction(formData: FormData): Promise<void> {
           userId: post.authorId,
           type: 'post_like',
           title: 'Nuevos me gusta',
-          message: `${user.name} liked your post.`,
+          message: `${user.name} ha indicado que le gusta tu publicación.`,
           link: `/dashboard/discovery/${postId}`,
           groupMessage: (count) => `A ${count} personas les gusta tu publicación.`,
         });
@@ -553,7 +574,7 @@ export async function createCommentAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Invalid session.' };
+    return { error: 'La sesión no es válida.' };
   }
 
   const parsed = postCommentSchema.safeParse({
@@ -576,7 +597,7 @@ export async function createCommentAction(
     select: { authorId: true, status: true, commentsPolicy: true },
   });
   if (!post || post.status !== 'PUBLISHED') {
-    return { error: 'Publication not found.' };
+    return { error: 'La publicación no existe.' };
   }
 
   // Política de comentarios del autor + bloqueos entre ambos perfiles.
@@ -634,7 +655,7 @@ export async function createCommentAction(
     }
   }
 
-  return { success: 'Comment published.' };
+  return { success: 'Comentario publicado.' };
 }
 
 /** Edita el texto de un comentario propio. */
@@ -644,12 +665,12 @@ export async function updateCommentAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Invalid session.' };
+    return { error: 'La sesión no es válida.' };
   }
 
   const commentId = str(formData, 'commentId');
   if (!commentId) {
-    return { error: 'Comment not found.' };
+    return { error: 'El comentario no existe.' };
   }
 
   const parsed = postCommentEditSchema.safeParse({ body: str(formData, 'body') });
@@ -662,7 +683,7 @@ export async function updateCommentAction(
     select: { authorId: true },
   });
   if (!comment) {
-    return { error: 'Comment not found.' };
+    return { error: 'El comentario no existe.' };
   }
   if (comment.authorId !== session.user.id) {
     return { error: 'Solo puedes editar tus propios comentarios.' };
@@ -714,7 +735,7 @@ export async function reportPostAction(
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'Invalid session.' };
+    return { error: 'La sesión no es válida.' };
   }
 
   const parsed = postReportSchema.safeParse({
@@ -741,7 +762,7 @@ export async function reportPostAction(
     return { error: 'No se pudo enviar la denuncia.' };
   }
 
-  return { success: 'Thanks, our team will review it.' };
+  return { success: 'Gracias, lo revisaremos.' };
 }
 
 /**

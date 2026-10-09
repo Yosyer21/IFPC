@@ -17,6 +17,7 @@ import {
   trackPostView,
 } from '@/lib/discovery';
 import { canComment } from '@/lib/discovery-privacy';
+import { isNotInterested } from '@/lib/discovery-interest';
 
 export const metadata: Metadata = { title: 'Publicación' };
 
@@ -37,7 +38,7 @@ export default async function PostDetailPage({
   await trackPostView({ postId, authorUserId: post.author.id });
 
   const isAuthor = post.author.id === session.user.id;
-  const [comments, stats, mayComment] = await Promise.all([
+  const [comments, stats, mayComment, notInterested] = await Promise.all([
     listComments(postId, session.user.id),
     isAuthor ? getPostViewStats(postId) : Promise.resolve(null),
     canComment({
@@ -45,6 +46,7 @@ export default async function PostDetailPage({
       authorId: post.author.id,
       policy: post.commentsPolicy,
     }),
+    isNotInterested({ postId, viewerId: session.user.id }),
   ]);
 
   return (
@@ -57,7 +59,12 @@ export default async function PostDetailPage({
       </Link>
 
       <div className="mt-4">
-        <PostCard post={post} viewerId={session.user.id} viewerRole={session.user.role} />
+        <PostCard
+          post={post}
+          viewerId={session.user.id}
+          viewerRole={session.user.role}
+          notInterested={notInterested}
+        />
       </div>
 
       {isAuthor && post.status === 'HIDDEN' ? (

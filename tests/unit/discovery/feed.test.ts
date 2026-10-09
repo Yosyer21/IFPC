@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   privacyFindMany: vi.fn(),
   privacyFindFirst: vi.fn(),
   userFindMany: vi.fn(),
+  notInterestedFindMany: vi.fn(),
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
@@ -30,6 +31,7 @@ vi.mock('@ifpc/database', () => ({
     },
     privacyRule: { findMany: mocks.privacyFindMany, findFirst: mocks.privacyFindFirst },
     user: { findMany: mocks.userFindMany },
+    postNotInterested: { findMany: mocks.notInterestedFindMany },
   },
 }));
 
@@ -91,6 +93,7 @@ beforeEach(() => {
   mocks.privacyFindMany.mockResolvedValue([]);
   mocks.privacyFindFirst.mockResolvedValue(null);
   mocks.userFindMany.mockResolvedValue([]);
+  mocks.notInterestedFindMany.mockResolvedValue([]);
 });
 
 describe('parseFeedFilters', () => {
@@ -259,6 +262,18 @@ describe('listFeed', () => {
     expect(args.take).toBe(21);
     // El "me gusta" se resuelve para el espectador actual.
     expect(args.include.likes).toEqual({ where: { userId: 'viewer-1' }, select: { id: true } });
+  });
+
+  it('quita de la lista lo que el espectador marcó como "no me interesa"', async () => {
+    mocks.notInterestedFindMany.mockResolvedValue([{ postId: 'post-9' }]);
+
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where.id).toEqual({ notIn: ['post-9'] });
+    expect(mocks.notInterestedFindMany).toHaveBeenCalledWith({
+      where: { userId: 'viewer-1' },
+      select: { postId: true },
+    });
   });
 
   it('devuelve cursor cuando hay más de una página', async () => {

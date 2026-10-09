@@ -2,6 +2,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { DISCOVERY_PAGE_SIZE, DISCOVERY_SUGGESTED_PROFILES } from '@ifpc/config';
 import { hiddenAuthorIds } from './discovery-privacy';
+import { notInterestedPostIds } from './discovery-interest';
 import {
   POST_INCLUDE,
   rankTrendingPosts,
@@ -45,7 +46,13 @@ export async function listFeed(input: {
   }
 
   // Lo que el espectador ha bloqueado o silenciado (y quien le bloqueó) no aparece.
-  const hidden = await hiddenAuthorIds(viewerId);
+  // Tampoco lo que marcó como "no me interesa".
+  const [hidden, hiddenPosts] = await Promise.all([
+    hiddenAuthorIds(viewerId),
+    notInterestedPostIds(viewerId),
+  ]);
+  // Fijados (que van aparte) + lo que el espectador no quiere ver.
+  const excludedIds = [...(excludeIds ?? []), ...hiddenPosts];
 
   const where = {
     status: 'PUBLISHED' as const,
@@ -70,7 +77,7 @@ export async function listFeed(input: {
           ],
         }
       : {}),
-    ...(excludeIds && excludeIds.length > 0 ? { id: { notIn: excludeIds } } : {}),
+    ...(excludedIds.length > 0 ? { id: { notIn: excludedIds } } : {}),
   };
   const include = {
     ...POST_INCLUDE,
@@ -169,13 +176,17 @@ export async function listPinnedPosts(
   viewerId?: string | null,
   limit = 3
 ): Promise<FeedPost[]> {
-  const hidden = await hiddenAuthorIds(viewerId);
+  const [hidden, hiddenPosts] = await Promise.all([
+    hiddenAuthorIds(viewerId),
+    notInterestedPostIds(viewerId),
+  ]);
 
   const rows = await prisma.post.findMany({
     where: {
       status: 'PUBLISHED',
       pinnedAt: { not: null },
       ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
+      ...(hiddenPosts.length > 0 ? { id: { notIn: hiddenPosts } } : {}),
     },
     orderBy: { pinnedAt: 'desc' },
     take: limit,
