@@ -1,0 +1,68 @@
+name: E2E Discovery
+
+# Informativo: comprueba el recorrido de extremo a extremo del feed contra una app
+# real con Postgres. No bloquea (continue-on-error) hasta que el job lleve unas
+# cuantas ejecuciones en verde; entonces quítale esa línea.
+#
+# En local el equivalente es:
+#   pnpm dev            # en otra terminal
+#   pnpm e2e tests/e2e/discovery-area.spec.ts
+# (requiere `pnpm db:seed` y, la primera vez, `npx playwright install chromium`).
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  discovery:
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - '5432:5432'
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+      USE_PGLITE: 'false'
+      AUTH_SECRET: ci-e2e-secret
+      AUTH_TRUST_HOST: 'true'
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      STORAGE_DRIVER: local
+      UPLOAD_DIR: ${{ github.workspace }}/apps/web/public/uploads
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generar cliente Prisma y esquema
+        run: |
+          pnpm --filter database exec prisma generate
+          pnpm --filter database exec prisma db push --skip-generate
+      - name: Datos de demo
+        run: pnpm db:seed
+      - name: Navegador
+        run: npx playwright install --with-deps chromium
+      - name: Levantar la app
+        run: |
+          nohup pnpm dev >/tmp/dev.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:3000/api/auth/csrf; then exit 0; fi
+            sleep 2
+          done
+          echo 'La app no respondió a tiempo'; tail -40 /tmp/dev.log; exit 1
+      - name: Recorrido de Discovery
+        run: pnpm e2e tests/e2e/discovery-area.spec.ts --reporter=line
+      - name: Log del servidor si algo falla
+        if: failure()
+        run: tail -80 /tmp/dev.log

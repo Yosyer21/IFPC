@@ -50,8 +50,8 @@ logros.
 - **Convivencia**: topes anti-abuso (ritmo de publicación y comentario, enlaces
   por texto y duplicados recientes) y moderación automática del lenguaje no
   permitido, que deja la publicación **en revisión** en vez de borrarla.
-- **Exploración**: pestañas *Para ti · Siguiendo · **Perfiles** · Recientes ·
-  Tendencias · Anuncios · Vídeos*, **buscador combinable** (texto, tipo de
+- **Exploración**: pestañas _Para ti · Siguiendo · **Perfiles** · Recientes ·
+  Tendencias · Anuncios · Vídeos_, **buscador combinable** (texto, tipo de
   publicación y rol del autor) con filtro por etiqueta (`#sub17`), **directorio de
   perfiles** para encontrar a quién seguir y paginación por cursor.
 - **Métricas del autor**: cada publicación muestra a su autor cuántas personas
@@ -68,7 +68,7 @@ logros.
 - **Búsqueda y fijados (F3)**: buscador por texto (título, cuerpo **y nombre del
   autor**) que convive con pestañas y etiquetas, y publicaciones **fijadas** por
   un admin, que aparecen destacadas al principio del feed con la etiqueta
-  *Fijado* y sin duplicarse en el listado.
+  _Fijado_ y sin duplicarse en el listado.
 
 ## Significado de "Para ti"
 
@@ -98,14 +98,14 @@ badge (`82% match`) en las publicaciones que encajan.
 La misma página, **sin sesión y en solo lectura**, para que el contenido se pueda
 compartir, encontrar en buscadores y servir de puerta de entrada al registro:
 
-- `/discovery` — feed público (pestañas *Recientes · Tendencias · Anuncios ·
-  Vídeos*, buscador, etiquetas y publicaciones fijadas) con un aviso de que está
-  en modo lectura y CTAs a *Crear cuenta* / *Entrar*.
+- `/discovery` — feed público (pestañas _Recientes · Tendencias · Anuncios ·
+  Vídeos_, buscador, etiquetas y publicaciones fijadas) con un aviso de que está
+  en modo lectura y CTAs a _Crear cuenta_ / _Entrar_.
 - `/discovery/<postId>` — publicación y sus comentarios, sin caja de comentario.
 - `/discovery/u/<userId>` — muro del autor con sus contadores, sin botón de seguir.
 - `/discovery/tag/<tag>` — redirige al feed filtrado.
 
-En público **no** hay *Para ti* ni *Siguiendo* (hacen falta saber quién mira), no
+En público **no** hay _Para ti_ ni _Siguiendo_ (hacen falta saber quién mira), no
 se puede dar me gusta, comentar, denunciar ni reportar, y **no se cuentan vistas**
 (el alcance mide espectadores identificables). Todo el contenido publicado es
 visible: no hay contenido restringido ni se filtra por edad.

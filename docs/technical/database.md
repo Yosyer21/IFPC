@@ -38,6 +38,13 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
 - Verificación: `pnpm scripts:verify`.
 - **PGlite local**: `pnpm scripts:apply-delta [ref]` aplica a la base embebida el delta SQL
   entre el esquema del árbol de trabajo y otra versión (por defecto `HEAD`), sin recrearla.
+- **PGlite, un solo proceso**: con `USE_PGLITE=true` la base embebida no admite dos
+  procesos a la vez. Antes de lanzar un script (`pnpm scripts:*`, `pnpm db:seed`) hay que
+  parar `pnpm dev`; si no, la segunda apertura falla con `RuntimeError: Aborted()`.
+- **Si PGlite no arranca**: un proceso que murió a mitad de escritura deja
+  `.pglite/postmaster.pid`. Si no hay ningún dev/script activo, bórralo y vuelve a
+  arrancar; si el directorio quedó inconsistente, se rehace con `pnpm db:setup-pglite`
+  (aplica el esquema completo y carga los datos demo).
 - **Nota**: `prisma/migrations` está vacío (no hay historial), así que `migrate deploy` no
   reconstruye el esquema desde cero. Mientras siga así, cualquier cambio de esquema —como los
   modelos de Discovery— se aplica en local con `scripts:apply-delta` y en producción con

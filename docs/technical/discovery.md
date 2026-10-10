@@ -4,17 +4,17 @@
 
 Cuelga de `User` (no de `Player`) para que **cualquier rol** pueda publicar.
 
-| Modelo        | Uso                                                                        |
-| ------------- | -------------------------------------------------------------------------- |
-| `Post`        | Publicación: `authorId`, `type`, `status`, texto, medio y etiquetas.        |
-| `PostLike`    | Un "me gusta" por persona y publicación (`@@unique([postId, userId])`).     |
-| `PostComment` | Comentario; `parentId` da un nivel de respuestas (auto-relación).           |
-| `PostView`    | Alcance: un registro por publicación + espectador, con contador y fechas.   |
-| `PostPollVote` | Voto en la encuesta de una publicación (uno por persona y publicación).    |
-| `PostNotInterested` | «No me interesa»: el espectador quita esa publicación de **sus** listados. |
-| `PostReport`  | Denuncia (una por persona y publicación); `resolvedAt` marca las atendidas.  |
-| `ModerationLog` | Traza de moderación: actor, `postId`, acción y notas. `postId` no es relación, para sobrevivir al borrado. |
-| `Follow`      | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera). |
+| Modelo              | Uso                                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `Post`              | Publicación: `authorId`, `type`, `status`, texto, medio y etiquetas.                                       |
+| `PostLike`          | Un "me gusta" por persona y publicación (`@@unique([postId, userId])`).                                    |
+| `PostComment`       | Comentario; `parentId` da un nivel de respuestas (auto-relación).                                          |
+| `PostView`          | Alcance: un registro por publicación + espectador, con contador y fechas.                                  |
+| `PostPollVote`      | Voto en la encuesta de una publicación (uno por persona y publicación).                                    |
+| `PostNotInterested` | «No me interesa»: el espectador quita esa publicación de **sus** listados.                                 |
+| `PostReport`        | Denuncia (una por persona y publicación); `resolvedAt` marca las atendidas.                                |
+| `ModerationLog`     | Traza de moderación: actor, `postId`, acción y notas. `postId` no es relación, para sobrevivir al borrado. |
+| `Follow`            | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera).                          |
 
 Enums: `PostType` (`ANNOUNCEMENT · VIDEO · PHOTO · ACHIEVEMENT`) y `PostStatus`
 (`DRAFT · PUBLISHED · HIDDEN`; `HIDDEN` solo lo aplica un admin).
@@ -106,7 +106,7 @@ relación, para que borrar un usuario no arrastre métricas.
   enlace directo de alguien que te bloqueó devuelve **404** (`getPostForViewer`).
 - `MUTE` es **unilateral**: solo dejo de ver su contenido.
 - La política de comentarios es del autor (`Post.commentsPolicy`):
-  *cualquiera · solo quien me sigue · nadie*, y `canComment` la combina con los
+  _cualquiera · solo quien me sigue · nadie_, y `canComment` la combina con los
   bloqueos. En el detalle, quien no puede comentar ve el motivo en lugar de la
   caja de comentario (el autor siempre puede comentar en lo suyo).
 - El muro (`/dashboard/discovery/u/<id>`) muestra los botones **Seguir**,
@@ -117,7 +117,7 @@ relación, para que borrar un usuario no arrastre métricas.
   diferencia del bloqueo/silencio, es una decisión **por publicación** y solo
   afecta a los listados de quien la toma (`listFeed` —también tendencias—,
   `listPinnedPosts` y `listForYouFeed` la excluyen). El autor y el resto siguen
-  viéndola, y el detalle sigue accesible con el botón *Volver a mostrar*, que
+  viéndola, y el detalle sigue accesible con el botón _Volver a mostrar_, que
   borra la fila (`setNotInterested({ value: false })`).
 - **Límite conocido**: en el espejo público no hay espectador identificable, así
   que los bloqueos no filtran ahí.
@@ -169,6 +169,7 @@ duplica reglas, solo recoge datos.
   Vive aparte de `lib/discovery.ts` a propósito: solo depende de la base de
   datos, así que el script (o un cron de Railway) no arrastra la sesión ni
   NextAuth. Sin Redis ni workers.
+
 - **Encuestas**: el compositor manda cuatro campos `pollOption`; la acción
   descarta vacíos, repite sin duplicados, corta a cuatro y, si quedan **menos de
   dos**, ignora el campo (`pollOptions = []`). `votePollAction` valida que la
@@ -190,7 +191,7 @@ duplica reglas, solo recoge datos.
   `loading.tsx` (privada y espejo público), así que al navegar nunca se ve una
   pantalla en blanco.
 - **Accesibilidad**: las pestañas son un `<nav aria-label="Secciones del feed">`
-  con `aria-current="page"` en la activa (son enlaces que navegan, no *tabs* de
+  con `aria-current="page"` en la activa (son enlaces que navegan, no _tabs_ de
   un panel, así que no se usa `role="tablist"`); el botón «Ver más» avisa con
   `aria-live="polite"` y la lista marca `aria-busy` mientras carga; los
   esqueletos se anuncian como `role="status"` sin que se lean formas vacías.
@@ -243,15 +244,15 @@ Las páginas de `apps/web/app/(public)/discovery/` (feed, `[postId]`, `u/[userId
 y `tag/[tag]`) reutilizan los mismos componentes y consultas con **`viewerId`
 ausente**:
 
-- `publicFeedFilters` descarta las pestañas que exigen sesión (*Para ti*,
-  *Siguiendo*) y deja el resto con sus etiquetas y búsqueda.
+- `publicFeedFilters` descarta las pestañas que exigen sesión (_Para ti_,
+  _Siguiendo_) y deja el resto con sus etiquetas y búsqueda.
 - `listFeed`, `listPinnedPosts` y `getPostForViewer` **omiten el `include` de
   `likes`** cuando no hay espectador (`likedByMe` queda en `false`) y el detalle
   público solo alcanza `status: PUBLISHED`.
-- `listFeed` con la pestaña *Siguiendo* y sin espectador devuelve una página
+- `listFeed` con la pestaña _Siguiendo_ y sin espectador devuelve una página
   **vacía** en lugar del feed completo.
 - `getFollowStats` sin espectador devuelve los contadores con `isFollowing:
-  false` y no consulta la relación.
+false` y no consulta la relación.
 - `PostCard`, `CommentList`, `FeedTabs` y `FeedSearch` aceptan `readOnly` / `base`
   para no pintar acciones y enlazar a las rutas públicas.
 - **No se cuentan vistas**: sin sesión no hay espectador identificable, así que el
@@ -272,7 +273,7 @@ cada autor con contenido, y `app/robots.ts` bloquea `/dashboard`.
   atendidas), `pinPostAction` (fija/desfija), `resolveReportsAction` (atiende
   sin tocar la publicación) y `deletePostAction` (que registra la retirada
   cuando el admin borra contenido ajeno).
-- **Traza**: `logModeration` escribe en `ModerationLog` y es *best-effort*: si
+- **Traza**: `logModeration` escribe en `ModerationLog` y es _best-effort_: si
   falla, la moderación ya aplicada no se deshace. `MODERATION_ACTION_LABELS`
   (`lib/labels.ts`) traduce las acciones en el panel.
 - **Panel**: `/dashboard/admin/discovery` (protegido por el prefijo de rol de
@@ -363,6 +364,32 @@ perfil), con likes, comentarios, alcance y relaciones de seguimiento, mediante
 `upsert` con ids fijos (`seed-post-*`, `seed-comment-*`) o claves compuestas, por
 lo que `pnpm db:seed` es idempotente.
 
+## Pruebas
+
+Las funciones puras y las consultas tienen su hueco en `tests/unit/discovery/*`
+(feed, privacidad, guardarraíles, recomendación, perfiles, moderación, analítica,
+interés, compositor) y las acciones en `tests/unit/actions/discovery-*.test.ts`.
+
+El recorrido de extremo a extremo vive en `tests/e2e/discovery-area.spec.ts`
+(Playwright, `pnpm e2e`) y cubre:
+
+1. Feed privado: pestañas accesibles (`aria-current`), directorio de perfiles y
+   búsqueda que vive en la URL.
+2. Compositor: publicar con **galería** y **encuesta**, votar, comentar y borrar
+   (el borrado limpia también los ficheros subidos).
+3. «No me interesa»: se marca, desaparece solo del feed de quien la marca, sigue
+   visible en el espejo público y se deshace desde el detalle.
+4. Borradores: guardar, publicar desde la tarjeta y borrar.
+5. Espejo público: solo lectura (sin compositor ni acciones de autor), solo
+   pestañas públicas y SEO (`title` + `og:title`).
+
+Requiere la app levantada y los datos de demo (`pnpm db:seed`). Cada prueba crea
+sus publicaciones con un identificador único —el guardarraíl rechaza el mismo
+texto dos veces en 10 minutos— y las borra al final, así que se puede repetir sin
+dejar basura. Como los formularios de las server actions necesitan hidratación, el
+spec nunca decide con un `count()` inmediato: usa localizadores que auto-esperan y,
+en los pasos con riesgo de perder el primer clic, un reintento acotado.
+
 ## Notas
 
 - Las subidas viven en el sistema de ficheros: en producción (Railway) es
@@ -377,6 +404,11 @@ lo que `pnpm db:seed` es idempotente.
   (`revalidatePath` solo funciona dentro de una petición real de Next, fuera lanza
   un invariante, y `next` se resuelve desde `apps/web/node_modules`, no desde la
   raíz del repo).
+- Las acciones de **comentarios** (`createCommentAction`, `updateCommentAction` y
+  `deleteCommentAction`) también revalidan explícitamente feed y detalle. El
+  refresco automático no alcanza a la ruta del detalle, así que sin esto el hilo
+  no se actualizaba al comentar (se veía «Comentarios (0)» hasta recargar). Lo
+  detectó `tests/e2e/discovery-area.spec.ts`.
 - El limpiador de ficheros huérfanos (`scripts/maintenance/cleanup.ts` y el job
   `cleanup-files` del worker) conoce `Post.mediaUrl` **y** `Post.mediaUrls`, y
   revisa también `uploads/posts/`, para no borrar las imágenes de una **galería**.
