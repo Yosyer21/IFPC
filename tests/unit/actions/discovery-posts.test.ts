@@ -187,7 +187,9 @@ describe('createPostAction', () => {
   });
 
   it('publica un anuncio de texto y vuelve al feed', async () => {
-    const target = await captureRedirect(() => createPostAction({}, form({ body: 'Nuevo fichaje' })));
+    const target = await captureRedirect(() =>
+      createPostAction({}, form({ body: 'Nuevo fichaje' }))
+    );
 
     expect(target).toBe('/dashboard/discovery');
     expect(mocks.postCreate).toHaveBeenCalledWith({
@@ -372,7 +374,12 @@ describe('deletePostAction', () => {
   });
 
   it('no permite borrar publicaciones de otros', async () => {
-    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null, mediaUrls: [] });
+    mocks.postFindUnique.mockResolvedValue({
+      id: 'post-1',
+      authorId: 'otro',
+      mediaUrl: null,
+      mediaUrls: [],
+    });
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
     expect(mocks.postDelete).not.toHaveBeenCalled();
   });
@@ -396,7 +403,12 @@ describe('deletePostAction', () => {
 
   it('un admin puede borrar cualquier publicación', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
-    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null, mediaUrls: [] });
+    mocks.postFindUnique.mockResolvedValue({
+      id: 'post-1',
+      authorId: 'otro',
+      mediaUrl: null,
+      mediaUrls: [],
+    });
 
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
     expect(mocks.postDelete).toHaveBeenCalled();
@@ -404,7 +416,12 @@ describe('deletePostAction', () => {
 
   it('un admin que retira contenido ajeno deja traza', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
-    mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro', mediaUrl: null, mediaUrls: [] });
+    mocks.postFindUnique.mockResolvedValue({
+      id: 'post-1',
+      authorId: 'otro',
+      mediaUrl: null,
+      mediaUrls: [],
+    });
 
     await captureRedirect(() => deletePostAction(form({ postId: 'post-1' })));
 
@@ -532,6 +549,11 @@ describe('createCommentAction', () => {
     expect(mocks.notifyGrouped).toHaveBeenCalledWith(
       expect.objectContaining({ userId: 'otro', type: 'post_comment' })
     );
+    // El hilo vive en el detalle y el contador en el feed: se revalidan los dos.
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith(
+      '/dashboard/discovery',
+      '/dashboard/discovery/post-1'
+    );
     expect(result).toEqual({ success: 'Comentario publicado.' });
   });
 
@@ -572,7 +594,10 @@ describe('createCommentAction', () => {
   });
 
   it('rechaza comentarios con lenguaje prohibido', async () => {
-    const result = await createCommentAction({}, form({ postId: 'post-1', body: 'eres un idiota' }));
+    const result = await createCommentAction(
+      {},
+      form({ postId: 'post-1', body: 'eres un idiota' })
+    );
 
     expect(result.error).toContain('lenguaje');
     expect(mocks.commentCreate).not.toHaveBeenCalled();
@@ -639,6 +664,10 @@ describe('deleteCommentAction', () => {
 
     await deleteCommentAction(form({ commentId: 'comment-1' }));
     expect(mocks.commentDelete).toHaveBeenCalledWith({ where: { id: 'comment-1' } });
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith(
+      '/dashboard/discovery',
+      '/dashboard/discovery/post-1'
+    );
   });
 
   it('permite al autor del post moderar sus comentarios', async () => {
@@ -687,14 +716,21 @@ describe('updateCommentAction', () => {
   });
 
   it('guarda el texto del comentario propio', async () => {
-    mocks.commentFindUnique.mockResolvedValue({ authorId: 'user-1' });
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'user-1', postId: 'post-1' });
 
-    const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: '  nuevo ' }));
+    const result = await updateCommentAction(
+      {},
+      form({ commentId: 'comment-1', body: '  nuevo ' })
+    );
 
     expect(mocks.commentUpdate).toHaveBeenCalledWith({
       where: { id: 'comment-1' },
       data: { body: 'nuevo' },
     });
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith(
+      '/dashboard/discovery',
+      '/dashboard/discovery/post-1'
+    );
     expect(result).toEqual({ success: 'Comentario actualizado.' });
   });
 });

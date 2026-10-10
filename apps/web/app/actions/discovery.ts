@@ -33,7 +33,12 @@ import {
 } from '@/lib/discovery-privacy';
 import { listFeed } from '@/lib/discovery';
 import { setNotInterested } from '@/lib/discovery-interest';
-import { GUARDRAIL_MESSAGES, containsBannedWord, reviewComment, reviewPost } from '@/lib/discovery-guardrails';
+import {
+  GUARDRAIL_MESSAGES,
+  containsBannedWord,
+  reviewComment,
+  reviewPost,
+} from '@/lib/discovery-guardrails';
 import { logModeration } from '@/lib/discovery-moderation';
 import { extractVideoPoster } from '@/lib/media/video-poster';
 import { revalidatePaths } from '@/lib/revalidate';
@@ -100,8 +105,7 @@ async function removeMedia(url: string | null | undefined): Promise<void> {
 async function storeUpload(
   file: FormDataEntryValue | null
 ): Promise<
-  | { mediaUrl: string; mediaKind: 'image' | 'video'; posterUrl: string | null }
-  | { error: string }
+  { mediaUrl: string; mediaKind: 'image' | 'video'; posterUrl: string | null } | { error: string }
 > {
   const imageExt = file instanceof File ? POST_IMAGE_MIME_EXT[file.type] : undefined;
   const videoExt = file instanceof File ? POST_VIDEO_MIME_EXT[file.type] : undefined;
@@ -154,8 +158,7 @@ async function storeUpload(
 }
 
 /** Etiquetas del formulario: separadas por espacios o comas (con o sin `#`). */
-const splitTags = (value: string | null): string[] =>
-  (value ?? '').split(/[\s,]+/).filter(Boolean);
+const splitTags = (value: string | null): string[] => (value ?? '').split(/[\s,]+/).filter(Boolean);
 
 /**
  * Publica en el feed. Acepta texto, una imagen/vídeo subido o un vídeo externo
@@ -655,9 +658,12 @@ export async function createCommentAction(
     }
   }
 
+  // El hilo vive en el detalle, pero el contador de la tarjeta está en el feed:
+  // hay que revalidar los dos (el refresco automático no alcanza a esta ruta).
+  revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${parsed.data.postId}`);
+
   return { success: 'Comentario publicado.' };
 }
-
 /** Edita el texto de un comentario propio. */
 export async function updateCommentAction(
   _prev: ActionState,
@@ -680,7 +686,7 @@ export async function updateCommentAction(
 
   const comment = await prisma.postComment.findUnique({
     where: { id: commentId },
-    select: { authorId: true },
+    select: { authorId: true, postId: true },
   });
   if (!comment) {
     return { error: 'El comentario no existe.' };
@@ -694,6 +700,8 @@ export async function updateCommentAction(
   } catch {
     return { error: 'No se pudo guardar el comentario.' };
   }
+
+  revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${comment.postId}`);
 
   return { success: 'Comentario actualizado.' };
 }
@@ -713,7 +721,7 @@ export async function deleteCommentAction(formData: FormData): Promise<void> {
 
   const comment = await prisma.postComment.findUnique({
     where: { id: commentId },
-    select: { authorId: true, post: { select: { authorId: true } } },
+    select: { authorId: true, postId: true, post: { select: { authorId: true } } },
   });
   if (!comment) {
     return;
@@ -726,6 +734,8 @@ export async function deleteCommentAction(formData: FormData): Promise<void> {
   }
 
   await prisma.postComment.delete({ where: { id: commentId } });
+
+  revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${comment.postId}`);
 }
 
 /** Denuncia una publicación (idempotente: una denuncia por persona). */
