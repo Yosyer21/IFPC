@@ -128,6 +128,18 @@ Todo se resuelve en `createPostAction` (`app/actions/discovery.ts`) desde un ún
 formulario; el compositor (`components/discovery/post-composer.tsx`, cliente) no
 duplica reglas, solo recoge datos.
 
+- **Divulgación progresiva** (estilo Twitter/X): de entrada solo se ve el campo de
+  texto y la barra inferior con iconos —foto o vídeo, galería, encuesta y
+  programación— más «Borrador» y «Publicar». La **encuesta** y la
+  **programación** añaden sus campos al pulsar su icono (con `aria-expanded` y
+  un botón para quitarlas) y todo lo demás vive en **«Más opciones»**, un
+  `<details>` nativo (título, enlace, vídeo externo, texto alternativo,
+  etiquetas, comentarios y tipo). Las ayudas largas (tamaños y formatos
+  admitidos, para qué sirve el texto alternativo…) pasan a `sr-only` +
+  `aria-describedby`: siguen ahí para lectores de pantalla sin saturar la
+  interfaz. El contador `n/2000` solo aparece al acercarse al límite, y las
+  sugerencias de mención se muestran únicamente mientras se escribe un `@…`.
+
 - **Galería + texto alternativo**: el campo `files` (múltiple) sube **hasta cuatro
   imágenes** con el mismo `storeUpload` de siempre (límite y tipos de
   `POST_IMAGE_MIME_EXT`); la primera pasa a ser `mediaUrl`/`mediaKind = 'image'` y
@@ -149,7 +161,7 @@ duplica reglas, solo recoge datos.
   que insertan `@Nombre`, y cada mención resuelta recibe un aviso
   `post_mention` agrupado. Las menciones **no** enlazan dentro del texto: el
   cuerpo se sigue pintando como texto plano (sin HTML), así que no hay inyección.
-- **Borradores**: el botón `Guardar borrador` envía `intent=draft` y la
+- **Borradores**: el botón `Borrador` envía `intent=draft` y la
   publicación se crea con `status: DRAFT` (el compositor ya no necesita una
   segunda acción). El autor ve sus borradores en `DraftsCard` —solo él: el feed
   filtra `PUBLISHED`— con "Publicar" (`publishDraftAction`) y "Borrar". Un

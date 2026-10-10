@@ -17,11 +17,14 @@ logros.
 - **Contenido**: texto (con `#etiquetas`), título y enlace opcionales, imagen o
   vídeo propio (subido) o **vídeo externo de YouTube/Vimeo**, y compartir una
   **oportunidad** ya existente sin duplicarla.
-- **Compositor completo**: **galería** de hasta cuatro imágenes con **texto
-  alternativo** (accesibilidad), **menciones** `@perfil` (con sugerencias de
-  perfiles y aviso a quien mencionas), **borradores** (guardas y publicas cuando
-  quieras), **publicación programada** (sale sola a su hora) y **encuestas** de
-  2 a 4 opciones con recuento en vivo y un voto por persona (se puede cambiar).
+- **Compositor simple**: de entrada solo el texto y la barra de acciones; el resto
+  se despliega cuando hace falta —adjuntar **foto o vídeo**, **galería** de hasta
+  cuatro imágenes con **texto alternativo** (accesibilidad), **encuesta** (2 a 4
+  opciones), **programación** (sale sola a su hora) o el bloque **«Más opciones»**
+  (título, enlace, vídeo de YouTube/Vimeo, etiquetas, quién puede comentar y
+  tipo)—. Las **menciones** `@perfil` aparecen como sugerencias al escribir la
+  arroba (con aviso a quien mencionas) y los **borradores** se guardan con un
+  botón, sin salir del feed.
 - **Vídeos con portada**: al subir un vídeo se le extrae un fotograma que se
   muestra antes de darle al play (y que se usa como imagen al compartir el
   enlace), en vez del rectángulo negro de antes.

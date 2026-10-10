@@ -132,8 +132,9 @@ test('compositor: galería y encuesta, voto, comentario y borrado', async ({ pag
     { name: 'galeria-1.png', mimeType: 'image/png', buffer: PNG_1PX },
     { name: 'galeria-2.png', mimeType: 'image/png', buffer: PNG_1PX },
   ]);
-  await form.getByPlaceholder('Opción 1 (mínimo dos)').fill('Sí, encaja');
-  await form.getByPlaceholder('Opción 2 (mínimo dos)').fill('No encaja');
+  await form.getByRole('button', { name: 'Encuesta' }).click();
+  await form.getByLabel('Opción 1 de la encuesta').fill('Sí, encaja');
+  await form.getByLabel('Opción 2 de la encuesta').fill('No encaja');
   await form.getByRole('button', { name: 'Publicar' }).click();
 
   // La tarjeta muestra la galería completa y la encuesta a cero.
@@ -235,7 +236,7 @@ test('borradores: guardar, publicar desde la tarjeta y borrar', async ({ page })
 
   const form = composer(page);
   await form.getByLabel('¿Qué quieres contar?').fill(body);
-  await form.getByRole('button', { name: 'Guardar borrador' }).click();
+  await form.getByRole('button', { name: 'Borrador' }).click();
 
   // El borrador solo lo ve su autor y no aparece en el feed.
   const drafts = page.locator('section').filter({ hasText: 'Tus borradores' }).first();
