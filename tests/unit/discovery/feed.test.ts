@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   privacyFindFirst: vi.fn(),
   userFindMany: vi.fn(),
   notInterestedFindMany: vi.fn(),
+  authorPreferenceFindMany: vi.fn(),
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
@@ -32,6 +33,7 @@ vi.mock('@ifpc/database', () => ({
     privacyRule: { findMany: mocks.privacyFindMany, findFirst: mocks.privacyFindFirst },
     user: { findMany: mocks.userFindMany },
     postNotInterested: { findMany: mocks.notInterestedFindMany },
+    authorPreference: { findMany: mocks.authorPreferenceFindMany },
   },
 }));
 
@@ -94,6 +96,7 @@ beforeEach(() => {
   mocks.privacyFindFirst.mockResolvedValue(null);
   mocks.userFindMany.mockResolvedValue([]);
   mocks.notInterestedFindMany.mockResolvedValue([]);
+  mocks.authorPreferenceFindMany.mockResolvedValue([]);
 });
 
 describe('parseFeedFilters', () => {
@@ -200,8 +203,14 @@ describe('engagement y ranking', () => {
   });
 
   it('ordena por engagement y desempata por fecha', () => {
-    const older = { counts: { likes: 1, comments: 0, views: 0 }, createdAt: new Date('2026-10-01') };
-    const newer = { counts: { likes: 1, comments: 0, views: 0 }, createdAt: new Date('2026-10-02') };
+    const older = {
+      counts: { likes: 1, comments: 0, views: 0 },
+      createdAt: new Date('2026-10-01'),
+    };
+    const newer = {
+      counts: { likes: 1, comments: 0, views: 0 },
+      createdAt: new Date('2026-10-02'),
+    };
     const best = { counts: { likes: 9, comments: 1, views: 0 }, createdAt: new Date('2026-09-01') };
 
     expect(rankTrendingPosts([older, best, newer])).toEqual([best, newer, older]);
@@ -281,14 +290,20 @@ describe('listFeed', () => {
       Array.from({ length: 21 }, (_value, index) => row(`post-${index + 1}`))
     );
 
-    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
+    const page = await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'recent', tag: null, q: null },
+    });
     expect(page.posts).toHaveLength(20);
     expect(page.nextCursor).toBe('post-20');
   });
 
   it('sin más resultados no devuelve cursor', async () => {
     mocks.postFindMany.mockResolvedValue([row('post-1')]);
-    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
+    const page = await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'recent', tag: null, q: null },
+    });
     expect(page.nextCursor).toBeNull();
   });
 
@@ -303,9 +318,38 @@ describe('listFeed', () => {
       row('mucho', { _count: { likes: 5, comments: 1, views: 9 } }),
     ]);
 
-    const page = await listFeed({ viewerId: 'viewer-1', filters: { tab: 'trending', tag: null, q: null } });
+    const page = await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'trending', tag: null, q: null },
+    });
     expect(page.posts.map((post) => post.id)).toEqual(['mucho', 'poco']);
     expect(page.nextCursor).toBeNull();
+  });
+
+  it('en tendencias sube a quien sigues', async () => {
+    // Mismo engagement: la del autor seguido gana por preferencia.
+    mocks.postFindMany.mockResolvedValue([
+      row('normal'),
+      row('seguido', {
+        author: { id: 'autor-seguido', name: 'Club Seguido', role: 'CLUB', image: null },
+      }),
+    ]);
+    mocks.followFindMany.mockResolvedValue([{ followingId: 'autor-seguido' }]);
+
+    const page = await listFeed({
+      viewerId: 'viewer-1',
+      filters: { tab: 'trending', tag: null, q: null },
+    });
+
+    expect(page.posts.map((post) => post.id)).toEqual(['seguido', 'normal']);
+  });
+
+  it('en tendencias deja fuera a quien el espectador descartó', async () => {
+    mocks.authorPreferenceFindMany.mockResolvedValue([{ authorId: 'autor-menos', kind: 'LESS' }]);
+
+    await listFeed({ viewerId: 'viewer-1', filters: { tab: 'trending', tag: null, q: null } });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where.authorId).toEqual({ notIn: ['autor-menos'] });
   });
 
   it('marca likedByMe y cuenta las interacciones', async () => {
@@ -316,8 +360,9 @@ describe('listFeed', () => {
       }),
     ]);
 
-    const [post] = (await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } }))
-      .posts;
+    const [post] = (
+      await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } })
+    ).posts;
     expect(post?.likedByMe).toBe(true);
     expect(post?.counts).toEqual({ likes: 4, comments: 2, views: 7 });
   });
@@ -629,4 +674,3 @@ describe('espejo público (sin sesión)', () => {
     expect(mocks.followFindUnique).not.toHaveBeenCalled();
   });
 });
-

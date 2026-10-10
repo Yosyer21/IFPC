@@ -10,6 +10,8 @@ const mocks = vi.hoisted(() => ({
   opportunityFindMany: vi.fn(),
   privacyFindMany: vi.fn(),
   notInterestedFindMany: vi.fn(),
+  authorPreferenceFindMany: vi.fn(),
+  followFindMany: vi.fn(),
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
@@ -22,6 +24,8 @@ vi.mock('@ifpc/database', () => ({
     opportunity: { findMany: mocks.opportunityFindMany },
     privacyRule: { findMany: mocks.privacyFindMany },
     postNotInterested: { findMany: mocks.notInterestedFindMany },
+    authorPreference: { findMany: mocks.authorPreferenceFindMany },
+    follow: { findMany: mocks.followFindMany },
   },
 }));
 
@@ -46,7 +50,11 @@ const player: ScorablePlayer = {
   status: 'AVAILABLE',
 };
 
-const opportunity = (position: string | null, ageMin: number | null = null, ageMax: number | null = null) => ({
+const opportunity = (
+  position: string | null,
+  ageMin: number | null = null,
+  ageMax: number | null = null
+) => ({
   position,
   ageMin,
   ageMax,
@@ -62,6 +70,8 @@ beforeEach(() => {
   mocks.opportunityFindMany.mockResolvedValue([]);
   mocks.privacyFindMany.mockResolvedValue([]);
   mocks.notInterestedFindMany.mockResolvedValue([]);
+  mocks.authorPreferenceFindMany.mockResolvedValue([]);
+  mocks.followFindMany.mockResolvedValue([]);
 });
 
 describe('relevanceForPlayer', () => {
@@ -207,9 +217,45 @@ describe('listForYouFeed', () => {
     const posts = await listForYouFeed({ viewerId: 'viewer-1', viewerRole: 'PARENT' });
 
     expect(posts.map((post) => post.id)).toEqual(['p1', 'p2']);
-    expect(posts[0]?.relevance).toBeUndefined();
+    // `null` = no hay encaje calculable (no se inventa relevancia).
+    expect(posts[0]?.relevance).toBeNull();
     expect(mocks.playerFindUnique).not.toHaveBeenCalled();
     expect(mocks.opportunityFindMany).not.toHaveBeenCalled();
+  });
+
+  it('sube a quien sigues aunque no haya contexto puntuable', async () => {
+    // El del autor seguido es más antiguo: sin preferencias iría después.
+    mocks.postFindMany.mockResolvedValue([
+      row('p1'),
+      row('p2', {
+        author: { id: 'autor-seguido', name: 'Club Seguido', role: 'CLUB', image: null },
+      }),
+    ]);
+    mocks.followFindMany.mockResolvedValue([{ followingId: 'autor-seguido' }]);
+
+    const posts = await listForYouFeed({ viewerId: 'viewer-1', viewerRole: 'PARENT' });
+
+    expect(posts.map((post) => post.id)).toEqual(['p2', 'p1']);
+  });
+
+  it('«ver más» también sube, y sin preferencias se respeta la fecha', async () => {
+    mocks.postFindMany.mockResolvedValue([
+      row('p1'),
+      row('p2', { author: { id: 'autor-mas', name: 'Club X', role: 'CLUB', image: null } }),
+    ]);
+    mocks.authorPreferenceFindMany.mockResolvedValue([{ authorId: 'autor-mas', kind: 'MORE' }]);
+
+    const posts = await listForYouFeed({ viewerId: 'viewer-1', viewerRole: 'PARENT' });
+
+    expect(posts.map((post) => post.id)).toEqual(['p2', 'p1']);
+  });
+
+  it('quien tiene «ver menos» queda fuera de Para ti', async () => {
+    mocks.authorPreferenceFindMany.mockResolvedValue([{ authorId: 'autor-menos', kind: 'LESS' }]);
+
+    await listForYouFeed({ viewerId: 'viewer-1', viewerRole: 'PARENT' });
+
+    expect(mocks.postFindMany.mock.calls[0][0].where.authorId).toEqual({ notIn: ['autor-menos'] });
   });
 
   it('un club sin oportunidades abiertas no puntúa nada', async () => {
@@ -219,6 +265,6 @@ describe('listForYouFeed', () => {
 
     const posts = await listForYouFeed({ viewerId: 'viewer-club', viewerRole: 'CLUB' });
 
-    expect(posts[0]?.relevance).toBeUndefined();
+    expect(posts[0]?.relevance).toBeNull();
   });
 });

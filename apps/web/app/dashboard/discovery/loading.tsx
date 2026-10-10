@@ -1,5 +1,4 @@
 import { FeedSkeleton } from '@/components/discovery/feed-skeleton';
-import { FeedTabs } from '@/components/discovery/feed-tabs';
 import { PageHeader } from '@/components/player/page-header';
 
 /**

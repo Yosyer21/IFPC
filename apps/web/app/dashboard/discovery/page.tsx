@@ -74,6 +74,12 @@ export default async function DiscoveryPage({
         >
           Mi rendimiento →
         </Link>
+        <Link
+          href="/dashboard/discovery/following"
+          className="text-sm text-muted-foreground hover:underline"
+        >
+          Siguiendo y preferencias →
+        </Link>
       </PageHeader>
 
       {showComposer ? (
@@ -97,7 +103,6 @@ export default async function DiscoveryPage({
   );
 }
 
-
 /** Borradores del autor y perfiles a los que puede mencionar en el compositor. */
 async function ComposerSection({ viewerId }: { viewerId: string }) {
   const [drafts, mentions] = await Promise.all([
@@ -108,7 +113,9 @@ async function ComposerSection({ viewerId }: { viewerId: string }) {
   return (
     <>
       <DraftsCard drafts={drafts} />
-      <PostComposer mentions={mentions.map((profile) => ({ id: profile.id, name: profile.name }))} />
+      <PostComposer
+        mentions={mentions.map((profile) => ({ id: profile.id, name: profile.name }))}
+      />
     </>
   );
 }

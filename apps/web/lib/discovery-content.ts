@@ -254,12 +254,27 @@ export function engagementScore(post: Pick<FeedPost, 'counts'>): number {
 
 /** Ordena por engagement (y, a igualdad, por más reciente). */
 export function rankTrendingPosts<T extends Pick<FeedPost, 'counts' | 'createdAt'>>(
-  posts: T[]
+  posts: T[],
+  /**
+   * Puntos extra por publicación (el sistema de preferencias: a quién sigues y
+   * quién te interesa más suben; «ver menos» resta). Sin él, el orden es el
+   * ranking global por engagement.
+   */
+  bonusOf?: (post: T) => number
 ): T[] {
+  const scoreOf = (post: T) => engagementScore(post) + (bonusOf?.(post) ?? 0);
   return [...posts].sort((a, b) => {
-    const diff = engagementScore(b) - engagementScore(a);
+    const diff = scoreOf(b) - scoreOf(a);
     return diff !== 0 ? diff : b.createdAt.getTime() - a.createdAt.getTime();
   });
+}
+
+/** Ordena por puntuación descendente y, a igualdad, conservando el orden de entrada. */
+export function rankByScore<T>(candidates: T[], scoreOf: (candidate: T) => number): T[] {
+  return candidates
+    .map((item, index) => ({ item, index, score: scoreOf(item) }))
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map((entry) => entry.item);
 }
 
 /** Texto relativo corto ("ahora", "hace 5 min"…). */
@@ -304,10 +319,7 @@ export const POST_GALLERY_MAX = 4;
  * palabras. La resolución contra perfiles reales la hace la acción, que ignora
  * lo que no exista.
  */
-export function extractMentions(
-  text: string | null | undefined,
-  limit = 5
-): string[] {
+export function extractMentions(text: string | null | undefined, limit = 5): string[] {
   if (!text) return [];
 
   const found: string[] = [];
@@ -323,8 +335,9 @@ export function extractMentions(
 
 /** Reparto de votos de una encuesta (mismo orden que las opciones). */
 export function countPollVotes(optionCount: number, votes: { optionIndex: number }[]): number[] {
-  return Array.from({ length: optionCount }, (_value, index) =>
-    votes.filter((vote) => vote.optionIndex === index).length
+  return Array.from(
+    { length: optionCount },
+    (_value, index) => votes.filter((vote) => vote.optionIndex === index).length
   );
 }
 

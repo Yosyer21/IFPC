@@ -27,6 +27,7 @@ const SEED = {
   highlights: 'Mis mejores jugadas de la temporada',
   becas: 'Becas deportivas 2026',
   torneo: 'torneo regional',
+  club: 'Buscamos lateral izquierdo sub-17',
 };
 
 /** PNG 1×1 válido: el compositor valida tipo y tamaño del archivo. */
@@ -63,6 +64,51 @@ function feedTabs(page: Page) {
 
 async function openFeed(page: Page) {
   await page.goto(`${BASE}/dashboard/discovery`);
+}
+
+/**
+ * Deja la preferencia del perfil abierto en el estado pedido. Los botones son
+ * interruptores (pulsar el activo quita la marca), así que primero se normaliza.
+ * Reintenta porque el primer clic puede perderse antes de hidratar.
+ */
+async function setPreference(page: Page, label: 'Ver más' | 'Ver menos') {
+  await expect(async () => {
+    const active = page.getByRole('button', { name: `✓ ${label}` });
+    if ((await active.count()) > 0) {
+      await active
+        .first()
+        .click({ timeout: 8_000 })
+        .catch(() => undefined);
+      await expect(page.getByRole('button', { name: label, exact: true })).toBeVisible({
+        timeout: 8_000,
+      });
+      return;
+    }
+
+    await page
+      .getByRole('button', { name: label, exact: true })
+      .click({ timeout: 8_000 })
+      .catch(() => undefined);
+    await expect(active.first()).toBeVisible({ timeout: 8_000 });
+  }).toPass({ timeout: 45_000, intervals: [1_000] });
+}
+
+/** Quita las preferencias del perfil abierto (deja los datos del seed intactos). */
+async function clearPreference(page: Page) {
+  await expect(async () => {
+    for (const label of ['Ver más', 'Ver menos'] as const) {
+      const active = page.getByRole('button', { name: `✓ ${label}` });
+      if ((await active.count()) === 0) continue;
+
+      await active
+        .first()
+        .click({ timeout: 8_000 })
+        .catch(() => undefined);
+    }
+
+    // Si el clic se perdió antes de hidratar, la marca sigue puesta: se reintenta.
+    await expect(page.locator('button:has-text("✓ Ver")')).toHaveCount(0, { timeout: 8_000 });
+  }).toPass({ timeout: 45_000, intervals: [1_000] });
 }
 
 /** Publica desde el compositor y espera a verla en el feed. */
@@ -271,4 +317,52 @@ test('espejo público: solo lectura, pestañas públicas y SEO', async ({ page }
   // El detalle público también responde (es la URL que se comparte).
   await page.goto(`${BASE}/discovery/seed-post-2`);
   await expect(page.getByText(SEED.highlights).first()).toBeVisible({ timeout: 20_000 });
+});
+
+test('siguiendo y preferencias: el ranking sigue a quién sigues y a tus marcas', async ({
+  page,
+}) => {
+  await login(page);
+
+  // Página de seguimientos: a quién sigues (organizaciones y personas) y quién te sigue.
+  await page.goto(`${BASE}/dashboard/discovery/following`);
+  await expect(page.getByRole('heading', { name: 'Siguiendo y preferencias' })).toBeVisible();
+  await expect(page.getByText('A quién sigues')).toBeVisible();
+  await expect(page.getByText('Quién te sigue')).toBeVisible();
+  await expect(page.getByText('Clubes, universidades y escuelas')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Demo Club' }).first()).toBeVisible();
+
+  // Desde el perfil del club se pide «ver menos».
+  await page.getByRole('link', { name: 'Demo Club' }).first().click();
+  await expect(page).toHaveURL(/\/dashboard\/discovery\/u\//);
+  const profileUrl = page.url();
+  await expect(page.getByRole('heading', { name: 'Demo Club' })).toBeVisible();
+
+  await setPreference(page, 'Ver menos');
+  await expect(page.getByText(/salen de «Para ti» y «Tendencias»/)).toBeVisible({
+    timeout: 20_000,
+  });
+
+  // Fuera de los listados rankeados…
+  for (const tab of ['foryou', 'trending']) {
+    await page.goto(`${BASE}/dashboard/discovery?tab=${tab}`);
+    await expect(page.locator('.animate-fade-up').first()).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText(SEED.club)).toHaveCount(0);
+  }
+
+  // …pero sigue en el cronológico (las preferencias no censuran, solo ordenan).
+  await page.goto(`${BASE}/dashboard/discovery?tab=recent`);
+  await expect(postCard(page, SEED.club)).toBeVisible({ timeout: 20_000 });
+
+  // La marca queda a la vista y se puede quitar desde la página de seguimientos.
+  await page.goto(`${BASE}/dashboard/discovery/following`);
+  await expect(page.getByRole('button', { name: 'Demo Club ✕' })).toBeVisible({ timeout: 20_000 });
+
+  // Al quitarla vuelve a los dos listados rankeados.
+  await page.goto(profileUrl);
+  await clearPreference(page);
+  for (const tab of ['foryou', 'trending']) {
+    await page.goto(`${BASE}/dashboard/discovery?tab=${tab}`);
+    await expect(postCard(page, SEED.club)).toBeVisible({ timeout: 20_000 });
+  }
 });

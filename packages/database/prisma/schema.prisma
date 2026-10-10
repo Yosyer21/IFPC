@@ -126,6 +126,8 @@ model User {
   privacyReceived   PrivacyRule[] @relation("PrivacyTarget")
   pollVotes         PostPollVote[]
   notInterested     PostNotInterested[]
+  authorPreferences AuthorPreference[] @relation("AuthorPreferenceOwner")
+  preferenceAbout   AuthorPreference[] @relation("AuthorPreferenceAuthor")
 
   @@index([role])
 }
@@ -1021,6 +1023,25 @@ model PostNotInterested {
 
   @@unique([postId, userId])
   @@index([userId])
+}
+
+/// Preferencia del espectador sobre un autor (`MORE` = ver más, `LESS` = ver
+/// menos). Es la parte explícita del sistema de preferencias: seguir a alguien ya
+/// cuenta como "ver más" implícito, y esto lo afina. No oculta el contenido de
+/// los listados cronológicos (Recientes y Siguiendo), solo cambia el orden de los
+/// rankeados (Para ti y Tendencias).
+model AuthorPreference {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("AuthorPreferenceOwner", fields: [userId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation("AuthorPreferenceAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  kind      String // MORE | LESS
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, authorId])
+  @@index([userId, kind])
 }
 
 /// Preferencias de privacidad entre perfiles: bloquear (no nos vemos ni

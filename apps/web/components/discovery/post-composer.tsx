@@ -12,7 +12,6 @@ import {
   IconImage,
   IconImages,
 } from '@/components/dashboard/icons';
-import { POST_GALLERY_MAX } from '@/lib/discovery-content';
 import { COMMENTS_POLICY_LABELS } from '@/lib/labels';
 
 const fieldClass =

@@ -35,6 +35,8 @@ const mocks = vi.hoisted(() => ({
   notInterestedFindMany: vi.fn(),
   notInterestedUpsert: vi.fn(),
   notInterestedDeleteMany: vi.fn(),
+  preferenceUpsert: vi.fn(),
+  preferenceDeleteMany: vi.fn(),
   revalidatePaths: vi.fn(),
   notifyUser: vi.fn(),
   notifyGrouped: vi.fn(),
@@ -84,6 +86,10 @@ vi.mock('@ifpc/database', () => ({
       delete: mocks.privacyDelete,
     },
     user: { findUnique: mocks.userFindUnique },
+    authorPreference: {
+      upsert: mocks.preferenceUpsert,
+      deleteMany: mocks.preferenceDeleteMany,
+    },
     postNotInterested: {
       findMany: mocks.notInterestedFindMany,
       upsert: mocks.notInterestedUpsert,
@@ -109,6 +115,7 @@ import {
   deletePostAction,
   moderatePostAction,
   notInterestedAction,
+  setAuthorPreferenceAction,
   pinPostAction,
   reportPostAction,
   resolveReportsAction,
@@ -172,6 +179,8 @@ beforeEach(() => {
   mocks.notInterestedFindMany.mockResolvedValue([]);
   mocks.notInterestedUpsert.mockResolvedValue({});
   mocks.notInterestedDeleteMany.mockResolvedValue({ count: 1 });
+  mocks.preferenceUpsert.mockResolvedValue({});
+  mocks.preferenceDeleteMany.mockResolvedValue({ count: 1 });
   mocks.notifyGrouped.mockResolvedValue(undefined);
   mocks.mkdir.mockResolvedValue(undefined);
   mocks.writeFile.mockResolvedValue(undefined);
@@ -882,6 +891,55 @@ describe('resolveReportsAction', () => {
 
     await resolveReportsAction(form({ postId: 'post-1' }));
     expect(mocks.moderationLogCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('setAuthorPreferenceAction', () => {
+  it('no hace nada sin sesión', async () => {
+    mocks.auth.mockResolvedValue(null);
+
+    await setAuthorPreferenceAction(form({ userId: 'autor-1', kind: 'MORE' }));
+
+    expect(mocks.preferenceUpsert).not.toHaveBeenCalled();
+  });
+
+  it('ignora autores que no existen', async () => {
+    mocks.userFindUnique.mockResolvedValue(null);
+
+    await setAuthorPreferenceAction(form({ userId: 'fantasma', kind: 'MORE' }));
+
+    expect(mocks.preferenceUpsert).not.toHaveBeenCalled();
+  });
+
+  it('con un valor desconocido no toca nada', async () => {
+    await setAuthorPreferenceAction(form({ userId: 'autor-1', kind: 'RARO' }));
+
+    expect(mocks.preferenceUpsert).not.toHaveBeenCalled();
+    expect(mocks.preferenceDeleteMany).not.toHaveBeenCalled();
+  });
+
+  it('guarda «ver más» y revalida feed, siguiendo y perfil', async () => {
+    await setAuthorPreferenceAction(form({ userId: 'autor-1', kind: 'MORE' }));
+
+    expect(mocks.preferenceUpsert).toHaveBeenCalledWith({
+      where: { userId_authorId: { userId: 'user-1', authorId: 'autor-1' } },
+      create: { userId: 'user-1', authorId: 'autor-1', kind: 'MORE' },
+      update: { kind: 'MORE' },
+    });
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith(
+      '/dashboard/discovery',
+      '/dashboard/discovery/following',
+      '/dashboard/discovery/u/autor-1'
+    );
+  });
+
+  it('con kind vacío quita la preferencia', async () => {
+    await setAuthorPreferenceAction(form({ userId: 'autor-1', kind: '' }));
+
+    expect(mocks.preferenceDeleteMany).toHaveBeenCalledWith({
+      where: { userId: 'user-1', authorId: 'autor-1' },
+    });
+    expect(mocks.preferenceUpsert).not.toHaveBeenCalled();
   });
 });
 

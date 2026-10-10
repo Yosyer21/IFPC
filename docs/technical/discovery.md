@@ -15,6 +15,7 @@ Cuelga de `User` (no de `Player`) para que **cualquier rol** pueda publicar.
 | `PostReport`        | Denuncia (una por persona y publicación); `resolvedAt` marca las atendidas.                                |
 | `ModerationLog`     | Traza de moderación: actor, `postId`, acción y notas. `postId` no es relación, para sobrevivir al borrado. |
 | `Follow`            | Relación social: `followerId` → `followingId` (cualquier rol sigue a cualquiera).                          |
+| `AuthorPreference`  | Preferencia del espectador sobre un autor (`MORE`/`LESS`, `@@unique([userId, authorId])`).                 |
 
 Enums: `PostType` (`ANNOUNCEMENT · VIDEO · PHOTO · ACHIEVEMENT`) y `PostStatus`
 (`DRAFT · PUBLISHED · HIDDEN`; `HIDDEN` solo lo aplica un admin).
@@ -56,7 +57,9 @@ relación, para que borrar un usuario no arrastre métricas.
 - **Recientes**: `status = PUBLISHED` ordenado por `createdAt desc, id desc`,
   20 por página, cursor = id del último elemento.
 - **Tendencias**: candidatos de los últimos 30 días (máximo 60) puntuados en
-  memoria con `likes*3 + comments*2 + views`; una sola página.
+  memoria con `likes*3 + comments*2 + views`; una sola página. Con espectador, la
+  puntuación lleva el bonus de sus preferencias y a quien marcó «ver menos» no
+  entra (ver «Seguimientos y preferencias»).
 - **Siguiendo**: publicaciones de los perfiles seguidos **más las propias**
   (`OR` sobre `authorId`); sin seguir a nadie solo aparecen las tuyas.
 - **Anuncios / Vídeos**: filtran por `type`. **Etiqueta**: `tags: { has }`.
@@ -76,6 +79,45 @@ relación, para que borrar un usuario no arrastre métricas.
 - **Fijadas**: `listPinnedPosts` las trae aparte (máx. 3, por `pinnedAt desc`) y
   se pasan como `excludeIds` a `listFeed`, así que aparecen destacadas **una sola
   vez** y la paginación por cursor no se rompe.
+
+## Seguimientos y preferencias
+
+El sistema de preferencias tiene dos capas: **seguir a alguien ya es una
+preferencia** (impulso implícito) y encima el espectador puede afinarla autor por
+autor con «ver más» / «ver menos» (`AuthorPreference`).
+
+`apps/web/lib/discovery-preferences.ts`:
+
+- Puro: `isPreferenceKind` y `preferenceWeight({ isFollowed, preference })`, que
+  resuelve el peso de cada autor con `FEED_PREFERENCE_WEIGHTS`
+  (`@ifpc/config`: seguir `+30`, «ver más» `+15` encima, «ver menos» `-60` —
+  manda sobre el seguimiento).
+- Datos: `authorPreferences` (mapa `authorId → MORE|LESS`), `followedAuthorIds`,
+  `downrankedAuthorIds` (los «ver menos»), `feedPreferenceContext` (las dos cosas
+  en una consulta + `weightOf(authorId)` ya atado al espectador),
+  `setAuthorPreference`, `getAuthorPreference` y `listAuthorPreferences`.
+- Alcance: solo reordena los listados **rankeados**. «Recientes» y «Siguiendo»
+  siguen siendo cronológicos y **sí** muestran a quien marcaron «ver menos»: la
+  preferencia ordena, no censura (para ocultar hay «No me interesa», por
+  publicación, y bloquear/silenciar, en privacidad).
+- `AuthorPreference` cuelga de `User`, con `onDelete: Cascade` en las dos puntas
+  y sin efecto sobre uno mismo (la lib y la acción lo ignoran).
+
+Interfaz y acciones:
+
+- Página **`/dashboard/discovery/following`** («Siguiendo y preferencias»): chips
+  de «ver más» / «ver menos» (cada uno con su botón de quitar), «A quién sigues»
+  partido en organizaciones (club, universidad, escuela) y personas, «Quién te
+  sigue» con `ProfileCard`/`FollowButton` para devolver el seguimiento, y los
+  perfiles sugeridos. Usa `listFollowing` / `listFollowers` (esta última marca
+  `isFollowing` relativo al espectador) y `getFollowStats` para los contadores.
+- En el muro de un autor (`/dashboard/discovery/u/<userId>`): botones «Ver más» /
+  «Ver menos» que son **interruptores** (el activo lleva `✓` y al pulsarlo quita
+  la marca) más una línea que explica el efecto. El propio perfil enlaza «N
+  siguiendo» a la página de preferencias.
+- `setAuthorPreferenceAction` valida el `kind` (el campo vacío quita la marca,
+  un valor desconocido no toca nada), comprueba que el autor existe y revalida
+  feed, página de seguimientos y muro.
 
 ## Analítica
 
@@ -299,15 +341,20 @@ cada autor con contenido, y `app/robots.ts` bloquea `/dashboard`.
 
 - Puro: `relevanceForPlayer` (encaje entre el perfil del espectador y la
   oportunidad que comparte la publicación), `relevanceForOpportunities` (mejor
-  encaje del autor jugador con las oportunidades del espectador) y `rankForYou`
+  encaje del autor jugador con las oportunidades del espectador), `rankForYou`
   (los que superan el umbral `PLAYER_MATCH_THRESHOLD`, de mayor a menor, y
-  después el resto conservando el orden reciente).
+  después el resto conservando el orden reciente) y `rankForYouWithPreferences`
+  (lo mismo, pero sumando el peso de las preferencias dentro de cada tramo; en el
+  resto —sin encaje o por debajo del umbral— solo mandan las preferencias y, a
+  igualdad, la fecha).
 - Datos: `listForYouFeed` resuelve el contexto del espectador (`player` si es
   jugador; `recruiter` con sus oportunidades abiertas si es club o universidad;
   `none` en el resto) y una única consulta de candidatos (45 días, máx. 60), más
   una segunda consulta para los perfiles de jugador de los autores cuando hace
-  falta. Sin contexto puntuable **no se puntúa nada**: se devuelve el orden
-  reciente.
+  falta. Excluye a quien el espectador marcó «ver menos» y suma a cada candidato
+  el peso de sus preferencias (`feedPreferenceContext.weightOf`), así que sin
+  contexto puntuable **tampoco se inventa relevancia**: mandan el seguimiento y
+  las marcas explícitas y, a igualdad, la fecha.
 
 El resultado se muestra con `MatchScoreBadge` (`82% match`) en las publicaciones
 que encajan, así que la recomendación es explicable, no una caja negra.
@@ -380,7 +427,8 @@ lo que `pnpm db:seed` es idempotente.
 
 Las funciones puras y las consultas tienen su hueco en `tests/unit/discovery/*`
 (feed, privacidad, guardarraíles, recomendación, perfiles, moderación, analítica,
-interés, compositor) y las acciones en `tests/unit/actions/discovery-*.test.ts`.
+interés, preferencias, compositor) y las acciones en
+`tests/unit/actions/discovery-*.test.ts`.
 
 El recorrido de extremo a extremo vive en `tests/e2e/discovery-area.spec.ts`
 (Playwright, `pnpm e2e`) y cubre:
@@ -394,6 +442,9 @@ El recorrido de extremo a extremo vive en `tests/e2e/discovery-area.spec.ts`
 4. Borradores: guardar, publicar desde la tarjeta y borrar.
 5. Espejo público: solo lectura (sin compositor ni acciones de autor), solo
    pestañas públicas y SEO (`title` + `og:title`).
+6. Siguiendo y preferencias: la página de seguimientos, «ver menos» desde el muro
+   (sale de «Para ti» y «Tendencias», sigue en «Recientes»), el chip para quitarlo
+   y el regreso al ranking.
 
 Requiere la app levantada y los datos de demo (`pnpm db:seed`). Cada prueba crea
 sus publicaciones con un identificador único —el guardarraíl rechaza el mismo

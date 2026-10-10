@@ -12,6 +12,7 @@ export function ActionSubmit({
   confirmText,
   variant = 'outline',
   className = '',
+  title,
 }: {
   label: string;
   pendingLabel?: string;
@@ -19,6 +20,8 @@ export function ActionSubmit({
   confirmText?: string;
   variant?: 'outline' | 'primary' | 'danger' | 'ghost';
   className?: string;
+  /** Texto de ayuda al pasar el ratón (el nombre accesible es `label`). */
+  title?: string;
 }) {
   const { pending } = useFormStatus();
 
@@ -34,6 +37,7 @@ export function ActionSubmit({
     <button
       type="submit"
       disabled={pending}
+      title={title}
       onClick={
         confirmText
           ? (event) => {

@@ -3,6 +3,7 @@ import { prisma } from '@ifpc/database';
 import { DISCOVERY_PAGE_SIZE, DISCOVERY_SUGGESTED_PROFILES } from '@ifpc/config';
 import { hiddenAuthorIds } from './discovery-privacy';
 import { notInterestedPostIds } from './discovery-interest';
+import { downrankedAuthorIds, feedPreferenceContext } from './discovery-preferences';
 import {
   POST_INCLUDE,
   rankTrendingPosts,
@@ -86,16 +87,25 @@ export async function listFeed(input: {
 
   if (filters.tab === 'trending') {
     const since = new Date(Date.now() - TRENDING_DAYS * 24 * 60 * 60 * 1000);
+    // El ranking global se ajusta a las preferencias del espectador: a quien
+    // sigue y "ver más" suben, y "ver menos" no entra aquí (sí en Recientes).
+    const [preferences, downranked] = await Promise.all([
+      feedPreferenceContext(viewerId),
+      downrankedAuthorIds(viewerId),
+    ]);
+    const trendingWhere =
+      downranked.length > 0 ? { ...where, authorId: { notIn: [...hidden, ...downranked] } } : where;
+
     const rows = await prisma.post.findMany({
-      where: { ...where, createdAt: { gte: since } },
+      where: { ...trendingWhere, createdAt: { gte: since } },
       orderBy: { createdAt: 'desc' },
       take: TRENDING_WINDOW,
       include,
     });
-    const posts = rankTrendingPosts(rows.map((row) => toFeedPost(row, viewerId))).slice(
-      0,
-      DISCOVERY_PAGE_SIZE
-    );
+    const posts = rankTrendingPosts(
+      rows.map((row) => toFeedPost(row, viewerId)),
+      (post) => preferences.weightOf(post.author.id)
+    ).slice(0, DISCOVERY_PAGE_SIZE);
     return { posts, nextCursor: null };
   }
 
@@ -172,10 +182,7 @@ export async function listProfiles(input: {
 }
 
 /** Publicaciones fijadas por un admin (las más recientes primero). */
-export async function listPinnedPosts(
-  viewerId?: string | null,
-  limit = 3
-): Promise<FeedPost[]> {
+export async function listPinnedPosts(viewerId?: string | null, limit = 3): Promise<FeedPost[]> {
   const [hidden, hiddenPosts] = await Promise.all([
     hiddenAuthorIds(viewerId),
     notInterestedPostIds(viewerId),
@@ -291,7 +298,11 @@ export async function recordPostView(input: {
   try {
     await prisma.postView.upsert({
       where: { postId_viewerUserId: { postId: input.postId, viewerUserId: input.viewerUserId } },
-      update: { viewerRole: input.viewerRole, viewCount: { increment: 1 }, lastViewedAt: new Date() },
+      update: {
+        viewerRole: input.viewerRole,
+        viewCount: { increment: 1 },
+        lastViewedAt: new Date(),
+      },
       create: input,
     });
   } catch {
@@ -303,7 +314,10 @@ export async function recordPostView(input: {
  * Registra la apertura cuando hay sesión y el espectador no es el autor.
  * Se llama al renderizar el detalle de una publicación.
  */
-export async function trackPostView(input: { postId: string; authorUserId: string }): Promise<void> {
+export async function trackPostView(input: {
+  postId: string;
+  authorUserId: string;
+}): Promise<void> {
   const session = await auth();
   const viewer = session?.user;
   if (!viewer?.id || viewer.id === input.authorUserId) return;
@@ -459,4 +473,80 @@ export async function listSuggestedProfiles(
       },
     ];
   });
+}
+
+/** Resúmenes de perfil (con seguimiento del espectador) conservando el orden de los ids. */
+async function profileSummaries(
+  ids: string[],
+  viewerId?: string | null
+): Promise<ProfileSummary[]> {
+  if (ids.length === 0) return [];
+
+  const users = await prisma.user.findMany({
+    where: { id: { in: ids } },
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      image: true,
+      _count: { select: { posts: true, followers: true } },
+    },
+  });
+
+  const follows = viewerId
+    ? await prisma.follow.findMany({
+        where: { followerId: viewerId, followingId: { in: ids } },
+        select: { followingId: true },
+      })
+    : [];
+  const followed = new Set(follows.map((follow) => follow.followingId));
+  const byId = new Map(users.map((user) => [user.id, user]));
+
+  return ids.flatMap((id) => {
+    const user = byId.get(id);
+    if (!user) return [];
+    return [
+      {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        image: user.image,
+        posts: user._count.posts,
+        followers: user._count.followers,
+        isFollowing: followed.has(user.id),
+      },
+    ];
+  });
+}
+
+/** Perfiles que sigue un usuario, de la relación más reciente a la más antigua. */
+export async function listFollowing(
+  userId: string,
+  viewerId?: string | null
+): Promise<ProfileSummary[]> {
+  const rows = await prisma.follow.findMany({
+    where: { followerId: userId },
+    orderBy: { createdAt: 'desc' },
+    select: { followingId: true },
+  });
+  return profileSummaries(
+    rows.map((row) => row.followingId),
+    viewerId ?? userId
+  );
+}
+
+/** Perfiles que siguen a un usuario, del seguimiento más reciente al más antiguo. */
+export async function listFollowers(
+  userId: string,
+  viewerId?: string | null
+): Promise<ProfileSummary[]> {
+  const rows = await prisma.follow.findMany({
+    where: { followingId: userId },
+    orderBy: { createdAt: 'desc' },
+    select: { followerId: true },
+  });
+  return profileSummaries(
+    rows.map((row) => row.followerId),
+    viewerId ?? userId
+  );
 }

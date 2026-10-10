@@ -86,6 +86,28 @@ badge (`82% match`) en las publicaciones que encajan.
 - El resto de perfiles (familias, entrenadores, ojeadores, escuelas, admin) ven
   el feed reciente: no se inventa una relevancia que no se puede calcular.
 
+Además, el ranking **respeta a quién sigues**: en «Para ti» y «Tendencias» las
+publicaciones de los perfiles que sigues suben, y cualquiera puede afinar sus
+preferencias con «ver más» / «ver menos» (ver el apartado siguiente). En
+«Recientes» y «Siguiendo» el orden es cronológico de verdad: las preferencias no
+ocultan nada ahí.
+
+## Siguiendo y preferencias
+
+En **`/dashboard/discovery/following`** (enlace «Siguiendo y preferencias →» de la
+cabecera del feed) se ve:
+
+- **A quién sigues**, separado en clubes/universidades/escuelas y personas, con el
+  botón para dejar de seguir en cada tarjeta.
+- **Quién te sigue**, con el botón para devolver el seguimiento (o seguir).
+- **Tus preferencias**: chips de «ver más» y «ver menos» con un clic para quitarlos.
+- Perfiles sugeridos (los más seguidos que aún no sigues).
+
+Las preferencias se marcan en el muro de cada perfil (`/dashboard/discovery/u/<id>`):
+«Ver más» lo sube en los listados ordenados por relevancia; «Ver menos» lo saca de
+ellos (sigue apareciendo en «Recientes» y «Siguiendo», porque ahí manda la fecha).
+Es reversible en cualquier momento y solo afecta a tu feed.
+
 ## Flujos
 
 1. Entrar en **Discovery** desde el sidebar de cualquier área (primera sección).
@@ -95,6 +117,9 @@ badge (`82% match`) en las publicaciones que encajan.
 4. Tocar el nombre o el avatar de un autor para ver su muro
    (`/dashboard/discovery/u/<userId>`).
 5. Tocar una etiqueta para filtrar el feed por `#etiqueta`.
+6. Gestionar la red desde «Siguiendo y preferencias →»
+   (`/dashboard/discovery/following`): ver a quién sigues (clubes y personas),
+   quién te sigue y afinar tus preferencias.
 
 ## Espejo público (`/discovery`)
 

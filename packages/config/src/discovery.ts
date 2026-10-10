@@ -68,6 +68,27 @@ export const DISCOVERY_FORYOU_DAYS = 45;
  */
 export const DISCOVERY_RECRUITER_ROLES = ['CLUB', 'UNIVERSITY'] as const;
 
+/** Preferencias del espectador sobre autores: "ver más" y "ver menos". */
+export const AUTHOR_PREFERENCE_KINDS = ['MORE', 'LESS'] as const;
+export type AuthorPreferenceKind = (typeof AUTHOR_PREFERENCE_KINDS)[number];
+
+export const AUTHOR_PREFERENCE_LABELS: Record<string, string> = {
+  MORE: 'Ver más',
+  LESS: 'Ver menos',
+};
+
+/**
+ * Pesos del sistema de preferencias para los listados rankeados ("Para ti" y
+ * "Tendencias"). Seguir a alguien ya es una preferencia implícita y pesa más que
+ * marcarlo a mano como "ver más"; "ver menos" penaliza lo suficiente para que sus
+ * publicaciones caigan al final (y quedan excluidas de esos dos listados).
+ */
+export const FEED_PREFERENCE_WEIGHTS = {
+  followed: 30,
+  more: 15,
+  less: -60,
+} as const;
+
 /** Límites anti-abuso del feed (por usuario y ventana de una hora). */
 export const FEED_RATE_LIMITS = {
   postsPerHour: 10,

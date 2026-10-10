@@ -33,6 +33,7 @@ import {
 } from '@/lib/discovery-privacy';
 import { listFeed } from '@/lib/discovery';
 import { setNotInterested } from '@/lib/discovery-interest';
+import { isPreferenceKind, setAuthorPreference } from '@/lib/discovery-preferences';
 import {
   GUARDRAIL_MESSAGES,
   containsBannedWord,
@@ -340,6 +341,40 @@ export async function createPostAction(
   }
 
   redirect('/dashboard/discovery');
+}
+
+/**
+ * Guarda, cambia o quita la preferencia del espectador sobre un autor
+ * («ver más» / «ver menos»). Con `kind` vacío se borra la marca.
+ */
+export async function setAuthorPreferenceAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+
+  const authorId = str(formData, 'userId');
+  if (!authorId) return;
+
+  // `str()` convierte el vacío en `null`, y aquí el campo vacío significa «quitar
+  // la preferencia»: se lee tal cual para poder distinguirlo de un campo ausente.
+  const kindField = formData.get('kind');
+  const raw = typeof kindField === 'string' ? kindField.trim() : null;
+  if (raw === null) return;
+
+  const kind = raw === '' ? null : isPreferenceKind(raw) ? raw : undefined;
+  // Valor desconocido: mejor no tocar nada que guardar basura.
+  if (kind === undefined) return;
+
+  const author = await prisma.user.findUnique({ where: { id: authorId }, select: { id: true } });
+  if (!author) return;
+
+  await setAuthorPreference({ userId, authorId, kind });
+
+  revalidatePaths(
+    '/dashboard/discovery',
+    '/dashboard/discovery/following',
+    `/dashboard/discovery/u/${authorId}`
+  );
 }
 
 /** Marca o desmarca una publicación como "no me interesa" (solo quien la ve). */

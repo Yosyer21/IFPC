@@ -9,6 +9,7 @@ import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from './matching';
 import { toFeedPost, type FeedPost } from './discovery';
 import { hiddenAuthorIds } from './discovery-privacy';
 import { notInterestedPostIds } from './discovery-interest';
+import { downrankedAuthorIds, feedPreferenceContext } from './discovery-preferences';
 
 /**
  * "Para ti": ordena el feed con el motor de matching que ya usan las
@@ -86,6 +87,34 @@ export function rankForYou<T>(
   return [...matches, ...rest].map((entry) => entry.item);
 }
 
+/**
+ * Ordena "Para ti" combinando el encaje del matching con el sistema de
+ * preferencias: primero lo que supera el umbral (de mayor a menor encaje **más
+ * preferencias**), y después el resto, donde solo mandan las preferencias y, a
+ * igualdad, la fecha (el orden de entrada, que ya viene por fecha). Sin
+ * preferencias, el resultado es el de siempre.
+ */
+export function rankForYouWithPreferences<T>(
+  candidates: T[],
+  scoreOf: (candidate: T) => { relevance: number | null; preference: number },
+  threshold: number = PLAYER_MATCH_THRESHOLD
+): T[] {
+  const entries = candidates.map((item, index) => ({ item, index, ...scoreOf(item) }));
+
+  const matches = entries
+    .filter((entry) => entry.relevance !== null && entry.relevance >= threshold)
+    .sort(
+      (a, b) =>
+        (b.relevance ?? 0) + b.preference - ((a.relevance ?? 0) + a.preference) || a.index - b.index
+    );
+
+  const rest = entries
+    .filter((entry) => entry.relevance === null || entry.relevance < threshold)
+    .sort((a, b) => b.preference - a.preference || a.index - b.index);
+
+  return [...matches, ...rest].map((entry) => entry.item);
+}
+
 // ---------------------------------------------------------------------------
 // Consultas
 // ---------------------------------------------------------------------------
@@ -146,17 +175,21 @@ export async function listForYouFeed(input: {
   viewerRole: string;
 }): Promise<FeedPost[]> {
   const since = new Date(Date.now() - DISCOVERY_FORYOU_DAYS * 24 * 60 * 60 * 1000);
-  // Lo bloqueado o silenciado por el espectador tampoco entra en "Para ti".
-  const [hidden, hiddenPosts] = await Promise.all([
+  // Lo bloqueado o silenciado por el espectador tampoco entra en "Para ti"; a
+  // quien marcó "ver menos" se le deja fuera de este listado.
+  const [hidden, hiddenPosts, preferences, downranked] = await Promise.all([
     hiddenAuthorIds(input.viewerId),
     notInterestedPostIds(input.viewerId),
+    feedPreferenceContext(input.viewerId),
+    downrankedAuthorIds(input.viewerId),
   ]);
+  const excludedAuthors = [...hidden, ...downranked];
 
   const rows = await prisma.post.findMany({
     where: {
       status: 'PUBLISHED',
       createdAt: { gte: since },
-      ...(hidden.length > 0 ? { authorId: { notIn: hidden } } : {}),
+      ...(excludedAuthors.length > 0 ? { authorId: { notIn: excludedAuthors } } : {}),
       ...(hiddenPosts.length > 0 ? { id: { notIn: hiddenPosts } } : {}),
     },
     orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
@@ -172,9 +205,6 @@ export async function listForYouFeed(input: {
   });
 
   const context = await viewerContext(input);
-  if (context.kind === 'none') {
-    return rows.slice(0, DISCOVERY_PAGE_SIZE).map((row) => toFeedPost(row, input.viewerId));
-  }
 
   // Para el caso reclutador hace falta el perfil de jugador de cada autor.
   const authorIds = [...new Set(rows.map((row) => row.author.id))];
@@ -194,14 +224,26 @@ export async function listForYouFeed(input: {
       : [];
   const authorsById = new Map(authors.map((author) => [author.userId, author]));
 
+  // El encaje del motor de matching se suma al sistema de preferencias: a quien
+  // sigues (o pides "ver más") sube dentro de su tramo. Sin contexto puntuable
+  // solo mandan las preferencias y, a igualdad, la fecha.
   const scored = rows.map((row) => {
     const relevance =
       context.kind === 'player'
         ? relevanceForPlayer(row.opportunity, context.player)
-        : relevanceForOpportunities(authorsById.get(row.author.id) ?? null, context.opportunities);
+        : context.kind === 'recruiter'
+          ? relevanceForOpportunities(authorsById.get(row.author.id) ?? null, context.opportunities)
+          : null;
 
-    return { ...toFeedPost(row, input.viewerId), relevance };
+    return {
+      ...toFeedPost(row, input.viewerId),
+      relevance,
+      preference: preferences.weightOf(row.author.id),
+    };
   });
 
-  return rankForYou(scored, (post) => post.relevance ?? null).slice(0, DISCOVERY_PAGE_SIZE);
+  return rankForYouWithPreferences(scored, (post) => ({
+    relevance: post.relevance,
+    preference: post.preference,
+  })).slice(0, DISCOVERY_PAGE_SIZE);
 }
