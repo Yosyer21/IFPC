@@ -12,16 +12,16 @@ usa `dark` de forma permanente (`apps/web/app/layout.tsx` → `<html className="
 
 ## Utilidades globales (`globals.css`)
 
-| Utilidad            | Uso                                                    |
-| ------------------- | ------------------------------------------------------ |
-| `.glass-card`       | Panel translúcido + blur + borde. Usado por `Card`.    |
-| `.app-ambient`      | Fondo con degradados radiales emerald/cyan/lime.       |
-| `.bg-grid-faint`    | Rejilla sutil de fondo.                                |
-| `.chip-gradient`    | Chip de icono / item activo del sidebar.               |
-| `.text-gradient-brand` | Wordmark y títulos con degradado de marca.          |
-| `.card-hover`       | Elevación y borde en hover para tarjetas enlazadas.    |
-| `.glow`             | Halo emerald para CTAs.                                |
-| `.reveal` / `.animate-*` | Animaciones de entrada (fade-up, drift, marquee…). |
+| Utilidad                 | Uso                                                 |
+| ------------------------ | --------------------------------------------------- |
+| `.glass-card`            | Panel translúcido + blur + borde. Usado por `Card`. |
+| `.app-ambient`           | Fondo con degradados radiales emerald/cyan/lime.    |
+| `.bg-grid-faint`         | Rejilla sutil de fondo.                             |
+| `.chip-gradient`         | Chip de icono / item activo del sidebar.            |
+| `.text-gradient-brand`   | Wordmark y títulos con degradado de marca.          |
+| `.card-hover`            | Elevación y borde en hover para tarjetas enlazadas. |
+| `.glow`                  | Halo emerald para CTAs.                             |
+| `.reveal` / `.animate-*` | Animaciones de entrada (fade-up, drift, marquee…).  |
 
 ## Componentes compartidos (el punto de propagación)
 
@@ -33,6 +33,8 @@ Cambiar estos archivos reestiliza **toda** la app:
 - `apps/web/components/player/stat-card.tsx` — KPIs.
 - `apps/web/components/dashboard/sidebar.tsx` + `nav.ts` — navegación lateral.
 - `apps/web/components/discovery/*` — composer, tarjeta de publicación, comentarios y pestañas del feed.
+- `apps/web/components/player/profile-header.tsx` + `profile-checklist-card.tsx` — cabecera
+  personalizable del perfil (portada, acento, titular y chips) y checklist de fuerza.
 - `apps/web/app/dashboard/layout.tsx` — fondo ambiental del área privada.
 - `apps/web/app/(auth)/layout.tsx` — tarjeta glass de login/registro/onboarding.
 

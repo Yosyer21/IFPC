@@ -22,7 +22,7 @@ test('Agent: workspace, pipeline and new pages without 404', async ({ page }) =>
   await expect(page.getByText('Recent activity')).toBeVisible();
 
   // 2. Sidebar with Submissions (renamed)
-  await page.getByRole('button', { name: 'Reclutamiento' }).click();
+  await page.getByRole('button', { name: 'Recruitment' }).click();
   await expect(
     page.locator('aside').getByRole('link', { name: 'Submissions', exact: true }).first()
   ).toBeVisible();

@@ -2,13 +2,22 @@
 
 import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
-import { PLAYER_STATUSES, type PlayerStatus } from '@ifpc/config';
+import {
+  PLAYER_STATUSES,
+  PROFILE_BANNER_MAX_BYTES,
+  PROFILE_BANNER_MIME_EXT,
+  resolveProfileAccent,
+  sanitizeProfileOpenTo,
+  type PlayerStatus,
+} from '@ifpc/config';
 import { prisma } from '@ifpc/database';
 import { careerEntrySchema, playerProfileSchema } from '@ifpc/validation';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { ActionState } from './auth';
 import { notifyUser } from '@/lib/notifications/notify';
+import { dashboardPath } from '@/lib/safe-redirect';
+import { resolveStorage } from '@/lib/storage';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -43,6 +52,12 @@ export async function updatePlayerProfileAction(
     competitionLevel: str(formData, 'competitionLevel'),
     bio: str(formData, 'bio'),
     clubName: str(formData, 'clubName'),
+    headline: str(formData, 'headline'),
+    location: str(formData, 'location'),
+    // Personalización: el acento se normaliza contra la paleta permitida y los
+    // chips contra `PROFILE_OPEN_TO` (se descarta lo desconocido y se corta al máximo).
+    accentColor: resolveProfileAccent(str(formData, 'accentColor')),
+    openTo: sanitizeProfileOpenTo(formData.getAll('openTo')),
   });
   if (!parsed.success) {
     return { error: 'Please review the profile data.' };
@@ -59,6 +74,77 @@ export async function updatePlayerProfileAction(
   }
 
   redirect('/dashboard/player/profile');
+}
+
+/** Prefijo de las portadas dentro del almacén (`/uploads/banners/...` en disco). */
+const BANNER_KEY_PREFIX = 'banners/';
+
+/**
+ * Sube o reemplaza la portada del perfil (`Player.bannerUrl`). Pasa por
+ * `resolveStorage()`, así que funciona igual con el disco y con S3 (ver
+ * `apps/web/lib/storage`).
+ */
+export async function updateProfileBannerAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const file = formData.get('file');
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: 'Selecciona una imagen.' };
+  }
+  const ext = PROFILE_BANNER_MIME_EXT[file.type];
+  if (!ext) {
+    return { error: 'Only JPG, PNG or WebP images are allowed.' };
+  }
+  if (file.size > PROFILE_BANNER_MAX_BYTES) {
+    return { error: 'La imagen debe pesar menos de 4 MB.' };
+  }
+
+  const player = await prisma.player.findUnique({
+    where: { userId: session.user.id },
+    select: { bannerUrl: true },
+  });
+  if (!player) {
+    return { error: 'Profile de jugador no encontrado.' };
+  }
+
+  const storage = resolveStorage();
+  try {
+    const { url } = await storage.save({
+      key: `${BANNER_KEY_PREFIX}${crypto.randomUUID()}.${ext}`,
+      body: Buffer.from(await file.arrayBuffer()),
+      contentType: file.type,
+    });
+    await prisma.player.update({ where: { userId: session.user.id }, data: { bannerUrl: url } });
+    // La portada anterior se borra cuando la nueva ya está guardada (best-effort).
+    await storage.remove(player.bannerUrl);
+  } catch {
+    return { error: 'No se pudo guardar la portada.' };
+  }
+
+  redirect(dashboardPath(formData.get('redirectTo')));
+}
+
+/** Quita la portada del perfil y borra el fichero del almacén (best-effort). */
+export async function removeProfileBannerAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return;
+  }
+
+  const player = await prisma.player.findUnique({
+    where: { userId: session.user.id },
+    select: { bannerUrl: true },
+  });
+  await prisma.player.update({ where: { userId: session.user.id }, data: { bannerUrl: null } });
+  await resolveStorage().remove(player?.bannerUrl ?? null);
+
+  redirect(dashboardPath(formData.get('redirectTo')));
 }
 
 export async function updatePlayerStatusAction(

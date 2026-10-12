@@ -23,7 +23,7 @@ test('Club: centro de reclutamiento y bandeja de solicitudes', async ({ page }) 
   await expect(page.getByText('Recent activity').first()).toBeVisible();
 
   // 2. Sidebar with the new Applications section
-  await page.getByRole('button', { name: 'Reclutamiento' }).click();
+  await page.getByRole('button', { name: 'Recruitment' }).click();
   await expect(page.getByRole('link', { name: 'Applications', exact: true })).toBeVisible();
 
   // 3. Bandeja de solicitudes

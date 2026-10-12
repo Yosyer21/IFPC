@@ -64,12 +64,53 @@ describe('playerProfileSchema', () => {
   });
 
   it('rechaza una altura fuera de rango', () => {
-    const result = playerProfileSchema.safeParse({ firstName: 'Ana', lastName: 'G', heightCm: 300 });
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      heightCm: 300,
+    });
     expect(result.success).toBe(false);
   });
 
   it('rechaza un peso fuera de rango', () => {
     const result = playerProfileSchema.safeParse({ firstName: 'Ana', lastName: 'G', weightKg: 20 });
+    expect(result.success).toBe(false);
+  });
+
+  it('acepta los campos de personalización', () => {
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      headline: 'Interior zurda',
+      location: 'Valencia, España',
+      accentColor: 'violet',
+      openTo: ['CLUB', 'TRIAL'],
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rechaza un titular o una ubicación demasiado largos', () => {
+    const headline = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      headline: 'x'.repeat(121),
+    });
+    expect(headline.success).toBe(false);
+
+    const location = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      location: 'x'.repeat(81),
+    });
+    expect(location.success).toBe(false);
+  });
+
+  it('rechaza más chips de disponibilidad de los permitidos', () => {
+    const result = playerProfileSchema.safeParse({
+      firstName: 'Ana',
+      lastName: 'G',
+      openTo: ['A', 'B', 'C', 'D', 'E', 'F'],
+    });
     expect(result.success).toBe(false);
   });
 

@@ -1,4 +1,8 @@
-import { profileCompletionPercentage } from '@ifpc/config';
+import {
+  profileChecklistScore,
+  profileCompletionPercentage,
+  type ProfileChecklistState,
+} from '@ifpc/config';
 import type { Player } from '@ifpc/types';
 
 /**
@@ -48,4 +52,45 @@ export function playerProfileCompletion(player: PlayerCompletionFields): {
   const fields = playerProfileFields(player);
   const completed = fields.filter(Boolean).length;
   return { percent: profileCompletionPercentage(fields), completed, total: fields.length };
+}
+
+/** Datos que no son columnas de `Player` pero completan la checklist. */
+export interface PlayerChecklistExtras {
+  /** `User.image`: la foto de perfil. */
+  image?: string | null;
+  /** Nº de vídeos subidos por el jugador. */
+  videoCount?: number;
+  /** Nº de temporadas de la trayectoria (`CareerEntry`). */
+  careerCount?: number;
+}
+
+type PlayerChecklistFields = PlayerCompletionFields & {
+  headline?: string | null;
+  bannerUrl?: string | null;
+};
+
+/**
+ * Fuerza del perfil: la checklist ponderada de `PROFILE_CHECKLIST` aplicada a
+ * los datos reales del jugador. `next` es el pendiente de más peso: el
+ * «siguiente mejor paso» que la UI ofrece como CTA.
+ */
+export function playerProfileChecklist(
+  player: PlayerChecklistFields & PlayerChecklistExtras
+): ProfileChecklistState {
+  return profileChecklistScore({
+    name: Boolean(player.firstName.trim() && player.lastName.trim()),
+    dateOfBirth: Boolean(player.dateOfBirth),
+    nationality: Boolean(player.nationality),
+    position: Boolean(player.position),
+    foot: Boolean(player.foot),
+    competitionLevel: Boolean(player.competitionLevel),
+    physicalData: Boolean(player.heightCm && player.weightKg),
+    clubName: Boolean(player.clubName),
+    bio: Boolean(player.bio),
+    photo: Boolean(player.image),
+    banner: Boolean(player.bannerUrl),
+    headline: Boolean(player.headline),
+    video: (player.videoCount ?? 0) > 0,
+    career: (player.careerCount ?? 0) > 0,
+  });
 }

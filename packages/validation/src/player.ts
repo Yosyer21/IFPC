@@ -27,13 +27,10 @@ const birthDateSchema = z
   .trim()
   .regex(/^\d{4}-\d{2}-\d{2}/, 'Use the YYYY-MM-DD format')
   .refine((value) => !Number.isNaN(new Date(value).getTime()), 'Invalid date')
-  .refine(
-    (value) => {
-      const age = ageInYears(new Date(value));
-      return age >= MIN_AGE_YEARS && age <= MAX_AGE_YEARS;
-    },
-    `Age must be between ${MIN_AGE_YEARS} and ${MAX_AGE_YEARS}`
-  );
+  .refine((value) => {
+    const age = ageInYears(new Date(value));
+    return age >= MIN_AGE_YEARS && age <= MAX_AGE_YEARS;
+  }, `Age must be between ${MIN_AGE_YEARS} and ${MAX_AGE_YEARS}`);
 
 export const playerProfileSchema = z.object({
   firstName: z.string().min(1).max(80),
@@ -47,6 +44,13 @@ export const playerProfileSchema = z.object({
   competitionLevel: z.string().max(60).optional().nullable(),
   bio: z.string().max(2000).optional().nullable(),
   clubName: z.string().max(120).optional().nullable(),
+  // Personalización del perfil. Los valores se validan contra `@ifpc/config` en la
+  // server action (`resolveProfileAccent` / `sanitizeProfileOpenTo`), igual que
+  // `position` o `foot`, que tampoco se cierran a un enum aquí.
+  headline: z.string().max(120).optional().nullable(),
+  location: z.string().max(80).optional().nullable(),
+  accentColor: z.string().max(20).optional().nullable(),
+  openTo: z.array(z.string().max(20)).max(5).optional(),
 });
 
 export type PlayerProfileInput = z.infer<typeof playerProfileSchema>;

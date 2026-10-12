@@ -16,7 +16,7 @@ test('Parent: family hub, linked child and support pages', async ({ page }) => {
   // 1. Hub familiar
   await page.goto(`${BASE}/dashboard/parent`);
   await expect(page.getByText('Hub familiar').first()).toBeVisible();
-  await expect(page.getByText('Your child's level by category')).toBeVisible();
+  await expect(page.getByText("Your child's level by category")).toBeVisible();
   await expect(page.getByText('My children').first()).toBeVisible();
   await expect(page.getByText('Recent activity')).toBeVisible();
   await expect(page.getByText('Your payments')).toBeVisible();

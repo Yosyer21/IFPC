@@ -18,7 +18,7 @@ test('University: academic-sports portal and recruitment pages', async ({ page }
   await expect(page.getByText('University recruitment')).toBeVisible();
   await expect(page.getByText('Available players').first()).toBeVisible();
   await expect(page.getByText('Featured opportunities')).toBeVisible();
-  await expect(page.getByText(/Universidad Demo/).first()).toBeVisible();
+  await expect(page.getByText(/Demo University/).first()).toBeVisible();
 
   // 2. Pages
   await page.goto(`${BASE}/dashboard/university/players`);

@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -10,13 +11,14 @@ import {
   PLAYER_STATUS_LABELS,
   POSITION_LABELS,
   ROLE_LABELS,
+  profileAccentColors,
 } from '@ifpc/config';
-import { PlayerAvatar } from '@/components/player/avatar';
+import { ProfileChecklistCard } from '@/components/player/profile-checklist-card';
 import { ProfileGrid } from '@/components/player/profile-grid';
+import { ProfileHeader } from '@/components/player/profile-header';
 import { PhotoUploadForm } from '@/components/account/photo-upload-form';
 import { StatusToggle } from '@/components/player/status-toggle';
-import { DonutChart } from '@/components/player/charts';
-import { playerProfileCompletion } from '@/lib/player';
+import { playerProfileChecklist } from '@/lib/player';
 import { getProfileViewStats } from '@/lib/profile-views';
 import { removeProfilePhotoAction } from '@/app/actions/account';
 import { IconTarget, IconTrendingUp, IconTrophy, IconWhistle } from '@/components/dashboard/icons';
@@ -29,7 +31,11 @@ export default async function PlayerProfilePage() {
 
   const player = await prisma.player.findUnique({
     where: { userId: session.user.id },
-    include: { user: true },
+    include: {
+      user: true,
+      // Contadores que completan la checklist (vídeos y trayectoria).
+      _count: { select: { videos: true, career: true } },
+    },
   });
   if (!player) notFound();
 
@@ -46,8 +52,13 @@ export default async function PlayerProfilePage() {
       player.competitionLevel)
     : '—';
 
-  const { percent, completed: completedFields, total: totalFields } =
-    playerProfileCompletion(player);
+  const accent = profileAccentColors(player.accentColor);
+  const checklist = playerProfileChecklist({
+    ...player,
+    image: player.user.image,
+    videoCount: player._count.videos,
+    careerCount: player._count.career,
+  });
   const viewStats = await getProfileViewStats(player.id);
 
   const rows: [string, string][] = [
@@ -70,43 +81,41 @@ export default async function PlayerProfilePage() {
     { href: '/dashboard/player/career', label: 'Career history', icon: IconTrophy },
   ];
 
-
   return (
-    <div className="mx-auto max-w-5xl">
-      {/* Cabecera */}
-      <div className="animate-fade-up mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <PlayerAvatar
-            firstName={player.firstName}
-            lastName={player.lastName}
-            imageUrl={player.user.image}
-            size="md"
-          />
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">My profile</h1>
-            <p className="text-sm text-muted-foreground">
-              {positionLabel}
-              {competitionLabel !== '—' ? ` · ${competitionLabel}` : ''}
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <StatusToggle status={player.status} />
-          <Link
-            href="/dashboard/player/profile/edit"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
-          >
-            Edit profile
-          </Link>
-        </div>
+    <div className="mx-auto max-w-5xl" style={{ '--profile-accent': accent.hex } as CSSProperties}>
+      {/* Cabecera personalizable: portada, acento, titular, ubicación y chips. */}
+      <div className="mb-6">
+        <ProfileHeader
+          firstName={player.firstName}
+          lastName={player.lastName}
+          imageUrl={player.user.image}
+          bannerUrl={player.bannerUrl}
+          accentColor={player.accentColor}
+          headline={player.headline}
+          location={player.location}
+          subtitle={`${positionLabel}${competitionLabel !== '—' ? ` · ${competitionLabel}` : ''}`}
+          openTo={player.openTo}
+          badges={
+            <Badge variant={player.status === 'AVAILABLE' ? 'success' : 'default'}>
+              {statusLabel}
+            </Badge>
+          }
+          actions={
+            <>
+              <StatusToggle status={player.status} />
+              <Link
+                href="/dashboard/player/profile/edit"
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+              >
+                Edit profile
+              </Link>
+            </>
+          }
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
-          <Badge variant={player.status === 'AVAILABLE' ? 'success' : 'default'}>
-            {statusLabel}
-          </Badge>
-
           <Card className="animate-fade-up" style={{ animationDelay: '120ms' }}>
             <CardContent>
               <ProfileGrid rows={rows} />
@@ -185,24 +194,7 @@ export default async function PlayerProfilePage() {
             </CardContent>
           </Card>
 
-          <Card className="animate-fade-up flex flex-col items-center" style={{ animationDelay: '160ms' }}>
-            <CardContent className="flex w-full flex-col items-center gap-4">
-              <h2 className="self-start font-semibold">Profile complete</h2>
-              <DonutChart
-                value={percent}
-                label={`${percent}%`}
-                sublabel={`${completedFields}/${totalFields} campos`}
-              />
-              {percent < 100 ? (
-                <Link
-                  href="/dashboard/player/profile/edit"
-                  className="text-sm text-primary hover:underline"
-                >
-                  Complete profile →
-                </Link>
-              ) : null}
-            </CardContent>
-          </Card>
+          <ProfileChecklistCard state={checklist} />
 
           <Card className="animate-fade-up" style={{ animationDelay: '240ms' }}>
             <CardContent className="flex flex-col gap-1">

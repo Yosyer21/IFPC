@@ -21,6 +21,10 @@ Motor: **PostgreSQL** vía **Prisma ORM** (`packages/database/prisma/schema.pris
   `PostReport` (con `resolvedAt` y `ModerationLog` para la traza) y `Follow`. Ver
   `docs/technical/discovery.md`.
 
+- **Perfil personalizable**: `Player` guarda `headline`, `location`, `openTo`, `accentColor` y
+  `bannerUrl` (portada). La paleta de acentos y la checklist de fuerza viven en
+  `packages/config/src/profile.ts`.
+
 ## Convenciones
 
 - IDs `cuid`, timestamps `createdAt`/`updatedAt`.

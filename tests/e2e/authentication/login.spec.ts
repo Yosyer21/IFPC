@@ -9,7 +9,7 @@ test.describe('Authentication', () => {
     await page.fill('input[name="password"]', 'wrong-password');
     await page.click('button[type="submit"]');
 
-    await expect(page.getByText('Credenciales incorrectas')).toBeVisible();
+    await expect(page.getByText('Incorrect credentials. Please try again.')).toBeVisible();
   });
 
   test('redirects to login when accessing the dashboard without a session', async ({ page }) => {

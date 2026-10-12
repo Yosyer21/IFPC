@@ -15,6 +15,12 @@ export interface Player {
   competitionLevel?: string | null;
   bio?: string | null;
   clubName?: string | null;
+  /** Personalización del perfil (ver `packages/config/src/profile.ts`). */
+  headline?: string | null;
+  location?: string | null;
+  openTo?: string[];
+  accentColor?: string | null;
+  bannerUrl?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { prisma } from '@ifpc/database';
 import { Badge } from '@ifpc/ui';
-import { POSITION_LABELS } from '@ifpc/config';
+import { POSITION_LABELS, profileAccentColors, profileOpenToLabels } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 import { PlayerAvatar } from '@/components/player/avatar';
@@ -50,7 +51,8 @@ export async function generateMetadata({
   const name = `${player.firstName} ${player.lastName}`;
   const position = positionLabelOf(player.position);
   const description =
-    player.bio?.slice(0, 155) ??
+    player.headline?.trim() ||
+    player.bio?.slice(0, 155) ||
     `Perfil deportivo de ${name} (${position}${
       player.nationality ? `, ${player.nationality}` : ''
     }) en Future Baller.`;
@@ -76,6 +78,8 @@ export default async function PublicPlayerProfilePage({
   await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const positionLabel = positionLabelOf(player.position);
+  const accent = profileAccentColors(player.accentColor);
+  const openToChips = profileOpenToLabels(player.openTo);
 
   const overall =
     player.evaluations.length > 0
@@ -97,6 +101,16 @@ export default async function PublicPlayerProfilePage({
         </Link>
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
+          {player.bannerUrl ? (
+            <Image
+              src={player.bannerUrl}
+              alt=""
+              width={1200}
+              height={300}
+              unoptimized
+              className="mb-6 h-40 w-full rounded-xl object-cover"
+            />
+          ) : null}
           <div className="flex flex-wrap items-center gap-4">
             <PlayerAvatar
               firstName={player.firstName}
@@ -108,9 +122,15 @@ export default async function PublicPlayerProfilePage({
               <h1 className="text-2xl font-bold tracking-tight">
                 {player.firstName} {player.lastName}
               </h1>
+              {player.headline ? (
+                <p className="mt-0.5 text-sm font-medium" style={{ color: accent.hex }}>
+                  {player.headline}
+                </p>
+              ) : null}
               <p className="text-sm text-muted-foreground">
                 {positionLabel}
-                {age !== null ? ` · ${age} years old` : ''} · {player.nationality ?? 'Sin nacionalidad'}
+                {age !== null ? ` · ${age} years old` : ''} ·{' '}
+                {player.nationality ?? 'Sin nacionalidad'}
               </p>
             </div>
             {overall !== null ? (
@@ -124,6 +144,19 @@ export default async function PublicPlayerProfilePage({
           </div>
 
           <div className="mt-6 flex flex-wrap gap-2 text-xs">
+            {openToChips.map((label) => (
+              <span
+                key={label}
+                className="rounded-full border px-3 py-1 font-medium"
+                style={{
+                  borderColor: accent.hex,
+                  backgroundColor: accent.soft,
+                  color: accent.hex,
+                }}
+              >
+                {label}
+              </span>
+            ))}
             {player.competitionLevel ? (
               <Badge variant="outline">{player.competitionLevel}</Badge>
             ) : null}
@@ -188,5 +221,3 @@ export default async function PublicPlayerProfilePage({
     </div>
   );
 }
-
-
