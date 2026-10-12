@@ -45,8 +45,8 @@ export function ProfileCard({
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <Badge variant="outline">{ROLE_LABELS[profile.role] ?? profile.role}</Badge>
             <span className="text-xs text-muted-foreground">
-              {profile.posts} {profile.posts === 1 ? 'publicación' : 'publicaciones'} ·{' '}
-              {profile.followers} {profile.followers === 1 ? 'seguidor' : 'seguidores'}
+              {profile.posts} {profile.posts === 1 ? 'post' : 'posts'} ·{' '}
+              {profile.followers} {profile.followers === 1 ? 'follower' : 'followers'}
             </span>
           </div>
         </div>

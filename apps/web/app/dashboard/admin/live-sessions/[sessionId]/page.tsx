@@ -42,7 +42,7 @@ export default async function AdminLiveSessionDetailPage({
           href="/dashboard/admin/live-sessions"
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Sesiones en vivo
+          ← Live sessions
         </Link>
       </PageHeader>
 
@@ -65,15 +65,15 @@ export default async function AdminLiveSessionDetailPage({
               </div>
             </div>
             <div className="rounded-md border border-border p-3">
-              <div className="text-xs text-muted-foreground">Entrenador</div>
-              <div className="mt-1 font-medium">{liveSession.coach?.user?.name ?? 'Sin asignar'}</div>
+              <div className="text-xs text-muted-foreground">Coach</div>
+              <div className="mt-1 font-medium">{liveSession.coach?.user?.name ?? 'Unassigned'}</div>
             </div>
             <div className="rounded-md border border-border p-3">
-              <div className="text-xs text-muted-foreground">Jugador (1:1)</div>
+              <div className="text-xs text-muted-foreground">Player (1:1)</div>
               <div className="mt-1 font-medium">
                 {liveSession.player
                   ? `${liveSession.player.firstName} ${liveSession.player.lastName}`
-                  : 'Grupo / sin jugador'}
+                  : 'Group / no player'}
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@ import {
 const fieldClass =
   'h-10 rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
 
-/** URL del feed conservando pestaña, etiqueta y filtros (sin búsqueda). */
+/** URL del feed conservando pestaña, tag y filters (sin búsqueda). */
 function clearHref(filters: FeedFilters, base: string): string {
   const query = new URLSearchParams();
   if (filters.tab !== 'recent') query.set('tab', filters.tab);
@@ -23,7 +23,7 @@ function clearHref(filters: FeedFilters, base: string): string {
 }
 
 /**
- * Filtros del feed: búsqueda + tipo de publicación + rol del autor. Es un
+ * Filtros del feed: búsqueda + tipo de post + rol del autor. Es un
  * formulario GET, así que funciona sin JavaScript y queda todo en la URL.
  */
 export function FeedSearch({
@@ -33,7 +33,7 @@ export function FeedSearch({
 }: {
   filters: FeedFilters;
   base?: string;
-  /** Pestaña que se conserva al filtrar (el público no tiene "Siguiendo"). */
+  /** Pestaña que se conserva al filtrar (el público no tiene "Following"). */
   tab?: string;
 }) {
   const keepTab = tab ?? filters.tab;
@@ -47,11 +47,11 @@ export function FeedSearch({
         name="q"
         defaultValue={filters.q ?? ''}
         maxLength={FEED_QUERY_MAX}
-        placeholder="Buscar publicaciones o perfiles…"
-        aria-label="Buscar en Discovery"
+        placeholder="Search posts or profiles…"
+        aria-label="Search Discovery"
         className={`${fieldClass} min-w-0 flex-1`}
       />
-      <select name="type" defaultValue={filters.type ?? ''} aria-label="Tipo de publicación" className={fieldClass}>
+      <select name="type" defaultValue={filters.type ?? ''} aria-label="Post type" className={fieldClass}>
         <option value="">Todo tipo</option>
         {FEED_TYPE_FILTERS.map((value) => (
           <option key={value} value={value}>
@@ -59,8 +59,8 @@ export function FeedSearch({
           </option>
         ))}
       </select>
-      <select name="role" defaultValue={filters.role ?? ''} aria-label="Rol del autor" className={fieldClass}>
-        <option value="">Todos los perfiles</option>
+      <select name="role" defaultValue={filters.role ?? ''} aria-label="Author role" className={fieldClass}>
+        <option value="">All profiles</option>
         {FEED_ROLE_FILTERS.map((value) => (
           <option key={value} value={value}>
             {ROLE_LABELS[value] ?? value}
@@ -68,11 +68,11 @@ export function FeedSearch({
         ))}
       </select>
       <Button type="submit" variant="outline">
-        Filtrar
+        Filter
       </Button>
       {filters.q ? (
         <Link href={clearHref(filters, base)} className="text-xs text-muted-foreground hover:text-foreground">
-          Quitar búsqueda
+          Clear search
         </Link>
       ) : null}
     </form>

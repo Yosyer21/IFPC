@@ -57,7 +57,7 @@ export default async function ClubDashboardPage() {
     {
       href: '/dashboard/club/opportunities',
       icon: IconTarget,
-      label: 'Oportunidades abiertas',
+      label: 'Open opportunities',
       value: openOpportunities.length,
     },
     {
@@ -75,7 +75,7 @@ export default async function ClubDashboardPage() {
     {
       href: '/dashboard/club/inquiries',
       icon: IconMail,
-      label: 'Inquiries sin responder',
+      label: 'Unanswered enquiries',
       value: newInquiries.length,
     },
   ];
@@ -84,7 +84,7 @@ export default async function ClubDashboardPage() {
   const pipeline = [
     {
       href: '/dashboard/club/opportunities',
-      label: 'Oportunidades',
+      label: 'Opportunities',
       sub: 'activas publicadas',
       value: openOpportunities.length,
       icon: IconTarget,
@@ -119,7 +119,7 @@ export default async function ClubDashboardPage() {
       href: '/dashboard/club/applications',
       icon: IconUsers,
       text: `${pendingApplications.length} pending application${pendingApplications.length === 1 ? '' : 's'} awaiting review`,
-      meta: 'Revisar candidatos',
+      meta: 'Revisar candidates',
     });
   }
   if (newInquiries.length > 0) {
@@ -127,7 +127,7 @@ export default async function ClubDashboardPage() {
       href: '/dashboard/club/inquiries',
       icon: IconMail,
       text: `${newInquiries.length} consulta${newInquiries.length === 1 ? '' : 's'} sin responder`,
-      meta: 'Responder ahora',
+      meta: 'Responder now',
     });
   }
   if (draftOpportunities.length > 0) {
@@ -135,7 +135,7 @@ export default async function ClubDashboardPage() {
       href: '/dashboard/club/opportunities',
       icon: IconFile,
       text: `${draftOpportunities.length} oportunidad${draftOpportunities.length === 1 ? '' : 'es'} en borrador sin publicar`,
-      meta: 'Publicar',
+      meta: 'Publish',
     });
   }
   if (expiring.length > 0) {
@@ -177,7 +177,7 @@ export default async function ClubDashboardPage() {
               href="/dashboard/club/opportunities"
               className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Publicar oportunidad
+              Post opportunity
             </Link>
             <Link
               href="/dashboard/club/requirements/new"
@@ -189,7 +189,7 @@ export default async function ClubDashboardPage() {
               href="/dashboard/club/applications"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Ver solicitudes
+              Ver requests
             </Link>
           </div>
         </div>
@@ -235,7 +235,7 @@ export default async function ClubDashboardPage() {
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold">Pipeline de reclutamiento</h2>
             <Link href="/dashboard/club/applications" className="text-sm text-primary hover:underline">
-              Gestionar solicitudes →
+              Gestionar requests →
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -264,7 +264,7 @@ export default async function ClubDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Applications by status + requisitos activos */}
+      {/* Applications by status + requirements activos */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
@@ -360,7 +360,7 @@ export default async function ClubDashboardPage() {
             <h2 className="mb-4 font-semibold">Recent activity</h2>
             {recentApps.length === 0 && recentInquiries.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Publica oportunidades y responde consultas para ver la actividad de tu club.
+                Publica opportunities y responde consultas para ver la actividad de tu club.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">

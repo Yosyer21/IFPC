@@ -81,7 +81,7 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/players',
       icon: IconUsers,
-      label: 'Jugadores representados',
+      label: 'Represented players',
       value: players.length,
     },
     {
@@ -99,7 +99,7 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/negotiations',
       icon: IconBriefcase,
-      label: 'Negociaciones abiertas',
+      label: 'Negociaciones open',
       value: openNegotiations.length,
     },
   ];
@@ -107,7 +107,7 @@ export default async function AgentDashboardPage() {
   const pipeline = [
     {
       href: '/dashboard/agent/players',
-      label: 'Jugadores',
+      label: 'Players',
       sub: 'representados',
       value: players.length,
       icon: IconUsers,
@@ -115,7 +115,7 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/submissions',
       label: 'Submissions',
-      sub: 'a clubes',
+      sub: 'a clubs',
       value: submissions.length,
       icon: IconMail,
     },
@@ -129,7 +129,7 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/negotiations',
       label: 'Negociaciones',
-      sub: 'abiertas',
+      sub: 'open',
       value: openNegotiations.length,
       icon: IconBriefcase,
     },
@@ -203,7 +203,7 @@ export default async function AgentDashboardPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               {agent.user.email} · Representation agency
               {players.length > 0
-                ? ` · ${players.length} jugador${players.length === 1 ? '' : 'es'} representado${players.length === 1 ? '' : 's'}`
+                ? ` · ${players.length} player${players.length === 1 ? '' : 'es'} representado${players.length === 1 ? '' : 's'}`
                 : ''}
             </p>
           </div>
@@ -229,7 +229,7 @@ export default async function AgentDashboardPage() {
             { href: '/dashboard/agent/players', icon: IconUsers, label: 'My players' },
             { href: '/dashboard/agent/submissions', icon: IconMail, label: 'Submissions' },
             { href: '/dashboard/agent/trials', icon: IconWhistle, label: 'Pruebas' },
-            { href: '/dashboard/agent/opportunities', icon: IconTarget, label: 'Oportunidades' },
+            { href: '/dashboard/agent/opportunities', icon: IconTarget, label: 'Opportunities' },
           ].map((action, i) => {
             const Icon = action.icon;
             return (
@@ -389,7 +389,7 @@ export default async function AgentDashboardPage() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">My players</h2>
               <Link href="/dashboard/agent/players" className="text-sm text-primary hover:underline">
-                Ver todos →
+                See all →
               </Link>
             </div>
             {players.length === 0 ? (

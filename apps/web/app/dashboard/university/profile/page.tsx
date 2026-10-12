@@ -4,7 +4,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Mi universidad' };
+export const metadata: Metadata = { title: 'My university' };
 
 export default async function UniversityProfilePage() {
   const session = await auth();
@@ -17,17 +17,17 @@ export default async function UniversityProfilePage() {
   if (!university) return null;
 
   const rows: [string, string][] = [
-    ['Nombre', university.name],
+    ['Name', university.name],
     ['Email', university.user?.email ?? '—'],
     ['Country', university.country],
     ['Ciudad', university.city ?? '—'],
-    ['Miembro desde', university.createdAt.toLocaleDateString('es')],
+    ['Member since', university.createdAt.toLocaleDateString('es')],
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Mi universidad"
+        title="My university"
         subtitle="Your institution's public information on the platform"
         icon="book"
       />

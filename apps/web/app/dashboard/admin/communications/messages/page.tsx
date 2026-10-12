@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { createMessageAction } from '@/app/actions/admin';
 
-export const metadata: Metadata = { title: 'Mensajes' };
+export const metadata: Metadata = { title: 'Messages' };
 
 export default async function AdminMessagesPage() {
   const session = await auth();
@@ -23,7 +23,7 @@ export default async function AdminMessagesPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title="Mensajes" subtitle="Hilo de mensajes de todas las conversaciones" icon="mail">
+      <PageHeader title="Messages" subtitle="Hilo de messages de todas las conversaciones" icon="mail">
         <Link href="/dashboard/admin/communications" className="text-sm text-muted-foreground hover:underline">
           ← Comunicaciones
         </Link>
@@ -84,7 +84,7 @@ export default async function AdminMessagesPage() {
                     required
                     name="body"
                     rows={2}
-                    placeholder="Escribe una respuesta…"
+                    placeholder="Write a reply…"
                     className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                   />
                   <button

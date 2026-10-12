@@ -30,7 +30,7 @@ export default async function ParentPaymentsHistoryPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Historial de pagos"
-        subtitle="Todos los movimientos de tu cuenta familiar"
+        subtitle="All movements on your family account"
         icon="star"
       >
         <Link href="/dashboard/parent/payments" className="text-sm text-muted-foreground hover:underline">

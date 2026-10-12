@@ -31,9 +31,9 @@ export default async function PlayerFootballPage() {
   const rows: [string, string][] = [
     ['Main position', positionLabel],
     ['Preferred foot', footLabel],
-    ['Nivel competitivo', competitionLabel],
+    ['Level competitivo', competitionLabel],
     ['Club actual', player.clubName ?? '—'],
-    ['Disponibilidad', player.status === 'AVAILABLE' ? 'Disponible' : 'No disponible'],
+    ['Disponibilidad', player.status === 'AVAILABLE' ? 'Available' : 'Unavailable'],
   ];
 
   return (

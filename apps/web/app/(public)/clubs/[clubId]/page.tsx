@@ -60,15 +60,15 @@ export default async function PublicClubDetailPage({
 
           <div className="mt-6 flex flex-wrap gap-2">
             {club.league ? <Badge variant="outline">{club.league}</Badge> : null}
-            <Badge variant="outline">{club.opportunities.length} oportunidades abiertas</Badge>
-            <Badge variant="outline">{club.requirements.length} requisitos abiertos</Badge>
+            <Badge variant="outline">{club.opportunities.length} opportunities open</Badge>
+            <Badge variant="outline">{club.requirements.length} requirements open</Badge>
           </div>
         </div>
 
-        <h2 className="mb-4 mt-10 text-xl font-semibold">Oportunidades abiertas</h2>
+        <h2 className="mb-4 mt-10 text-xl font-semibold">Open opportunities</h2>
         {club.opportunities.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-6 text-center text-sm text-muted-foreground">
-            Este club no tiene oportunidades abiertas ahora.
+            This club has no open opportunities right now.
           </div>
         ) : (
           <div className="flex flex-col gap-3">
@@ -103,7 +103,7 @@ export default async function PublicClubDetailPage({
         <h2 className="mb-4 mt-10 text-xl font-semibold">Profilees buscados</h2>
         {club.requirements.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-6 text-center text-sm text-muted-foreground">
-            No hay perfiles buscados publicados.
+            No searched profiles have been posted.
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

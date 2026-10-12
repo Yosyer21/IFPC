@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { InviteStaffForm } from '@/components/club/invite-staff-form';
 
-export const metadata: Metadata = { title: 'Invitar miembro' };
+export const metadata: Metadata = { title: 'Invitar member' };
 
 export default function ClubInviteStaffPage() {
   return (
@@ -13,9 +13,9 @@ export default function ClubInviteStaffPage() {
       >
         ← Miembros
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Invitar miembro</h1>
+      <h1 className="mb-6 text-2xl font-bold">Invitar member</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        El miembro debe tener una cuenta registrada en la plataforma.
+        The member must have an account registered on the platform.
       </p>
       <InviteStaffForm />
     </div>

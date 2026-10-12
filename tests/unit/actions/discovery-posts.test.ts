@@ -188,16 +188,16 @@ beforeEach(() => {
 });
 
 describe('createPostAction', () => {
-  it('exige sesión', async () => {
+  it('requires a session', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await createPostAction({}, form({ body: 'hola' }));
-    expect(result).toEqual({ error: 'Tu perfil no puede publicar.' });
+    expect(result).toEqual({ error: 'Your profile cannot post.' });
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
   it('publica un anuncio de texto y vuelve al feed', async () => {
     const target = await captureRedirect(() =>
-      createPostAction({}, form({ body: 'Nuevo fichaje' }))
+      createPostAction({}, form({ body: 'New signing' }))
     );
 
     expect(target).toBe('/dashboard/discovery');
@@ -205,24 +205,24 @@ describe('createPostAction', () => {
       data: expect.objectContaining({
         authorId: 'user-1',
         type: 'ANNOUNCEMENT',
-        body: 'Nuevo fichaje',
+        body: 'New signing',
         mediaUrl: null,
       }),
     });
   });
 
-  it('rechaza publicaciones sin contenido', async () => {
+  it('rechaza posts sin contenido', async () => {
     const result = await createPostAction({}, form({ body: '   ' }));
     expect(result.error).toBeDefined();
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
-  it('normaliza los hashtags del texto y de las etiquetas', async () => {
+  it('normaliza los hashtags del texto y de las tags', async () => {
     await captureRedirect(() =>
-      createPostAction({}, form({ body: 'Buen #Partido', tags: '#previa ultimo' }))
+      createPostAction({}, form({ body: 'Good #Match', tags: '#previa ultimo' }))
     );
 
-    expect(mocks.postCreate.mock.calls[0][0].data.tags).toEqual(['previa', 'ultimo', 'partido']);
+    expect(mocks.postCreate.mock.calls[0][0].data.tags).toEqual(['previa', 'ultimo', 'match']);
   });
 
   it('sube una imagen y la publica como foto', async () => {
@@ -252,7 +252,7 @@ describe('createPostAction', () => {
       {},
       form({ body: 'x', file: file('application/pdf', 1024, 'doc.pdf') })
     );
-    expect(result.error).toContain('JPG, PNG o WebP');
+    expect(result.error).toContain('JPG, PNG or WebP');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
@@ -261,7 +261,7 @@ describe('createPostAction', () => {
       {},
       form({ body: 'x', file: file('image/png', 5 * 1024 * 1024) })
     );
-    expect(result.error).toContain('supera el máximo');
+    expect(result.error).toContain('exceeds the maximum');
     expect(mocks.writeFile).not.toHaveBeenCalled();
   });
 
@@ -276,18 +276,18 @@ describe('createPostAction', () => {
     expect(data.type).toBe('VIDEO');
   });
 
-  it('rechaza enlaces externos que no estén en la lista blanca', async () => {
+  it('rechaza links externos que no estén en la lista blanca', async () => {
     const result = await createPostAction(
       {},
       form({ body: 'x', mediaUrl: 'https://evil.example/watch?v=M7lc1UVf-VE' })
     );
-    expect(result.error).toContain('YouTube o Vimeo');
+    expect(result.error).toContain('YouTube or Vimeo');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
-  it('no publica un tipo Foto o Vídeo sin medio adjunto', async () => {
+  it('no publica un tipo Foto o Video sin medio adjunto', async () => {
     const result = await createPostAction({}, form({ body: 'solo texto', type: 'PHOTO' }));
-    expect(result.error).toContain('Adjunta el archivo');
+    expect(result.error).toContain('Attach the file');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
@@ -306,12 +306,12 @@ describe('createPostAction', () => {
     expect(mocks.postCreate.mock.calls[0][0].data.opportunityId).toBe('opp-1');
   });
 
-  it('corta por ritmo de publicación', async () => {
+  it('rate-limits de post', async () => {
     mocks.postCount.mockResolvedValue(99);
 
     const result = await createPostAction({}, form({ body: 'otra vez' }));
 
-    expect(result.error).toContain('demasiado seguido');
+    expect(result.error).toContain('too often');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
@@ -320,21 +320,21 @@ describe('createPostAction', () => {
 
     const result = await createPostAction({}, form({ body: 'igual' }));
 
-    expect(result.error).toContain('Ya has publicado');
+    expect(result.error).toContain('You have already posted');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
-  it('rechaza textos con demasiados enlaces', async () => {
+  it('rechaza textos con too many links', async () => {
     const result = await createPostAction(
       {},
       form({ body: 'a https://a.com b https://b.com c https://c.com d https://d.com' })
     );
 
-    expect(result.error).toContain('enlaces');
+    expect(result.error).toContain('links');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
-  it('deja a revisión (oculta) el lenguaje prohibido en vez de perderlo', async () => {
+  it('deja a revisión (oculta) el banned language en vez de perderlo', async () => {
     const target = await captureRedirect(() =>
       createPostAction({}, form({ body: 'eres un idiota' }))
     );
@@ -348,27 +348,27 @@ describe('createPostAction', () => {
 });
 
 describe('updatePostAction', () => {
-  it('solo permite editar las publicaciones propias', async () => {
+  it('solo permite editar las posts propias', async () => {
     mocks.postFindUnique.mockResolvedValue({ id: 'post-1', authorId: 'otro' });
 
     const result = await updatePostAction({}, form({ postId: 'post-1', body: 'editado' }));
-    expect(result).toEqual({ error: 'Solo puedes editar tus propias publicaciones.' });
+    expect(result).toEqual({ error: 'You can only edit your own posts.' });
     expect(mocks.postUpdate).not.toHaveBeenCalled();
   });
 
   it('guarda el texto y vuelve al detalle', async () => {
     const target = await captureRedirect(() =>
-      updatePostAction({}, form({ postId: 'post-1', title: 'Título', body: 'editado' }))
+      updatePostAction({}, form({ postId: 'post-1', title: 'Title', body: 'editado' }))
     );
 
     expect(target).toBe('/dashboard/discovery/post-1');
     expect(mocks.postUpdate).toHaveBeenCalledWith({
       where: { id: 'post-1' },
-      data: { title: 'Título', body: 'editado', tags: [] },
+      data: { title: 'Title', body: 'editado', tags: [] },
     });
   });
 
-  it('rechaza dejar la publicación vacía', async () => {
+  it('rechaza dejar la post vacía', async () => {
     const result = await updatePostAction({}, form({ postId: 'post-1', body: '   ' }));
     expect(result.error).toBeDefined();
     expect(mocks.postUpdate).not.toHaveBeenCalled();
@@ -382,7 +382,7 @@ describe('deletePostAction', () => {
     expect(mocks.postDelete).not.toHaveBeenCalled();
   });
 
-  it('no permite borrar publicaciones de otros', async () => {
+  it('no permite borrar posts de otros', async () => {
     mocks.postFindUnique.mockResolvedValue({
       id: 'post-1',
       authorId: 'otro',
@@ -393,7 +393,7 @@ describe('deletePostAction', () => {
     expect(mocks.postDelete).not.toHaveBeenCalled();
   });
 
-  it('borra la publicación propia y su archivo local', async () => {
+  it('borra la post propia y su archivo local', async () => {
     mocks.postFindUnique.mockResolvedValue({
       id: 'post-1',
       authorId: 'user-1',
@@ -410,7 +410,7 @@ describe('deletePostAction', () => {
     expect(target).toBe('/dashboard/discovery');
   });
 
-  it('un admin puede borrar cualquier publicación', async () => {
+  it('un admin puede borrar cualquier post', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     mocks.postFindUnique.mockResolvedValue({
       id: 'post-1',
@@ -439,7 +439,7 @@ describe('deletePostAction', () => {
     });
   });
 
-  it('borrar la publicación propia no se registra como moderación', async () => {
+  it('deleting your own post is not recorded as moderation', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     mocks.postFindUnique.mockResolvedValue({
       id: 'post-1',
@@ -481,13 +481,13 @@ describe('deletePostAction', () => {
 });
 
 describe('toggleLikeAction', () => {
-  it('no hace nada sin sesión', async () => {
+  it('does nothing without a session', async () => {
     mocks.auth.mockResolvedValue(null);
     await toggleLikeAction(form({ postId: 'post-1' }));
     expect(mocks.likeCreate).not.toHaveBeenCalled();
   });
 
-  it('no interactúa con publicaciones ocultas', async () => {
+  it('no interactúa con posts ocultas', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'otro', status: 'HIDDEN' });
     await toggleLikeAction(form({ postId: 'post-1' }));
     expect(mocks.likeCreate).not.toHaveBeenCalled();
@@ -515,7 +515,7 @@ describe('toggleLikeAction', () => {
     expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 
-  it('no avisa al darse me gusta en la propia publicación', async () => {
+  it('no avisa al darse me gusta en la propia post', async () => {
     await toggleLikeAction(form({ postId: 'post-1' }));
     expect(mocks.likeCreate).toHaveBeenCalled();
     expect(mocks.notifyGrouped).not.toHaveBeenCalled();
@@ -523,26 +523,26 @@ describe('toggleLikeAction', () => {
 });
 
 describe('createCommentAction', () => {
-  it('exige sesión', async () => {
+  it('requires a session', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
-    expect(result).toEqual({ error: 'La sesión no es válida.' });
+    expect(result).toEqual({ error: 'Your session is not valid.' });
   });
 
-  it('rechaza comentarios vacíos', async () => {
+  it('rechaza comments vacíos', async () => {
     const result = await createCommentAction({}, form({ postId: 'post-1', body: '  ' }));
     expect(result.error).toBeDefined();
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
-  it('rechaza comentar una publicación oculta o inexistente', async () => {
+  it('rechaza comentar una post oculta o inexistente', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'otro', status: 'HIDDEN' });
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
-    expect(result).toEqual({ error: 'La publicación no existe.' });
+    expect(result).toEqual({ error: 'The post does not exist.' });
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
-  it('publica el comentario, avisa al autor y revalida', async () => {
+  it('publica el comment, avisa al autor y revalida', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'otro', status: 'PUBLISHED' });
 
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'Muy bueno' }));
@@ -566,23 +566,23 @@ describe('createCommentAction', () => {
     expect(result).toEqual({ success: 'Comentario publicado.' });
   });
 
-  it('acepta respuestas indicando el comentario padre', async () => {
+  it('acepta replies indicando el comment padre', async () => {
     await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
     expect(mocks.commentCreate.mock.calls[0][0].data.parentId).toBe('comment-9');
   });
 
-  it('una respuesta avisa a quien comentó, no al autor de la publicación', async () => {
+  it('una reply avisa a quien comentó, no al autor de la post', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'autor-post', status: 'PUBLISHED' });
-    mocks.commentFindUnique.mockResolvedValue({ authorId: 'autor-comentario', postId: 'post-1' });
+    mocks.commentFindUnique.mockResolvedValue({ authorId: 'autor-comment', postId: 'post-1' });
 
     await createCommentAction({}, form({ postId: 'post-1', parentId: 'comment-9', body: 'Total' }));
 
     expect(mocks.notifyGrouped).toHaveBeenCalledWith(
-      expect.objectContaining({ userId: 'autor-comentario', type: 'comment_reply' })
+      expect.objectContaining({ userId: 'autor-comment', type: 'comment_reply' })
     );
   });
 
-  it('ignora un padre que pertenece a otra publicación', async () => {
+  it('ignora un padre que pertenece a otra post', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'autor-post', status: 'PUBLISHED' });
     mocks.commentFindUnique.mockResolvedValue({ authorId: 'ajeno', postId: 'post-OTRO' });
 
@@ -593,7 +593,7 @@ describe('createCommentAction', () => {
     );
   });
 
-  it('responder a tu propio comentario no genera aviso', async () => {
+  it('responder a tu propio comment no genera aviso', async () => {
     mocks.postFindUnique.mockResolvedValue({ authorId: 'otro', status: 'PUBLISHED' });
     mocks.commentFindUnique.mockResolvedValue({ authorId: 'user-1', postId: 'post-1' });
 
@@ -602,22 +602,22 @@ describe('createCommentAction', () => {
     expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 
-  it('rechaza comentarios con lenguaje prohibido', async () => {
+  it('rechaza comments con banned language', async () => {
     const result = await createCommentAction(
       {},
       form({ postId: 'post-1', body: 'eres un idiota' })
     );
 
-    expect(result.error).toContain('lenguaje');
+    expect(result.error).toContain('language');
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
-  it('corta por ritmo de comentarios', async () => {
+  it('rate-limits comments', async () => {
     mocks.commentCount.mockResolvedValue(99);
 
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
 
-    expect(result.error).toContain('demasiado seguido');
+    expect(result.error).toContain('too often');
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
@@ -631,7 +631,7 @@ describe('createCommentAction', () => {
 
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
 
-    expect(result).toEqual({ error: 'No puedes comentar en esta publicación.' });
+    expect(result).toEqual({ error: 'You cannot comment on this post.' });
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
@@ -644,7 +644,7 @@ describe('createCommentAction', () => {
 
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
 
-    expect(result).toEqual({ error: 'No puedes comentar en esta publicación.' });
+    expect(result).toEqual({ error: 'You cannot comment on this post.' });
     expect(mocks.commentCreate).not.toHaveBeenCalled();
   });
 
@@ -664,7 +664,7 @@ describe('createCommentAction', () => {
 });
 
 describe('deleteCommentAction', () => {
-  it('permite borrar el comentario propio', async () => {
+  it('permite borrar el comment propio', async () => {
     mocks.commentFindUnique.mockResolvedValue({
       authorId: 'user-1',
       postId: 'post-1',
@@ -679,7 +679,7 @@ describe('deleteCommentAction', () => {
     );
   });
 
-  it('permite al autor del post moderar sus comentarios', async () => {
+  it('permite al autor del post moderar sus comments', async () => {
     mocks.commentFindUnique.mockResolvedValue({
       authorId: 'otro',
       postId: 'post-1',
@@ -690,7 +690,7 @@ describe('deleteCommentAction', () => {
     expect(mocks.commentDelete).toHaveBeenCalled();
   });
 
-  it('no permite borrar comentarios ajenos', async () => {
+  it('no permite borrar comments ajenos', async () => {
     mocks.commentFindUnique.mockResolvedValue({
       authorId: 'otro',
       postId: 'post-1',
@@ -703,10 +703,10 @@ describe('deleteCommentAction', () => {
 });
 
 describe('updateCommentAction', () => {
-  it('exige sesión', async () => {
+  it('requires a session', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: 'nuevo' }));
-    expect(result).toEqual({ error: 'La sesión no es válida.' });
+    expect(result).toEqual({ error: 'Your session is not valid.' });
   });
 
   it('rechaza textos vacíos', async () => {
@@ -715,16 +715,16 @@ describe('updateCommentAction', () => {
     expect(mocks.commentUpdate).not.toHaveBeenCalled();
   });
 
-  it('solo edita comentarios propios', async () => {
+  it('solo edita comments propios', async () => {
     mocks.commentFindUnique.mockResolvedValue({ authorId: 'otro' });
 
     const result = await updateCommentAction({}, form({ commentId: 'comment-1', body: 'nuevo' }));
 
-    expect(result).toEqual({ error: 'Solo puedes editar tus propios comentarios.' });
+    expect(result).toEqual({ error: 'You can only edit your own comments.' });
     expect(mocks.commentUpdate).not.toHaveBeenCalled();
   });
 
-  it('guarda el texto del comentario propio', async () => {
+  it('guarda el texto del comment propio', async () => {
     mocks.commentFindUnique.mockResolvedValue({ authorId: 'user-1', postId: 'post-1' });
 
     const result = await updateCommentAction(
@@ -745,10 +745,10 @@ describe('updateCommentAction', () => {
 });
 
 describe('reportPostAction', () => {
-  it('exige sesión', async () => {
+  it('requires a session', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await reportPostAction({}, form({ postId: 'post-1', reason: 'spam' }));
-    expect(result).toEqual({ error: 'La sesión no es válida.' });
+    expect(result).toEqual({ error: 'Your session is not valid.' });
   });
 
   it('exige un motivo con contenido', async () => {
@@ -757,7 +757,7 @@ describe('reportPostAction', () => {
     expect(mocks.reportUpsert).not.toHaveBeenCalled();
   });
 
-  it('registra la denuncia una sola vez por persona', async () => {
+  it('registra la report una sola vez por persona', async () => {
     const result = await reportPostAction(
       {},
       form({ postId: 'post-1', reason: 'Contenido ofensivo' })
@@ -778,7 +778,7 @@ describe('moderatePostAction', () => {
     expect(mocks.postUpdate).not.toHaveBeenCalled();
   });
 
-  it('oculta una publicación cuando lo pide un admin', async () => {
+  it('oculta una post cuando lo pide un admin', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
 
     await moderatePostAction(form({ postId: 'post-1', status: 'HIDDEN' }));
@@ -795,7 +795,7 @@ describe('moderatePostAction', () => {
     expect(mocks.postUpdate).not.toHaveBeenCalled();
   });
 
-  it('ocultar cierra las denuncias pendientes y deja traza', async () => {
+  it('ocultar cierra las reports pendientes y deja traza', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
 
     await moderatePostAction(form({ postId: 'post-1', status: 'HIDDEN' }));
@@ -809,7 +809,7 @@ describe('moderatePostAction', () => {
     });
   });
 
-  it('republicar no toca las denuncias pero sí deja traza', async () => {
+  it('republicar no toca las reports pero sí deja traza', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
 
     await moderatePostAction(form({ postId: 'post-1', status: 'PUBLISHED', notes: 'revisado' }));
@@ -822,12 +822,12 @@ describe('moderatePostAction', () => {
 });
 
 describe('pinPostAction', () => {
-  it('solo los admin pueden fijar publicaciones', async () => {
+  it('solo los admin pueden fijar posts', async () => {
     await pinPostAction(form({ postId: 'post-1' }));
     expect(mocks.postUpdate).not.toHaveBeenCalled();
   });
 
-  it('fija una publicación y lo registra', async () => {
+  it('fija una post y lo registra', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
 
     await pinPostAction(form({ postId: 'post-1' }));
@@ -841,7 +841,7 @@ describe('pinPostAction', () => {
     );
   });
 
-  it('desfija una publicación ya fijada', async () => {
+  it('unpins an already pinned post', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     mocks.postFindUnique.mockResolvedValue({ id: 'post-1', pinnedAt: new Date('2026-01-01') });
 
@@ -856,7 +856,7 @@ describe('pinPostAction', () => {
     );
   });
 
-  it('ignora publicaciones que no existen', async () => {
+  it('ignores posts that do not exist', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     mocks.postFindUnique.mockResolvedValue(null);
 
@@ -866,12 +866,12 @@ describe('pinPostAction', () => {
 });
 
 describe('resolveReportsAction', () => {
-  it('solo los admin pueden atender denuncias', async () => {
+  it('solo los admin pueden atender reports', async () => {
     await resolveReportsAction(form({ postId: 'post-1' }));
     expect(mocks.reportUpdateMany).not.toHaveBeenCalled();
   });
 
-  it('marca las denuncias pendientes y lo registra', async () => {
+  it('marca las reports pendientes y lo registra', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
 
     await resolveReportsAction(form({ postId: 'post-1' }));
@@ -885,7 +885,7 @@ describe('resolveReportsAction', () => {
     );
   });
 
-  it('si no había denuncias pendientes no deja traza', async () => {
+  it('si no había reports pendientes no deja traza', async () => {
     mocks.auth.mockResolvedValue({ user: { id: 'admin-1', name: 'Admin', role: 'ADMIN' } });
     mocks.reportUpdateMany.mockResolvedValue({ count: 0 });
 
@@ -895,7 +895,7 @@ describe('resolveReportsAction', () => {
 });
 
 describe('setAuthorPreferenceAction', () => {
-  it('no hace nada sin sesión', async () => {
+  it('does nothing without a session', async () => {
     mocks.auth.mockResolvedValue(null);
 
     await setAuthorPreferenceAction(form({ userId: 'autor-1', kind: 'MORE' }));
@@ -944,7 +944,7 @@ describe('setAuthorPreferenceAction', () => {
 });
 
 describe('notInterestedAction', () => {
-  it('no hace nada sin sesión', async () => {
+  it('does nothing without a session', async () => {
     mocks.auth.mockResolvedValue(null);
 
     await notInterestedAction(form({ postId: 'post-1' }));
@@ -952,7 +952,7 @@ describe('notInterestedAction', () => {
     expect(mocks.notInterestedUpsert).not.toHaveBeenCalled();
   });
 
-  it('ignora publicaciones que no existen', async () => {
+  it('ignores posts that do not exist', async () => {
     mocks.postFindUnique.mockResolvedValue(null);
 
     await notInterestedAction(form({ postId: 'fantasma' }));
@@ -960,7 +960,7 @@ describe('notInterestedAction', () => {
     expect(mocks.notInterestedUpsert).not.toHaveBeenCalled();
   });
 
-  it('marca la publicación y revalida feed y detalle', async () => {
+  it('marca la post y revalida feed y detalle', async () => {
     await notInterestedAction(form({ postId: 'post-1' }));
 
     expect(mocks.notInterestedUpsert).toHaveBeenCalledWith({
@@ -983,7 +983,7 @@ describe('notInterestedAction', () => {
 });
 
 describe('toggleFollowAction', () => {
-  it('no hace nada sin sesión', async () => {
+  it('does nothing without a session', async () => {
     mocks.auth.mockResolvedValue(null);
     await toggleFollowAction(form({ userId: 'otro' }));
     expect(mocks.followCreate).not.toHaveBeenCalled();
@@ -1001,7 +1001,7 @@ describe('toggleFollowAction', () => {
     expect(mocks.followCreate).not.toHaveBeenCalled();
   });
 
-  it('crea el seguimiento y avisa al seguido', async () => {
+  it('crea el tracking y avisa al seguido', async () => {
     await toggleFollowAction(form({ userId: 'otro' }));
 
     expect(mocks.followCreate).toHaveBeenCalledWith({
@@ -1026,7 +1026,7 @@ describe('toggleFollowAction', () => {
     expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 
-  it('el aviso no rompe el seguimiento si falla', async () => {
+  it('el aviso no rompe el tracking si falla', async () => {
     mocks.notifyGrouped.mockRejectedValue(new Error('boom'));
 
     await expect(toggleFollowAction(form({ userId: 'otro' }))).resolves.toBeUndefined();
@@ -1063,7 +1063,7 @@ describe('toggleBlockAction y toggleMuteAction', () => {
     expect(mocks.privacyCreate).not.toHaveBeenCalled();
   });
 
-  it('bloquear crea la regla y corta los seguimientos', async () => {
+  it('bloquear crea la regla y corta los follows', async () => {
     await toggleBlockAction(form({ userId: 'otro' }));
 
     expect(mocks.privacyCreate).toHaveBeenCalledWith({
@@ -1072,7 +1072,7 @@ describe('toggleBlockAction y toggleMuteAction', () => {
     expect(mocks.followDeleteMany).toHaveBeenCalledTimes(1);
   });
 
-  it('silenciar crea la regla sin tocar los seguimientos', async () => {
+  it('silenciar crea la regla sin tocar los follows', async () => {
     await toggleMuteAction(form({ userId: 'otro' }));
 
     expect(mocks.privacyCreate).toHaveBeenCalledWith({

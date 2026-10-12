@@ -57,7 +57,7 @@ describe('profileChecklistScore', () => {
   });
 });
 
-describe('acento del perfil', () => {
+describe('profile accent', () => {
   it('resuelve el acento guardado y cae al de marca', () => {
     expect(resolveProfileAccent('violet')).toBe('violet');
     expect(resolveProfileAccent('neon')).toBe(DEFAULT_PROFILE_ACCENT);
@@ -98,7 +98,7 @@ describe('sanitizeProfileOpenTo', () => {
 
 describe('profileOpenToLabels', () => {
   it('traduce las señales y descarta lo desconocido', () => {
-    expect(profileOpenToLabels(['CLUB', 'NOPE'])).toEqual(['Busco club']);
+    expect(profileOpenToLabels(['CLUB', 'NOPE'])).toEqual(['Looking for a club']);
     expect(profileOpenToLabels([])).toEqual([]);
   });
 });
@@ -108,15 +108,15 @@ describe('playerProfileChecklist', () => {
     firstName: 'Ana',
     lastName: 'García',
     dateOfBirth: new Date('2010-05-04'),
-    nationality: 'España',
+    nationality: 'Spain',
     position: 'MIDFIELDER',
     foot: 'LEFT',
     competitionLevel: 'REGIONAL',
     heightCm: 170,
     weightKg: 60,
     clubName: 'CD Demo',
-    bio: 'Interior zurda con llegada',
-    headline: 'Interior zurda con llegada',
+    bio: 'Left-footed central midfielder who arrives in the box',
+    headline: 'Left-footed central midfielder who arrives in the box',
     bannerUrl: '/uploads/banners/a.jpg',
     image: '/uploads/photos/a.jpg',
     videoCount: 1,

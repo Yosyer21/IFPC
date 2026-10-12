@@ -23,7 +23,7 @@ export default async function AgentSubmissionsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title="Submissions" subtitle="Jugadores presentados a clubes y su estado" icon="mail">
+      <PageHeader title="Submissions" subtitle="Players submitted to clubs and their status" icon="mail">
         <Link
           href="/dashboard/agent/submissions/new"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"

@@ -34,7 +34,7 @@ export default async function AgentPlayerVideosPage({
         href={`/dashboard/agent/players/${playerId}`}
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Jugador
+        ← Player
       </Link>
       <h1 className="mb-6 text-2xl font-bold">Videos</h1>
 

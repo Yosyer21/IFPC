@@ -95,7 +95,7 @@ export async function updateProfileBannerAction(
 
   const file = formData.get('file');
   if (!(file instanceof File) || file.size === 0) {
-    return { error: 'Selecciona una imagen.' };
+    return { error: 'Select an image.' };
   }
   const ext = PROFILE_BANNER_MIME_EXT[file.type];
   if (!ext) {
@@ -110,7 +110,7 @@ export async function updateProfileBannerAction(
     select: { bannerUrl: true },
   });
   if (!player) {
-    return { error: 'Profile de jugador no encontrado.' };
+    return { error: 'Profile de player no encontrado.' };
   }
 
   const storage = resolveStorage();
@@ -124,7 +124,7 @@ export async function updateProfileBannerAction(
     // La portada anterior se borra cuando la nueva ya está guardada (best-effort).
     await storage.remove(player.bannerUrl);
   } catch {
-    return { error: 'No se pudo guardar la portada.' };
+    return { error: 'The cover could not be saved.' };
   }
 
   redirect(dashboardPath(formData.get('redirectTo')));
@@ -216,7 +216,7 @@ export async function uploadVideoAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de jugador no encontrado.' };
+    return { error: 'Profile de player no encontrado.' };
   }
 
   const ext = file.name.split('.').pop() ?? 'mp4';
@@ -254,7 +254,7 @@ export async function uploadDocumentAction(
   const title = str(formData, 'title');
   const type = str(formData, 'type') ?? 'other';
   if (!(file instanceof File) || file.size === 0) {
-    return { error: 'Selecciona un archivo.' };
+    return { error: 'Select a file.' };
   }
   if (!title) {
     return { error: 'Title is required.' };
@@ -262,7 +262,7 @@ export async function uploadDocumentAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de jugador no encontrado.' };
+    return { error: 'Profile de player no encontrado.' };
   }
 
   const ext = file.name.split('.').pop() ?? 'pdf';
@@ -281,7 +281,7 @@ export async function uploadDocumentAction(
       },
     });
   } catch {
-    return { error: 'No se pudo subir el documento.' };
+    return { error: 'The document could not be uploaded.' };
   }
 
   redirect('/dashboard/player/documents');
@@ -289,7 +289,7 @@ export async function uploadDocumentAction(
 
 /**
  * Crea (sin `entryId`) o actualiza (con `entryId`) una entrada de trayectoria del
- * jugador autenticado. Solo puede haber un club "actual": al marcarlo, se
+ * player autenticado. Solo puede haber un club "actual": al marcarlo, se
  * desmarca el resto y se sincroniza `Player.clubName`.
  */
 export async function saveCareerEntryAction(
@@ -303,7 +303,7 @@ export async function saveCareerEntryAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de jugador no encontrado.' };
+    return { error: 'Profile de player no encontrado.' };
   }
 
   const parsed = careerEntrySchema.safeParse({
@@ -317,7 +317,7 @@ export async function saveCareerEntryAction(
     notes: str(formData, 'notes'),
   });
   if (!parsed.success) {
-    return { error: 'Revisa los datos de la trayectoria (temporada tipo 2024/25).' };
+    return { error: 'Check the career history details (season format 2024/25).' };
   }
 
   const entryId = str(formData, 'entryId');
@@ -355,13 +355,13 @@ export async function saveCareerEntryAction(
       await prisma.careerEntry.create({ data: { playerId: player.id, ...data } });
     }
   } catch {
-    return { error: 'No se pudo guardar la trayectoria.' };
+    return { error: 'The career history could not be saved.' };
   }
 
   redirect('/dashboard/player/career');
 }
 
-/** Elimina una entrada de trayectoria (solo si es del jugador autenticado). */
+/** Elimina una entrada de trayectoria (solo si es del player autenticado). */
 export async function removeCareerEntryAction(formData: FormData): Promise<void> {
   const session = await auth();
   if (!session?.user?.id) {
@@ -405,7 +405,7 @@ export async function applyToOpportunityAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de jugador no encontrado.' };
+    return { error: 'Profile de player no encontrado.' };
   }
 
   try {

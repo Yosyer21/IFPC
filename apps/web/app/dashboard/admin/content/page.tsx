@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Contenido' };
 const CATEGORIES = [
   {
     href: '/dashboard/admin/content/training',
-    title: 'Entrenamiento',
+    title: 'Training',
     description: 'Catalog of technical content for players',
   },
   {

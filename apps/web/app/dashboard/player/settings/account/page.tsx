@@ -22,7 +22,7 @@ export default async function PlayerAccountSettingsPage() {
           href="/dashboard/player/settings"
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Ajustes
+          ← Settings
         </Link>
       </div>
       {!user.emailVerified ? <VerifyEmailBanner /> : null}

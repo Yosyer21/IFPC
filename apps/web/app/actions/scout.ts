@@ -49,7 +49,7 @@ export async function createScoutingReportAction(
       },
     });
   } catch {
-    return { error: 'No se pudo guardar el informe.' };
+    return { error: 'The report could not be saved.' };
   }
 
   redirect('/dashboard/scout/scouting-reports');

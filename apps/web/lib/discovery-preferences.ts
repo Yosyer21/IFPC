@@ -6,8 +6,8 @@ import { FEED_PREFERENCE_WEIGHTS, type AuthorPreferenceKind } from '@ifpc/config
  * (impulso implícito), y encima el espectador puede afinarla autor por autor con
  * «ver más» / «ver menos».
  *
- * Alcance: solo cambia el orden de los listados **rankeados** («Para ti» y
- * «Tendencias»). Los cronológicos («Recientes» y «Siguiendo») se quedan como
+ * Alcance: solo cambia el orden de los listados **rankeados** («For you» y
+ * «Tendencias»). Los cronológicos («Recientes» y «Following») se quedan como
  * están —y sí muestran a los autores con «ver menos»— para que la preferencia no
  * se convierta en una censura invisible.
  */
@@ -21,7 +21,7 @@ export function isPreferenceKind(value: unknown): value is AuthorPreferenceKind 
   return value === 'MORE' || value === 'LESS';
 }
 
-/** Peso del autor en el ranking según seguimiento y preferencia explícita. */
+/** Peso del autor en el ranking según tracking y preferencia explícita. */
 export function preferenceWeight(input: {
   isFollowed: boolean;
   preference: AuthorPreferenceKind | null;
@@ -65,7 +65,7 @@ export async function followedAuthorIds(viewerId?: string | null): Promise<Set<s
 }
 
 /**
- * Autores con «ver menos»: quedan fuera de «Para ti» y «Tendencias» (en los
+ * Autores con «ver menos»: quedan fuera de «For you» y «Tendencias» (en los
  * listados cronológicos siguen apareciendo, solo caen en el ranking).
  */
 export async function downrankedAuthorIds(viewerId?: string | null): Promise<string[]> {

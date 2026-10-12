@@ -133,7 +133,7 @@ export default async function ParentDashboardPage() {
       href: '/dashboard/parent/opportunities',
       icon: IconTarget,
       text: `${openOpportunities} oportunidad${openOpportunities === 1 ? '' : 'es'} abierta${openOpportunities === 1 ? '' : 's'} para explorar`,
-      meta: 'Ver oportunidades',
+      meta: 'See opportunities',
     });
   }
 
@@ -184,7 +184,7 @@ export default async function ParentDashboardPage() {
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
             { href: '/dashboard/parent/children', icon: IconUsers, label: 'My children' },
-            { href: '/dashboard/parent/opportunities', icon: IconTarget, label: 'Oportunidades' },
+            { href: '/dashboard/parent/opportunities', icon: IconTarget, label: 'Opportunities' },
             { href: '/dashboard/parent/education', icon: IconBook, label: 'Education' },
             { href: '/dashboard/parent/payments', icon: IconStar, label: 'Payments' },
           ].map((action, i) => {
@@ -275,10 +275,10 @@ export default async function ParentDashboardPage() {
                 <DonutChart
                   value={overall * 10}
                   label={`${overall}`}
-                  sublabel={`sobre 10 · ${evaluations.length} evaluaciones`}
+                  sublabel={`out of 10 · ${evaluations.length} evaluations`}
                 />
                 <p className="text-center text-sm text-muted-foreground">
-                  Media de las evaluaciones registradas por el entrenador.
+                  Media de las evaluations registered por el coach.
                 </p>
               </>
             ) : (
@@ -296,12 +296,12 @@ export default async function ParentDashboardPage() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">My children</h2>
               <Link href="/dashboard/parent/children" className="text-sm text-primary hover:underline">
-                Ver todos →
+                See all →
               </Link>
             </div>
             {children.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Vincula a tu hijo para seguir su desarrollo, evaluaciones y oportunidades.
+                Vincula a tu hijo para seguir su desarrollo, evaluations y opportunities.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -354,7 +354,7 @@ export default async function ParentDashboardPage() {
                         {evaluation.player.firstName}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {evaluation.evaluatedBy ?? 'Entrenador'} ·{' '}
+                        {evaluation.evaluatedBy ?? 'Coach'} ·{' '}
                         {evaluation.createdAt.toLocaleDateString('es')}
                       </div>
                     </div>

@@ -19,9 +19,9 @@ import {
 import { canComment } from '@/lib/discovery-privacy';
 import { isNotInterested } from '@/lib/discovery-interest';
 
-export const metadata: Metadata = { title: 'Publicación' };
+export const metadata: Metadata = { title: 'Post' };
 
-/** Detalle de una publicación: comentarios, edición del autor y alcance. */
+/** Detalle de una post: comments, edición del autor y alcance. */
 export default async function PostDetailPage({
   params,
 }: {
@@ -55,7 +55,7 @@ export default async function PostDetailPage({
         href="/dashboard/discovery"
         className="text-sm text-muted-foreground hover:text-foreground"
       >
-        ← Volver al feed
+        ← Back to feed
       </Link>
 
       <div className="mt-4">
@@ -71,7 +71,7 @@ export default async function PostDetailPage({
         <Card className="mt-4">
           <CardContent>
             <p className="text-sm text-amber-400">
-              Tu publicación está en revisión por el equipo de moderación y todavía no es visible
+              Tu post está en revisión por el team de moderación y todavía no es visible
               para el resto.
             </p>
           </CardContent>
@@ -112,13 +112,13 @@ export default async function PostDetailPage({
               value={post.status === 'HIDDEN' ? 'PUBLISHED' : 'HIDDEN'}
             />
             <ActionSubmit
-              label={post.status === 'HIDDEN' ? 'Volver a publicar' : 'Ocultar (moderación)'}
+              label={post.status === 'HIDDEN' ? 'Republish' : 'Hide (moderation)'}
             />
           </form>
 
           <form action={pinPostAction}>
             <input type="hidden" name="postId" value={post.id} />
-            <ActionSubmit label={post.pinned ? 'Desfijar del feed' : 'Fijar en el feed'} />
+            <ActionSubmit label={post.pinned ? 'Unpin from the feed' : 'Fijar en el feed'} />
           </form>
         </div>
       ) : null}
@@ -138,8 +138,8 @@ export default async function PostDetailPage({
           ) : (
             <p className="text-sm text-muted-foreground">
               {post.commentsPolicy === 'NOBODY'
-                ? 'El autor ha cerrado los comentarios de esta publicación.'
-                : 'No puedes comentar en esta publicación.'}
+                ? 'The author has closed the comments on this post.'
+                : 'You cannot comment on this post.'}
             </p>
           )}
         </CardContent>

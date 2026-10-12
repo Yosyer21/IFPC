@@ -26,7 +26,7 @@ export function CreateGoalForm({ playerId }: { playerId: string }) {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Crear objetivo'}
+        {pending ? 'Guardando…' : 'Crear goal'}
       </Button>
     </form>
   );

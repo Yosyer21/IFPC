@@ -74,7 +74,7 @@ describe('listProfiles', () => {
     });
   });
 
-  it('sin sesión no consulta seguimientos', async () => {
+  it('sin sesión no consulta follows', async () => {
     mocks.userFindMany.mockResolvedValue([userRow('u1')]);
 
     const profiles = await listProfiles({});
@@ -93,7 +93,7 @@ describe('listProfiles', () => {
     expect(mocks.userFindMany.mock.calls[0][0].where.id).toEqual({ notIn: ['bloqueado'] });
   });
 
-  it('sin usuarios no consulta seguimientos', async () => {
+  it('sin usuarios no consulta follows', async () => {
     await listProfiles({ viewerId: 'viewer-1' });
     expect(mocks.followFindMany).not.toHaveBeenCalled();
   });

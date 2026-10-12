@@ -11,7 +11,7 @@ async function login(page: import('@playwright/test').Page, email: string, passw
 }
 
 test('Coach: assigns assessment and goal to the player, and the player sees them', async ({ page }) => {
-  // 1. Login como entrenador
+  // 1. Login como coach
   await login(page, 'coach@demo.com', 'coach123');
 
   // 2. Redesigned coach dashboard (hero, radar, donut, activity)
@@ -20,26 +20,26 @@ test('Coach: assigns assessment and goal to the player, and the player sees them
   await expect(page.getByText('Average level by category')).toBeVisible();
   await expect(page.getByText('Group overall average')).toBeVisible();
   await expect(page.getByText('Recent activity')).toBeVisible();
-  await expect(page.getByText('Jugador Demo').first()).toBeVisible();
+  await expect(page.getByText('Demo Player').first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'Register assessment' }).first()).toBeVisible();
 
-  // 3. Entrar al jugador y crear un objetivo
+  // 3. Entrar al player y crear un goal
   await page.goto(`${BASE}/dashboard/coach/players`);
-  await page.getByRole('link', { name: /Jugador Demo/ }).click();
-  await page.getByRole('link', { name: 'Ver objetivos y crear' }).click();
+  await page.getByRole('link', { name: /Demo Player/ }).click();
+  await page.getByRole('link', { name: 'Ver goals y crear' }).click();
 
-  const goalTitle = `Objetivo E2E ${Date.now()}: mejor golpeo`;
+  const goalTitle = `Goal E2E ${Date.now()}: mejor golpeo`;
   await page.getByLabel('Goal title').fill(goalTitle);
   await page.getByLabel('Deadline').fill('2026-12-31');
-  await page.getByLabel('Description').fill('Registrar 50 remates por semana en el entrenamiento.');
-  await page.getByRole('button', { name: 'Crear objetivo' }).click();
+  await page.getByLabel('Description').fill('Registrar 50 remates por week en el training.');
+  await page.getByRole('button', { name: 'Crear goal' }).click();
   await page.waitForURL('**/development', { timeout: 15_000 });
   await expect(page.getByText(goalTitle)).toBeVisible();
 
   // 4. Create an assessment
   await page.goto(`${BASE}/dashboard/coach/players`);
-  await page.getByRole('link', { name: /Jugador Demo/ }).first().click();
-  await page.getByRole('link', { name: 'Ver evaluaciones y registrar' }).click();
+  await page.getByRole('link', { name: /Demo Player/ }).first().click();
+  await page.getByRole('link', { name: 'Ver evaluations y registrar' }).click();
 
   await page.getByLabel('Score (1-10)').fill('9');
   const evalNotes = `E2E assessment ${Date.now()}: great progress on first touch.`;
@@ -55,6 +55,6 @@ test('Coach: assigns assessment and goal to the player, and the player sees them
   await expect(playerContext.getByText(goalTitle)).toBeVisible();
   await playerContext.goto(`${BASE}/dashboard/player/development/evaluations`);
   await expect(playerContext.getByText(evalNotes)).toBeVisible();
-  await expect(playerContext.getByText('por Entrenador Demo').first()).toBeVisible();
+  await expect(playerContext.getByText('por Demo Coach').first()).toBeVisible();
   await playerContext.close();
 });

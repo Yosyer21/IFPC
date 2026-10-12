@@ -5,7 +5,7 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 /**
  * GET /api/trials — pruebas.
  * - Club: sus pruebas.
- * - Jugador: las suyas.
+ * - Player: las suyas.
  * - Admin: todas.
  */
 export async function GET() {

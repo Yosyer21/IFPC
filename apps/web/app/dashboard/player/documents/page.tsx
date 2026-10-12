@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Mis documentos' };
+export const metadata: Metadata = { title: 'My documents' };
 
 const TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
@@ -29,12 +29,12 @@ export default async function PlayerDocumentsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title="Mis documentos" icon="file">
+      <PageHeader title="My documents" icon="file">
         <Link
           href="/dashboard/player/documents/upload"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
         >
-          Subir documento
+          Upload document
         </Link>
       </PageHeader>
 
@@ -42,7 +42,7 @@ export default async function PlayerDocumentsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No tienes documentos subidos. Tus documentos (pasaporte, contrato, certificado
+              No tienes documents subidos. Tus documents (pasaporte, contrato, certificado
               medical…) will appear here.
             </p>
           </CardContent>

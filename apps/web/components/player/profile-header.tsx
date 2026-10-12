@@ -8,13 +8,13 @@ export interface ProfileHeaderProps {
   lastName: string;
   /** `User.image`. */
   imageUrl?: string | null;
-  /** `Player.bannerUrl`: portada subida por el jugador. */
+  /** `Player.bannerUrl`: portada subida por el player. */
   bannerUrl?: string | null;
-  /** `Player.accentColor`: tiñe anillo, chips y titular. */
+  /** `Player.accentColor`: tiñe anillo, chips y headline. */
   accentColor?: string | null;
   headline?: string | null;
   location?: string | null;
-  /** Línea bajo el nombre (posición · nivel, en el perfil; solo posición en público). */
+  /** Línea bajo el nombre (position · level, en el perfil; solo position en público). */
   subtitle?: string | null;
   /** `Player.openTo`: señales de disponibilidad. */
   openTo?: string[];
@@ -30,7 +30,7 @@ export interface ProfileHeaderProps {
 
 /**
  * Cabecera personalizable del perfil: portada (o degradado del acento),
- * avatar con anillo del acento, titular, ubicación y chips de «abierto a»,
+ * avatar con anillo del acento, headline, ubicación y chips de «abierto a»,
  * con hueco para cambiar la portada y la foto sin salir de la página.
  * La comparten el perfil propio, el muro de Discovery y el público.
  */

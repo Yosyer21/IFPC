@@ -13,16 +13,16 @@ export interface ProfileViewRow {
 export interface ProfileViewStats {
   /** Visitantes únicos. */
   viewers: number;
-  /** Visitas totales (incluye repetidas del mismo visitante). */
+  /** Visitas totals (incluye repetidas del mismo visitante). */
   views: number;
-  /** Visitantes que han llegado por primera vez en los últimos 7 días. */
+  /** Visitantes que han llegado por primera vez en los últimos 7 days. */
   newThisWeek: number;
   byRole: { role: string; viewers: number }[];
 }
 
 /**
- * Agrega las visitas al perfil: visitantes únicos, visitas totales, nuevos de la
- * última semana y desglose por rol (de mayor a menor).
+ * Agrega las views al perfil: visitantes únicos, views totals, nuevos de la
+ * última week y desglose por rol (de mayor a menor).
  */
 export function summarizeProfileViews(
   rows: ProfileViewRow[],
@@ -45,7 +45,7 @@ export function summarizeProfileViews(
   };
 }
 
-/** Suma una visita al registro del visitante (un registro por jugador + visitante). */
+/** Suma una view al registro del visitante (un registro por player + visitante). */
 export async function recordProfileView(input: {
   playerId: string;
   viewerUserId: string;
@@ -64,13 +64,13 @@ export async function recordProfileView(input: {
       create: input,
     });
   } catch {
-    // Las métricas nunca deben romper la página del jugador.
+    // Las métricas nunca deben romper la página del player.
   }
 }
 
 /**
- * Registra la visita cuando hay sesión de un rol "profesional" distinto del
- * dueño del perfil. Pensado para llamarse al renderizar un perfil de jugador.
+ * Registra la view cuando hay sesión de un rol "profesional" distinto del
+ * dueño del perfil. Pensado para llamarse al renderizar un perfil de player.
  */
 export async function trackProfileView(input: {
   playerId: string;
@@ -90,7 +90,7 @@ export async function trackProfileView(input: {
   });
 }
 
-/** Métricas de interés del perfil de un jugador. */
+/** Métricas de interés del perfil de un player. */
 export async function getProfileViewStats(
   playerId: string,
   now: Date = new Date()

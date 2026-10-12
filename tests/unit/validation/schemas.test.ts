@@ -82,14 +82,14 @@ describe('playerProfileSchema', () => {
       firstName: 'Ana',
       lastName: 'G',
       headline: 'Interior zurda',
-      location: 'Valencia, España',
+      location: 'Valencia, Spain',
       accentColor: 'violet',
       openTo: ['CLUB', 'TRIAL'],
     });
     expect(result.success).toBe(true);
   });
 
-  it('rechaza un titular o una ubicación demasiado largos', () => {
+  it('rechaza un headline o una ubicación demasiado largos', () => {
     const headline = playerProfileSchema.safeParse({
       firstName: 'Ana',
       lastName: 'G',
@@ -137,7 +137,7 @@ describe('playerProfileSchema', () => {
     const result = playerProfileSchema.safeParse({
       firstName: 'Ana',
       lastName: 'G',
-      dateOfBirth: 'ayer',
+      dateOfBirth: 'yesterday',
     });
     expect(result.success).toBe(false);
   });
@@ -162,15 +162,15 @@ describe('careerEntrySchema', () => {
     assists: 7,
   };
 
-  it('acepta una temporada válida', () => {
+  it('acepta una season válida', () => {
     expect(careerEntrySchema.safeParse(valid).success).toBe(true);
   });
 
-  it('acepta un año suelto como temporada', () => {
+  it('acepta un year suelto como season', () => {
     expect(careerEntrySchema.safeParse({ ...valid, season: '2024' }).success).toBe(true);
   });
 
-  it('rechaza una temporada mal formada', () => {
+  it('rechaza una season mal formada', () => {
     expect(careerEntrySchema.safeParse({ ...valid, season: 'verano 2025' }).success).toBe(false);
     expect(careerEntrySchema.safeParse({ ...valid, season: '25/26' }).success).toBe(false);
   });

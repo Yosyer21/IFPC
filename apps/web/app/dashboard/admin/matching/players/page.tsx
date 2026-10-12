@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { matchScore } from '@ifpc/matching';
 import { IconWhistle } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Matching · Jugadores' };
+export const metadata: Metadata = { title: 'Matching · Players' };
 
 export default async function AdminMatchingPlayersPage() {
   const session = await auth();
@@ -34,7 +34,7 @@ export default async function AdminMatchingPlayersPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Matching · Jugadores" subtitle="Mejor coincidencia de cada jugador" icon="whistle">
+      <PageHeader title="Matching · Players" subtitle="Mejor coincidencia de cada player" icon="whistle">
         <Link href="/dashboard/admin/matching" className="text-sm text-muted-foreground hover:underline">
           ← Matching
         </Link>
@@ -63,7 +63,7 @@ export default async function AdminMatchingPlayersPage() {
                     <div className="mt-1 text-xs text-muted-foreground">
                       {best
                         ? `Mejor match: ${best.requirement.club?.name ?? 'Club'} · ${best.requirement.title}`
-                        : 'Sin requisitos abiertos que evaluar'}
+                        : 'No open requirements to evaluate'}
                     </div>
                   </div>
                   {best ? (

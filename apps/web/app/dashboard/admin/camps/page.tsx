@@ -43,7 +43,7 @@ export default async function AdminCampsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Camps"
-        subtitle="Campus, clinics y concentraciones organizadas por clubes y entrenadores"
+        subtitle="Campus, clinics y concentraciones organizadas por clubs y coaches"
         icon="trophy"
       >
         <Link
@@ -129,7 +129,7 @@ export default async function AdminCampsPage() {
                     type="submit"
                     className="rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-muted"
                   >
-                    Actualizar
+                    Update
                   </button>
                 </form>
 
@@ -139,7 +139,7 @@ export default async function AdminCampsPage() {
                     type="submit"
                     className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive transition-colors hover:bg-destructive/10"
                   >
-                    Eliminar
+                    Delete
                   </button>
                 </form>
               </CardContent>

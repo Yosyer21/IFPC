@@ -35,7 +35,7 @@ beforeEach(() => {
 });
 
 describe('summarizeProfileViews', () => {
-  it('sin visitas devuelve ceros', () => {
+  it('sin views devuelve ceros', () => {
     expect(summarizeProfileViews([], NOW)).toEqual({
       viewers: 0,
       views: 0,
@@ -44,7 +44,7 @@ describe('summarizeProfileViews', () => {
     });
   });
 
-  it('cuenta visitantes únicos, visitas totales y desglose por rol', () => {
+  it('cuenta visitantes únicos, views totals y desglose por rol', () => {
     const stats = summarizeProfileViews(
       [row('CLUB', 3, 1), row('CLUB', 1, 2), row('SCOUT', 2, 3)],
       NOW
@@ -58,7 +58,7 @@ describe('summarizeProfileViews', () => {
     ]);
   });
 
-  it('solo cuenta como nuevos los visitantes de los últimos 7 días', () => {
+  it('solo cuenta como nuevos los visitantes de los últimos 7 days', () => {
     const stats = summarizeProfileViews([row('CLUB', 1, 6), row('SCOUT', 1, 8)], NOW);
     expect(stats.newThisWeek).toBe(1);
   });
@@ -88,7 +88,7 @@ describe('recordProfileView', () => {
 });
 
 describe('trackProfileView', () => {
-  it('registra la visita de un rol profesional', async () => {
+  it('registra la view de un rol profesional', async () => {
     await trackProfileView({ playerId: 'p1', ownerUserId: 'owner-1' });
 
     expect(mocks.upsert).toHaveBeenCalledTimes(1);
@@ -104,7 +104,7 @@ describe('trackProfileView', () => {
     expect(mocks.upsert).not.toHaveBeenCalled();
   });
 
-  it('ignora roles no profesionales (jugadores, familias, admin)', async () => {
+  it('ignora roles no profesionales (players, families, admin)', async () => {
     for (const role of ['PLAYER', 'PARENT', 'ADMIN']) {
       mocks.auth.mockResolvedValue({ user: { id: 'viewer-1', role } });
       await trackProfileView({ playerId: 'p1', ownerUserId: 'owner-1' });
@@ -120,10 +120,10 @@ describe('trackProfileView', () => {
 });
 
 describe('getProfileViewStats', () => {
-  it('consulta las visitas del jugador y las resume', async () => {
+  it('consulta las views del player y las resume', async () => {
     mocks.findMany.mockResolvedValue([row('CLUB', 2, 1), row('SCOUT', 1, 30)]);
 
-    // Se pasa el reloj explícitamente: si no, «nuevos esta semana» depende del día real del test.
+    // Se pasa el reloj explícitamente: si no, «nuevos esta week» depende del day real del test.
     const stats = await getProfileViewStats('p1', NOW);
 
     expect(mocks.findMany).toHaveBeenCalledWith({

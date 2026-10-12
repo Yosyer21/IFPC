@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Oportunidades de mi hijo' };
+export const metadata: Metadata = { title: 'My child’s opportunities' };
 
 export default async function ParentChildOpportunitiesPage({
   params,
@@ -50,8 +50,8 @@ export default async function ParentChildOpportunitiesPage({
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Oportunidades de mi hijo"
-        subtitle="Applications enviadas, oportunidades guardadas e inscripciones a camps"
+        title="My child’s opportunities"
+        subtitle="Applications enviadas, opportunities guardadas e inscripciones a camps"
         icon="target"
       >
         <Link
@@ -96,7 +96,7 @@ export default async function ParentChildOpportunitiesPage({
         <CardContent>
           <h2 className="mb-4 font-semibold">Guardadas ({saved.length})</h2>
           {saved.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No tiene oportunidades guardadas.</p>
+            <p className="text-sm text-muted-foreground">They have no saved opportunities.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {saved.map((item) => (

@@ -13,7 +13,7 @@ export function CreateScoutingReportForm({
 
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
-      <Select name="playerId" label="Jugador" options={players} placeholder="Selecciona…" required />
+      <Select name="playerId" label="Player" options={players} placeholder="Select…" required />
       <Input name="rating" type="number" label="Rating (1-10)" min={1} max={10} required />
       <Input name="strengths" label="Fortalezas" placeholder="Control, vision…" />
       <Input name="weaknesses" label="A mejorar" placeholder="Aerial game…" />
@@ -30,7 +30,7 @@ export function CreateScoutingReportForm({
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Crear informe'}
+        {pending ? 'Guardando…' : 'Crear report'}
       </Button>
     </form>
   );

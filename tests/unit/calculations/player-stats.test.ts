@@ -31,7 +31,7 @@ beforeEach(() => {
 });
 
 describe('getPlayerStats', () => {
-  it('sin datos deja todo a cero y sin nivel global', async () => {
+  it('sin datos deja todo a cero y sin level global', async () => {
     await expect(getPlayerStats('player-1')).resolves.toEqual({
       overall: null,
       evaluations: 0,
@@ -41,7 +41,7 @@ describe('getPlayerStats', () => {
     });
   });
 
-  it('pondera la media global por número de evaluaciones y ordena por nivel', async () => {
+  it('pondera la media global por número de evaluations y ordena por level', async () => {
     mocks.evaluationGroupBy.mockResolvedValue([
       { category: 'technical', _avg: { score: 8 }, _count: { _all: 1 } },
       { category: 'physical', _avg: { score: 6 }, _count: { _all: 3 } },
@@ -55,7 +55,7 @@ describe('getPlayerStats', () => {
     expect(stats.categories[0]).toMatchObject({ label: 'Technique', average: 8, count: 1 });
   });
 
-  it('suma la trayectoria y cuenta temporadas distintas', async () => {
+  it('suma la trayectoria y cuenta seasons distintas', async () => {
     mocks.careerAggregate.mockResolvedValue({
       _count: { _all: 3 },
       _sum: { appearances: 42, goals: 12, assists: 7 },
@@ -72,7 +72,7 @@ describe('getPlayerStats', () => {
     });
   });
 
-  it('descarta categorías sin evaluaciones y redondea a una decimal', async () => {
+  it('descarta categories sin evaluations y redondea a una decimal', async () => {
     mocks.evaluationGroupBy.mockResolvedValue([
       { category: 'tactical', _avg: { score: 7.06 }, _count: { _all: 2 } },
       { category: 'psychological', _avg: { score: null }, _count: { _all: 0 } },
@@ -87,7 +87,7 @@ describe('getPlayerStats', () => {
     expect(stats.videos).toBe(4);
   });
 
-  it('usa la clave como etiqueta si la categoría no está en el catálogo', async () => {
+  it('usa la clave como tag si la category no está en el catálogo', async () => {
     mocks.evaluationGroupBy.mockResolvedValue([
       { category: 'leadership', _avg: { score: 5 }, _count: { _all: 1 } },
     ]);

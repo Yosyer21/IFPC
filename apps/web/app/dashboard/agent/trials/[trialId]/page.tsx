@@ -39,7 +39,7 @@ export default async function AgentTrialDetailPage({
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
-              ['Jugador', `${trial.player.firstName} ${trial.player.lastName}`],
+              ['Player', `${trial.player.firstName} ${trial.player.lastName}`],
               ['Club', trial.club.name],
               ['Inicio', trial.startsAt.toLocaleString('en')],
               ['Fin', trial.endsAt ? trial.endsAt.toLocaleString('en') : '—'],

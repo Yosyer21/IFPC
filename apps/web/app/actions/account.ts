@@ -45,7 +45,7 @@ export async function updateProfilePhotoAction(
 
   const file = formData.get('file');
   if (!(file instanceof File) || file.size === 0) {
-    return { error: 'Selecciona una imagen.' };
+    return { error: 'Select an image.' };
   }
   const ext = PHOTO_MIME_EXT[file.type];
   if (!ext) {
@@ -71,7 +71,7 @@ export async function updateProfilePhotoAction(
     });
     await removeLocalPhoto(previous?.image ?? null);
   } catch {
-    return { error: 'No se pudo guardar la foto.' };
+    return { error: 'The photo could not be saved.' };
   }
 
   redirect(backTo);

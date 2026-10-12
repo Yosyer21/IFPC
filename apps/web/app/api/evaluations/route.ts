@@ -4,8 +4,8 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
  * GET /api/evaluations
- * - Jugador: sus evaluaciones.
- * - Coach: evaluaciones de sus jugadores.
+ * - Player: sus evaluations.
+ * - Coach: evaluations de sus players.
  * - Admin: todas.
  */
 export async function GET() {

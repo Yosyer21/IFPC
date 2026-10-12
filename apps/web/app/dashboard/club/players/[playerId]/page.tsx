@@ -7,7 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { trackProfileView } from '@/lib/profile-views';
 
-export const metadata: Metadata = { title: 'Jugador' };
+export const metadata: Metadata = { title: 'Player' };
 
 export default async function ClubPlayerDetailPage({
   params,
@@ -24,7 +24,7 @@ export default async function ClubPlayerDetailPage({
   });
   if (!player) notFound();
 
-  // Interés de terceros: visita registrada para las métricas del jugador.
+  // Interés de terceros: view registrada para las métricas del player.
   await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const positionLabel = player.position
@@ -33,7 +33,7 @@ export default async function ClubPlayerDetailPage({
 
   const rows: [string, string][] = [
     ['Position', positionLabel],
-    ['Nacionalidad', player.nationality ?? '—'],
+    ['Nationality', player.nationality ?? '—'],
     ['Preferred foot', player.foot ?? '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],

@@ -37,7 +37,7 @@ export default async function ScoutReportsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Informes de scouting"
-        subtitle="Documenta y valora el talento que encuentras"
+        subtitle="Document and rate the talent you find"
         icon="whistle"
       />
 

@@ -86,14 +86,14 @@ describe('logModeration', () => {
 });
 
 describe('listReportedPosts', () => {
-  it('solo mira las denuncias pendientes', async () => {
+  it('solo mira las reports pendientes', async () => {
     await listReportedPosts();
 
     expect(mocks.reportFindMany.mock.calls[0][0].where).toEqual({ resolvedAt: null });
     expect(mocks.postFindMany).not.toHaveBeenCalled();
   });
 
-  it('agrupa las denuncias por publicación y prioriza las más denunciadas', async () => {
+  it('agrupa las reports por post y prioriza las más denunciadas', async () => {
     mocks.reportFindMany.mockResolvedValue([
       report('post-a'),
       report('post-b', 'reporter-1'),
@@ -109,7 +109,7 @@ describe('listReportedPosts', () => {
     expect(queue[0]?.reports[0]?.reporter.name).toBe('Persona reporter-1');
   });
 
-  it('marca las publicaciones fijadas y las ocultas', async () => {
+  it('marca las posts fijadas y las ocultas', async () => {
     mocks.reportFindMany.mockResolvedValue([report('post-a')]);
     mocks.postFindMany.mockResolvedValue([
       postRow('post-a', { pinnedAt: new Date('2026-01-02'), status: 'HIDDEN' }),
@@ -121,7 +121,7 @@ describe('listReportedPosts', () => {
     expect(entry?.status).toBe('HIDDEN');
   });
 
-  it('ignora denuncias cuyo post ya no existe', async () => {
+  it('ignora reports cuyo post ya no existe', async () => {
     mocks.reportFindMany.mockResolvedValue([report('post-borrado')]);
     mocks.postFindMany.mockResolvedValue([]);
 

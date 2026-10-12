@@ -39,7 +39,7 @@ export default async function AdminClubDetailPage({
     ['Country', club.country],
     ['Ciudad', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
-    ['Usuario', club.user?.name ?? 'Sin usuario vinculado'],
+    ['Usuario', club.user?.name ?? 'No linked user'],
     ['Registrado el', club.createdAt.toLocaleDateString('es')],
   ];
 
@@ -53,7 +53,7 @@ export default async function AdminClubDetailPage({
       </Link>
       <PageHeader title={club.name} subtitle={club.user?.email ?? club.email} icon="briefcase">
         <Badge variant={club.verified ? 'success' : 'warning'}>
-          {club.verified ? 'Verificado' : 'Pendiente'}
+          {club.verified ? 'Verificado' : 'Pending'}
         </Badge>
         {!club.verified ? (
           <form action={verifyClubAction}>
@@ -109,7 +109,7 @@ export default async function AdminClubDetailPage({
           <CardContent>
             <h2 className="mb-3 font-semibold">Staff ({club.staff.length})</h2>
             {club.staff.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin miembros de staff.</p>
+              <p className="text-sm text-muted-foreground">No staff members.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {club.staff.map((member) => (
@@ -130,9 +130,9 @@ export default async function AdminClubDetailPage({
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardContent>
-            <h2 className="mb-3 font-semibold">Oportunidades ({club.opportunities.length})</h2>
+            <h2 className="mb-3 font-semibold">Opportunities ({club.opportunities.length})</h2>
             {club.opportunities.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin oportunidades publicadas.</p>
+              <p className="text-sm text-muted-foreground">Sin opportunities publicadas.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {club.opportunities.slice(0, 10).map((opportunity) => (
@@ -160,7 +160,7 @@ export default async function AdminClubDetailPage({
           <CardContent>
             <h2 className="mb-3 font-semibold">Requisitos ({club.requirements.length})</h2>
             {club.requirements.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin requisitos de reclutamiento.</p>
+              <p className="text-sm text-muted-foreground">Sin requirements de reclutamiento.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {club.requirements.slice(0, 10).map((requirement) => (

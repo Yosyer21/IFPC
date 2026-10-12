@@ -6,7 +6,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Jugadores' };
+export const metadata: Metadata = { title: 'Players' };
 
 export default async function UniversityPlayersPage() {
   const session = await auth();
@@ -22,7 +22,7 @@ export default async function UniversityPlayersPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Available players"
-        subtitle="Talento abierto a nuevas oportunidades para reclutar"
+        subtitle="Talento abierto a nuevas opportunities para reclutar"
         icon="users"
       />
 
@@ -55,7 +55,7 @@ export default async function UniversityPlayersPage() {
                     </h2>
                     <p className="truncate text-sm text-muted-foreground">{positionLabel}</p>
                     <div className="mt-1 flex flex-wrap items-center gap-2">
-                      <Badge variant="success">Disponible</Badge>
+                      <Badge variant="success">Available</Badge>
                       {player.nationality ? (
                         <span className="text-xs text-muted-foreground">{player.nationality}</span>
                       ) : null}

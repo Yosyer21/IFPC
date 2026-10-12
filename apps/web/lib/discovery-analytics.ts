@@ -31,7 +31,7 @@ export function bestPostingHour(items: { createdAt: Date; score: number }[]): nu
   return best ? best.hour : null;
 }
 
-/** Cuenta etiquetas y devuelve las más usadas (desempate alfabético). */
+/** Cuenta tags y devuelve las más usadas (desempate alfabético). */
 export function countTags(tagLists: string[][], limit = 6): { tag: string; posts: number }[] {
   const counts = new Map<string, number>();
   for (const tags of tagLists) {
@@ -44,7 +44,7 @@ export function countTags(tagLists: string[][], limit = 6): { tag: string; posts
     .slice(0, limit);
 }
 
-/** Reparte fechas en los últimos `days` días (incluye los días sin actividad). */
+/** Reparte fechas en los últimos `days` days (incluye los days sin actividad). */
 export function bucketPostsByDay(
   dates: Date[],
   days: number,
@@ -64,7 +64,7 @@ export function bucketPostsByDay(
   return [...buckets.entries()].map(([day, posts]) => ({ day, posts }));
 }
 
-/** Horas medias hasta atender una denuncia (o `null` si no hay ninguna). */
+/** Horas medias hasta atender una report (o `null` si no hay ninguna). */
 export function averageResolutionHours(
   items: { createdAt: Date; resolvedAt: Date | null }[]
 ): number | null {
@@ -90,7 +90,7 @@ export interface AuthorPostRow {
   comments: number;
   /** Personas distintas que la abrieron. */
   viewers: number;
-  /** Aperturas anónimas (espejo público). */
+  /** Anonymous openings (espejo público). */
   anonymousViews: number;
 }
 
@@ -106,7 +106,7 @@ export interface AuthorAnalytics {
   bestHour: number | null;
 }
 
-/** Agrega el rendimiento de las publicaciones de un autor. */
+/** Agrega el rendimiento de las posts de un autor. */
 export function summarizeAuthorAnalytics(rows: AuthorPostRow[]): AuthorAnalytics {
   const scored = rows.map((row) => ({
     row,
@@ -141,11 +141,11 @@ export interface FeedHealth {
   published: number;
   hidden: number;
   pendingReports: number;
-  /** Denuncias pendientes por cada 100 publicaciones. */
+  /** Denuncias pendientes por cada 100 posts. */
   reportRatePer100: number;
-  /** Autores distintos que han publicado en los últimos 30 días. */
+  /** Autores distintos que han publicado en los últimos 30 days. */
   activeAuthors: number;
-  /** Publicaciones por día en las últimas dos semanas. */
+  /** Posts por day en las últimas dos weeks. */
   postsByDay: { day: string; posts: number }[];
   topTags: { tag: string; posts: number }[];
   averageResolutionHours: number | null;
@@ -153,7 +153,7 @@ export interface FeedHealth {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-/** Rendimiento del autor en Discovery (alcance, engagement, etiquetas y hora). */
+/** Rendimiento del autor en Discovery (alcance, engagement, tags y hora). */
 export async function getAuthorAnalytics(authorId: string): Promise<AuthorAnalytics> {
   const posts = await prisma.post.findMany({
     where: { authorId, status: { in: ['PUBLISHED', 'HIDDEN'] } },
@@ -187,7 +187,7 @@ export async function getAuthorAnalytics(authorId: string): Promise<AuthorAnalyt
   return summarizeAuthorAnalytics(
     posts.map((post) => ({
       id: post.id,
-      label: post.title ?? (post.body ?? '').slice(0, 60) ?? 'Publicación',
+      label: post.title ?? (post.body ?? '').slice(0, 60) ?? 'Post',
       tags: post.tags,
       createdAt: post.createdAt,
       likes: post._count.likes,
@@ -198,7 +198,7 @@ export async function getAuthorAnalytics(authorId: string): Promise<AuthorAnalyt
   );
 }
 
-/** Salud del feed para el panel de admin. */
+/** Feed health para el panel de admin. */
 export async function getFeedHealth(now: Date = new Date()): Promise<FeedHealth> {
   const since30 = new Date(now.getTime() - 30 * DAY_MS);
   const since14 = new Date(now.getTime() - 14 * DAY_MS);

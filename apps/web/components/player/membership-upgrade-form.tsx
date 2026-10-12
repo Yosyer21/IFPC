@@ -15,7 +15,7 @@ const PLANS: {
     tier: 'FREE',
     label: 'Gratis',
     price: '0 €',
-    features: ['Basic profile', 'Contenido de entrenamiento', 'Aplicar a oportunidades'],
+    features: ['Basic profile', 'Training content', 'Apply to opportunities'],
   },
   {
     tier: 'PREMIUM',
@@ -27,13 +27,13 @@ const PLANS: {
     tier: 'SCOUT',
     label: 'Scout',
     price: '€199/year',
-    features: ['Acceso a informes de scouting', 'Advanced player search', 'Guardar jugadores'],
+    features: ['Acceso a reports de scouting', 'Advanced player search', 'Save players'],
   },
   {
     tier: 'CLUB',
     label: 'Club',
     price: '€499/year',
-    features: ['Publicar oportunidades', 'Requisitos de jugadores', 'Acceso completo al matching'],
+    features: ['Post opportunities', 'Requisitos de players', 'Acceso completo al matching'],
   },
 ];
 

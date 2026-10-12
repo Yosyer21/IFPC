@@ -31,7 +31,7 @@ export default async function AdminRecruitmentTrialsPage() {
       </Link>
       <PageHeader
         title="Pruebas"
-        subtitle={`${trials.length} pruebas registradas`}
+        subtitle={`${trials.length} pruebas registered`}
         icon="briefcase"
       />
 
@@ -43,7 +43,7 @@ export default async function AdminRecruitmentTrialsPage() {
       {trials.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay pruebas registradas.</p>
+            <p className="text-sm text-muted-foreground">No trials recorded.</p>
           </CardContent>
         </Card>
       ) : (

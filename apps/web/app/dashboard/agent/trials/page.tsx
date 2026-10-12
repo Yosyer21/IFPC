@@ -25,7 +25,7 @@ export default async function AgentTrialsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Pruebas"
-        subtitle="Pruebas programadas para tus jugadores con clubes"
+        subtitle="Pruebas programadas para tus players con clubs"
         icon="whistle"
       />
 

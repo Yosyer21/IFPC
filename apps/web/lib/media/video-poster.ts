@@ -10,7 +10,7 @@ const run = promisify(execFile);
  * Extrae el **fotograma de portada** de un vídeo con `ffmpeg` y lo devuelve como
  * JPEG (o `null` si no se pudo: ffmpeg no está, el vídeo no se puede leer…).
  *
- * Nunca lanza: la miniatura es un extra, la publicación sale igual sin ella.
+ * Nunca lanza: la miniatura es un extra, la post sale igual sin ella.
  */
 export async function extractVideoPoster(
   video: Buffer,

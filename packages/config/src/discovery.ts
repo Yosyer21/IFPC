@@ -3,13 +3,13 @@
  * validación, las server actions y la UI (un solo sitio para cambiar límites).
  */
 
-/** Tipos de publicación del feed. */
+/** Tipos de post del feed. */
 export const POST_TYPES = ['ANNOUNCEMENT', 'VIDEO', 'PHOTO', 'ACHIEVEMENT'] as const;
 export type PostTypeValue = (typeof POST_TYPES)[number];
 
 export const POST_TYPE_LABELS: Record<string, string> = {
   ANNOUNCEMENT: 'Anuncio',
-  VIDEO: 'Vídeo',
+  VIDEO: 'Video',
   PHOTO: 'Foto',
   ACHIEVEMENT: 'Logro',
 };
@@ -18,7 +18,7 @@ export const POST_TYPE_LABELS: Record<string, string> = {
 export const POST_STATUSES = ['DRAFT', 'PUBLISHED', 'HIDDEN'] as const;
 export type PostStatusValue = (typeof POST_STATUSES)[number];
 
-/** Roles con permiso de publicación (todos los perfiles de la plataforma). */
+/** Roles con permiso de post (todos los perfiles de la plataforma). */
 export const POSTING_ROLES = [
   'PLAYER',
   'PARENT',
@@ -45,26 +45,26 @@ export type DiscoveryTab = (typeof DISCOVERY_TABS)[number];
 export const DEFAULT_DISCOVERY_TAB: DiscoveryTab = 'recent';
 
 export const DISCOVERY_TAB_LABELS: Record<string, string> = {
-  foryou: 'Para ti',
-  following: 'Siguiendo',
-  profiles: 'Perfiles',
+  foryou: 'For you',
+  following: 'Following',
+  profiles: 'Profiles',
   recent: 'Recientes',
   trending: 'Tendencias',
   announcements: 'Anuncios',
-  videos: 'Vídeos',
+  videos: 'Videos',
 };
 
-/** Perfiles sugeridos que se muestran en el feed. */
+/** Suggested profiles que se muestran en el feed. */
 export const DISCOVERY_SUGGESTED_PROFILES = 4;
 
-/** Candidatos que se puntúan (y ventana temporal, en días) para "Para ti" y tendencias. */
+/** Candidatos que se puntúan (y ventana temporal, en days) para "For you" y tendencias. */
 export const DISCOVERY_FORYOU_CANDIDATES = 60;
 export const DISCOVERY_FORYOU_DAYS = 45;
 
 /**
- * Roles que ven "Para ti" ordenado por el motor de matching: puntúan las
- * publicaciones de jugadores según el encaje con sus oportunidades abiertas.
- * (El jugador lo ve al revés: su encaje con las oportunidades que se comparten.)
+ * Roles que ven "For you" ordenado por el motor de matching: puntúan las
+ * posts de players según el encaje con sus opportunities open.
+ * (El player lo ve al revés: su encaje con las opportunities que se comparten.)
  */
 export const DISCOVERY_RECRUITER_ROLES = ['CLUB', 'UNIVERSITY'] as const;
 
@@ -73,15 +73,15 @@ export const AUTHOR_PREFERENCE_KINDS = ['MORE', 'LESS'] as const;
 export type AuthorPreferenceKind = (typeof AUTHOR_PREFERENCE_KINDS)[number];
 
 export const AUTHOR_PREFERENCE_LABELS: Record<string, string> = {
-  MORE: 'Ver más',
-  LESS: 'Ver menos',
+  MORE: 'Show more',
+  LESS: 'Show less',
 };
 
 /**
- * Pesos del sistema de preferencias para los listados rankeados ("Para ti" y
+ * Pesos del sistema de preferencias para los listados rankeados ("For you" y
  * "Tendencias"). Seguir a alguien ya es una preferencia implícita y pesa más que
  * marcarlo a mano como "ver más"; "ver menos" penaliza lo suficiente para que sus
- * publicaciones caigan al final (y quedan excluidas de esos dos listados).
+ * posts caigan al final (y quedan excluidas de esos dos listados).
  */
 export const FEED_PREFERENCE_WEIGHTS = {
   followed: 30,
@@ -93,7 +93,7 @@ export const FEED_PREFERENCE_WEIGHTS = {
 export const FEED_RATE_LIMITS = {
   postsPerHour: 10,
   commentsPerHour: 30,
-  /** Enlaces permitidos en el texto de una publicación. */
+  /** Enlaces permitidos en el texto de una post. */
   maxLinks: 3,
   /** Ventana en la que el mismo texto se considera duplicado (minutos). */
   duplicateWindowMinutes: 10,

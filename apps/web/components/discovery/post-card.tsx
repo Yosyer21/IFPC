@@ -10,7 +10,7 @@ import { PLAYER_MATCH_THRESHOLD } from '@/lib/matching';
 import { nameParts } from '@/lib/names';
 import { PostActions } from './post-actions';
 
-/** Tarjeta de una publicación del feed. El texto se renderiza como texto plano. */
+/** Tarjeta de una post del feed. El texto se renderiza como texto plano. */
 export function PostCard({
   post,
   viewerId,
@@ -21,9 +21,9 @@ export function PostCard({
   post: FeedPost;
   viewerId: string;
   viewerRole: string;
-  /** Espejo público: sin acciones (solo el resumen de interacción) y enlaces públicos. */
+  /** Espejo público: sin acciones (solo el resumen de interacción) y links públicos. */
   readOnly?: boolean;
-  /** El espectador marcó esta publicación como "no me interesa". */
+  /** El espectador marcó esta post como "no me interesa". */
   notInterested?: boolean;
 }) {
   const { firstName, lastName } = nameParts(post.author.name);
@@ -118,7 +118,7 @@ export function PostCard({
             {embed ? (
               <iframe
                 src={embed}
-                title={post.title ?? 'Vídeo'}
+                title={post.title ?? 'Video'}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="strict-origin-when-cross-origin"
@@ -189,7 +189,7 @@ export function PostCard({
                 href={`/opportunities/${post.opportunity.id}`}
                 className="mt-3 inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300 transition-colors hover:border-emerald-500/60"
               >
-                Oportunidad compartida: {post.opportunity.title}
+                Opportunity compartida: {post.opportunity.title}
               </Link>
             ) : null}
 
@@ -230,7 +230,7 @@ export function PostCard({
           <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-white/10 pt-3 text-xs text-muted-foreground">
             <span>{post.counts.likes} me gusta</span>
             <Link href={`${base}/${post.id}`} className="hover:text-foreground">
-              {post.counts.comments} comentarios
+              {post.counts.comments} comments
             </Link>
           </div>
         ) : (

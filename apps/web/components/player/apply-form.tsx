@@ -16,7 +16,7 @@ export function ApplyForm({
   if (alreadyApplied) {
     return (
       <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
-        Ya has enviado tu solicitud para esta oportunidad.
+        Ya has enviado tu request para esta oportunidad.
       </p>
     );
   }
@@ -38,7 +38,7 @@ export function ApplyForm({
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Enviando…' : 'Enviar solicitud'}
+        {pending ? 'Enviando…' : 'Send request'}
       </Button>
     </form>
   );

@@ -69,7 +69,7 @@ export function OnboardingForm({ role, fields }: { role: string; fields: Onboard
       )}
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Guardar y continuar'}
+        {pending ? 'Guardando…' : 'Save and continue'}
       </Button>
     </form>
   );

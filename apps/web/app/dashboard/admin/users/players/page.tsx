@@ -6,7 +6,7 @@ import { PLAYER_STATUS_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Jugadores · Users' };
+export const metadata: Metadata = { title: 'Players · Users' };
 
 export default async function AdminUsersPlayersPage() {
   const session = await auth();
@@ -24,8 +24,8 @@ export default async function AdminUsersPlayersPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Jugadores"
-        subtitle="Cuentas de jugadores de la plataforma"
+        title="Players"
+        subtitle="Cuentas de players de la plataforma"
         icon="users"
       />
       <RoleLinks />
@@ -58,7 +58,7 @@ export default async function AdminUsersPlayersPage() {
                   </Badge>
                   <Badge variant="outline">{player._count.videos} videos</Badge>
                   <Badge variant="outline">{player._count.evaluations} eval.</Badge>
-                  <Badge variant="outline">{player._count.applications} solicitudes</Badge>
+                  <Badge variant="outline">{player._count.applications} requests</Badge>
                 </div>
               </CardContent>
             </Card>

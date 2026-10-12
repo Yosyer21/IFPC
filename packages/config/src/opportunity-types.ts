@@ -5,6 +5,6 @@ export const OPPORTUNITY_TYPE_LABELS: Record<OpportunityType, string> = {
   TRIAL: 'Prueba',
   SCOUTING: 'Scouting',
   CONTRACT: 'Contrato',
-  SCHOLARSHIP: 'Beca',
+  SCHOLARSHIP: 'Scholarship',
   ACADEMY: 'Academia',
 };

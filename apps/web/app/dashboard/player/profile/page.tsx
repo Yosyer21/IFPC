@@ -75,13 +75,13 @@ export default async function PlayerProfilePage() {
   const myPosts = await listPostsByAuthor(session.user.id, 5, session.user.id);
 
   const rows: [string, string][] = [
-    ['Nombre', `${player.firstName} ${player.lastName}`],
+    ['Name', `${player.firstName} ${player.lastName}`],
     ['Email', player.user.email],
-    ['Fecha de nacimiento', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
-    ['Nacionalidad', player.nationality ?? '—'],
+    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
+    ['Nationality', player.nationality ?? '—'],
     ['Position', positionLabel],
     ['Preferred foot', footLabel],
-    ['Nivel competitivo', competitionLabel],
+    ['Level competitivo', competitionLabel],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Club actual', player.clubName ?? '—'],
@@ -94,14 +94,14 @@ export default async function PlayerProfilePage() {
     { href: '/dashboard/player/career', label: 'Career history', icon: IconTrophy },
     {
       href: `/dashboard/discovery/u/${session.user.id}`,
-      label: 'Mi muro en Discovery',
+      label: 'My wall on Discovery',
       icon: IconUsers,
     },
   ];
 
   return (
     <div className="mx-auto max-w-5xl" style={{ '--profile-accent': accent.hex } as CSSProperties}>
-      {/* Cabecera personalizable: portada, acento, titular, ubicación y chips. */}
+      {/* Cabecera personalizable: portada, acento, headline, ubicación y chips. */}
       <div className="mb-6">
         <ProfileHeader
           firstName={player.firstName}
@@ -167,11 +167,11 @@ export default async function PlayerProfilePage() {
         <div className="flex flex-col gap-4">
           <Card className="animate-fade-up" style={{ animationDelay: '150ms' }}>
             <CardContent className="flex flex-col gap-3">
-              <h2 className="font-semibold">Interés en tu perfil</h2>
+              <h2 className="font-semibold">Interest in your profile</h2>
               {viewStats.viewers === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  Todavía nadie ha visto tu perfil. Compártelo y mantén tus datos y vídeos al día
-                  para que clubes y ojeadores te encuentren.
+                  Todavía nadie ha visto tu perfil. Compártelo y mantén tus datos y vídeos al day
+                  para que clubs y scouts te encuentren.
                 </p>
               ) : (
                 <>
@@ -186,7 +186,7 @@ export default async function PlayerProfilePage() {
                     </div>
                     <div>
                       <div className="text-2xl font-bold tabular-nums">{viewStats.newThisWeek}</div>
-                      <div className="text-xs text-muted-foreground">Nuevos (7 días)</div>
+                      <div className="text-xs text-muted-foreground">Nuevos (7 days)</div>
                     </div>
                   </div>
                   <div className="flex flex-col divide-y divide-border/60">
@@ -230,19 +230,19 @@ export default async function PlayerProfilePage() {
         </div>
       </div>
 
-      {/* Muro: tus publicaciones de Discovery, como en un perfil social. */}
+      {/* Muro: tus posts de Discovery, como en un perfil social. */}
       <section className="mt-6 flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">Mis publicaciones</h2>
+          <h2 className="text-lg font-semibold">My posts</h2>
           <Link href="/dashboard/discovery" className="text-sm text-primary hover:underline">
-            Publicar en Discovery →
+            Post on Discovery →
           </Link>
         </div>
         {myPosts.length === 0 ? (
           <Card className="animate-fade-up">
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Todavía no has publicado nada. Comparte un vídeo, una foto o un logro en Discovery y
+                You have not posted anything yet. Share a video, a photo or a milestone on Discovery and
                 aparecerá aquí.
               </p>
             </CardContent>

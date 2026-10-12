@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { SCHOOL_TYPE_LABELS } from '@/lib/labels';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Organización' };
+export const metadata: Metadata = { title: 'Organisation' };
 
 export default async function SchoolProfilePage() {
   const session = await auth();
@@ -18,7 +18,7 @@ export default async function SchoolProfilePage() {
   if (!school) return null;
 
   const rows: [string, string][] = [
-    ['Nombre', school.name],
+    ['Name', school.name],
     ['Tipo', SCHOOL_TYPE_LABELS[school.type] ?? school.type],
     ['Email', school.user?.email ?? '—'],
     ['Contacto', school.contactName ?? '—'],
@@ -31,12 +31,12 @@ export default async function SchoolProfilePage() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Organización"
-        subtitle="Datos públicos de tu escuela o servicio comunitario"
+        title="Organisation"
+        subtitle="Datos públicos de tu school o servicio comunitario"
         icon="book"
       >
         <Badge variant={school.verified ? 'success' : 'outline'}>
-          {school.verified ? 'Verificada' : 'Pendiente de verificación'}
+          {school.verified ? 'Verificada' : 'Pending verification'}
         </Badge>
       </PageHeader>
 

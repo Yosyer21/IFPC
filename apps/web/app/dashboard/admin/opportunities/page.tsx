@@ -6,7 +6,7 @@ import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { closeOpportunityAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Oportunidades' };
+export const metadata: Metadata = { title: 'Opportunities' };
 
 export default async function AdminOpportunitiesPage() {
   const session = await auth();
@@ -21,15 +21,15 @@ export default async function AdminOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Oportunidades"
-        subtitle="Convocatorias publicadas por los clubes"
+        title="Opportunities"
+        subtitle="Convocatorias publicadas por los clubs"
         icon="target"
       />
 
       {opportunities.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay oportunidades registradas.</p>
+            <p className="text-sm text-muted-foreground">No opportunities recorded.</p>
           </CardContent>
         </Card>
       ) : (

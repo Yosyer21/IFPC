@@ -9,7 +9,7 @@ import { extractVideoPoster, hasFfmpeg } from '@/lib/media/video-poster';
 const run = promisify(execFile);
 const ffmpeg = await hasFfmpeg();
 
-/** Vídeo de prueba de dos segundos generado con ffmpeg. */
+/** Video de prueba de dos segundos generado con ffmpeg. */
 async function sampleVideo(): Promise<Buffer> {
   const dir = await mkdtemp(path.join(tmpdir(), 'ifpc-sample-'));
   const target = path.join(dir, 'sample.mp4');

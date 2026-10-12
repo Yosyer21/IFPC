@@ -4,7 +4,7 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
  * GET /api/pathways
- * - Jugador: su ruta.
+ * - Player: su ruta.
  * - Parent: rutas de sus hijos.
  * - Admin: todas.
  */

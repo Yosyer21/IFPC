@@ -10,7 +10,7 @@ async function loginAsClub(page: import('@playwright/test').Page) {
   await page.waitForURL('**/dashboard/**', { timeout: 15_000 });
 }
 
-test('Club: centro de reclutamiento y bandeja de solicitudes', async ({ page }) => {
+test('Club: centro de reclutamiento y bandeja de requests', async ({ page }) => {
   await loginAsClub(page);
 
   // 1. Dashboard: centro de reclutamiento
@@ -26,8 +26,8 @@ test('Club: centro de reclutamiento y bandeja de solicitudes', async ({ page }) 
   await page.getByRole('button', { name: 'Recruitment' }).click();
   await expect(page.getByRole('link', { name: 'Applications', exact: true })).toBeVisible();
 
-  // 3. Bandeja de solicitudes
+  // 3. Bandeja de requests
   await page.goto(`${BASE}/dashboard/club/applications`);
-  await expect(page.getByRole('heading', { name: 'Applications recibidas' })).toBeVisible();
-  await expect(page.getByText(/Jugador Demo/).first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Applications received' })).toBeVisible();
+  await expect(page.getByText(/Demo Player/).first()).toBeVisible();
 });

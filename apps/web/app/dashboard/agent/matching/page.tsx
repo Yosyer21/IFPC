@@ -67,7 +67,7 @@ export default async function AgentMatchingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Matching"
-        subtitle="Jugadores representados ordenados por compatibilidad con oportunidades abiertas"
+        subtitle="Represented players ordered por compatibilidad con opportunities open"
         icon="target"
       />
 
@@ -75,7 +75,7 @@ export default async function AgentMatchingPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay coincidencias con las oportunidades abiertas en este momento.
+              No matches with open opportunities at the moment.
             </p>
           </CardContent>
         </Card>

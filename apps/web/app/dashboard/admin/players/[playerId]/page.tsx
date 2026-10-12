@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { CategoryBars } from '@/components/player/charts';
 
-export const metadata: Metadata = { title: 'Detalle del jugador' };
+export const metadata: Metadata = { title: 'Detalle del player' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -19,7 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };
@@ -55,15 +55,15 @@ export default async function AdminPlayerDetailPage({
 
   const info: [string, string][] = [
     ['Email', player.user.email],
-    ['Fecha de nacimiento', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
-    ['Nacionalidad', player.nationality ?? '—'],
+    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
+    ['Nationality', player.nationality ?? '—'],
     [
       'Position',
       player.position
         ? (POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position
         : '—',
     ],
-    ['Pie dominante', player.foot ?? '—'],
+    ['Dominant foot', player.foot ?? '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Competition level', player.competitionLevel ?? '—'],
@@ -145,7 +145,7 @@ export default async function AdminPlayerDetailPage({
           <CardContent>
             <h2 className="mb-3 font-semibold">Recent assessments</h2>
             {player.evaluations.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin evaluaciones.</p>
+              <p className="text-sm text-muted-foreground">No evaluations.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {player.evaluations.slice(0, 10).map((evaluation) => (
@@ -197,7 +197,7 @@ export default async function AdminPlayerDetailPage({
             <CardContent>
               <h2 className="mb-3 font-semibold">Goals ({player.goals.length})</h2>
               {player.goals.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Sin objetivos.</p>
+                <p className="text-sm text-muted-foreground">No goals.</p>
               ) : (
                 <div className="flex flex-col gap-2">
                   {player.goals.slice(0, 8).map((goal) => (

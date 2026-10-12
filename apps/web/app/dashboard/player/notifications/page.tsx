@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { markNotificationsReadAction } from '@/app/actions/player';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Notificaciones' };
+export const metadata: Metadata = { title: 'Notifications' };
 
 export default async function PlayerNotificationsPage() {
   const session = await auth();
@@ -21,7 +21,7 @@ export default async function PlayerNotificationsPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader title="Notificaciones" icon="bell">
+      <PageHeader title="Notifications" icon="bell">
         {unreadCount > 0 ? (
           <form action={markNotificationsReadAction}>
             <button
@@ -37,7 +37,7 @@ export default async function PlayerNotificationsPage() {
       {notifications.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No tienes notificaciones.</p>
+            <p className="text-sm text-muted-foreground">You have no notifications.</p>
           </CardContent>
         </Card>
       ) : (

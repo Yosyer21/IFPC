@@ -24,7 +24,7 @@ export default async function AdminUsersCoachesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Entrenadores"
-        subtitle="Cuentas de coaches y su grupo de jugadores"
+        subtitle="Cuentas de coaches y su grupo de players"
         icon="users"
       />
       <RoleLinks />
@@ -32,7 +32,7 @@ export default async function AdminUsersCoachesPage() {
       {coaches.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay entrenadores registrados.</p>
+            <p className="text-sm text-muted-foreground">No coaches registered.</p>
           </CardContent>
         </Card>
       ) : (
@@ -44,11 +44,11 @@ export default async function AdminUsersCoachesPage() {
                   <p className="font-semibold">{coach.user.name}</p>
                   <p className="text-sm text-muted-foreground">{coach.user.email}</p>
                   <p className="text-xs text-muted-foreground">
-                    {coach.clubName ?? 'Sin club asignado'}
+                    {coach.clubName ?? 'No club assigned'}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="outline">{coach._count.players} jugadores</Badge>
+                  <Badge variant="outline">{coach._count.players} players</Badge>
                 </div>
               </CardContent>
             </Card>

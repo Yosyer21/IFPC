@@ -58,9 +58,9 @@ export function playerProfileCompletion(player: PlayerCompletionFields): {
 export interface PlayerChecklistExtras {
   /** `User.image`: la foto de perfil. */
   image?: string | null;
-  /** Nº de vídeos subidos por el jugador. */
+  /** Nº de vídeos subidos por el player. */
   videoCount?: number;
-  /** Nº de temporadas de la trayectoria (`CareerEntry`). */
+  /** Nº de seasons de la trayectoria (`CareerEntry`). */
   careerCount?: number;
 }
 
@@ -70,8 +70,8 @@ type PlayerChecklistFields = PlayerCompletionFields & {
 };
 
 /**
- * Fuerza del perfil: la checklist ponderada de `PROFILE_CHECKLIST` aplicada a
- * los datos reales del jugador. `next` es el pendiente de más peso: el
+ * Profile strength: la checklist ponderada de `PROFILE_CHECKLIST` aplicada a
+ * los datos reales del player. `next` es el pendiente de más peso: el
  * «siguiente mejor paso» que la UI ofrece como CTA.
  */
 export function playerProfileChecklist(

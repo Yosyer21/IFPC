@@ -9,7 +9,7 @@ import { StatusBadge } from '@/components/admin/status-badge';
 import { updateOpportunityStatusAction } from '@/app/actions/admin';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Oportunidad' };
+export const metadata: Metadata = { title: 'Opportunity' };
 
 export default async function AdminOpportunityDetailPage({
   params,
@@ -38,9 +38,9 @@ export default async function AdminOpportunityDetailPage({
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title={opportunity.title} subtitle={creator ?? 'Oportunidad'}>
+      <PageHeader title={opportunity.title} subtitle={creator ?? 'Opportunity'}>
         <Link href="/dashboard/admin/opportunities" className="text-sm text-muted-foreground hover:underline">
-          ← Oportunidades
+          ← Opportunities
         </Link>
       </PageHeader>
 
@@ -81,7 +81,7 @@ export default async function AdminOpportunityDetailPage({
             {opportunity.position ? <Badge variant="outline">Position: {opportunity.position}</Badge> : null}
             {opportunity.ageMin || opportunity.ageMax ? (
               <Badge variant="outline">
-                Edad: {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'}
+                Age: {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'}
               </Badge>
             ) : null}
             {opportunity.location ? <Badge variant="outline">Location: {opportunity.location}</Badge> : null}

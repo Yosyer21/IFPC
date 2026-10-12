@@ -31,19 +31,19 @@ export default async function AdminRecruitmentNegotiationsPage() {
       </Link>
       <PageHeader
         title="Negociaciones"
-        subtitle={`${negotiations.length} negociaciones registradas`}
+        subtitle={`${negotiations.length} negociaciones registered`}
         icon="briefcase"
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge variant="outline">{open} abiertas</Badge>
+        <Badge variant="outline">{open} open</Badge>
         <Badge variant="outline">Ofertas: {(totalOffers / 100).toLocaleString('es')} EUR</Badge>
       </div>
 
       {negotiations.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay negociaciones registradas.</p>
+            <p className="text-sm text-muted-foreground">No negotiations recorded.</p>
           </CardContent>
         </Card>
       ) : (

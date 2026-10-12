@@ -66,7 +66,7 @@ export function canonicalUri(pathname: string): string {
     .join('/');
 }
 
-/** Query canónica: parámetros ordenados por clave codificada y valor codificado. */
+/** Query canónica: parámetros ordered por clave codificada y valor codificado. */
 export function canonicalQuery(search: string): string {
   if (!search) return '';
   const params: [string, string][] = [...new URLSearchParams(search).entries()].map(

@@ -56,7 +56,7 @@ describe('isNotInterested', () => {
     expect(mocks.findUnique).not.toHaveBeenCalled();
   });
 
-  it('busca la marca por publicación y espectador', async () => {
+  it('busca la marca por post y espectador', async () => {
     expect(await isNotInterested({ postId: 'post-1', viewerId: 'user-1' })).toBe(false);
 
     expect(mocks.findUnique).toHaveBeenCalledWith({

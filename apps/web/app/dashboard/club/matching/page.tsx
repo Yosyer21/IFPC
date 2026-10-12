@@ -27,7 +27,7 @@ export default async function ClubMatchingPage() {
     take: 50,
   });
 
-  // Motor de matching real: mejor score de cada jugador contra los requisitos del club.
+  // Motor de matching real: mejor score de cada player contra los requirements del club.
   const matches = players
     .map((player) => {
       const best = requirements
@@ -61,7 +61,7 @@ export default async function ClubMatchingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Matching"
-        subtitle="Available players ordenados por compatibilidad con tus requisitos (motor de matching)"
+        subtitle="Available players ranked by compatibility with your requirements (matching engine)"
         icon="target"
       />
 
@@ -69,9 +69,9 @@ export default async function ClubMatchingPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Crea requisitos para recibir sugerencias de jugadores.{' '}
+              Crea requirements para recibir sugerencias de players.{' '}
               <Link href="/dashboard/club/requirements/new" className="text-primary hover:underline">
-                Crear requisito
+                Crear requirement
               </Link>
             </p>
           </CardContent>

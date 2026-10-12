@@ -8,7 +8,7 @@ import { Button, Input } from '@ifpc/ui';
 const fieldClass =
   'w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
 
-/** Edición del texto de una publicación propia (el medio no se toca). */
+/** Edición del texto de una post propia (el medio no se toca). */
 export function EditPostForm({
   postId,
   title,
@@ -25,11 +25,11 @@ export function EditPostForm({
   return (
     <details className="mt-4">
       <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
-        Editar publicación
+        Edit post
       </summary>
       <form action={formAction} className="mt-3 flex flex-col gap-3">
         <input type="hidden" name="postId" value={postId} />
-        <Input name="title" label="Título (opcional)" defaultValue={title ?? ''} />
+        <Input name="title" label="Title (optional)" defaultValue={title ?? ''} />
         <div className="flex flex-col gap-1.5">
           <label htmlFor="edit-body" className="text-sm font-medium">
             Texto
@@ -45,12 +45,12 @@ export function EditPostForm({
         </div>
         <Input
           name="tags"
-          label={`Etiquetas (máx. ${POST_TAGS_MAX})`}
+          label={`Tags (max. ${POST_TAGS_MAX})`}
           defaultValue={tags.join(' ')}
         />
         {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
         <Button type="submit" disabled={pending} className="self-start">
-          {pending ? 'Guardando…' : 'Guardar cambios'}
+          {pending ? 'Guardando…' : 'Save changes'}
         </Button>
       </form>
     </details>

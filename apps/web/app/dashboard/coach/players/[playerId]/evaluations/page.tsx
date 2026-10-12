@@ -7,7 +7,7 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 import { CreateEvaluationForm } from '@/components/coach/create-evaluation-form';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Evaluaciones del jugador' };
+export const metadata: Metadata = { title: 'Player evaluations' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -52,7 +52,7 @@ export default async function CoachPlayerEvaluationsPage({
       </Link>
       <PageHeader
         title="Evaluaciones"
-        subtitle={`Evaluaciones registradas de ${player.firstName} ${player.lastName}`}
+        subtitle={`Evaluaciones registered de ${player.firstName} ${player.lastName}`}
         icon="whistle"
       />
 
@@ -68,7 +68,7 @@ export default async function CoachPlayerEvaluationsPage({
       {evaluations.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay evaluaciones registradas.</p>
+            <p className="text-sm text-muted-foreground">No evaluations recorded.</p>
           </CardContent>
         </Card>
       ) : (

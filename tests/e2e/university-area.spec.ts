@@ -24,8 +24,8 @@ test('University: academic-sports portal and recruitment pages', async ({ page }
   await page.goto(`${BASE}/dashboard/university/players`);
   await expect(page.getByRole('heading', { name: 'Available players' })).toBeVisible();
   await page.goto(`${BASE}/dashboard/university/opportunities`);
-  await expect(page.getByRole('heading', { name: 'Oportunidades' })).toBeVisible();
-  await expect(page.getByText('Beca deportiva para delanteros')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
+  await expect(page.getByText('Sports scholarship for strikers')).toBeVisible();
   await page.goto(`${BASE}/dashboard/university/profile`);
-  await expect(page.getByRole('heading', { name: 'Mi universidad' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'My university' })).toBeVisible();
 });

@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { PlayerFilterLinks } from '@/components/admin/player-filter-links';
 import { PlayerRow } from '@/components/admin/player-row';
 
-export const metadata: Metadata = { title: 'Jugadores' };
+export const metadata: Metadata = { title: 'Players' };
 
 export default async function AdminPlayersPage({
   searchParams,
@@ -27,7 +27,7 @@ export default async function AdminPlayersPage({
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Jugadores"
+        title="Players"
         subtitle="Profile management, verification and statuses"
         icon="whistle"
       />

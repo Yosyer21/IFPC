@@ -4,7 +4,7 @@ import { OnboardingForm, type OnboardingField } from '@/components/auth/onboardi
 export const metadata: Metadata = { title: 'Onboarding · Club' };
 
 const FIELDS: OnboardingField[] = [
-  { name: 'name', label: 'Nombre del club', required: true },
+  { name: 'name', label: 'Club name', required: true },
   { name: 'country', label: 'Country', required: true },
   { name: 'city', label: 'Ciudad' },
   { name: 'league', label: 'Liga' },
@@ -14,8 +14,8 @@ const FIELDS: OnboardingField[] = [
 export default function OnboardingClubPage() {
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">Profile del club</h1>
-      <p className="mb-6 text-sm text-muted-foreground">Completa los datos del club.</p>
+      <h1 className="mb-2 text-2xl font-bold">Club profile</h1>
+      <p className="mb-6 text-sm text-muted-foreground">Complete the club details.</p>
       <OnboardingForm role="club" fields={FIELDS} />
     </div>
   );

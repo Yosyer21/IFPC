@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Ajustes' };
+export const metadata: Metadata = { title: 'Settings' };
 
 const SECTIONS = [
   {
@@ -14,7 +14,7 @@ const SECTIONS = [
   {
     href: '/dashboard/admin/settings/leagues',
     title: 'Ligas',
-    description: 'Competiciones de los clubes registrados',
+    description: 'Competitions of registered clubs',
   },
   {
     href: '/dashboard/admin/settings/roles',
@@ -42,7 +42,7 @@ export default async function SettingsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Ajustes"
+        title="Settings"
         subtitle="General platform settings"
         icon="settings"
       />

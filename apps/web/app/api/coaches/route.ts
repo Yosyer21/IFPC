@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/coaches — listado de entrenadores con sus usuarios. */
+/** GET /api/coaches — listado de coaches con sus usuarios. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

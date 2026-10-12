@@ -28,14 +28,14 @@ const POLL_MAX = 4;
 /**
  * Publica en el feed con la mínima fricción: se escribe el texto y se publica.
  * Todo lo demás es opcional y aparece solo cuando hace falta —adjuntar medio,
- * galería, encuesta, programación o el bloque «Más opciones» (título, enlace,
- * texto alternativo, etiquetas, comentarios y tipo)—. El tipo se deduce del medio
- * adjunto: una imagen se publica como Foto y un vídeo como Vídeo.
+ * galería, encuesta, programación o el bloque «Más opciones» (título, link,
+ * texto alternativo, tags, comments y tipo)—. El tipo se deduce del medio
+ * adjunto: una imagen se publica como Foto y un vídeo como Video.
  */
 export function PostComposer({
   mentions = [],
 }: {
-  /** Perfiles sugeridos para mencionar (los inserta como `@Nombre`). */
+  /** Suggested profiles para mencionar (los inserta como `@Name`). */
   mentions?: { id: string; name: string }[];
 }) {
   const [state, formAction, pending] = useActionState(createPostAction, {});
@@ -132,7 +132,7 @@ export function PostComposer({
               onClick={() => setPollCount(0)}
               className="text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
-              Quitar encuesta
+              Remove poll
             </button>
           </div>
         </fieldset>
@@ -143,7 +143,7 @@ export function PostComposer({
           <input
             name="publishAt"
             type="datetime-local"
-            aria-label="Programar la publicación"
+            aria-label="Programar la post"
             className={`${fieldClass} w-auto`}
           />
           <button
@@ -151,7 +151,7 @@ export function PostComposer({
             onClick={() => setSchedule(false)}
             className="text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
-            Quitar programación
+            Remove schedule
           </button>
         </div>
       ) : null}
@@ -163,12 +163,12 @@ export function PostComposer({
         </summary>
         <div className="mt-3 flex flex-col gap-3">
           <div className="grid gap-3 sm:grid-cols-2">
-            <Input name="title" label="Título (opcional)" placeholder="Resumen de una línea" />
+            <Input name="title" label="Title (optional)" placeholder="One-line summary" />
             <Input name="linkUrl" label="Enlace (opcional)" type="url" placeholder="https://…" />
           </div>
           <Input
             name="mediaUrl"
-            label="Vídeo de YouTube o Vimeo"
+            label="Video de YouTube or Vimeo"
             placeholder="https://youtu.be/…"
           />
           <Input
@@ -180,8 +180,8 @@ export function PostComposer({
           <Input
             id={tagsId}
             name="tags"
-            label="Etiquetas"
-            placeholder={`#sub17 #portero (máx. ${POST_TAGS_MAX})`}
+            label="Tags"
+            placeholder={`#sub17 #goalkeeper (max. ${POST_TAGS_MAX})`}
           />
           <div className="flex flex-wrap gap-3">
             <div className="flex flex-col gap-1.5">
@@ -227,9 +227,9 @@ export function PostComposer({
 
       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3">
         <div className="flex items-center gap-1">
-          <label htmlFor={fileId} className={toolClass} title="Foto o vídeo">
+          <label htmlFor={fileId} className={toolClass} title="Photo or video">
             <IconImage className="h-4 w-4" />
-            <span className="sr-only">Foto o vídeo</span>
+            <span className="sr-only">Photo or video</span>
           </label>
           <input
             id={fileId}
@@ -240,8 +240,8 @@ export function PostComposer({
             className="sr-only"
           />
           <p id={fileHintId} className="sr-only">
-            Imágenes JPG, PNG o WebP de hasta 4 MB, o vídeos MP4, WebM o MOV de hasta 25 MB. Para
-            vídeos largos, mejor el enlace en «Más opciones».
+            Imágenes JPG, PNG or WebP de hasta 4 MB, o vídeos MP4, WebM o MOV de hasta 25 MB. Para
+            vídeos largos, mejor el link en «Más opciones».
           </p>
 
           <label htmlFor={galleryId} className={toolClass} title="Galería de imágenes">
@@ -296,12 +296,12 @@ export function PostComposer({
             value="draft"
             variant="ghost"
             disabled={pending}
-            title="Guardar como borrador"
+            title="Save como borrador"
           >
             Borrador
           </Button>
           <Button type="submit" disabled={pending}>
-            {pending ? 'Publicando…' : 'Publicar'}
+            {pending ? 'Publicando…' : 'Publish'}
           </Button>
         </div>
       </div>

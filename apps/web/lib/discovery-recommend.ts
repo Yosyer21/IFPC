@@ -12,19 +12,19 @@ import { notInterestedPostIds } from './discovery-interest';
 import { downrankedAuthorIds, feedPreferenceContext } from './discovery-preferences';
 
 /**
- * "Para ti": ordena el feed con el motor de matching que ya usan las
- * oportunidades. Los criterios viven en `@ifpc/matching`; aquí solo se decide
- * **qué** se puntúa en cada dirección (jugador ↔ oportunidades).
+ * "For you": ordena el feed con el motor de matching que ya usan las
+ * opportunities. Los criterios viven en `@ifpc/matching`; aquí solo se decide
+ * **qué** se puntúa en cada dirección (player ↔ opportunities).
  */
 
-/** Oportunidad reducida a los criterios que evalúa el motor. */
+/** Opportunity reducida a los criterios que evalúa el motor. */
 export interface ScorableOpportunity {
   position: string | null;
   ageMin: number | null;
   ageMax: number | null;
 }
 
-/** Perfil de jugador reducido a lo que evalúa el motor. */
+/** Perfil de player reducido a lo que evalúa el motor. */
 export interface ScorablePlayer {
   position: string | null;
   dateOfBirth: Date | null;
@@ -38,8 +38,8 @@ export interface ScorablePlayer {
 // ---------------------------------------------------------------------------
 
 /**
- * Encaje de la oportunidad que comparte una publicación con el jugador que la
- * ve. `null` cuando la publicación no comparte ninguna oportunidad.
+ * Encaje de la oportunidad que comparte una post con el player que la
+ * ve. `null` cuando la post no comparte ninguna oportunidad.
  */
 export function relevanceForPlayer(
   opportunity: ScorableOpportunity | null,
@@ -50,8 +50,8 @@ export function relevanceForPlayer(
 }
 
 /**
- * Mejor encaje del autor (perfil de jugador) con las oportunidades abiertas del
- * espectador. `null` si el autor no es jugador o no hay oportunidades.
+ * Mejor encaje del autor (perfil de player) con las opportunities open del
+ * espectador. `null` si el autor no es player o no hay opportunities.
  */
 export function relevanceForOpportunities(
   author: ScorablePlayer | null,
@@ -65,7 +65,7 @@ export function relevanceForOpportunities(
 }
 
 /**
- * Ordena candidatos para "Para ti": primero los que superan el umbral de encaje
+ * Ordena candidates para "For you": primero los que superan el umbral de encaje
  * (de mayor a menor) y después el resto, conservando el orden de entrada (que ya
  * viene ordenado por fecha).
  */
@@ -88,11 +88,11 @@ export function rankForYou<T>(
 }
 
 /**
- * Ordena "Para ti" combinando el encaje del matching con el sistema de
+ * Ordena "For you" combinando el encaje del matching con el sistema de
  * preferencias: primero lo que supera el umbral (de mayor a menor encaje **más
  * preferencias**), y después el resto, donde solo mandan las preferencias y, a
  * igualdad, la fecha (el orden de entrada, que ya viene por fecha). Sin
- * preferencias, el resultado es el de siempre.
+ * preferencias, el result es el de siempre.
  */
 export function rankForYouWithPreferences<T>(
   candidates: T[],
@@ -124,7 +124,7 @@ type ViewerContext =
   | { kind: 'recruiter'; opportunities: ScorableOpportunity[] }
   | { kind: 'none' };
 
-/** Contexto del espectador: su perfil de jugador o sus oportunidades abiertas. */
+/** Contexto del espectador: su perfil de player o sus opportunities open. */
 async function viewerContext(input: {
   viewerId: string;
   viewerRole: string;
@@ -166,8 +166,8 @@ async function viewerContext(input: {
 }
 
 /**
- * Feed "Para ti". Sin contexto puntuable (familias, entrenadores, ojeadores,
- * escuelas, admin…) devuelve las publicaciones recientes tal cual, en vez de
+ * Feed "For you". Sin contexto puntuable (families, coaches, scouts,
+ * schools, admin…) devuelve las posts recientes tal cual, en vez de
  * inventar una relevancia que no se puede calcular.
  */
 export async function listForYouFeed(input: {
@@ -175,7 +175,7 @@ export async function listForYouFeed(input: {
   viewerRole: string;
 }): Promise<FeedPost[]> {
   const since = new Date(Date.now() - DISCOVERY_FORYOU_DAYS * 24 * 60 * 60 * 1000);
-  // Lo bloqueado o silenciado por el espectador tampoco entra en "Para ti"; a
+  // Lo bloqueado o silenciado por el espectador tampoco entra en "For you"; a
   // quien marcó "ver menos" se le deja fuera de este listado.
   const [hidden, hiddenPosts, preferences, downranked] = await Promise.all([
     hiddenAuthorIds(input.viewerId),
@@ -206,7 +206,7 @@ export async function listForYouFeed(input: {
 
   const context = await viewerContext(input);
 
-  // Para el caso reclutador hace falta el perfil de jugador de cada autor.
+  // Para el caso reclutador hace falta el perfil de player de cada autor.
   const authorIds = [...new Set(rows.map((row) => row.author.id))];
   const authors =
     context.kind === 'recruiter' && authorIds.length > 0

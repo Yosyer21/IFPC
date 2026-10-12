@@ -4,7 +4,7 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
  * GET /api/documents
- * - Jugador: sus documentos.
+ * - Player: sus documents.
  * - Admin: todos.
  * - Otros roles: 403.
  */

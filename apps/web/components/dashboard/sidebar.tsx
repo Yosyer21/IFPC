@@ -149,7 +149,7 @@ function SidebarContent({
         </div>
         <details className="mt-2">
           <summary className="cursor-pointer text-xs text-muted-foreground transition-colors hover:text-foreground">
-            Cambiar foto
+            Change photo
           </summary>
           <div className="mt-3">
             <PhotoUploadForm

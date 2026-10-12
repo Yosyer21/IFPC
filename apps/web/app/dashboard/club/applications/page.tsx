@@ -8,10 +8,10 @@ import { OPPORTUNITY_TYPE_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Applications recibidas' };
+export const metadata: Metadata = { title: 'Applications received' };
 
 const APPLICATION_STATUS_LABELS: Record<string, { label: string; variant: 'default' | 'success' | 'danger' | 'warning' }> = {
-  PENDING: { label: 'Pendiente', variant: 'warning' },
+  PENDING: { label: 'Pending', variant: 'warning' },
   ACCEPTED: { label: 'Aceptada', variant: 'success' },
   REJECTED: { label: 'Rechazada', variant: 'danger' },
   WITHDRAWN: { label: 'Retirada', variant: 'default' },
@@ -42,8 +42,8 @@ export default async function ClubApplicationsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Applications recibidas"
-        subtitle="Candidatos que han aplicado a tus oportunidades"
+        title="Applications received"
+        subtitle="Candidatos que han aplicado a tus opportunities"
         icon="mail"
       >
         {pendingCount > 0 ? (

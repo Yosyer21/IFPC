@@ -5,8 +5,8 @@ import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
 /**
  * GET /api/matching — scores de matching.
- * - Jugador: sus mejores coincidencias con requisitos abiertos.
- * - Club: los mejores jugadores para sus requisitos.
+ * - Player: sus mejores coincidencias con requirements open.
+ * - Club: los mejores players para sus requirements.
  * - Others: generic list.
  */
 export async function GET() {

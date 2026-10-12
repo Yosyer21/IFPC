@@ -52,7 +52,7 @@ export default async function AdminRecruitmentPage() {
                   section.items.slice(0, 5).map((item) => (
                     <div key={item.id} className="rounded-md border border-border p-2 text-sm">
                       <span className="font-medium">
-                        {item.player?.firstName ?? 'Jugador'} {item.player?.lastName ?? ''}
+                        {item.player?.firstName ?? 'Player'} {item.player?.lastName ?? ''}
                       </span>
                       <span className="text-muted-foreground"> → {item.club?.name ?? 'Club'}</span>
                     </div>
@@ -60,7 +60,7 @@ export default async function AdminRecruitmentPage() {
                 )}
               </div>
               <Link href={section.href} className="mt-3 inline-block text-sm text-primary hover:underline">
-                Ver todos →
+                See all →
               </Link>
             </CardContent>
           </Card>

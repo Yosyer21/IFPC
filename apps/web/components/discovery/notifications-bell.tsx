@@ -39,13 +39,13 @@ export function NotificationsBell({
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-label={pendingCount > 0 ? `Avisos, ${pendingCount} sin leer` : 'Avisos'}
+        aria-label={pendingCount > 0 ? `Alerts, ${pendingCount} unread` : 'Alerts'}
         className={`inline-flex items-center gap-2 rounded-full border border-border bg-white/5 text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground ${
           compact ? 'w-full justify-start px-2.5 py-1.5 text-xs' : 'px-3 py-2 text-sm'
         }`}
       >
         <IconBell className="h-4 w-4" />
-        Avisos
+        Alerts
         {pendingCount > 0 ? (
           <span className="rounded-full bg-emerald-500/20 px-1.5 text-xs font-semibold text-emerald-300">
             {pendingCount}
@@ -60,14 +60,14 @@ export function NotificationsBell({
           }`}
         >
           <div className="flex items-center justify-between gap-2">
-            <span className="text-sm font-semibold">Avisos</span>
+            <span className="text-sm font-semibold">Alerts</span>
             <button
               type="button"
               onClick={markRead}
               disabled={pending || pendingCount === 0}
               className="text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
             >
-              {pending ? 'Marcando…' : 'Marcar como leídos'}
+              {pending ? 'Marcando…' : 'Mark as read'}
             </button>
           </div>
 

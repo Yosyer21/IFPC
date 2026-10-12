@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { MatchScoreBadge } from '@/components/player/match-score';
 import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from '@/lib/matching';
 
-export const metadata: Metadata = { title: 'Oportunidades' };
+export const metadata: Metadata = { title: 'Opportunities' };
 
 export default async function PlayerOpportunitiesPage() {
   const session = await auth();
@@ -36,11 +36,11 @@ export default async function PlayerOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Oportunidades"
+        title="Opportunities"
         subtitle={
           goodMatches > 0
             ? `${goodMatches} de ${matches.length} encajan con tu perfil`
-            : `${matches.length} oportunidades abiertas`
+            : `${matches.length} opportunities open`
         }
         icon="target"
       >
@@ -56,7 +56,7 @@ export default async function PlayerOpportunitiesPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay oportunidades abiertas en este momento. Vuelve pronto.
+              There are no open opportunities at the moment. Come back soon.
             </p>
           </CardContent>
         </Card>

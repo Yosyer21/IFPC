@@ -47,7 +47,7 @@ export async function generateMetadata({
   const player = await getPlayer(playerId);
   if (!player || !isPublicProfile(player.status)) {
     // The root layout appends "| Future Baller".
-    return { title: 'Jugador no encontrado' };
+    return { title: 'Player not found' };
   }
 
   const name = `${player.firstName} ${player.lastName}`;
@@ -76,13 +76,13 @@ export default async function PublicPlayerProfilePage({
   const player = await getPlayer(playerId);
   if (!player || !isPublicProfile(player.status)) notFound();
 
-  // Interés de terceros: visita registrada para las métricas del jugador.
+  // Interés de terceros: view registrada para las métricas del player.
   await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const positionLabel = positionLabelOf(player.position);
   const accent = profileAccentColors(player.accentColor);
   const openToChips = profileOpenToLabels(player.openTo);
-  // Estadísticas deportivas (nivel global, totales y nivel por categoría).
+  // Stats deportivas (level global, totals y level por category).
   const stats = await getPlayerStats(player.id);
 
   const age = player.dateOfBirth
@@ -127,7 +127,7 @@ export default async function PublicPlayerProfilePage({
               <p className="text-sm text-muted-foreground">
                 {positionLabel}
                 {age !== null ? ` · ${age} years old` : ''} ·{' '}
-                {player.nationality ?? 'Sin nacionalidad'}
+                {player.nationality ?? 'No nationality'}
               </p>
             </div>
           </div>
@@ -152,7 +152,7 @@ export default async function PublicPlayerProfilePage({
             {player.clubName ? <Badge variant="outline">{player.clubName}</Badge> : null}
             {player.foot ? <Badge variant="outline">Pierna: {player.foot}</Badge> : null}
             <Badge variant="outline">{player._count.videos} videos</Badge>
-            <Badge variant="outline">{player.evaluations.length} evaluaciones</Badge>
+            <Badge variant="outline">{player.evaluations.length} evaluations</Badge>
           </div>
 
           <div className="mt-6">
@@ -166,7 +166,7 @@ export default async function PublicPlayerProfilePage({
           {player.career.length > 0 ? (
             <div className="mt-8">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
-                Trayectoria
+                Career history
               </h2>
               <div className="mt-2 flex flex-col divide-y divide-border/60">
                 {player.career.map((entry) => (

@@ -10,7 +10,7 @@ import {
 
 /**
  * GET /api/live-sessions
- * - Jugador: sus sesiones + grupales abiertas.
+ * - Player: sus sesiones + grupales open.
  * - Coach: las suyas.
  * - Admin: todas.
  */

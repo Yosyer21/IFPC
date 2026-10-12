@@ -128,9 +128,9 @@ export default async function AdminCampCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Entrenador responsable
+              Head coach
               <select name="coachId" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
-                <option value="">Sin asignar</option>
+                <option value="">Unassigned</option>
                 {coaches.map((coach) => (
                   <option key={coach.id} value={coach.id}>
                     {coach.user.name}
@@ -141,7 +141,7 @@ export default async function AdminCampCreatePage() {
             <label className="text-sm">
               Club organizador
               <select name="clubId" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
-                <option value="">Sin asignar</option>
+                <option value="">Unassigned</option>
                 {clubs.map((club) => (
                   <option key={club.id} value={club.id}>
                     {club.name}

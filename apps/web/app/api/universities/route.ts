@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/universities — listado de universidades. */
+/** GET /api/universities — listado de universities. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

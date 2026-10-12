@@ -2,7 +2,7 @@ export const POSITIONS = ['POR', 'DEF', 'LAT', 'CAR', 'MED', 'PIV', 'EXT', 'DEL'
 export type Position = (typeof POSITIONS)[number];
 
 export const POSITION_LABELS: Record<Position, string> = {
-  POR: 'Portero',
+  POR: 'Goalkeeper',
   DEF: 'Defensa central',
   LAT: 'Lateral',
   CAR: 'Carrilero',

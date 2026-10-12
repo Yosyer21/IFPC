@@ -30,7 +30,7 @@ export default async function AgentCommunicationsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Comunicaciones"
-        subtitle="Mensajes con clubes, jugadores y la plataforma"
+        subtitle="Messages con clubs, players y la plataforma"
         icon="mail"
       />
 
@@ -96,7 +96,7 @@ export default async function AgentCommunicationsPage() {
                       required
                       name="body"
                       rows={2}
-                      placeholder="Escribe una respuesta…"
+                      placeholder="Write a reply…"
                       className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm"
                     />
                     <button

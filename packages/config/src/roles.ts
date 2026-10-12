@@ -1,6 +1,6 @@
 /** Plural labels for the platform `Role` enum (dashboards, counts, breakdowns). */
 export const ROLE_LABELS: Record<string, string> = {
-  PLAYER: 'Jugadores',
+  PLAYER: 'Players',
   PARENT: 'Familiares',
   COACH: 'Entrenadores',
   SCOUT: 'Ojeadores',

@@ -6,7 +6,7 @@ import { nameParts } from '@/lib/names';
 import { CommentForm } from './comment-form';
 import { EditCommentForm } from './edit-comment-form';
 
-/** Un comentario con sus acciones (responder, editar y borrar). */
+/** Un comment con sus acciones (responder, editar y borrar). */
 function CommentRow({
   comment,
   postId,
@@ -84,8 +84,8 @@ function CommentRow({
 }
 
 /**
- * Comentarios de una publicación. Las respuestas (`parentId`) se muestran
- * indentadas bajo su comentario raíz.
+ * Comentarios de una post. Las replies (`parentId`) se muestran
+ * indentadas bajo su comment raíz.
  */
 export function CommentList({
   comments,
@@ -101,13 +101,13 @@ export function CommentList({
   viewerId: string;
   viewerRole: string;
   postAuthorId: string;
-  /** Espejo público: sin acciones y con enlaces públicos. */
+  /** Espejo público: sin acciones y con links públicos. */
   readOnly?: boolean;
   base?: string;
 }) {
   if (comments.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">Todavía no hay comentarios. Sé el primero.</p>
+      <p className="text-sm text-muted-foreground">No comments yet. Be the first.</p>
     );
   }
 

@@ -25,7 +25,7 @@ export const CAMP_STATUS_LABELS: Record<string, string> = {
 };
 
 export const SCHOOL_TYPE_LABELS: Record<string, string> = {
-  SCHOOL: 'Escuela / Colegio',
+  SCHOOL: 'School / College',
   COMMUNITY_SERVICE: 'Servicio comunitario',
 };
 
@@ -39,16 +39,16 @@ export const CATEGORY_LABELS: Record<string, string> = {
 
 /** Player goal status (`PlayerGoal.status`). */
 export const GOAL_STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };
 
-/** Política de comentarios de una publicación (`Post.commentsPolicy`). */
+/** Política de comments de una post (`Post.commentsPolicy`). */
 export const COMMENTS_POLICY_LABELS: Record<string, string> = {
   EVERYONE: 'Cualquiera',
   FOLLOWERS: 'Solo quien me sigue',
-  NOBODY: 'Nadie',
+  NOBODY: 'Nobody',
 };
 
 /** Acciones de la traza de moderación de Discovery (`ModerationLog.action`). */

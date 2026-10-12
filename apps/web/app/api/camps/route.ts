@@ -13,7 +13,7 @@ import {
 /**
  * GET /api/camps
  * - Admin: todos.
- * - Otros roles: camps abiertos/llenos.
+ * - Otros roles: camps open/llenos.
  */
 export async function GET() {
   const session = await requireUser();

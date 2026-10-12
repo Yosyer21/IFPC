@@ -8,8 +8,8 @@ import { Footer } from '@/components/landing/footer';
 import { PlayerAvatar } from '@/components/player/avatar';
 
 export const metadata: Metadata = {
-  title: 'Jugadores — Future Baller',
-  description: 'Descubre jugadores disponibles con perfil deportivo verificado en Future Baller.',
+  title: 'Players — Future Baller',
+  description: 'Discover available players with a verified sports profile on Future Baller.',
 };
 
 export default async function PublicPlayersPage() {
@@ -27,10 +27,10 @@ export default async function PublicPlayersPage() {
       <Navbar />
       <main className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="mb-10">
-          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Jugadores</p>
+          <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Players</p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">Talento disponible</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            {players.length} jugadores con perfil abierto · {countries} nacionalidades. Contacta con
+            {players.length} players con perfil abierto · {countries} nacionalidades. Contacta con
             them via the platform.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default async function PublicPlayersPage() {
                       {player.firstName} {player.lastName}
                     </h2>
                     <p className="text-xs text-muted-foreground">
-                      {player.nationality ?? 'Nacionalidad no indicada'}
+                      {player.nationality ?? 'Nationality no indicada'}
                     </p>
                   </div>
                 </div>

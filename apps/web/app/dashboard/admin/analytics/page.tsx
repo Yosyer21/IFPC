@@ -45,7 +45,7 @@ export default async function AdminAnalyticsPage() {
   const sections = [
     {
       href: '/dashboard/admin/analytics/players',
-      title: 'Jugadores',
+      title: 'Players',
       description: 'Distribution by status, position and monthly registrations',
     },
     {
@@ -75,11 +75,11 @@ export default async function AdminAnalyticsPage() {
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
         <StatCard href="/dashboard/admin/users" icon={IconUsers} label="Users" value={users} />
-        <StatCard href="/dashboard/admin/players" icon={IconUser} label="Jugadores" value={players} />
-        <StatCard href="/dashboard/admin/players" icon={IconWhistle} label="Disponibles" value={availablePlayers} />
+        <StatCard href="/dashboard/admin/players" icon={IconUser} label="Players" value={players} />
+        <StatCard href="/dashboard/admin/players" icon={IconWhistle} label="Available" value={availablePlayers} />
         <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubes" value={clubs} />
         <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubes verificados" value={verifiedClubs} />
-        <StatCard href="/dashboard/admin/opportunities" icon={IconTarget} label="Oportunidades" value={opportunities} />
+        <StatCard href="/dashboard/admin/opportunities" icon={IconTarget} label="Opportunities" value={opportunities} />
         <StatCard href="/dashboard/admin/players" icon={IconTarget} label="Applications" value={applications} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Submissions" value={submissions} />
         <StatCard href="/dashboard/admin/memberships/payments" icon={IconTrendingUp} label="Payments" value={payments} />

@@ -20,11 +20,11 @@ export default async function PlayerPhysicalPage() {
     : null;
 
   const rows: [string, string][] = [
-    ['Edad', age !== null ? `${age} years old` : '—'],
-    ['Fecha de nacimiento', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
+    ['Age', age !== null ? `${age} years old` : '—'],
+    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-    ['Nacionalidad', player.nationality ?? '—'],
+    ['Nationality', player.nationality ?? '—'],
   ];
 
   return (

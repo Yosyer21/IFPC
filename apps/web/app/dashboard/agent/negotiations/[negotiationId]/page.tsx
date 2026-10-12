@@ -39,7 +39,7 @@ export default async function AgentNegotiationDetailPage({
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
-              ['Jugador', `${negotiation.player.firstName} ${negotiation.player.lastName}`],
+              ['Player', `${negotiation.player.firstName} ${negotiation.player.lastName}`],
               ['Club', negotiation.club.name],
               ['Estado', negotiation.status],
               [

@@ -24,7 +24,7 @@ export default async function AdminUsersAgentsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Agentes"
-        subtitle="Agencias y representantes con jugadores vinculados"
+        subtitle="Agencias y representantes con players vinculados"
         icon="users"
       />
       <RoleLinks />
@@ -32,7 +32,7 @@ export default async function AdminUsersAgentsPage() {
       {agents.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay agentes registrados.</p>
+            <p className="text-sm text-muted-foreground">No agents registered.</p>
           </CardContent>
         </Card>
       ) : (

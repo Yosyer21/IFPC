@@ -24,7 +24,7 @@ export default async function AdminUsersParentsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Familiares"
-        subtitle="Cuentas de padres y tutores vinculadas a jugadores"
+        subtitle="Cuentas de padres y tutores vinculadas a players"
         icon="users"
       />
       <RoleLinks />
@@ -32,7 +32,7 @@ export default async function AdminUsersParentsPage() {
       {parents.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay familiares registrados.</p>
+            <p className="text-sm text-muted-foreground">No family members registered.</p>
           </CardContent>
         </Card>
       ) : (

@@ -30,14 +30,14 @@ export default async function AdminLiveSessionCreatePage() {
     <div className="mx-auto max-w-2xl">
       <PageHeader
         title="New live session"
-        subtitle="Organiza un entrenamiento en directo, charla o prueba"
+        subtitle="Organiza un training en directo, charla o prueba"
         icon="live"
       >
         <Link
           href="/dashboard/admin/live-sessions"
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Sesiones en vivo
+          ← Live sessions
         </Link>
       </PageHeader>
 
@@ -50,7 +50,7 @@ export default async function AdminLiveSessionCreatePage() {
                 required
                 name="title"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
-                placeholder="Entrenamiento en directo…"
+                placeholder="Training live…"
               />
             </label>
             <label className="text-sm sm:col-span-2">
@@ -115,9 +115,9 @@ export default async function AdminLiveSessionCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Entrenador
+              Coach
               <select name="coachId" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
-                <option value="">Sin asignar</option>
+                <option value="">Unassigned</option>
                 {coaches.map((coach) => (
                   <option key={coach.id} value={coach.id}>
                     {coach.user.name}
@@ -126,9 +126,9 @@ export default async function AdminLiveSessionCreatePage() {
               </select>
             </label>
             <label className="text-sm">
-              Jugador (1:1)
+              Player (1:1)
               <select name="playerId" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
-                <option value="">Grupo / sin jugador</option>
+                <option value="">Group / no player</option>
                 {players.map((player) => (
                   <option key={player.id} value={player.id}>
                     {player.firstName} {player.lastName}

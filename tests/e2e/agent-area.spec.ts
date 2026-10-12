@@ -13,7 +13,7 @@ async function loginAsAgent(page: import('@playwright/test').Page) {
 test('Agent: workspace, pipeline and new pages without 404', async ({ page }) => {
   await loginAsAgent(page);
 
-  // 1. Dashboard del agente
+  // 1. Dashboard del agent
   await page.goto(`${BASE}/dashboard/agent`);
   await expect(page.getByText('Representation pipeline')).toBeVisible();
   await expect(page.getByText('Submissions by stage')).toBeVisible();

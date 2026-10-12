@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Profile del club' };
+export const metadata: Metadata = { title: 'Club profile' };
 
 export default async function ClubProfilePage() {
   const session = await auth();
@@ -18,18 +18,18 @@ export default async function ClubProfilePage() {
   if (!club) notFound();
 
   const rows: [string, string][] = [
-    ['Nombre', club.name],
+    ['Name', club.name],
     ['Email', club.user?.email ?? '—'],
     ['Country', club.country],
     ['Ciudad', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
-    ['Miembro desde', club.createdAt.toLocaleDateString('es')],
+    ['Member since', club.createdAt.toLocaleDateString('es')],
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Profile del club"
+        title="Club profile"
         subtitle="Your club's public information on the platform"
         icon="briefcase"
       />

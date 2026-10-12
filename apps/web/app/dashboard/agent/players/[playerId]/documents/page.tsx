@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Documentos del jugador' };
+export const metadata: Metadata = { title: 'Player documents' };
 
 const TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
@@ -41,14 +41,14 @@ export default async function AgentPlayerDocumentsPage({
         href={`/dashboard/agent/players/${playerId}`}
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Jugador
+        ← Player
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Documentos</h1>
+      <h1 className="mb-6 text-2xl font-bold">Documents</h1>
 
       {documents.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay documentos subidos.</p>
+            <p className="text-sm text-muted-foreground">No documents uploaded yet.</p>
           </CardContent>
         </Card>
       ) : (

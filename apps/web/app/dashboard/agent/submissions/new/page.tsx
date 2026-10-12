@@ -38,7 +38,7 @@ export default async function AgentNewSubmissionPage() {
       </Link>
       <h1 className="mb-6 text-2xl font-bold">New submission</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Selecciona un jugador representado y el club al que quieres enviarlo.
+        Select a represented player and the club you want to send them to.
       </p>
       <CreateSubmissionForm players={playerOptions} clubs={clubOptions} />
     </div>

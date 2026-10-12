@@ -123,7 +123,7 @@ export async function createGoalAction(
       },
     });
   } catch {
-    return { error: 'No se pudo crear el objetivo.' };
+    return { error: 'The goal could not be created.' };
   }
 
   redirect(`/dashboard/coach/players/${playerId}/development`);

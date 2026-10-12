@@ -11,8 +11,8 @@ import {
 /**
  * GET /api/clubs
  * - Club: su propio perfil.
- * - Admin: todos los clubes.
- * - Otros roles: clubes verificados.
+ * - Admin: todos los clubs.
+ * - Otros roles: clubs verificados.
  */
 export async function GET() {
   const session = await requireUser();

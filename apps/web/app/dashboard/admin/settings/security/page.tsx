@@ -3,7 +3,7 @@ import { auth } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Seguridad · Ajustes' };
+export const metadata: Metadata = { title: 'Seguridad · Settings' };
 
 export default async function AdminSettingsSecurityPage() {
   const session = await auth();
@@ -12,13 +12,13 @@ export default async function AdminSettingsSecurityPage() {
   const checks: { label: string; value: string; ok: boolean; hint?: string }[] = [
     {
       label: 'AUTH_SECRET',
-      value: process.env.AUTH_SECRET ? 'Configurado' : 'Pendiente',
+      value: process.env.AUTH_SECRET ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.AUTH_SECRET),
       hint: 'Secreto de firma de sesiones de Auth.js',
     },
     {
       label: 'DATABASE_URL',
-      value: process.env.DATABASE_URL ? 'Configurado' : 'Pendiente',
+      value: process.env.DATABASE_URL ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.DATABASE_URL),
       hint: 'PostgreSQL connection (development: embedded PGlite)',
     },
@@ -30,21 +30,21 @@ export default async function AdminSettingsSecurityPage() {
     },
     {
       label: 'RESEND_API_KEY',
-      value: process.env.RESEND_API_KEY ? 'Configurado' : 'Pendiente',
+      value: process.env.RESEND_API_KEY ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.RESEND_API_KEY),
       hint: 'Verification and recovery emails (pending)',
     },
     {
       label: 'STRIPE_SECRET_KEY',
-      value: process.env.STRIPE_SECRET_KEY ? 'Configurado' : 'Pendiente',
+      value: process.env.STRIPE_SECRET_KEY ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.STRIPE_SECRET_KEY),
-      hint: 'Payments reales (pendiente, hoy simulados)',
+      hint: 'Payments reales (pendiente, today simulados)',
     },
     {
       label: 'S3_ENDPOINT',
-      value: process.env.S3_ENDPOINT ? 'Configurado' : 'Pendiente',
+      value: process.env.S3_ENDPOINT ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.S3_ENDPOINT),
-      hint: 'Almacenamiento de objetos (pendiente, hoy uploads locales)',
+      hint: 'Almacenamiento de objetos (pendiente, today uploads locales)',
     },
   ];
 

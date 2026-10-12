@@ -100,7 +100,7 @@ beforeEach(() => {
 });
 
 describe('parseFeedFilters', () => {
-  it('sin parámetros usa "recent", sin etiqueta y sin búsqueda', () => {
+  it('sin parámetros usa "recent", sin tag y sin búsqueda', () => {
     expect(parseFeedFilters({})).toEqual({
       tab: 'recent',
       tag: null,
@@ -110,7 +110,7 @@ describe('parseFeedFilters', () => {
     });
   });
 
-  it('normaliza los filtros de tipo y rol', () => {
+  it('normaliza los filters de tipo y rol', () => {
     expect(parseFeedFilters({ type: 'video', role: 'club' })).toMatchObject({
       type: 'VIDEO',
       role: 'CLUB',
@@ -127,7 +127,7 @@ describe('parseFeedFilters', () => {
     expect(parseFeedFilters({ tab: 'inventada' }).tab).toBe('recent');
   });
 
-  it('normaliza la etiqueta y rechaza formatos inválidos', () => {
+  it('normaliza la tag y rechaza formatos inválidos', () => {
     expect(parseFeedFilters({ tag: '#SUB-17' }).tag).toBe('sub-17');
     expect(parseFeedFilters({ tag: 'no vale' }).tag).toBeNull();
     expect(parseFeedFilters({ tag: '-raro' }).tag).toBeNull();
@@ -135,7 +135,7 @@ describe('parseFeedFilters', () => {
   });
 
   it('normaliza la búsqueda y descarta textos demasiado cortos o largos', () => {
-    expect(parseFeedFilters({ q: '  Becas   deportivas  ' }).q).toBe('Becas deportivas');
+    expect(parseFeedFilters({ q: '  Scholarships   deportivas  ' }).q).toBe('Scholarships deportivas');
     expect(parseFeedFilters({ q: 'a' }).q).toBeNull();
     expect(parseFeedFilters({}).q).toBeNull();
     expect(parseFeedFilters({ q: 'x'.repeat(200) }).q).toHaveLength(60);
@@ -144,11 +144,11 @@ describe('parseFeedFilters', () => {
 
 describe('extractTags', () => {
   it('saca los hashtags del texto, sin repetir y en minúsculas', () => {
-    expect(extractTags('Fichaje #Sub17 y más #sub17 #Portero')).toEqual(['sub17', 'portero']);
+    expect(extractTags('Signing #Sub17 and more #sub17 #Goalkeeper')).toEqual(['sub17', 'goalkeeper']);
   });
 
-  it('une los hashtags del texto con las etiquetas declaradas', () => {
-    expect(extractTags('buen #partido', ['#previa'])).toEqual(['previa', 'partido']);
+  it('une los hashtags del texto con las tags declaradas', () => {
+    expect(extractTags('good #match', ['#previa'])).toEqual(['previa', 'match']);
   });
 
   it('sin texto devuelve lo declarado', () => {
@@ -156,13 +156,13 @@ describe('extractTags', () => {
     expect(extractTags(null)).toEqual([]);
   });
 
-  it('limita el número de etiquetas', () => {
+  it('caps the number of tags', () => {
     expect(extractTags('#uno #dos #tres #cuatro #cinco #seis')).toHaveLength(5);
   });
 });
 
 describe('resolveEmbed', () => {
-  it('normaliza enlaces de YouTube', () => {
+  it('normaliza links de YouTube', () => {
     expect(resolveEmbed('https://www.youtube.com/watch?v=M7lc1UVf-VE')).toBe(
       'https://www.youtube.com/embed/M7lc1UVf-VE'
     );
@@ -174,7 +174,7 @@ describe('resolveEmbed', () => {
     );
   });
 
-  it('normaliza enlaces de Vimeo', () => {
+  it('normaliza links de Vimeo', () => {
     expect(resolveEmbed('https://vimeo.com/123456789')).toBe(
       'https://player.vimeo.com/video/123456789'
     );
@@ -187,7 +187,7 @@ describe('resolveEmbed', () => {
     expect(resolveEmbed('data:text/html,<iframe>')).toBeNull();
   });
 
-  it('rechaza enlaces sin identificador válido', () => {
+  it('rechaza links sin identificador válido', () => {
     expect(resolveEmbed('https://www.youtube.com/watch?v=ab')).toBeNull();
     expect(resolveEmbed('https://vimeo.com/')).toBeNull();
     expect(resolveEmbed(null)).toBeNull();
@@ -196,7 +196,7 @@ describe('resolveEmbed', () => {
 });
 
 describe('engagement y ranking', () => {
-  it('pondera comentarios por encima del mismo número de likes', () => {
+  it('pondera comments por encima del mismo número de likes', () => {
     expect(engagementScore({ counts: { likes: 3, comments: 0, views: 0 } })).toBe(9);
     expect(engagementScore({ counts: { likes: 0, comments: 3, views: 0 } })).toBe(6);
     expect(engagementScore({ counts: { likes: 0, comments: 0, views: 5 } })).toBe(5);
@@ -219,8 +219,8 @@ describe('engagement y ranking', () => {
 });
 
 describe('formatRelativeTime', () => {
-  it('usa minutos, horas, días o fecha según la antigüedad', () => {
-    expect(formatRelativeTime(NOW, NOW)).toBe('ahora');
+  it('usa minutos, horas, days o fecha según la antigüedad', () => {
+    expect(formatRelativeTime(NOW, NOW)).toBe('now');
     expect(formatRelativeTime(new Date(NOW.getTime() - 5 * 60_000), NOW)).toBe('hace 5 min');
     expect(formatRelativeTime(new Date(NOW.getTime() - 3 * 3_600_000), NOW)).toBe('hace 3 h');
     expect(formatRelativeTime(new Date(NOW.getTime() - 2 * 86_400_000), NOW)).toBe('hace 2 d');
@@ -263,7 +263,7 @@ describe('summarizePostViews', () => {
 });
 
 describe('listFeed', () => {
-  it('filtra por etiqueta y pide una fila extra para el cursor', async () => {
+  it('filtra por tag y pide una fila extra para el cursor', async () => {
     await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: 'sub17', q: null } });
 
     const args = mocks.postFindMany.mock.calls[0][0];
@@ -298,7 +298,7 @@ describe('listFeed', () => {
     expect(page.nextCursor).toBe('post-20');
   });
 
-  it('sin más resultados no devuelve cursor', async () => {
+  it('sin más results no devuelve cursor', async () => {
     mocks.postFindMany.mockResolvedValue([row('post-1')]);
     const page = await listFeed({
       viewerId: 'viewer-1',
@@ -370,15 +370,15 @@ describe('listFeed', () => {
   it('busca por título, texto o autor sin distinguir mayúsculas', async () => {
     await listFeed({
       viewerId: 'viewer-1',
-      filters: { tab: 'recent', tag: null, q: 'Becas' },
+      filters: { tab: 'recent', tag: null, q: 'Scholarships' },
     });
 
     expect(mocks.postFindMany.mock.calls[0][0].where.AND).toEqual([
       {
         OR: [
-          { title: { contains: 'Becas', mode: 'insensitive' } },
-          { body: { contains: 'Becas', mode: 'insensitive' } },
-          { author: { name: { contains: 'Becas', mode: 'insensitive' } } },
+          { title: { contains: 'Scholarships', mode: 'insensitive' } },
+          { body: { contains: 'Scholarships', mode: 'insensitive' } },
+          { author: { name: { contains: 'Scholarships', mode: 'insensitive' } } },
         ],
       },
     ]);
@@ -395,7 +395,7 @@ describe('listFeed', () => {
     expect(where.AND).toBeDefined();
   });
 
-  it('filtra por tipo de publicación y por rol del autor', async () => {
+  it('filtra por tipo de post y por rol del autor', async () => {
     await listFeed({
       viewerId: 'viewer-1',
       filters: { tab: 'recent', tag: null, q: null, type: 'PHOTO', role: 'CLUB' },
@@ -407,7 +407,7 @@ describe('listFeed', () => {
     });
   });
 
-  it('sin filtros de tipo ni rol no los añade', async () => {
+  it('sin filters de tipo ni rol no los añade', async () => {
     await listFeed({
       viewerId: 'viewer-1',
       filters: { tab: 'recent', tag: null, q: null, type: null, role: null },
@@ -418,7 +418,7 @@ describe('listFeed', () => {
     expect(where.author).toBeUndefined();
   });
 
-  it('excluye las publicaciones que ya se muestran aparte (fijadas)', async () => {
+  it('excludes posts already shown separately (pinned)', async () => {
     await listFeed({
       viewerId: 'viewer-1',
       filters: { tab: 'recent', tag: null, q: null },
@@ -430,7 +430,7 @@ describe('listFeed', () => {
     });
   });
 
-  it('sin exclusiones no añade el filtro por id', async () => {
+  it('sin exclusiones no añade el filter por id', async () => {
     await listFeed({ viewerId: 'viewer-1', filters: { tab: 'recent', tag: null, q: null } });
     expect(mocks.postFindMany.mock.calls[0][0].where.id).toBeUndefined();
   });
@@ -451,7 +451,7 @@ describe('listPinnedPosts', () => {
   });
 });
 
-describe('métricas de una publicación', () => {
+describe('metrics of a post', () => {
   it('recordPostView acumula una apertura por espectador', async () => {
     await recordPostView({ postId: 'post-1', viewerUserId: 'viewer-1', viewerRole: 'CLUB' });
     expect(mocks.viewUpsert).toHaveBeenCalledWith({
@@ -474,7 +474,7 @@ describe('métricas de una publicación', () => {
     expect(mocks.viewUpsert).not.toHaveBeenCalled();
   });
 
-  it('trackPostView no hace nada sin sesión', async () => {
+  it('trackPostView does nothing without a session', async () => {
     mocks.auth.mockResolvedValue(null);
     await trackPostView({ postId: 'post-1', authorUserId: 'author-1' });
     expect(mocks.viewUpsert).not.toHaveBeenCalled();
@@ -502,8 +502,8 @@ describe('métricas de una publicación', () => {
   });
 });
 
-describe('pestaña Siguiendo', () => {
-  it('filtra por los perfiles seguidos y por las publicaciones propias', async () => {
+describe('pestaña Following', () => {
+  it('filters by followed profiles and by your own posts', async () => {
     mocks.followFindMany.mockResolvedValue([
       { followingId: 'author-2' },
       { followingId: 'author-3' },
@@ -517,7 +517,7 @@ describe('pestaña Siguiendo', () => {
     });
   });
 
-  it('sin seguir a nadie solo muestra las publicaciones propias', async () => {
+  it('sin seguir a nadie solo muestra las posts propias', async () => {
     await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: null, q: null } });
 
     expect(mocks.postFindMany.mock.calls[0][0].where).toMatchObject({
@@ -525,7 +525,7 @@ describe('pestaña Siguiendo', () => {
     });
   });
 
-  it('combina los perfiles seguidos con el filtro de etiqueta', async () => {
+  it('combina los perfiles seguidos con el filter de tag', async () => {
     mocks.followFindMany.mockResolvedValue([{ followingId: 'author-2' }]);
 
     await listFeed({ viewerId: 'viewer-1', filters: { tab: 'following', tag: 'sub17', q: null } });
@@ -548,14 +548,14 @@ describe('getFollowStats', () => {
     });
   });
 
-  it('en el muro propio nunca se es seguidor de uno mismo', async () => {
+  it('en el muro propio nunca se es follower de uno mismo', async () => {
     const stats = await getFollowStats('viewer-1', 'viewer-1');
 
     expect(stats.isFollowing).toBe(false);
     expect(mocks.followFindUnique).not.toHaveBeenCalled();
   });
 
-  it('sin seguimiento el estado es falso', async () => {
+  it('sin tracking el estado es falso', async () => {
     await expect(getFollowStats('author-1', 'viewer-1')).resolves.toMatchObject({
       isFollowing: false,
     });
@@ -571,18 +571,18 @@ describe('listSuggestedProfiles', () => {
       { followingId: 'nuevo', _count: { followingId: 7 } },
     ]);
     mocks.userFindMany.mockResolvedValue([
-      { id: 'nuevo', name: 'Nuevo Perfil', role: 'CLUB', image: null, _count: { posts: 4 } },
+      { id: 'nuevo', name: 'New Profile', role: 'CLUB', image: null, _count: { posts: 4 } },
     ]);
 
     const suggestions = await listSuggestedProfiles('viewer-1');
 
     expect(suggestions).toEqual([
-      { id: 'nuevo', name: 'Nuevo Perfil', role: 'CLUB', image: null, followers: 7, posts: 4 },
+      { id: 'nuevo', name: 'New Profile', role: 'CLUB', image: null, followers: 7, posts: 4 },
     ]);
     expect(mocks.userFindMany.mock.calls[0][0].where).toEqual({ id: { in: ['nuevo'] } });
   });
 
-  it('sin candidatos no llega a consultar usuarios', async () => {
+  it('sin candidates no llega a consultar usuarios', async () => {
     await expect(listSuggestedProfiles('viewer-1')).resolves.toEqual([]);
     expect(mocks.userFindMany).not.toHaveBeenCalled();
   });
@@ -595,13 +595,13 @@ describe('espejo público (sin sesión)', () => {
     expect(publicFeedFilters(parseFeedFilters({ tab: 'videos' })).tab).toBe('videos');
   });
 
-  it('conserva etiqueta y búsqueda al ajustar los filtros públicos', () => {
+  it('conserva tag y búsqueda al ajustar los filters públicos', () => {
     expect(
-      publicFeedFilters(parseFeedFilters({ tab: 'trending', tag: '#sub17', q: 'becas' }))
+      publicFeedFilters(parseFeedFilters({ tab: 'trending', tag: '#sub17', q: 'scholarships' }))
     ).toEqual({
       tab: 'trending',
       tag: 'sub17',
-      q: 'becas',
+      q: 'scholarships',
       type: null,
       role: null,
     });
@@ -620,7 +620,7 @@ describe('espejo público (sin sesión)', () => {
     expect(posts[0]?.likedByMe).toBe(false);
   });
 
-  it('la pestaña Siguiendo sin sesión devuelve vacío en vez del feed entero', async () => {
+  it('la pestaña Following sin sesión devuelve vacío en vez del feed entero', async () => {
     const page = await listFeed({ filters: { tab: 'following', tag: null, q: null } });
 
     expect(page.posts).toEqual([]);
@@ -628,7 +628,7 @@ describe('espejo público (sin sesión)', () => {
     expect(mocks.postFindMany).not.toHaveBeenCalled();
   });
 
-  it('las publicaciones fijadas públicas tampoco piden "me gusta"', async () => {
+  it('public pinned posts also do not ask for a “like“', async () => {
     mocks.postFindMany.mockResolvedValue([row('post-1', { pinnedAt: new Date() })]);
 
     await listPinnedPosts();
@@ -647,7 +647,7 @@ describe('espejo público (sin sesión)', () => {
     expect(mocks.postFindMany.mock.calls[0][0].where.authorId).toEqual({ notIn: ['bloqueado'] });
   });
 
-  it('el detalle por enlace directo no muestra a quien bloqueaste', async () => {
+  it('el detalle por link directo no muestra a quien bloqueaste', async () => {
     mocks.postFindFirst.mockResolvedValue(row('post-1'));
     mocks.privacyFindMany.mockResolvedValue([
       { ownerId: 'viewer-1', targetId: 'author-1', kind: 'BLOCK' },
@@ -656,7 +656,7 @@ describe('espejo público (sin sesión)', () => {
     await expect(getPostForViewer('post-1', 'viewer-1')).resolves.toBeNull();
   });
 
-  it('el detalle público solo alcanza publicaciones publicadas', async () => {
+  it('the public detail page only reaches published posts', async () => {
     mocks.postFindFirst.mockResolvedValue(null);
 
     await getPostForViewer('post-1');
@@ -667,7 +667,7 @@ describe('espejo público (sin sesión)', () => {
     });
   });
 
-  it('los contadores públicos no consultan el seguimiento del espectador', async () => {
+  it('los contadores públicos no consultan el tracking del espectador', async () => {
     const stats = await getFollowStats('author-1');
 
     expect(stats.isFollowing).toBe(false);

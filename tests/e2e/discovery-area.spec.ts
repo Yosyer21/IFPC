@@ -1,10 +1,10 @@
 /**
- * Discovery: recorrido de extremo a extremo del feed (área privada y espejo
+ * Discovery: recorrido de winger a winger del feed (área privada y espejo
  * público).
  *
  * Requiere la app levantada (`pnpm dev`) y los datos de demo (`pnpm db:seed`),
  * igual que el resto de specs de `tests/e2e`. Cada prueba crea sus propias
- * publicaciones con un identificador único —el guardarraíl rechaza el mismo texto
+ * posts con un identificador único —el guardarraíl rechaza el mismo texto
  * dos veces en 10 minutos— y las borra al terminar, así que no deja basura en la
  * base de datos ni ficheros huérfanos en `uploads/`.
  *
@@ -22,12 +22,12 @@ test.describe.configure({ timeout: 90_000 });
 const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 const MARK = `E2E-DISCOVERY-${Date.now()}`;
 
-/** Publicaciones del seed (`packages/database/prisma/seed.ts`), ids fijos. */
+/** Posts del seed (`packages/database/prisma/seed.ts`), ids fijos. */
 const SEED = {
-  highlights: 'Mis mejores jugadas de la temporada',
-  becas: 'Becas deportivas 2026',
-  torneo: 'torneo regional',
-  club: 'Buscamos lateral izquierdo sub-17',
+  highlights: 'My best plays of the season',
+  scholarships: 'Sports scholarships 2026',
+  tournament: 'regional tournament',
+  club: 'Looking for a U-17 left-back',
 };
 
 /** PNG 1×1 válido: el compositor valida tipo y tamaño del archivo. */
@@ -44,7 +44,7 @@ async function login(page: Page, email = 'player@demo.com', password = 'player12
   await page.waitForURL('**/dashboard/**', { timeout: 20_000 });
 }
 
-/** Tarjeta de una publicación por su texto (raíz `Card` del componente). */
+/** Tarjeta de una post por su texto (raíz `Card` del componente). */
 function postCard(page: Page, text: string) {
   return page.locator('.animate-fade-up').filter({ hasText: text }).first();
 }
@@ -59,7 +59,7 @@ function composer(page: Page) {
 
 /** Pestañas del feed. */
 function feedTabs(page: Page) {
-  return page.getByRole('navigation', { name: 'Secciones del feed' });
+  return page.getByRole('navigation', { name: 'Feed sections' });
 }
 
 async function openFeed(page: Page) {
@@ -71,7 +71,7 @@ async function openFeed(page: Page) {
  * interruptores (pulsar el activo quita la marca), así que primero se normaliza.
  * Reintenta porque el primer clic puede perderse antes de hidratar.
  */
-async function setPreference(page: Page, label: 'Ver más' | 'Ver menos') {
+async function setPreference(page: Page, label: 'Show more' | 'Show less') {
   await expect(async () => {
     const active = page.getByRole('button', { name: `✓ ${label}` });
     if ((await active.count()) > 0) {
@@ -96,7 +96,7 @@ async function setPreference(page: Page, label: 'Ver más' | 'Ver menos') {
 /** Quita las preferencias del perfil abierto (deja los datos del seed intactos). */
 async function clearPreference(page: Page) {
   await expect(async () => {
-    for (const label of ['Ver más', 'Ver menos'] as const) {
+    for (const label of ['Show more', 'Show less'] as const) {
       const active = page.getByRole('button', { name: `✓ ${label}` });
       if ((await active.count()) === 0) continue;
 
@@ -107,7 +107,7 @@ async function clearPreference(page: Page) {
     }
 
     // Si el clic se perdió antes de hidratar, la marca sigue puesta: se reintenta.
-    await expect(page.locator('button:has-text("✓ Ver")')).toHaveCount(0, { timeout: 8_000 });
+    await expect(page.locator('button:has-text("✓ Show")')).toHaveCount(0, { timeout: 8_000 });
   }).toPass({ timeout: 45_000, intervals: [1_000] });
 }
 
@@ -116,12 +116,12 @@ async function publish(page: Page, body: string) {
   await openFeed(page);
   const form = composer(page);
   await form.getByLabel('¿Qué quieres contar?').fill(body);
-  await form.getByRole('button', { name: 'Publicar' }).click();
+  await form.getByRole('button', { name: 'Publish' }).click();
   await expect(postCard(page, body)).toBeVisible({ timeout: 30_000 });
 }
 
 /**
- * Borra una publicación propia desde su tarjeta del feed, con la confirmación del
+ * Borra una post propia desde su tarjeta del feed, con la confirmación del
  * navegador. Si el primer clic se pierde antes de hidratar, se reintenta.
  */
 async function deleteOwnPost(page: Page, body: string) {
@@ -138,7 +138,7 @@ test('feed privado: pestañas accesibles, búsqueda y directorio de perfiles', a
   await login(page);
   await openFeed(page);
 
-  // Pestañas: enlaces con `aria-current` en la activa (son navegación, no paneles).
+  // Pestañas: links con `aria-current` en la activa (son navegación, no paneles).
   const tabs = feedTabs(page);
   await expect(tabs).toBeVisible();
   await expect(tabs.getByRole('link')).toHaveCount(7);
@@ -146,9 +146,9 @@ test('feed privado: pestañas accesibles, búsqueda y directorio de perfiles', a
   await expect(postCard(page, SEED.highlights)).toBeVisible({ timeout: 20_000 });
 
   // Directorio de perfiles: otra consulta, misma pestaña (`?tab=profiles`).
-  await tabs.getByRole('link', { name: 'Perfiles' }).click();
+  await tabs.getByRole('link', { name: 'Profiles' }).click();
   await expect(page).toHaveURL(/tab=profiles/);
-  await expect(tabs.locator('[aria-current="page"]')).toHaveText('Perfiles');
+  await expect(tabs.locator('[aria-current="page"]')).toHaveText('Profiles');
   await expect(page.getByRole('link', { name: 'Demo Player' }).first()).toBeVisible();
 
   // Búsqueda: el estado vive en la URL y filtra por texto. Hay que esperar a que la
@@ -156,18 +156,18 @@ test('feed privado: pestañas accesibles, búsqueda y directorio de perfiles', a
   // directorio de perfiles (que también tiene buscador).
   await tabs.getByRole('link', { name: 'Recientes' }).click();
   await expect(tabs.locator('[aria-current="page"]')).toHaveText('Recientes');
-  await page.getByRole('searchbox', { name: 'Buscar en Discovery' }).fill('becas');
-  await page.getByRole('button', { name: 'Filtrar' }).click();
-  await expect(page).toHaveURL(/q=becas/);
-  await expect(postCard(page, SEED.becas)).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByText(SEED.torneo)).toHaveCount(0);
+  await page.getByRole('searchbox', { name: 'Search Discovery' }).fill('scholarships');
+  await page.getByRole('button', { name: 'Filter' }).click();
+  await expect(page).toHaveURL(/q=scholarships/);
+  await expect(postCard(page, SEED.scholarships)).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText(SEED.tournament)).toHaveCount(0);
 
   // Quitar la búsqueda devuelve el feed completo.
-  await page.getByRole('link', { name: 'Quitar búsqueda' }).click();
-  await expect(postCard(page, SEED.torneo)).toBeVisible({ timeout: 20_000 });
+  await page.getByRole('link', { name: 'Clear search' }).click();
+  await expect(postCard(page, SEED.tournament)).toBeVisible({ timeout: 20_000 });
 });
 
-test('compositor: galería y encuesta, voto, comentario y borrado', async ({ page }) => {
+test('compositor: galería y encuesta, voto, comment y borrado', async ({ page }) => {
   await login(page);
   const body = `${MARK} galería con encuesta`;
 
@@ -179,9 +179,9 @@ test('compositor: galería y encuesta, voto, comentario y borrado', async ({ pag
     { name: 'galeria-2.png', mimeType: 'image/png', buffer: PNG_1PX },
   ]);
   await form.getByRole('button', { name: 'Encuesta' }).click();
-  await form.getByLabel('Opción 1 de la encuesta').fill('Sí, encaja');
+  await form.getByLabel('Opción 1 de la encuesta').fill('Yes, encaja');
   await form.getByLabel('Opción 2 de la encuesta').fill('No encaja');
-  await form.getByRole('button', { name: 'Publicar' }).click();
+  await form.getByRole('button', { name: 'Publish' }).click();
 
   // La tarjeta muestra la galería completa y la encuesta a cero.
   const card = postCard(page, body);
@@ -190,21 +190,21 @@ test('compositor: galería y encuesta, voto, comentario y borrado', async ({ pag
   await expect(card.getByText('Encuesta · 0 votos')).toBeVisible();
 
   // Votar cuenta el voto (server action + revalidación).
-  await card.getByRole('button', { name: 'Votar Sí, encaja' }).click();
+  await card.getByRole('button', { name: 'Votar Yes, encaja' }).click();
   await expect(card.getByText('Encuesta · 1 voto')).toBeVisible({ timeout: 20_000 });
   await expect(card.getByText('100% · 1')).toBeVisible();
 
-  // Detalle: comentario propio. El hilo aparece sin recargar (la acción revalida
+  // Detalle: comment propio. El hilo aparece sin recargar (la acción revalida
   // feed y detalle); si el primer clic se pierde, se reintenta.
   await card.getByRole('link', { name: 'Comentarios' }).click();
   await expect(page).toHaveURL(/\/dashboard\/discovery\/[a-z0-9]+$/);
-  await page.getByPlaceholder('Escribe un comentario…').fill(`${MARK} comentario`);
+  await page.getByPlaceholder('Write a comment…').fill(`${MARK} comment`);
   await expect(async () => {
     await page
-      .getByRole('button', { name: 'Comentar' })
+      .getByRole('button', { name: 'Comment' })
       .click({ timeout: 10_000 })
       .catch(() => undefined);
-    await expect(page.getByText(`${MARK} comentario`).first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(`${MARK} comment`).first()).toBeVisible({ timeout: 10_000 });
   }).toPass({ timeout: 30_000, intervals: [1_000] });
   await expect(page.getByRole('heading', { name: /Comentarios \(1\)/ })).toBeVisible();
 
@@ -215,12 +215,12 @@ test('compositor: galería y encuesta, voto, comentario y borrado', async ({ pag
     .getByRole('button', { name: 'Borrar' });
   await expect(async () => {
     await commentDelete.click({ timeout: 10_000 }).catch(() => undefined);
-    await expect(page.getByText('Todavía no hay comentarios. Sé el primero.')).toBeVisible({
+    await expect(page.getByText('No comments yet. Be the first.')).toBeVisible({
       timeout: 8_000,
     });
   }).toPass({ timeout: 30_000, intervals: [1_000] });
 
-  // Borrar la publicación borra también su medio (ficheros incluidos).
+  // Borrar la post borra también su medio (ficheros incluidos).
   await deleteOwnPost(page, body);
 });
 
@@ -232,7 +232,7 @@ test('«no me interesa»: se oculta solo para quien la marca y se deshace', asyn
   const body = `${MARK} marca privada`;
   await publish(page, body);
 
-  // Quien publica no puede marcarse su propia publicación.
+  // Quien publica no puede marcarse su propia post.
   await expect(postCard(page, body).getByRole('button', { name: 'No me interesa' })).toHaveCount(0);
 
   const otherContext = await browser.newContext();
@@ -242,7 +242,7 @@ test('«no me interesa»: se oculta solo para quien la marca y se deshace', asyn
 
   const clubCard = postCard(club, body);
   await expect(clubCard).toBeVisible({ timeout: 30_000 });
-  // El enlace «Comentarios» lleva al detalle (el avatar lleva al perfil).
+  // El link «Comentarios» lleva al detalle (el avatar lleva al perfil).
   const href = await clubCard.getByRole('link', { name: 'Comentarios' }).getAttribute('href');
   expect(href).toMatch(/^\/dashboard\/discovery\/[a-z0-9]+$/);
 
@@ -258,7 +258,7 @@ test('«no me interesa»: se oculta solo para quien la marca y se deshace', asyn
   await club.goto(`${BASE}${href}`);
   await expect(async () => {
     await club
-      .locator('button:has-text("Volver a mostrar")')
+      .locator('button:has-text("Show again")')
       .click({ timeout: 8_000 })
       .catch(() => undefined);
     await expect(club.locator('button:has-text("No me interesa")').first()).toBeVisible({
@@ -289,8 +289,8 @@ test('borradores: guardar, publicar desde la tarjeta y borrar', async ({ page })
   await expect(drafts.getByText(body)).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('.animate-fade-up').filter({ hasText: body })).toHaveCount(0);
 
-  // Publicar desde la tarjeta lo saca al feed.
-  await drafts.getByRole('button', { name: 'Publicar', exact: true }).click();
+  // Publish desde la tarjeta lo saca al feed.
+  await drafts.getByRole('button', { name: 'Publish', exact: true }).click();
   await expect(postCard(page, body)).toBeVisible({ timeout: 30_000 });
 
   await deleteOwnPost(page, body);
@@ -305,13 +305,13 @@ test('espejo público: solo lectura, pestañas públicas y SEO', async ({ page }
   // Feed de solo lectura: ni compositor ni acciones de autor.
   await expect(page.getByLabel('¿Qué quieres contar?')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Borrar' })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Compartir' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Share' })).toHaveCount(0);
 
-  // Solo las pestañas públicas: "Para ti" y "Siguiendo" necesitan espectador.
+  // Solo las pestañas públicas: "For you" y "Following" necesitan espectador.
   const tabs = feedTabs(page);
   await expect(tabs.getByRole('link', { name: 'Recientes' })).toBeVisible();
-  await expect(tabs.getByRole('link', { name: 'Para ti' })).toHaveCount(0);
-  await expect(tabs.getByRole('link', { name: 'Siguiendo' })).toHaveCount(0);
+  await expect(tabs.getByRole('link', { name: 'For you' })).toHaveCount(0);
+  await expect(tabs.getByRole('link', { name: 'Following' })).toHaveCount(0);
   await expect(postCard(page, SEED.highlights)).toBeVisible({ timeout: 20_000 });
 
   // El detalle público también responde (es la URL que se comparte).
@@ -324,12 +324,12 @@ test('siguiendo y preferencias: el ranking sigue a quién sigues y a tus marcas'
 }) => {
   await login(page);
 
-  // Página de seguimientos: a quién sigues (organizaciones y personas) y quién te sigue.
+  // Página de follows: a quién sigues (organizaciones y personas) y quién te sigue.
   await page.goto(`${BASE}/dashboard/discovery/following`);
-  await expect(page.getByRole('heading', { name: 'Siguiendo y preferencias' })).toBeVisible();
-  await expect(page.getByText('A quién sigues')).toBeVisible();
-  await expect(page.getByText('Quién te sigue')).toBeVisible();
-  await expect(page.getByText('Clubes, universidades y escuelas')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Following and preferences' })).toBeVisible();
+  await expect(page.getByText('Who you follow')).toBeVisible();
+  await expect(page.getByText('Who follows you')).toBeVisible();
+  await expect(page.getByText('Clubes, universities y schools')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Demo Club' }).first()).toBeVisible();
 
   // Desde el perfil del club se pide «ver menos».
@@ -338,8 +338,8 @@ test('siguiendo y preferencias: el ranking sigue a quién sigues y a tus marcas'
   const profileUrl = page.url();
   await expect(page.getByRole('heading', { name: 'Demo Club' })).toBeVisible();
 
-  await setPreference(page, 'Ver menos');
-  await expect(page.getByText(/salen de «Para ti» y «Tendencias»/)).toBeVisible({
+  await setPreference(page, 'Show less');
+  await expect(page.getByText(/leave “For you” and “Trending”/)).toBeVisible({
     timeout: 20_000,
   });
 
@@ -354,7 +354,7 @@ test('siguiendo y preferencias: el ranking sigue a quién sigues y a tus marcas'
   await page.goto(`${BASE}/dashboard/discovery?tab=recent`);
   await expect(postCard(page, SEED.club)).toBeVisible({ timeout: 20_000 });
 
-  // La marca queda a la vista y se puede quitar desde la página de seguimientos.
+  // La marca queda a la vista y se puede quitar desde la página de follows.
   await page.goto(`${BASE}/dashboard/discovery/following`);
   await expect(page.getByRole('button', { name: 'Demo Club ✕' })).toBeVisible({ timeout: 20_000 });
 

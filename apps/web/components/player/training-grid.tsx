@@ -14,7 +14,7 @@ export function TrainingGrid({ contents }: { contents: TrainingContent[] }) {
     return (
       <Card>
         <CardContent>
-          <p className="text-sm text-muted-foreground">No hay contenido disponible.</p>
+          <p className="text-sm text-muted-foreground">No content available.</p>
         </CardContent>
       </Card>
     );
@@ -37,7 +37,7 @@ export function TrainingGrid({ contents }: { contents: TrainingContent[] }) {
               </p>
               <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground">
                 {content.durationMinutes ? <span>{content.durationMinutes} min</span> : null}
-                {content.difficulty ? <span>Nivel {content.difficulty}/5</span> : null}
+                {content.difficulty ? <span>Level {content.difficulty}/5</span> : null}
               </div>
             </CardContent>
           </Card>

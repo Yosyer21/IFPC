@@ -33,14 +33,14 @@ export function ProfilePhotoEditor({ hasImage, redirectTo }: ProfilePhotoEditorP
           onChange={(event) => event.currentTarget.form?.requestSubmit()}
         />
         <label htmlFor={inputId} className={`cursor-pointer ${chip}`}>
-          {pending ? 'Subiendo…' : 'Cambiar foto'}
+          {pending ? 'Uploading…' : 'Change photo'}
         </label>
       </form>
       {hasImage ? (
         <form action={removeProfilePhotoAction}>
           <input type="hidden" name="redirectTo" value={redirectTo ?? ''} />
           <button type="submit" className={chip}>
-            Quitar foto
+            Remove photo
           </button>
         </form>
       ) : null}

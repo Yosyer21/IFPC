@@ -7,7 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { trackProfileView } from '@/lib/profile-views';
 
-export const metadata: Metadata = { title: 'Jugador' };
+export const metadata: Metadata = { title: 'Player' };
 
 export default async function AgentPlayerDetailPage({
   params,
@@ -32,14 +32,14 @@ export default async function AgentPlayerDetailPage({
   });
   if (!player) notFound();
 
-  // Interés de terceros: visita registrada para las métricas del jugador.
+  // Interés de terceros: view registrada para las métricas del player.
   await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const sections = [
     { href: `/dashboard/agent/players/${playerId}/profile`, label: 'Profile' },
     { href: `/dashboard/agent/players/${playerId}/videos`, label: 'Videos' },
     { href: `/dashboard/agent/players/${playerId}/evaluations`, label: 'Evaluaciones' },
-    { href: `/dashboard/agent/players/${playerId}/documents`, label: 'Documentos' },
+    { href: `/dashboard/agent/players/${playerId}/documents`, label: 'Documents' },
   ];
 
   const positionLabel = player.position
@@ -67,7 +67,7 @@ export default async function AgentPlayerDetailPage({
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
               ['Position', positionLabel],
-              ['Nacionalidad', player.nationality ?? '—'],
+              ['Nationality', player.nationality ?? '—'],
               ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
               ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
             ].map(([label, value]) => (

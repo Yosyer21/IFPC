@@ -8,7 +8,7 @@ import { StatCard } from '@/components/player/stat-card';
 import { CountsBars } from '@/components/player/charts';
 import { IconBriefcase, IconShield } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Ligas · Ajustes' };
+export const metadata: Metadata = { title: 'Ligas · Settings' };
 
 export default async function AdminSettingsLeaguesPage() {
   const session = await auth();
@@ -32,13 +32,13 @@ export default async function AdminSettingsLeaguesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Ligas"
-        subtitle="Competiciones de los clubes registrados"
+        subtitle="Competitions of registered clubs"
         icon="briefcase"
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubes con liga" value={withLeague} />
-        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubes sin liga" value={otherClubs.length} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubs with a league" value={withLeague} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubs without a league" value={otherClubs.length} />
         <StatCard href="/dashboard/admin/settings" icon={IconShield} label="Ligas configuradas" value={LEAGUES.length} />
       </div>
 

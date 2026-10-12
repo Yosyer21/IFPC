@@ -8,7 +8,7 @@ import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { CreateOpportunityForm } from '@/components/club/create-opportunity-form';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Oportunidades del club' };
+export const metadata: Metadata = { title: 'Club opportunities' };
 
 export default async function ClubOpportunitiesPage() {
   const session = await auth();
@@ -25,8 +25,8 @@ export default async function ClubOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Oportunidades"
-        subtitle="Publica convocatorias para que los jugadores apliquen"
+        title="Opportunities"
+        subtitle="Publica call-ups para que los players apliquen"
         icon="target"
       />
 
@@ -70,7 +70,7 @@ export default async function ClubOpportunitiesPage() {
                   href={`/dashboard/club/players`}
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver candidatos →
+                  Ver candidates →
                 </Link>
               </CardContent>
             </Card>

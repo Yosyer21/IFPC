@@ -3,9 +3,9 @@ import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
 /**
- * GET /api/development — desarrollo del jugador (ruta, objetivos, evaluaciones).
- * - Jugador: su desarrollo.
- * - Coach: de sus jugadores.
+ * GET /api/development — desarrollo del player (ruta, goals, evaluations).
+ * - Player: su desarrollo.
+ * - Coach: de sus players.
  * - Admin: all (without including relationship).
  */
 export async function GET() {

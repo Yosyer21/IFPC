@@ -32,7 +32,7 @@ export default async function ParentEducationArticlePage({
         <h1 className="mt-3 text-2xl font-bold tracking-tight">{content.title}</h1>
         <div className="mt-2 flex items-center gap-3 text-sm text-muted-foreground">
           {content.durationMinutes ? <span>{content.durationMinutes} min</span> : null}
-          {content.difficulty ? <span>Nivel {content.difficulty}/5</span> : null}
+          {content.difficulty ? <span>Level {content.difficulty}/5</span> : null}
         </div>
       </div>
 

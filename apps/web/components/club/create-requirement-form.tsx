@@ -15,7 +15,7 @@ export function CreateRequirementForm() {
         <Input name="ageMin" type="number" label="Minimum age" />
         <Input name="ageMax" type="number" label="Maximum age" />
       </div>
-      <Input name="level" label="Nivel" placeholder="regional / nacional…" />
+      <Input name="level" label="Level" placeholder="regional / nacional…" />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="description" className="text-sm font-medium">
           Description
@@ -29,7 +29,7 @@ export function CreateRequirementForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Creando…' : 'Crear requisito'}
+        {pending ? 'Creando…' : 'Crear requirement'}
       </Button>
     </form>
   );

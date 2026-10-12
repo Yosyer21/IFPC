@@ -8,7 +8,7 @@ const TYPES = [
   { value: 'TRIAL', label: 'Prueba' },
   { value: 'SCOUTING', label: 'Scouting' },
   { value: 'CONTRACT', label: 'Contrato' },
-  { value: 'SCHOLARSHIP', label: 'Beca' },
+  { value: 'SCHOLARSHIP', label: 'Scholarship' },
   { value: 'ACADEMY', label: 'Academia' },
 ];
 
@@ -17,7 +17,7 @@ export function CreateOpportunityForm() {
 
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
-      <Input name="title" label="Title" placeholder="Ej: Prueba para juvenil Sub-17" required />
+      <Input name="title" label="Title" placeholder="Ej: U-17 youth trial" required />
       <Select name="type" label="Tipo" options={TYPES} defaultValue="TRIAL" required />
       <Input name="position" label="Position" placeholder="DEL / MED / DEF…" />
       <div className="grid grid-cols-2 gap-3">
@@ -39,7 +39,7 @@ export function CreateOpportunityForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Creando…' : 'Publicar oportunidad'}
+        {pending ? 'Creando…' : 'Post opportunity'}
       </Button>
     </form>
   );

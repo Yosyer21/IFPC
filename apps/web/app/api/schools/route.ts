@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/schools — listado de escuelas y servicios comunitarios. */
+/** GET /api/schools — listado de schools y servicios comunitarios. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

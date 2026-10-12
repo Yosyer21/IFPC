@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
 import { IconBook, IconPlay, IconStar, IconWhistle } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Entrenamiento' };
+export const metadata: Metadata = { title: 'Training' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -36,7 +36,7 @@ export default async function CoachTrainingPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Entrenamiento"
+        title="Training"
         subtitle="Exercise catalog to plan your players' development"
         icon="play"
       />

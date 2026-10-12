@@ -28,15 +28,15 @@ export default async function PublicCampsPage() {
             Campus, clinics y concentraciones
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            Entrenamientos intensivos organizados por clubes y entrenadores. Plazas limitadas con
-            seguimiento individualizado.
+            Intensive training organised by clubs and coaches. Limited places with
+            tracking individualizado.
           </p>
         </div>
 
         {camps.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-10 text-center">
             <p className="text-muted-foreground">
-              No hay camps abiertos en este momento. Vuelve pronto.
+              No open camps at the moment. Come back soon.
             </p>
           </div>
         ) : (
@@ -82,7 +82,7 @@ export default async function PublicCampsPage() {
                   </div>
                   {spotsLeft !== null ? (
                     <div className="mt-3 text-xs text-muted-foreground">
-                      {spotsLeft > 0 ? `${spotsLeft} plazas disponibles` : 'Sin plazas libres'}
+                      {spotsLeft > 0 ? `${spotsLeft} plazas available` : 'Sin plazas libres'}
                     </div>
                   ) : null}
                 </Link>

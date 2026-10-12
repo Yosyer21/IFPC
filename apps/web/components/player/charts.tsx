@@ -76,7 +76,7 @@ export function RadarChart({
         const [x, y] = point(i, v);
         return <circle key={i} cx={x} cy={y} r={3} fill="hsl(var(--primary))" />;
       })}
-      {/* etiquetas */}
+      {/* tags */}
       {categories.map((label, i) => {
         const [x, y] = point(i, 11.2);
         return (

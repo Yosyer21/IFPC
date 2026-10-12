@@ -15,7 +15,7 @@ export default function AgentAddPlayerPage() {
       </Link>
       <h1 className="mb-6 text-2xl font-bold">Add player</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Introduce el email de la cuenta del jugador que quieres representar.
+        Enter the email of the player account you want to represent.
       </p>
       <AddPlayerForm />
     </div>

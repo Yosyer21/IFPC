@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { PlayerFilterLinks } from '@/components/admin/player-filter-links';
 import { PlayerRow } from '@/components/admin/player-row';
 
-export const metadata: Metadata = { title: 'Jugadores activos' };
+export const metadata: Metadata = { title: 'Active players' };
 
 export default async function AdminPlayersActivePage() {
   const session = await auth();
@@ -22,8 +22,8 @@ export default async function AdminPlayersActivePage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Jugadores activos"
-        subtitle="Profilees activos y disponibles para reclutamiento"
+        title="Active players"
+        subtitle="Profilees activos y available para reclutamiento"
         icon="whistle"
       />
       <PlayerFilterLinks />

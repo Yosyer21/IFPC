@@ -9,8 +9,8 @@ const scheduledFormat = new Intl.DateTimeFormat('es-ES', {
 });
 
 /**
- * Borradores y publicaciones programadas del autor. Solo lo ve quien los
- * escribió: el feed público nunca lista publicaciones en `DRAFT`.
+ * Borradores y posts programadas del autor. Solo lo ve quien los
+ * escribió: el feed público nunca lista posts en `DRAFT`.
  */
 export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
   if (drafts.length === 0) return null;
@@ -28,12 +28,12 @@ export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
           >
             <div className="min-w-0">
               <p className="truncate text-sm font-medium">
-                {draft.title ?? draft.body?.slice(0, 80) ?? 'Sin texto'}
+                {draft.title ?? draft.body?.slice(0, 80) ?? 'No text'}
               </p>
               <p className="text-xs text-muted-foreground">
                 {draft.scheduledAt
                   ? `Programada para el ${scheduledFormat.format(draft.scheduledAt)}`
-                  : 'Borrador sin programar'}
+                  : 'Unscheduled draft'}
                 {draft.pollOptions.length > 0 ? ' · con encuesta' : ''}
                 {draft.mediaUrls.length > 0 || draft.mediaUrl ? ' · con medio' : ''}
               </p>
@@ -47,7 +47,7 @@ export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
               </Link>
               <form action={publishDraftAction}>
                 <input type="hidden" name="postId" value={draft.id} />
-                <ActionSubmit label="Publicar" pendingLabel="Publicando…" variant="primary" />
+                <ActionSubmit label="Publish" pendingLabel="Publicando…" variant="primary" />
               </form>
               <form action={deletePostAction}>
                 <input type="hidden" name="postId" value={draft.id} />

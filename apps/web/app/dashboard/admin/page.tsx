@@ -50,9 +50,9 @@ export default async function AdminDashboardPage() {
 
   const kpis = [
     { href: '/dashboard/admin/users', icon: IconUsers, label: 'Users', value: users },
-    { href: '/dashboard/admin/players', icon: IconWhistle, label: 'Jugadores', value: players },
+    { href: '/dashboard/admin/players', icon: IconWhistle, label: 'Players', value: players },
     { href: '/dashboard/admin/clubs', icon: IconBriefcase, label: 'Clubes', value: clubs },
-    { href: '/dashboard/admin/opportunities', icon: IconTarget, label: 'Oportunidades abiertas', value: openOpportunities },
+    { href: '/dashboard/admin/opportunities', icon: IconTarget, label: 'Open opportunities', value: openOpportunities },
     { href: '/dashboard/admin/memberships/payments', icon: IconStar, label: 'Payments', value: payments.length },
     { href: '/dashboard/admin/analytics/revenue', icon: IconStar, label: 'Ingresos', value: Math.round(revenue / 100) },
   ];
@@ -120,8 +120,8 @@ export default async function AdminDashboardPage() {
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Control center de la plataforma · {users} usuarios · {players} jugadores ·{' '}
-              {clubs} clubes
+              Control center de la plataforma · {users} usuarios · {players} players ·{' '}
+              {clubs} clubs
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

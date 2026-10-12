@@ -45,7 +45,7 @@ export default async function AdminPlayersEvaluationsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Evaluaciones"
-        subtitle="Valoraciones de jugadores registradas por los coaches"
+        subtitle="Valoraciones de players registered por los coaches"
         icon="whistle"
       />
 
@@ -53,7 +53,7 @@ export default async function AdminPlayersEvaluationsPage() {
         <StatCard
           href="/dashboard/admin/players"
           icon={IconWhistle}
-          label="Evaluaciones totales"
+          label="Evaluaciones totals"
           value={total}
         />
         <StatCard
@@ -76,7 +76,7 @@ export default async function AdminPlayersEvaluationsPage() {
           <CardContent>
             <h2 className="mb-4 font-semibold">Average by category</h2>
             {total === 0 ? (
-              <p className="text-sm text-muted-foreground">No hay evaluaciones registradas.</p>
+              <p className="text-sm text-muted-foreground">No evaluations recorded.</p>
             ) : (
               <CategoryBars items={byCategory} />
             )}
@@ -87,7 +87,7 @@ export default async function AdminPlayersEvaluationsPage() {
           <CardContent>
             <h2 className="mb-3 font-semibold">Recent ({evaluations.length})</h2>
             {evaluations.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin evaluaciones.</p>
+              <p className="text-sm text-muted-foreground">No evaluations.</p>
             ) : (
               <div className="flex max-h-96 flex-col gap-2 overflow-y-auto">
                 {evaluations.slice(0, 50).map((evaluation) => (

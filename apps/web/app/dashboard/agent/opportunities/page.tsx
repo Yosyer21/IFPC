@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Oportunidades' };
+export const metadata: Metadata = { title: 'Opportunities' };
 
 export default async function AgentOpportunitiesPage() {
   const session = await auth();
@@ -21,15 +21,15 @@ export default async function AgentOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Oportunidades abiertas"
-        subtitle="Convocatorias publicadas por clubes en la plataforma"
+        title="Open opportunities"
+        subtitle="Convocatorias publicadas por clubs en la plataforma"
         icon="target"
       />
 
       {opportunities.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay oportunidades abiertas.</p>
+            <p className="text-sm text-muted-foreground">There are no open opportunities.</p>
           </CardContent>
         </Card>
       ) : (

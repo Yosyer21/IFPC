@@ -1,11 +1,11 @@
 import { prisma } from '@ifpc/database';
 
 /**
- * Moderación de Discovery: cola de denuncias, traza de acciones y los tipos que
+ * Discovery moderation: cola de reports, traza de acciones y los tipos que
  * comparten las server actions con el panel de admin.
  */
 
-/** Acciones que quedan registradas en la traza de moderación. */
+/** Acciones que quedan registered en la traza de moderación. */
 const MODERATION_ACTIONS = [
   'HIDDEN',
   'PUBLISHED',
@@ -61,8 +61,8 @@ export interface ReportedPost {
 }
 
 /**
- * Cola de moderación: publicaciones con denuncias **pendientes**, ordenadas por
- * número de denuncias y, a igualdad, por la más reciente.
+ * Cola de moderación: posts con reports **pendientes**, ordered por
+ * número de reports y, a igualdad, por la más reciente.
  */
 export async function listReportedPosts(limit = 20): Promise<ReportedPost[]> {
   const reports = await prisma.postReport.findMany({
@@ -72,7 +72,7 @@ export async function listReportedPosts(limit = 20): Promise<ReportedPost[]> {
     include: { reporter: { select: { id: true, name: true } } },
   });
 
-  // Se agrupa por publicación respetando el orden de la denuncia más reciente.
+  // Se agrupa por post respetando el orden de la report más reciente.
   const grouped = new Map<string, typeof reports>();
   for (const report of reports) {
     const list = grouped.get(report.postId) ?? [];

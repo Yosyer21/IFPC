@@ -31,7 +31,7 @@ export default async function AdminRecruitmentContractsPage() {
       </Link>
       <PageHeader
         title="Contratos"
-        subtitle={`${contracts.length} contratos registrados`}
+        subtitle={`${contracts.length} contratos registered`}
         icon="briefcase"
       />
 
@@ -43,7 +43,7 @@ export default async function AdminRecruitmentContractsPage() {
       {contracts.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay contratos registrados.</p>
+            <p className="text-sm text-muted-foreground">No contracts recorded.</p>
           </CardContent>
         </Card>
       ) : (

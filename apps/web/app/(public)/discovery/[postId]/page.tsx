@@ -11,7 +11,7 @@ import { getPostForViewer, listComments, recordAnonymousView } from '@/lib/disco
 
 const BASE = '/discovery';
 
-/** SEO: título y descripción a partir de la publicación. */
+/** SEO: título y descripción a partir de la post. */
 export async function generateMetadata({
   params,
 }: {
@@ -20,13 +20,13 @@ export async function generateMetadata({
   const { postId } = await params;
   const post = await getPostForViewer(postId);
   if (!post) {
-    return { title: 'Publicación no encontrada — Future Baller' };
+    return { title: 'Post not found — Future Baller' };
   }
 
-  const title = post.title ?? `${POST_TYPE_LABELS[post.type] ?? 'Publicación'} de ${post.author.name}`;
+  const title = post.title ?? `${POST_TYPE_LABELS[post.type] ?? 'Post'} de ${post.author.name}`;
   const description =
     (post.body ?? '').slice(0, 150) ||
-    `Publicación de ${post.author.name} en Discovery (Future Baller).`;
+    `Post de ${post.author.name} en Discovery (Future Baller).`;
 
   // Imagen para compartir: la miniatura del vídeo, la foto o la primera de la
   // galería. Un embed (YouTube/Vimeo) no sirve como imagen.
@@ -49,7 +49,7 @@ export async function generateMetadata({
   };
 }
 
-/** Detalle público de una publicación: lectura de la publicación y sus comentarios. */
+/** Detalle público de una post: lectura de la post y sus comments. */
 export default async function PublicPostPage({
   params,
 }: {
@@ -68,7 +68,7 @@ export default async function PublicPostPage({
       <Navbar />
       <main className="mx-auto w-full max-w-3xl px-4 py-24">
         <Link href={BASE} className="text-sm text-muted-foreground hover:text-foreground">
-          ← Volver a Discovery
+          ← Back to Discovery
         </Link>
 
         <div className="mt-4">
@@ -78,7 +78,7 @@ export default async function PublicPostPage({
         <Card className="mt-4">
           <CardContent className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
-              Entra para comentar, dar me gusta y seguir a este perfil.
+              Sign in to comment, like and follow this profile.
             </p>
             <Link
               href="/login"

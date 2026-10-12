@@ -28,7 +28,7 @@ export default async function AdminPaymentsPage() {
       </Link>
       <h1 className="mb-2 text-2xl font-bold">Payments</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Ingresos registrados: {(totalRevenue / 100).toLocaleString('en')} EUR
+        Ingresos registered: {(totalRevenue / 100).toLocaleString('en')} EUR
       </p>
 
       {payments.length === 0 ? (

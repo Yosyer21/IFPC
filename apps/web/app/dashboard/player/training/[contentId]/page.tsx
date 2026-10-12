@@ -25,7 +25,7 @@ export default async function PlayerTrainingDetailPage({
         href="/dashboard/player/training"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Entrenamiento
+        ← Training
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{content.title}</h1>
       <div className="mb-4 flex items-center gap-3">
@@ -34,7 +34,7 @@ export default async function PlayerTrainingDetailPage({
           <span className="text-sm text-muted-foreground">{content.durationMinutes} min</span>
         ) : null}
         {content.difficulty ? (
-          <span className="text-sm text-muted-foreground">Nivel {content.difficulty}/5</span>
+          <span className="text-sm text-muted-foreground">Level {content.difficulty}/5</span>
         ) : null}
       </div>
 

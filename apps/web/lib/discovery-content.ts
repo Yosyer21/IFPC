@@ -21,9 +21,9 @@ export interface FeedFilters {
   tag: string | null;
   /** Búsqueda por texto: título, cuerpo o autor. */
   q: string | null;
-  /** Tipo de publicación (`PostType`). */
+  /** Post type (`PostType`). */
   type: FeedTypeFilter | null;
-  /** Rol del autor (`Role`). */
+  /** Author role (`Role`). */
   role: FeedRoleFilter | null;
 }
 
@@ -31,7 +31,7 @@ export interface FeedFilters {
 export const FEED_QUERY_MAX = 60;
 const FEED_QUERY_MIN = 2;
 
-/** Tipos y roles aceptados como filtro del feed (mismos valores que los enums). */
+/** Tipos y roles aceptados como filter del feed (mismos valores que los enums). */
 export const FEED_TYPE_FILTERS = ['ANNOUNCEMENT', 'VIDEO', 'PHOTO', 'ACHIEVEMENT'] as const;
 export const FEED_ROLE_FILTERS = [
   'PLAYER',
@@ -60,7 +60,7 @@ export interface ProfileSummary {
 }
 
 /**
- * Pestañas disponibles **sin sesión** (espejo público): "Para ti" y "Siguiendo"
+ * Pestañas available **sin sesión** (espejo público): "For you" y "Following"
  * necesitan saber quién mira.
  */
 export const PUBLIC_DISCOVERY_TABS = [
@@ -71,7 +71,7 @@ export const PUBLIC_DISCOVERY_TABS = [
   'videos',
 ] as const;
 
-/** Ajusta los filtros al espejo público: descarta las pestañas que exigen sesión. */
+/** Ajusta los filters al espejo público: descarta las pestañas que exigen sesión. */
 export function publicFeedFilters(filters: FeedFilters): FeedFilters {
   const tab = PUBLIC_DISCOVERY_TABS.some((value) => value === filters.tab)
     ? filters.tab
@@ -80,7 +80,7 @@ export function publicFeedFilters(filters: FeedFilters): FeedFilters {
   return { ...filters, tab: tab as DiscoveryTab };
 }
 
-/** Publicación ya normalizada para la UI. */
+/** Post ya normalizada para la UI. */
 export interface FeedPost {
   id: string;
   type: string;
@@ -105,7 +105,7 @@ export interface FeedPost {
   mediaUrls: string[];
   /** Texto alternativo del medio (accesibilidad). */
   mediaAlt: string | null;
-  /** Fecha programada de publicación (si sigue siendo un borrador). */
+  /** Fecha programada de post (si sigue siendo un borrador). */
   scheduledAt: Date | null;
   /** Opciones de encuesta (vacío si no hay). */
   pollOptions: string[];
@@ -113,7 +113,7 @@ export interface FeedPost {
   pollCounts: number[];
   /** Opción votada por el espectador, o `null`. */
   myPollVote: number | null;
-  /** Solo lo rellena la pestaña "Para ti": encaje con el perfil (0-100). */
+  /** Solo lo rellena la pestaña "For you": encaje con el perfil (0-100). */
   relevance?: number | null;
 }
 
@@ -130,7 +130,7 @@ export interface FeedPage {
   nextCursor: string | null;
 }
 
-/** Ventana temporal del ranking de tendencias (días) y candidatos que se puntúan. */
+/** Ventana temporal del ranking de tendencias (days) y candidates que se puntúan. */
 const AUTHOR_SELECT = {
   select: { id: true, name: true, role: true, image: true },
 } as const;
@@ -173,7 +173,7 @@ interface FeedRow {
 // Funciones puras
 // ---------------------------------------------------------------------------
 
-/** Normaliza `?tab=`, `?tag=`, `?q=`, `?type=` y `?role=` (desconocidos → sin filtro). */
+/** Normaliza `?tab=`, `?tag=`, `?q=`, `?type=` y `?role=` (desconocidos → sin filter). */
 export function parseFeedFilters(
   params: { tab?: string; tag?: string; q?: string; type?: string; role?: string } = {}
 ): FeedFilters {
@@ -194,7 +194,7 @@ export function parseFeedFilters(
   };
 }
 
-/** Extrae los `#hashtags` del texto y los une a las etiquetas ya declaradas. */
+/** Extrae los `#hashtags` del texto y los une a las tags ya declaradas. */
 export function extractTags(body: string | null | undefined, explicit: string[] = []): string[] {
   const all = [...explicit];
   for (const match of body?.matchAll(/#([\p{L}\p{N}_-]{2,24})/gu) ?? []) {
@@ -247,7 +247,7 @@ export function resolveEmbed(url: string | null | undefined): string | null {
   return null;
 }
 
-/** Puntuación de engagement: los comentarios pesan más que los likes. */
+/** Puntuación de engagement: los comments pesan más que los likes. */
 export function engagementScore(post: Pick<FeedPost, 'counts'>): number {
   return post.counts.likes * 3 + post.counts.comments * 2 + post.counts.views;
 }
@@ -256,7 +256,7 @@ export function engagementScore(post: Pick<FeedPost, 'counts'>): number {
 export function rankTrendingPosts<T extends Pick<FeedPost, 'counts' | 'createdAt'>>(
   posts: T[],
   /**
-   * Puntos extra por publicación (el sistema de preferencias: a quién sigues y
+   * Puntos extra por post (el sistema de preferencias: a quién sigues y
    * quién te interesa más suben; «ver menos» resta). Sin él, el orden es el
    * ranking global por engagement.
    */
@@ -269,7 +269,7 @@ export function rankTrendingPosts<T extends Pick<FeedPost, 'counts' | 'createdAt
   });
 }
 
-/** Ordena por puntuación descendente y, a igualdad, conservando el orden de entrada. */
+/** Ordena por score descendente y, a igualdad, conservando el orden de entrada. */
 export function rankByScore<T>(candidates: T[], scoreOf: (candidate: T) => number): T[] {
   return candidates
     .map((item, index) => ({ item, index, score: scoreOf(item) }))
@@ -277,10 +277,10 @@ export function rankByScore<T>(candidates: T[], scoreOf: (candidate: T) => numbe
     .map((entry) => entry.item);
 }
 
-/** Texto relativo corto ("ahora", "hace 5 min"…). */
+/** Texto relativo corto ("now", "hace 5 min"…). */
 export function formatRelativeTime(date: Date, now: Date = new Date()): string {
   const minutes = Math.round((now.getTime() - date.getTime()) / 60_000);
-  if (minutes < 1) return 'ahora';
+  if (minutes < 1) return 'now';
   if (minutes < 60) return `hace ${minutes} min`;
   const hours = Math.round(minutes / 60);
   if (hours < 24) return `hace ${hours} h`;
@@ -289,7 +289,7 @@ export function formatRelativeTime(date: Date, now: Date = new Date()): string {
   return date.toLocaleDateString('es', { day: 'numeric', month: 'short' });
 }
 
-/** Campos de `PostView` necesarios para agregar el alcance de una publicación. */
+/** Campos de `PostView` necesarios para agregar el alcance de una post. */
 export interface PostViewRow {
   viewerRole: string;
   viewCount: number;
@@ -298,9 +298,9 @@ export interface PostViewRow {
 }
 
 export interface PostViewStats {
-  /** Personas distintas que han abierto la publicación (sin contar el anónimo). */
+  /** Personas distintas que han abierto la post (sin contar el anónimo). */
   viewers: number;
-  /** Aperturas totales (incluye repetidas de la misma persona). */
+  /** Aperturas totals (incluye repetidas de la misma persona). */
   views: number;
   /** Aperturas desde el espejo público, donde no hay espectador identificable. */
   anonymousViews: number;
@@ -314,7 +314,7 @@ export const ANON_VIEWER_ID = 'anonymous';
 export const POST_GALLERY_MAX = 4;
 
 /**
- * Candidatos de mención (`@Nombre Apellido`): el `@` no puede venir pegado a
+ * Candidatos de mención (`@Name Apellido`): el `@` no puede venir pegado a
  * una palabra (evita los correos) y el nombre empieza en mayúscula, hasta dos
  * palabras. La resolución contra perfiles reales la hace la acción, que ignora
  * lo que no exista.
@@ -403,7 +403,7 @@ export function toFeedPost(row: FeedRow, viewerId?: string | null): FeedPost {
   };
 }
 
-/** Avisos del usuario para la campana del feed (los más recientes primero). */
+/** Alerts del usuario para la campana del feed (los más recientes primero). */
 export interface FeedNotification {
   id: string;
   type: string;

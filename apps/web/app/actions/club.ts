@@ -53,7 +53,7 @@ export async function createOpportunityAction(
       data: { ...rest, clubId: club.id, closesAt: closesAt ? new Date(closesAt) : null },
     });
   } catch {
-    return { error: 'No se pudo crear la oportunidad.' };
+    return { error: 'The opportunity could not be created.' };
   }
 
   redirect('/dashboard/club/opportunities');
@@ -86,7 +86,7 @@ export async function createRequirementAction(
       },
     });
   } catch {
-    return { error: 'No se pudo crear el requisito.' };
+    return { error: 'The requirement could not be created.' };
   }
 
   redirect('/dashboard/club/requirements');
@@ -125,7 +125,7 @@ export async function respondInquiryAction(
   const inquiryId = str(formData, 'inquiryId');
   const response = str(formData, 'response');
   if (!inquiryId || !response) {
-    return { error: 'Falta el texto de la respuesta.' };
+    return { error: 'Falta el texto de la reply.' };
   }
 
   try {
@@ -134,7 +134,7 @@ export async function respondInquiryAction(
       data: { response, status: 'CLOSED', respondedAt: new Date() },
     });
   } catch {
-    return { error: 'No se pudo guardar la respuesta.' };
+    return { error: 'The reply could not be saved.' };
   }
 
   redirect(`/dashboard/club/inquiries/${inquiryId}`);
@@ -156,7 +156,7 @@ export async function inviteStaffAction(
 
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
   if (!user) {
-    return { error: 'No existe un usuario registrado con ese email.' };
+    return { error: 'There is no registered user with that email.' };
   }
 
   try {
@@ -166,7 +166,7 @@ export async function inviteStaffAction(
       create: { clubId: club.id, userId: user.id, role },
     });
   } catch {
-    return { error: 'No se pudo invitar al miembro.' };
+    return { error: 'The member could not be invited.' };
   }
 
   redirect('/dashboard/club/staff');

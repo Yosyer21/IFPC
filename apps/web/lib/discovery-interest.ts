@@ -1,14 +1,14 @@
 import { prisma } from '@ifpc/database';
 
 /**
- * "No me interesa": preferencias del espectador sobre publicaciones concretas.
+ * "No me interesa": preferencias del espectador sobre posts concretas.
  *
- * No es moderación (no oculta la publicación a nadie más) ni privacidad (no
+ * No es moderación (no oculta la post a nadie más) ni privacidad (no
  * cambia lo que ve el autor): solo la quita de **sus** listados, y se puede
- * deshacer desde el detalle de la publicación.
+ * deshacer desde el detalle de la post.
  */
 
-/** Ids de las publicaciones que el espectador marcó como "no me interesa". */
+/** Ids de las posts que el espectador marcó como "no me interesa". */
 export async function notInterestedPostIds(viewerId?: string | null): Promise<string[]> {
   if (!viewerId) return [];
 
@@ -19,7 +19,7 @@ export async function notInterestedPostIds(viewerId?: string | null): Promise<st
   return rows.map((row) => row.postId);
 }
 
-/** ¿El espectador marcó esta publicación como "no me interesa"? */
+/** ¿El espectador marcó esta post como "no me interesa"? */
 export async function isNotInterested(input: {
   postId: string;
   viewerId?: string | null;
@@ -33,7 +33,7 @@ export async function isNotInterested(input: {
   return row !== null;
 }
 
-/** Marca o desmarca una publicación (idempotente). */
+/** Marca o desmarca una post (idempotente). */
 export async function setNotInterested(input: {
   postId: string;
   userId: string;

@@ -2,8 +2,8 @@ import { prisma } from '@ifpc/database';
 import { FEED_BANNED_WORDS, FEED_RATE_LIMITS } from '@ifpc/config';
 
 /**
- * Guardarraíles anti-abuso del feed: ritmo de publicación, duplicados, enlaces y
- * lenguaje prohibido. Sin dependencias externas (no hay Redis en desarrollo):
+ * Guardarraíles anti-abuso del feed: ritmo de post, duplicados, links y
+ * banned language. Sin dependencias externas (no hay Redis en desarrollo):
  * los contadores salen de la propia base de datos.
  */
 
@@ -62,8 +62,8 @@ export async function isDuplicatePost(userId: string, body: string | null): Prom
 }
 
 /**
- * Revisiones de una publicación nueva. Devuelve el primer motivo encontrado.
- * El lenguaje prohibido **no** bloquea: marca la publicación para revisión.
+ * Revisiones de una post nueva. Devuelve el primer motivo encontrado.
+ * El banned language **no** bloquea: marca la post para revisión.
  */
 export async function reviewPost(input: {
   userId: string;
@@ -85,7 +85,7 @@ export async function reviewPost(input: {
   return null;
 }
 
-/** Revisiones de un comentario nuevo (el lenguaje prohibido aquí se rechaza). */
+/** Revisiones de un comment nuevo (el banned language aquí se rechaza). */
 export async function reviewComment(input: {
   userId: string;
   body: string | null;
@@ -101,8 +101,8 @@ export async function reviewComment(input: {
 
 /** Mensaje para el autor según el motivo. */
 export const GUARDRAIL_MESSAGES: Record<GuardrailReason, string> = {
-  rate_limit: 'Has publicado demasiado seguido. Espera un rato antes de volver a intentarlo.',
-  duplicate: 'Ya has publicado algo igual hace un momento.',
-  too_many_links: `No se permiten más de ${FEED_RATE_LIMITS.maxLinks} enlaces por publicación.`,
-  banned_words: 'El texto contiene lenguaje que no está permitido.',
+  rate_limit: 'You have posted too often. Wait a while before trying again.',
+  duplicate: 'You have already posted something identical a moment ago.',
+  too_many_links: `No more than ${FEED_RATE_LIMITS.maxLinks} links per post are allowed.`,
+  banned_words: 'The text contains language that is not allowed.',
 };

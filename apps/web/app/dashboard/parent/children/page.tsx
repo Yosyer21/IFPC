@@ -27,7 +27,7 @@ export default async function ParentChildrenPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="My children"
-        subtitle="Jugadores vinculados a tu cuenta familiar"
+        subtitle="Players linked to your family account"
         icon="users"
       />
 

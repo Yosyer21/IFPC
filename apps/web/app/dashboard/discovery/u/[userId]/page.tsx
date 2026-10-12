@@ -25,7 +25,7 @@ import { nameParts } from '@/lib/names';
 
 export const metadata: Metadata = { title: 'Perfil' };
 
-/** Datos de jugador que personalizan el muro (portada, acento, titular y chips). */
+/** Datos de player que personalizan el muro (portada, acento, headline y chips). */
 const PLAYER_PROFILE_SELECT = {
   id: true,
   headline: true,
@@ -44,8 +44,8 @@ function labelOf(labels: Record<string, string>, value: string | null | undefine
 
 /**
  * Perfil de un autor como en una red social: panel frontal con portada y foto
- * (editables si es tu perfil), estadísticas del jugador cuando lo es y su muro
- * de publicaciones de Discovery.
+ * (editables si es tu perfil), estadísticas del player cuando lo es y su muro
+ * de posts de Discovery.
  */
 export default async function DiscoveryAuthorPage({
   params,
@@ -90,13 +90,13 @@ export default async function DiscoveryAuthorPage({
         href="/dashboard/discovery"
         className="text-sm text-muted-foreground hover:text-foreground"
       >
-        ← Volver al feed
+        ← Back to feed
       </Link>
 
       {blockBetween && !privacy.blocked && !isSelf ? (
         <Card className="mt-4">
           <CardContent>
-            <p className="text-sm text-muted-foreground">Este perfil no está disponible.</p>
+            <p className="text-sm text-muted-foreground">This profile is not available.</p>
           </CardContent>
         </Card>
       ) : (
@@ -116,9 +116,9 @@ export default async function DiscoveryAuthorPage({
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{ROLE_LABELS[author.role] ?? author.role}</Badge>
                   <span className="text-xs text-muted-foreground">
-                    {posts.length} {posts.length === 1 ? 'publicación' : 'publicaciones'} ·{' '}
+                    {posts.length} {posts.length === 1 ? 'post' : 'posts'} ·{' '}
                     {followStats.followers}{' '}
-                    {followStats.followers === 1 ? 'seguidor' : 'seguidores'} ·{' '}
+                    {followStats.followers === 1 ? 'follower' : 'followers'} ·{' '}
                     {isSelf ? (
                       <Link href="/dashboard/discovery/following" className="hover:underline">
                         {followStats.following} siguiendo
@@ -136,7 +136,7 @@ export default async function DiscoveryAuthorPage({
                       href="/dashboard/player/profile/edit"
                       className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
                     >
-                      Editar mi perfil
+                      Edit my profile
                     </Link>
                   ) : (
                     <>
@@ -153,11 +153,11 @@ export default async function DiscoveryAuthorPage({
                               value={preference === 'MORE' ? '' : 'MORE'}
                             />
                             <ActionSubmit
-                              label={preference === 'MORE' ? '✓ Ver más' : 'Ver más'}
+                              label={preference === 'MORE' ? '✓ Show more' : 'Show more'}
                               title={
                                 preference === 'MORE'
-                                  ? 'Quitar «ver más» de este perfil'
-                                  : 'Priorizar sus publicaciones en Para ti y Tendencias'
+                                  ? 'Remove “show more” from this profile'
+                                  : 'Prioritise their posts in For you and Trending'
                               }
                             />
                           </form>
@@ -169,11 +169,11 @@ export default async function DiscoveryAuthorPage({
                               value={preference === 'LESS' ? '' : 'LESS'}
                             />
                             <ActionSubmit
-                              label={preference === 'LESS' ? '✓ Ver menos' : 'Ver menos'}
+                              label={preference === 'LESS' ? '✓ Show less' : 'Show less'}
                               title={
                                 preference === 'LESS'
-                                  ? 'Quitar «ver menos» de este perfil'
-                                  : 'Sacar sus publicaciones de Para ti y Tendencias'
+                                  ? 'Remove “show less” from this profile'
+                                  : 'Take their posts out of For you and Trending'
                               }
                             />
                           </form>
@@ -181,17 +181,17 @@ export default async function DiscoveryAuthorPage({
                       )}
                       <form action={toggleMuteAction}>
                         <input type="hidden" name="userId" value={author.id} />
-                        <ActionSubmit label={privacy.muted ? 'Dejar de silenciar' : 'Silenciar'} />
+                        <ActionSubmit label={privacy.muted ? 'Unmute' : 'Mute'} />
                       </form>
                       <form action={toggleBlockAction}>
                         <input type="hidden" name="userId" value={author.id} />
                         <ActionSubmit
-                          label={privacy.blocked ? 'Desbloquear' : 'Bloquear'}
+                          label={privacy.blocked ? 'Desbloquear' : 'Block'}
                           variant={privacy.blocked ? 'outline' : 'danger'}
                           confirmText={
                             privacy.blocked
                               ? undefined
-                              : '¿Bloquear a este perfil? Dejaréis de veros y se cancelan los seguimientos.'
+                              : '¿Block a este perfil? Dejaréis de veros y se cancelan los follows.'
                           }
                         />
                       </form>
@@ -218,8 +218,8 @@ export default async function DiscoveryAuthorPage({
           {preference ? (
             <p className="mb-4 text-xs text-muted-foreground">
               {preference === 'MORE'
-                ? 'Verás más de este perfil en «Para ti» y «Tendencias».'
-                : 'Sus publicaciones salen de «Para ti» y «Tendencias»; siguen en «Recientes» y «Siguiendo».'}
+                ? 'You will see more from this profile in “For you” and “Trending”.'
+                : 'Their posts leave “For you” and “Trending”; they still appear in “Recent” and “Following”.'}
             </p>
           ) : null}
 
@@ -236,7 +236,7 @@ export default async function DiscoveryAuthorPage({
           ) : posts.length === 0 ? (
             <Card>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Todavía no ha publicado nada.</p>
+                <p className="text-sm text-muted-foreground">They have not posted anything yet.</p>
               </CardContent>
             </Card>
           ) : (

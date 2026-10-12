@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Documento' };
+export const metadata: Metadata = { title: 'Document' };
 
 const TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
@@ -55,7 +55,7 @@ export default async function PlayerDocumentDetailPage({
             rel="noopener noreferrer"
             className="inline-flex w-fit rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
           >
-            Abrir documento
+            Open document
           </a>
         </CardContent>
       </Card>

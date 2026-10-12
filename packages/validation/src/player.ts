@@ -44,7 +44,7 @@ export const playerProfileSchema = z.object({
   competitionLevel: z.string().max(60).optional().nullable(),
   bio: z.string().max(2000).optional().nullable(),
   clubName: z.string().max(120).optional().nullable(),
-  // Personalización del perfil. Los valores se validan contra `@ifpc/config` en la
+  // Profile customisation. Los valores se validan contra `@ifpc/config` en la
   // server action (`resolveProfileAccent` / `sanitizeProfileOpenTo`), igual que
   // `position` o `foot`, que tampoco se cierran a un enum aquí.
   headline: z.string().max(120).optional().nullable(),

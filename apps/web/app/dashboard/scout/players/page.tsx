@@ -33,7 +33,7 @@ export default async function ScoutPlayersPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Search players"
-        subtitle="Profilees disponibles para tu radar de scouting"
+        subtitle="Profilees available para tu radar de scouting"
         icon="search"
       />
 
@@ -75,7 +75,7 @@ export default async function ScoutPlayersPage() {
                         : 'border-border hover:bg-muted'
                     }`}
                   >
-                    {savedIds.has(player.id) ? '★ Guardado' : 'Guardar'}
+                    {savedIds.has(player.id) ? '★ Guardado' : 'Save'}
                   </button>
                 </form>
               </CardContent>

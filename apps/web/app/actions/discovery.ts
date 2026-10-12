@@ -56,7 +56,7 @@ const str = (formData: FormData, key: string): string | null => {
   return typeof value === 'string' && value.trim() ? value.trim() : null;
 };
 
-/** ¿El usuario autenticado tiene permiso de publicación? */
+/** ¿El usuario autenticado tiene permiso de post? */
 async function requirePoster(): Promise<{ id: string; name: string; role: string } | null> {
   const session = await auth();
   const user = session?.user;
@@ -74,7 +74,7 @@ function pollOptionsFrom(values: string[]): string[] {
   return cleaned.length >= 2 ? cleaned : [];
 }
 
-/** Resuelve menciones `@Nombre` contra perfiles reales (ignora lo que no exista). */
+/** Resuelve menciones `@Name` contra perfiles reales (ignora lo que no exista). */
 async function resolveMentions(
   text: string | null,
   excludeUserId: string
@@ -92,14 +92,14 @@ async function resolveMentions(
   });
 }
 
-/** Borra el medio de una publicación (best-effort, nunca lanza). */
+/** Borra el medio de una post (best-effort, nunca lanza). */
 async function removeMedia(url: string | null | undefined): Promise<void> {
   await resolveStorage().remove(url);
 }
 
 /**
  * Guarda la imagen/vídeo subido y devuelve su URL pública y su tipo, o un error
- * si el fichero no es válido. El almacén lo decide `resolveStorage()`
+ * si el fichero is not valid. El almacén lo decide `resolveStorage()`
  * (disco por defecto, S3 con `STORAGE_DRIVER=s3`) y los vídeos llevan además una
  * **miniatura** extraída con ffmpeg (si está disponible).
  */
@@ -112,11 +112,11 @@ async function storeUpload(
   const videoExt = file instanceof File ? POST_VIDEO_MIME_EXT[file.type] : undefined;
 
   if (!imageExt && !videoExt) {
-    return { error: 'Solo se permiten imágenes JPG, PNG o WebP y vídeos MP4, WebM o MOV.' };
+    return { error: 'Only JPG, PNG or WebP images and MP4, WebM or MOV videos are allowed.' };
   }
   const max = imageExt ? POST_IMAGE_MAX_BYTES : POST_VIDEO_MAX_BYTES;
   if (file instanceof File && file.size > max) {
-    return { error: `El archivo supera el máximo de ${Math.round(max / 1024 / 1024)} MB.` };
+    return { error: `The file exceeds the maximum of ${Math.round(max / 1024 / 1024)} MB.` };
   }
 
   const ext = imageExt ?? videoExt;
@@ -133,7 +133,7 @@ async function storeUpload(
     });
 
     // Miniatura del vídeo: mejor una portada real que un rectángulo negro. Si
-    // ffmpeg no está (o el vídeo no se puede leer) la publicación sale igual.
+    // ffmpeg no está (o el vídeo no se puede leer) la post sale igual.
     let posterUrl: string | null = null;
     if (videoExt) {
       const poster = await extractVideoPoster(buffer, videoExt);
@@ -154,11 +154,11 @@ async function storeUpload(
 
     return { mediaUrl: url, mediaKind: imageExt ? 'image' : 'video', posterUrl };
   } catch {
-    return { error: 'No se pudo guardar el archivo.' };
+    return { error: 'The file could not be saved.' };
   }
 }
 
-/** Etiquetas del formulario: separadas por espacios o comas (con o sin `#`). */
+/** Tags del formulario: separadas por espacios o comas (con o sin `#`). */
 const splitTags = (value: string | null): string[] => (value ?? '').split(/[\s,]+/).filter(Boolean);
 
 /**
@@ -171,7 +171,7 @@ export async function createPostAction(
 ): Promise<ActionState> {
   const poster = await requirePoster();
   if (!poster) {
-    return { error: 'Tu perfil no puede publicar.' };
+    return { error: 'Your profile cannot post.' };
   }
 
   const file = formData.get('file');
@@ -211,7 +211,7 @@ export async function createPostAction(
   const publishAtRaw = parsed.data.publishAt ?? null;
   const publishAt = publishAtRaw ? new Date(publishAtRaw) : null;
   if (publishAt && Number.isNaN(publishAt.getTime())) {
-    return { error: 'La fecha de programación no es válida.' };
+    return { error: 'The schedule date is not valid.' };
   }
   // Con menos de dos opciones el campo no es una encuesta: se ignora.
   const pollOptions = pollOptionsFrom(parsed.data.pollOptions ?? []);
@@ -228,7 +228,7 @@ export async function createPostAction(
   } else if (externalUrl) {
     const embed = resolveEmbed(externalUrl);
     if (!embed) {
-      return { error: 'Solo se pueden incrustar enlaces de YouTube o Vimeo.' };
+      return { error: 'Only YouTube or Vimeo links can be embedded.' };
     }
     mediaUrl = embed;
     mediaKind = 'embed';
@@ -240,7 +240,7 @@ export async function createPostAction(
     const stored = await storeUpload(galleryFile);
     if ('error' in stored) return { error: stored.error };
     if (stored.mediaKind !== 'image') {
-      return { error: 'La galería solo admite imágenes.' };
+      return { error: 'The gallery only accepts images.' };
     }
     galleryUrls.push(stored.mediaUrl);
   }
@@ -250,7 +250,7 @@ export async function createPostAction(
   }
 
   if (!mediaKind && (parsed.data.type === 'VIDEO' || parsed.data.type === 'PHOTO')) {
-    return { error: 'Adjunta el archivo o el enlace del medio.' };
+    return { error: 'Attach the file or the media link.' };
   }
 
   // El medio manda: un vídeo o una imagen nunca queda clasificado como anuncio.
@@ -259,7 +259,7 @@ export async function createPostAction(
   // Borrador (a mano o programado): no se revisa ni se avisa hasta publicarse.
   const asDraft = intent === 'draft' || (publishAt !== null && publishAt.getTime() > Date.now());
 
-  // Guardarraíles anti-abuso: ritmo, duplicados, enlaces y lenguaje prohibido.
+  // Guardarraíles anti-abuso: ritmo, duplicados, links y banned language.
   // El borrador sí respeta ritmo/duplicados, pero no se oculta: se revisa al publicarse.
   const review = await reviewPost({
     userId: poster.id,
@@ -269,7 +269,7 @@ export async function createPostAction(
   if (review && 'reason' in review) {
     return { error: GUARDRAIL_MESSAGES[review.reason] };
   }
-  // El lenguaje no permitido no se pierde: la publicación queda a revisión.
+  // El language no permitido no se pierde: la post queda a revisión.
   const needsReview = review !== null && !asDraft;
 
   // Solo se adjunta la oportunidad si existe (el FK no admite referencias sueltas).
@@ -305,7 +305,7 @@ export async function createPostAction(
       },
     });
   } catch {
-    return { error: 'No se pudo publicar.' };
+    return { error: 'The post could not be published.' };
   }
 
   // El borrador (manual o programado) no avisa a nadie: aún no es visible.
@@ -321,12 +321,12 @@ export async function createPostAction(
         userId: mentioned.id,
         type: 'post_mention',
         title: 'Te han mencionado',
-        message: `${poster.name} te mencionó en una publicación.`,
+        message: `${poster.name} te mencionó en una post.`,
         link: `/dashboard/discovery/${created.id}`,
         groupMessage: (count) => `${count} menciones nuevas en Discovery.`,
       });
     } catch {
-      // El aviso nunca debe romper la publicación.
+      // El aviso nunca debe romper la post.
     }
   }
 
@@ -335,7 +335,7 @@ export async function createPostAction(
       actorId: poster.id,
       postId: created.id,
       action: 'HIDDEN',
-      notes: 'Automático: el texto contiene lenguaje no permitido.',
+      notes: 'Automático: el texto contiene language no permitido.',
     });
     redirect(`/dashboard/discovery/${created.id}`);
   }
@@ -377,7 +377,7 @@ export async function setAuthorPreferenceAction(formData: FormData): Promise<voi
   );
 }
 
-/** Marca o desmarca una publicación como "no me interesa" (solo quien la ve). */
+/** Marca o desmarca una post como "no me interesa" (solo quien la ve). */
 export async function notInterestedAction(formData: FormData): Promise<void> {
   const session = await auth();
   const userId = session?.user?.id;
@@ -389,7 +389,7 @@ export async function notInterestedAction(formData: FormData): Promise<void> {
   const post = await prisma.post.findUnique({ where: { id: postId }, select: { id: true } });
   if (!post) return;
 
-  // 'off' deshace la marca (desde el detalle de la publicación).
+  // 'off' deshace la marca (desde el detalle de la post).
   await setNotInterested({ postId, userId, value: str(formData, 'value') !== 'off' });
 
   const from = str(formData, 'from');
@@ -397,7 +397,7 @@ export async function notInterestedAction(formData: FormData): Promise<void> {
   revalidatePaths(`/dashboard/discovery/${postId}`);
 }
 
-/** Vota (o cambia el voto) en la encuesta de una publicación. */
+/** Vota (o cambia el voto) en la encuesta de una post. */
 export async function votePollAction(formData: FormData): Promise<void> {
   const session = await auth();
   const userId = session?.user?.id;
@@ -445,8 +445,8 @@ export async function publishDraftAction(formData: FormData): Promise<void> {
   });
   if (!draft) return;
 
-  // Publicar un borrador no es una publicación nueva: el ritmo y los duplicados
-  // no aplican (el texto ya existe), pero sí el filtro de lenguaje prohibido.
+  // Publish un borrador no es una post nueva: el ritmo y los duplicados
+  // no aplican (el texto ya existe), pero sí el filter de banned language.
   const hidden = containsBannedWord(draft.title) || containsBannedWord(draft.body);
 
   await prisma.post.update({
@@ -459,7 +459,7 @@ export async function publishDraftAction(formData: FormData): Promise<void> {
       actorId: userId,
       postId: draft.id,
       action: 'HIDDEN',
-      notes: 'Automático al publicar un borrador: el texto contiene lenguaje no permitido.',
+      notes: 'Automático al publicar un borrador: el texto contiene language no permitido.',
     });
   }
 
@@ -467,19 +467,19 @@ export async function publishDraftAction(formData: FormData): Promise<void> {
   redirect(`/dashboard/discovery/${draft.id}`);
 }
 
-/** Edita el texto de una publicación propia (el medio no se cambia). */
+/** Edita el texto de una post propia (el medio no se cambia). */
 export async function updatePostAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const poster = await requirePoster();
   if (!poster) {
-    return { error: 'Tu perfil no puede publicar.' };
+    return { error: 'Your profile cannot post.' };
   }
 
   const postId = str(formData, 'postId');
   if (!postId) {
-    return { error: 'La publicación no existe.' };
+    return { error: 'The post does not exist.' };
   }
 
   const post = await prisma.post.findUnique({
@@ -487,10 +487,10 @@ export async function updatePostAction(
     select: { authorId: true },
   });
   if (!post) {
-    return { error: 'La publicación no existe.' };
+    return { error: 'The post does not exist.' };
   }
   if (post.authorId !== poster.id) {
-    return { error: 'Solo puedes editar tus propias publicaciones.' };
+    return { error: 'You can only edit your own posts.' };
   }
 
   const parsed = postEditSchema.safeParse({
@@ -512,13 +512,13 @@ export async function updatePostAction(
       },
     });
   } catch {
-    return { error: 'No se pudo guardar la publicación.' };
+    return { error: 'The post could not be saved.' };
   }
 
   redirect(`/dashboard/discovery/${postId}`);
 }
 
-/** Borra una publicación propia (un admin puede borrar cualquiera). */
+/** Borra una post propia (un admin puede borrar cualquiera). */
 export async function deletePostAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -593,10 +593,10 @@ export async function toggleLikeAction(formData: FormData): Promise<void> {
         await notifyGrouped({
           userId: post.authorId,
           type: 'post_like',
-          title: 'Nuevos me gusta',
-          message: `${user.name} ha indicado que le gusta tu publicación.`,
+          title: 'New likes',
+          message: `${user.name} ha indicado que le gusta tu post.`,
           link: `/dashboard/discovery/${postId}`,
-          groupMessage: (count) => `A ${count} personas les gusta tu publicación.`,
+          groupMessage: (count) => `A ${count} personas les gusta tu post.`,
         });
       } catch {
         // El aviso nunca debe romper la interacción.
@@ -605,14 +605,14 @@ export async function toggleLikeAction(formData: FormData): Promise<void> {
   }
 }
 
-/** Comenta una publicación y avisa al autor. */
+/** Comenta una post y avisa al autor. */
 export async function createCommentAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'La sesión no es válida.' };
+    return { error: 'Your session is not valid.' };
   }
 
   const parsed = postCommentSchema.safeParse({
@@ -621,10 +621,10 @@ export async function createCommentAction(
     body: str(formData, 'body'),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comentario.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comment.' };
   }
 
-  // Guardarraíles: ritmo y lenguaje prohibido.
+  // Guardarraíles: ritmo y banned language.
   const review = await reviewComment({ userId: session.user.id, body: parsed.data.body });
   if (review) {
     return { error: GUARDRAIL_MESSAGES[review.reason] };
@@ -635,17 +635,17 @@ export async function createCommentAction(
     select: { authorId: true, status: true, commentsPolicy: true },
   });
   if (!post || post.status !== 'PUBLISHED') {
-    return { error: 'La publicación no existe.' };
+    return { error: 'The post does not exist.' };
   }
 
-  // Política de comentarios del autor + bloqueos entre ambos perfiles.
+  // Política de comments del autor + bloqueos entre ambos perfiles.
   const allowed = await canComment({
     viewerId: session.user.id,
     authorId: post.authorId,
     policy: post.commentsPolicy ?? 'EVERYONE',
   });
   if (!allowed) {
-    return { error: 'No puedes comentar en esta publicación.' };
+    return { error: 'You cannot comment on this post.' };
   }
 
   try {
@@ -658,17 +658,17 @@ export async function createCommentAction(
       },
     });
   } catch {
-    return { error: 'No se pudo enviar el comentario.' };
+    return { error: 'The comment could not be sent.' };
   }
 
-  // Una respuesta avisa a quien comentó; un comentario nuevo, al autor.
+  // Una reply avisa a quien comentó; un comment nuevo, al autor.
   let targetUserId = post.authorId;
   if (parsed.data.parentId) {
     const parent = await prisma.postComment.findUnique({
       where: { id: parsed.data.parentId },
       select: { authorId: true, postId: true },
     });
-    // Solo se acepta el padre si pertenece a la misma publicación.
+    // Solo se acepta el padre si pertenece a la misma post.
     if (parent && parent.postId === parsed.data.postId) {
       targetUserId = parent.authorId;
     }
@@ -680,16 +680,16 @@ export async function createCommentAction(
       await notifyGrouped({
         userId: targetUserId,
         type: isReply ? 'comment_reply' : 'post_comment',
-        title: isReply ? 'Nueva respuesta' : 'Nuevos comentarios',
+        title: isReply ? 'New reply' : 'New comments',
         message: `${session.user.name} comentó en Discovery.`,
         link: `/dashboard/discovery/${parsed.data.postId}`,
         groupMessage: (count) =>
           isReply
-            ? `${count} respuestas nuevas en la conversación.`
-            : `${count} comentarios nuevos en tu publicación.`,
+            ? `${count} replies nuevas en la conversación.`
+            : `${count} comments nuevos en tu post.`,
       });
     } catch {
-      // El aviso nunca debe romper el comentario.
+      // El aviso nunca debe romper el comment.
     }
   }
 
@@ -699,24 +699,24 @@ export async function createCommentAction(
 
   return { success: 'Comentario publicado.' };
 }
-/** Edita el texto de un comentario propio. */
+/** Edita el texto de un comment propio. */
 export async function updateCommentAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'La sesión no es válida.' };
+    return { error: 'Your session is not valid.' };
   }
 
   const commentId = str(formData, 'commentId');
   if (!commentId) {
-    return { error: 'El comentario no existe.' };
+    return { error: 'The comment does not exist.' };
   }
 
   const parsed = postCommentEditSchema.safeParse({ body: str(formData, 'body') });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comentario.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comment.' };
   }
 
   const comment = await prisma.postComment.findUnique({
@@ -724,16 +724,16 @@ export async function updateCommentAction(
     select: { authorId: true, postId: true },
   });
   if (!comment) {
-    return { error: 'El comentario no existe.' };
+    return { error: 'The comment does not exist.' };
   }
   if (comment.authorId !== session.user.id) {
-    return { error: 'Solo puedes editar tus propios comentarios.' };
+    return { error: 'You can only edit your own comments.' };
   }
 
   try {
     await prisma.postComment.update({ where: { id: commentId }, data: { body: parsed.data.body } });
   } catch {
-    return { error: 'No se pudo guardar el comentario.' };
+    return { error: 'The comment could not be saved.' };
   }
 
   revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${comment.postId}`);
@@ -741,7 +741,7 @@ export async function updateCommentAction(
   return { success: 'Comentario actualizado.' };
 }
 
-/** Borra un comentario propio (o cualquiera si eres el autor del post / admin). */
+/** Borra un comment propio (o cualquiera si eres el autor del post / admin). */
 export async function deleteCommentAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -773,14 +773,14 @@ export async function deleteCommentAction(formData: FormData): Promise<void> {
   revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${comment.postId}`);
 }
 
-/** Denuncia una publicación (idempotente: una denuncia por persona). */
+/** Denuncia una post (idempotente: una report por persona). */
 export async function reportPostAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
   const session = await auth();
   if (!session?.user?.id) {
-    return { error: 'La sesión no es válida.' };
+    return { error: 'Your session is not valid.' };
   }
 
   const parsed = postReportSchema.safeParse({
@@ -804,15 +804,15 @@ export async function reportPostAction(
       },
     });
   } catch {
-    return { error: 'No se pudo enviar la denuncia.' };
+    return { error: 'The report could not be sent.' };
   }
 
   return { success: 'Gracias, lo revisaremos.' };
 }
 
 /**
- * Carga la siguiente página del feed para "Ver más" sin recargar la página.
- * Devuelve solo lo que necesita el cliente (publicaciones + cursor).
+ * Carga la siguiente página del feed para "Show more" sin recargar la página.
+ * Devuelve solo lo que necesita el cliente (posts + cursor).
  */
 export async function loadMoreFeedAction(input: {
   tab: string;
@@ -839,7 +839,7 @@ export async function loadMoreFeedAction(input: {
   return { posts: page.posts, nextCursor: page.nextCursor };
 }
 
-/** Oculta o vuelve a publicar contenido (solo ADMIN). Al ocultar, atiende las denuncias. */
+/** Oculta o vuelve a publicar contenido (solo ADMIN). Al ocultar, atiende las reports. */
 export async function moderatePostAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -855,7 +855,7 @@ export async function moderatePostAction(formData: FormData): Promise<void> {
 
   await prisma.post.update({ where: { id: postId }, data: { status } });
 
-  // Ocultar contenido cierra las denuncias pendientes que lo señalaban.
+  // Ocultar contenido cierra las reports pendientes que lo señalaban.
   if (status === 'HIDDEN') {
     await prisma.postReport.updateMany({
       where: { postId, resolvedAt: null },
@@ -871,7 +871,7 @@ export async function moderatePostAction(formData: FormData): Promise<void> {
   });
 }
 
-/** Fija o desfija una publicación en el feed (solo ADMIN). */
+/** Fija o desfija una post en el feed (solo ADMIN). */
 export async function pinPostAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -900,7 +900,7 @@ export async function pinPostAction(formData: FormData): Promise<void> {
   await logModeration({ actorId: user.id, postId, action: pin ? 'PINNED' : 'UNPINNED' });
 }
 
-/** Da por atendidas las denuncias pendientes de una publicación (solo ADMIN). */
+/** Da por atendidas las reports pendientes de una post (solo ADMIN). */
 export async function resolveReportsAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -953,7 +953,7 @@ export async function toggleFollowAction(formData: FormData): Promise<void> {
     return;
   }
 
-  // Con un bloqueo por medio no hay seguimiento posible.
+  // Con un bloqueo por medio no hay tracking posible.
   if (await hasBlockBetween(user.id, targetId)) {
     return;
   }
@@ -971,21 +971,21 @@ export async function toggleFollowAction(formData: FormData): Promise<void> {
   await prisma.follow.create({ data: { followerId: user.id, followingId: targetId } });
 
   try {
-    // El aviso agrupa seguidores y enlaza a tu propio muro.
+    // El aviso agrupa followers y enlaza a tu propio muro.
     await notifyGrouped({
       userId: targetId,
       type: 'new_follower',
-      title: 'Nuevos seguidores',
+      title: 'New followers',
       message: `${user.name} te sigue en Discovery.`,
       link: `/dashboard/discovery/u/${targetId}`,
       groupMessage: (count) => `${count} personas te siguen en Discovery.`,
     });
   } catch {
-    // El aviso nunca debe romper el seguimiento.
+    // El aviso nunca debe romper el tracking.
   }
 }
 
-/** Bloquea o desbloquea a un perfil (corta los seguimientos en ambos sentidos). */
+/** Bloquea o desbloquea a un perfil (corta los follows en ambos sentidos). */
 export async function toggleBlockAction(formData: FormData): Promise<void> {
   await togglePrivacy(formData, 'BLOCK');
 }

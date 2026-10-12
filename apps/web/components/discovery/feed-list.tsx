@@ -6,7 +6,7 @@ import type { FeedFilters, FeedPost } from '@/lib/discovery-content';
 import { PostCard } from './post-card';
 
 /**
- * Lista del feed con carga incremental: las publicaciones del servidor son la
+ * Lista del feed con carga incremental: las posts del servidor son la
  * fuente de verdad y aquí solo se acumulan las páginas siguientes, así que un
  * refresco de la ruta (tras un me gusta, por ejemplo) no pierde lo cargado.
  */
@@ -69,7 +69,7 @@ export function FeedList({
             aria-live="polite"
             className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground disabled:opacity-50"
           >
-            {pending ? 'Cargando…' : 'Ver más'}
+            {pending ? 'Cargando…' : 'Show more'}
           </button>
         </div>
       ) : null}

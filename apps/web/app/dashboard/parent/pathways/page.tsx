@@ -11,7 +11,7 @@ import { IconRoute } from '@/components/dashboard/icons';
 export const metadata: Metadata = { title: 'Rutas de mis hijos' };
 
 const PATHWAY_STATUS_LABELS: Record<string, string> = {
-  active: 'Activa',
+  active: 'Active',
   completed: 'Completada',
   paused: 'Pausada',
 };
@@ -34,7 +34,7 @@ export default async function ParentPathwaysPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Rutas de desarrollo"
-        subtitle="Plan de desarrollo deportivo de cada uno de tus hijos"
+        subtitle="Sports development plan for each of your children"
         icon="route"
       />
 
@@ -89,7 +89,7 @@ export default async function ParentPathwaysPage() {
                             />
                           </div>
                           <span className="text-xs text-muted-foreground">
-                            {completed}/{player.goals.length} objetivos ({progress}%)
+                            {completed}/{player.goals.length} goals ({progress}%)
                           </span>
                         </div>
                       </div>
@@ -102,7 +102,7 @@ export default async function ParentPathwaysPage() {
 
                     <div className="mt-3 flex flex-wrap gap-2 text-xs">
                       {player.pathway?.level ? (
-                        <Badge variant="outline">Nivel: {player.pathway.level}</Badge>
+                        <Badge variant="outline">Level: {player.pathway.level}</Badge>
                       ) : null}
                       {player.pathway?.focus ? (
                         <Badge variant="outline">Foco: {player.pathway.focus}</Badge>

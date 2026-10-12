@@ -8,7 +8,7 @@ import { StatCard } from '@/components/player/stat-card';
 import { PageHeader } from '@/components/player/page-header';
 import { IconCalendar, IconTarget, IconUsers, IconWhistle } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Escuela / Comunidad' };
+export const metadata: Metadata = { title: 'School / Community' };
 
 export default async function SchoolDashboardPage() {
   const session = await auth();
@@ -35,20 +35,20 @@ export default async function SchoolDashboardPage() {
     {
       href: '/dashboard/school/participants',
       icon: IconUsers,
-      label: 'Jugadoras disponibles',
+      label: 'Available female players',
       value: availablePlayers,
     },
     {
       href: '/dashboard/school/opportunities',
       icon: IconTarget,
-      label: 'Oportunidades abiertas',
+      label: 'Open opportunities',
       value: openOpportunities,
     },
-    { href: '/dashboard/school', icon: IconCalendar, label: 'Clínicas abiertas', value: openCamps },
+    { href: '/dashboard/school', icon: IconCalendar, label: 'Clínicas open', value: openCamps },
     {
       href: '/dashboard/school',
       icon: IconWhistle,
-      label: 'Próximas clínicas',
+      label: 'Próximas clinics',
       value: upcomingCamps.length,
     },
   ];
@@ -57,11 +57,11 @@ export default async function SchoolDashboardPage() {
     <div className="mx-auto max-w-6xl">
       <PageHeader
         title={school.name}
-        subtitle="Programa escolar y comunitario — grupos, clínicas y oportunidades"
+        subtitle="Programa escolar y comunitario — grupos, clinics y opportunities"
         icon="book"
       >
         <Badge variant={school.verified ? 'success' : 'outline'}>
-          {school.verified ? 'Verificada' : 'Pendiente de verificación'}
+          {school.verified ? 'Verificada' : 'Pending verification'}
         </Badge>
         <Badge>{SCHOOL_TYPE_LABELS[school.type] ?? school.type}</Badge>
       </PageHeader>
@@ -102,7 +102,7 @@ export default async function SchoolDashboardPage() {
               href="/dashboard/school/profile"
               className="mt-4 inline-block text-sm text-primary hover:underline"
             >
-              Ver perfil de organización →
+              See organisation profile →
             </Link>
           </CardContent>
         </Card>
@@ -110,17 +110,17 @@ export default async function SchoolDashboardPage() {
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '120ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Próximas clínicas y camps</h2>
+              <h2 className="font-semibold">Próximas clinics y camps</h2>
               <Link
                 href="/dashboard/school/opportunities"
                 className="text-sm text-primary hover:underline"
               >
-                Ver oportunidades →
+                See opportunities →
               </Link>
             </div>
             {upcomingCamps.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No hay clínicas programadas por el momento.
+                No clinics scheduled at the moment.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -141,7 +141,7 @@ export default async function SchoolDashboardPage() {
                       </div>
                     </div>
                     <Badge variant={camp.status === 'OPEN' ? 'success' : 'warning'}>
-                      {camp.status === 'OPEN' ? 'Inscripciones abiertas' : 'Completo'}
+                      {camp.status === 'OPEN' ? 'Inscripciones open' : 'Completo'}
                     </Badge>
                   </div>
                 ))}

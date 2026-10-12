@@ -34,7 +34,7 @@ const daysAgo = (days: number, hours = 0) =>
 function postRow(overrides: Partial<AuthorPostRow> = {}): AuthorPostRow {
   return {
     id: 'post-1',
-    label: 'Publicación',
+    label: 'Post',
     tags: [],
     createdAt: NOW,
     likes: 0,
@@ -55,7 +55,7 @@ beforeEach(() => {
 });
 
 describe('summarizeAuthorAnalytics', () => {
-  it('sin publicaciones devuelve todo a cero', () => {
+  it('sin posts devuelve todo a cero', () => {
     expect(summarizeAuthorAnalytics([])).toEqual({
       posts: 0,
       reach: 0,
@@ -84,7 +84,7 @@ describe('summarizeAuthorAnalytics', () => {
     expect(analytics.engagement).toBe(17);
   });
 
-  it('ordena las publicaciones por interacción y recorta a cinco', () => {
+  it('ordena las posts por interacción y recorta a cinco', () => {
     const rows = Array.from({ length: 7 }, (_value, index) =>
       postRow({ id: `post-${index}`, likes: index })
     );
@@ -96,9 +96,9 @@ describe('summarizeAuthorAnalytics', () => {
     expect(topPosts.map((post) => post.score)).toEqual([18, 15, 12, 9, 6]);
   });
 
-  it('cuenta etiquetas con desempate alfabético', () => {
+  it('cuenta tags con desempate alfabético', () => {
     const analytics = summarizeAuthorAnalytics([
-      postRow({ tags: ['sub17', 'portero'] }),
+      postRow({ tags: ['sub17', 'goalkeeper'] }),
       postRow({ id: 'post-2', tags: ['sub17'] }),
       postRow({ id: 'post-3', tags: ['aviso'] }),
     ]);
@@ -106,7 +106,7 @@ describe('summarizeAuthorAnalytics', () => {
     expect(analytics.topTags).toEqual([
       { tag: 'sub17', posts: 2 },
       { tag: 'aviso', posts: 1 },
-      { tag: 'portero', posts: 1 },
+      { tag: 'goalkeeper', posts: 1 },
     ]);
   });
 });
@@ -128,13 +128,13 @@ describe('bestPostingHour', () => {
 });
 
 describe('countTags', () => {
-  it('limita el número de etiquetas', () => {
+  it('caps the number of tags', () => {
     expect(countTags([['a'], ['b'], ['c']], 2)).toHaveLength(2);
   });
 });
 
 describe('bucketPostsByDay', () => {
-  it('rellena los días sin actividad', () => {
+  it('rellena los days sin actividad', () => {
     const buckets = bucketPostsByDay([NOW, daysAgo(1)], 3, NOW);
 
     expect(buckets).toHaveLength(3);
@@ -149,7 +149,7 @@ describe('bucketPostsByDay', () => {
 });
 
 describe('averageResolutionHours', () => {
-  it('sin denuncias atendidas no hay media', () => {
+  it('sin reports atendidas no hay media', () => {
     expect(averageResolutionHours([])).toBeNull();
     expect(averageResolutionHours([{ createdAt: NOW, resolvedAt: null }])).toBeNull();
   });
@@ -165,7 +165,7 @@ describe('averageResolutionHours', () => {
 });
 
 describe('getAuthorAnalytics', () => {
-  it('sin publicaciones no consulta vistas', async () => {
+  it('sin posts no consulta vistas', async () => {
     await expect(getAuthorAnalytics('author-1')).resolves.toMatchObject({ posts: 0 });
     expect(mocks.viewFindMany).not.toHaveBeenCalled();
   });
@@ -216,7 +216,7 @@ describe('getFeedHealth', () => {
     expect(health.averageResolutionHours).toBe(4);
   });
 
-  it('sin publicaciones la tasa de denuncia es cero', async () => {
+  it('sin posts la tasa de report es cero', async () => {
     const health = await getFeedHealth(NOW);
     expect(health.reportRatePer100).toBe(0);
     expect(health.averageResolutionHours).toBeNull();

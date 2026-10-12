@@ -6,7 +6,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { CategoryBars, DonutChart, LineChart, RadarChart } from '@/components/player/charts';
 
-export const metadata: Metadata = { title: 'Mi progreso' };
+export const metadata: Metadata = { title: 'My progress' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -66,7 +66,7 @@ export default async function PlayerProgressPage() {
   return (
     <div className="mx-auto max-w-6xl">
       <PageHeader
-        title="Mi progreso"
+        title="My progress"
         subtitle="Track your development based on your coach and scouts' assessments"
         icon="trending"
       />
@@ -105,7 +105,7 @@ export default async function PlayerProgressPage() {
                 <DonutChart
                   value={overall * 10}
                   label={`${overall}`}
-                  sublabel={`sobre 10 · ${evaluations.length} evaluaciones`}
+                  sublabel={`out of 10 · ${evaluations.length} evaluations`}
                 />
                 <div className="flex flex-wrap justify-center gap-2">
                   {bars.map((bar) => (

@@ -24,7 +24,7 @@ export default async function ClubInquiriesPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Inquiries recibidas"
-        subtitle="Mensajes de jugadores y familias interesados en tu club"
+        subtitle="Messages de players y families interesados en tu club"
         icon="mail"
       />
 

@@ -7,8 +7,8 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Oportunidades — Future Baller',
-  description: 'Pruebas, becas y convocatorias abiertas de clubes y universidades.',
+  title: 'Opportunities — Future Baller',
+  description: 'Pruebas, scholarships y call-ups open de clubs y universities.',
 };
 
 export default async function PublicOpportunitiesPage() {
@@ -33,18 +33,18 @@ export default async function PublicOpportunitiesPage() {
             Opportunities
           </p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">
-            Oportunidades abiertas
+            Open opportunities
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {opportunities.length} trials · {scholarships} scholarships · {countries} countries.
-            Aplica desde tu perfil de jugador.
+            Aplica desde tu perfil de player.
           </p>
         </div>
 
         {opportunities.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-card p-10 text-center">
             <p className="text-muted-foreground">
-              No hay oportunidades abiertas ahora. Vuelve pronto.
+              There are no open opportunities right now. Come back soon.
             </p>
           </div>
         ) : (

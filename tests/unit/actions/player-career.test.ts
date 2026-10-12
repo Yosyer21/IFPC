@@ -62,10 +62,10 @@ beforeEach(() => {
 });
 
 describe('saveCareerEntryAction', () => {
-  it('rechaza una temporada con formato inválido', async () => {
+  it('rechaza una season con formato inválido', async () => {
     const result = await saveCareerEntryAction({}, careerForm({ ...validEntry, season: 'verano' }));
     expect(result).toEqual({
-      error: 'Revisa los datos de la trayectoria (temporada tipo 2024/25).',
+      error: 'Check the career history details (season format 2024/25).',
     });
     expect(mocks.entryCreate).not.toHaveBeenCalled();
   });
@@ -73,12 +73,12 @@ describe('saveCareerEntryAction', () => {
   it('rechaza un club vacío', async () => {
     const result = await saveCareerEntryAction({}, careerForm({ ...validEntry, clubName: '   ' }));
     expect(result).toEqual({
-      error: 'Revisa los datos de la trayectoria (temporada tipo 2024/25).',
+      error: 'Check the career history details (season format 2024/25).',
     });
     expect(mocks.entryCreate).not.toHaveBeenCalled();
   });
 
-  it('crea la entrada en el perfil del jugador autenticado', async () => {
+  it('crea la entrada en el perfil del player autenticado', async () => {
     const target = await captureRedirect(() => saveCareerEntryAction({}, careerForm(validEntry)));
 
     expect(target).toBe(CAREER_URL);
@@ -98,7 +98,7 @@ describe('saveCareerEntryAction', () => {
     expect(mocks.playerUpdate).not.toHaveBeenCalled();
   });
 
-  it('al marcar equipo actual desmarca el resto y sincroniza Player.clubName', async () => {
+  it('al marcar team actual desmarca el resto y sincroniza Player.clubName', async () => {
     await captureRedirect(() =>
       saveCareerEntryAction({}, careerForm({ ...validEntry, isCurrent: 'on' }))
     );
@@ -113,7 +113,7 @@ describe('saveCareerEntryAction', () => {
     });
   });
 
-  it('actualiza una entrada existente del propio jugador', async () => {
+  it('actualiza una entrada existente del propio player', async () => {
     mocks.entryFindUnique.mockResolvedValue({ id: 'entry-1', playerId: 'player-1' });
 
     const target = await captureRedirect(() =>
@@ -128,7 +128,7 @@ describe('saveCareerEntryAction', () => {
     expect(mocks.entryCreate).not.toHaveBeenCalled();
   });
 
-  it('no deja editar una entrada de otro jugador', async () => {
+  it('no deja editar una entrada de otro player', async () => {
     mocks.entryFindUnique.mockResolvedValue({ id: 'entry-9', playerId: 'other-player' });
 
     const result = await saveCareerEntryAction(
@@ -140,7 +140,7 @@ describe('saveCareerEntryAction', () => {
     expect(mocks.entryUpdate).not.toHaveBeenCalled();
   });
 
-  it('falla con sesión inválida', async () => {
+  it('fails with an invalid session', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await saveCareerEntryAction({}, careerForm(validEntry));
     expect(result).toEqual({ error: 'Invalid session.' });
@@ -148,7 +148,7 @@ describe('saveCareerEntryAction', () => {
 });
 
 describe('removeCareerEntryAction', () => {
-  it('elimina la entrada del jugador autenticado', async () => {
+  it('elimina la entrada del player autenticado', async () => {
     mocks.entryFindFirst.mockResolvedValue({ id: 'entry-1', isCurrent: false });
 
     const target = await captureRedirect(() =>
@@ -165,7 +165,7 @@ describe('removeCareerEntryAction', () => {
     expect(mocks.playerUpdate).not.toHaveBeenCalled();
   });
 
-  it('limpia Player.clubName al borrar el equipo actual', async () => {
+  it('limpia Player.clubName al borrar el team actual', async () => {
     mocks.entryFindFirst.mockResolvedValue({ id: 'entry-1', isCurrent: true });
 
     await captureRedirect(() => removeCareerEntryAction(careerForm({ entryId: 'entry-1' })));
@@ -176,7 +176,7 @@ describe('removeCareerEntryAction', () => {
     });
   });
 
-  it('no borra nada si la entrada no es del jugador', async () => {
+  it('no borra nada si la entrada no es del player', async () => {
     mocks.entryFindFirst.mockResolvedValue(null);
 
     const target = await captureRedirect(() =>

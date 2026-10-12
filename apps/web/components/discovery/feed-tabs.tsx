@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { DISCOVERY_TAB_LABELS, DISCOVERY_TABS } from '@ifpc/config';
 import type { FeedFilters } from '@/lib/discovery-content';
 
-/** URL de una pestaña conservando etiqueta y búsqueda. */
+/** URL de una pestaña conservando tag y búsqueda. */
 function hrefFor(base: string, tab: string, filters: FeedFilters): string {
   const query = new URLSearchParams();
   if (tab !== 'recent') query.set('tab', tab);
@@ -13,7 +13,7 @@ function hrefFor(base: string, tab: string, filters: FeedFilters): string {
 }
 
 /**
- * Pestañas del feed. Son enlaces (no JS): el estado vive en la URL, así que
+ * Pestañas del feed. Son links (no JS): el estado vive en la URL, así que
  * funcionan igual en el área privada y en el espejo público.
  */
 export function FeedTabs({
@@ -22,13 +22,13 @@ export function FeedTabs({
   base = '/dashboard/discovery',
 }: {
   filters: FeedFilters;
-  /** Pestañas a mostrar (el espejo público oculta "Para ti" y "Siguiendo"). */
+  /** Pestañas a mostrar (el espejo público oculta "For you" y "Following"). */
   tabs?: readonly string[];
   base?: string;
 }) {
   return (
     <nav
-      aria-label="Secciones del feed"
+      aria-label="Feed sections"
       className="mb-4 flex flex-wrap items-center gap-2"
     >
       {tabs.map((tab) => {

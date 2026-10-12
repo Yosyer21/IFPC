@@ -36,16 +36,16 @@ export default async function AdminAnalyticsClubsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Analytics de clubes"
+        title="Analytics de clubs"
         subtitle="Verification, geographic distribution and growth"
         icon="trending"
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubes totales" value={total} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubes totals" value={total} />
         <StatCard href="/dashboard/admin/clubs" icon={IconShield} label="Verificados" value={verified} />
         <StatCard href="/dashboard/admin/clubs/pending" icon={IconBriefcase} label="Pendientes" value={pending} />
-        <StatCard href="/dashboard/admin/opportunities" icon={IconBriefcase} label="Con oportunidades" value={withOpportunities} />
+        <StatCard href="/dashboard/admin/opportunities" icon={IconBriefcase} label="Con opportunities" value={withOpportunities} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

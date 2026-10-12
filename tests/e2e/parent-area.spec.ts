@@ -24,14 +24,14 @@ test('Parent: family hub, linked child and support pages', async ({ page }) => {
   // 2. My children → detalle del hijo
   await page.goto(`${BASE}/dashboard/parent/children`);
   await expect(page.getByRole('heading', { name: 'My children' })).toBeVisible();
-  await page.getByRole('link', { name: /Jugador Demo/ }).click();
-  await expect(page.getByRole('heading', { name: /Jugador Demo/ })).toBeVisible();
+  await page.getByRole('link', { name: /Demo Player/ }).click();
+  await expect(page.getByRole('heading', { name: /Demo Player/ })).toBeVisible();
 
   // 3. Education, opportunities and payments
   await page.goto(`${BASE}/dashboard/parent/education`);
   await expect(page.getByRole('heading', { name: 'Education for families' })).toBeVisible();
   await page.goto(`${BASE}/dashboard/parent/opportunities`);
-  await expect(page.getByRole('heading', { name: 'Oportunidades' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
   await page.goto(`${BASE}/dashboard/parent/payments`);
   await expect(page.getByRole('heading', { name: 'Payments' })).toBeVisible();
   await expect(page.getByText('Family membership')).toBeVisible();

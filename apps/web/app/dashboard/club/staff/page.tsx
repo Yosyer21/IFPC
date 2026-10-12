@@ -6,13 +6,13 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Miembros del club' };
+export const metadata: Metadata = { title: 'Club members' };
 
 const ROLE_LABELS: Record<string, string> = {
   OWNER: 'Propietario',
   MANAGER: 'Manager',
-  COACH: 'Entrenador',
-  SCOUT: 'Ojeador',
+  COACH: 'Coach',
+  SCOUT: 'Scout',
   STAFF: 'Staff',
 };
 
@@ -31,12 +31,12 @@ export default async function ClubStaffPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title="Miembros del club" icon="users">
+      <PageHeader title="Club members" icon="users">
         <Link
           href="/dashboard/club/staff/invite"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
         >
-          Invitar miembro
+          Invitar member
         </Link>
       </PageHeader>
 

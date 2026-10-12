@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Oportunidades' };
+export const metadata: Metadata = { title: 'Opportunities' };
 
 export default async function ScoutOpportunitiesPage() {
   const session = await auth();
@@ -21,15 +21,15 @@ export default async function ScoutOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Oportunidades"
-        subtitle="Convocatorias abiertas de clubes donde orientar a tus candidatos"
+        title="Opportunities"
+        subtitle="Convocatorias open de clubs donde orientar a tus candidates"
         icon="target"
       />
 
       {opportunities.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay oportunidades abiertas.</p>
+            <p className="text-sm text-muted-foreground">There are no open opportunities.</p>
           </CardContent>
         </Card>
       ) : (
@@ -54,7 +54,7 @@ export default async function ScoutOpportunitiesPage() {
                   href="/dashboard/scout/players"
                   className="text-sm text-primary hover:underline"
                 >
-                  Buscar candidatos →
+                  Find candidates →
                 </Link>
               </CardContent>
             </Card>

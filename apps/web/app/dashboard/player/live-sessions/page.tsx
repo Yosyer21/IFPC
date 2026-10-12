@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { SESSION_TYPE_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Sesiones en vivo' };
+export const metadata: Metadata = { title: 'Live sessions' };
 
 export default async function PlayerLiveSessionsPage() {
   const session = await auth();
@@ -36,8 +36,8 @@ export default async function PlayerLiveSessionsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Sesiones en vivo"
-        subtitle="Entrenamientos en directo y pruebas organizadas para ti"
+        title="Live sessions"
+        subtitle="Live training and trials organised for you"
         icon="live"
       />
 
@@ -46,7 +46,7 @@ export default async function PlayerLiveSessionsPage() {
         <Card className="mb-6">
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No tienes sesiones en vivo programadas. Cuando tu club o un entrenador organicen
+              No tienes sesiones en vivo programadas. Cuando tu club o un coach organicen
               sessions (training, talks or trials) will appear here.
             </p>
           </CardContent>

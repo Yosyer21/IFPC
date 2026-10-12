@@ -6,7 +6,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Entrenamiento — Future Baller',
+  title: 'Training — Future Baller',
   description: 'Open football development exercises, routines and content.',
 };
 
@@ -31,10 +31,10 @@ export default async function PublicTrainingPage() {
       <main className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="mb-10">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Training</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">Plan de entrenamiento abierto</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">Plan de training abierto</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {content.length} exercises · {categories.size} areas. Access the full catalog and your
-            plan personalizado con una cuenta de jugador.
+            plan personalizado con una cuenta de player.
           </p>
         </div>
 
@@ -74,7 +74,7 @@ export default async function PublicTrainingPage() {
                 </p>
                 {item.difficulty ? (
                   <div className="mt-4 text-xs text-muted-foreground">
-                    Nivel {'★'.repeat(item.difficulty)}
+                    Level {'★'.repeat(item.difficulty)}
                     <span className="opacity-40">{'★'.repeat(Math.max(0, 5 - item.difficulty))}</span>
                   </div>
                 ) : null}

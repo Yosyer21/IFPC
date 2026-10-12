@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Oportunidades' };
+export const metadata: Metadata = { title: 'Opportunities' };
 
 export default async function ParentOpportunitiesPage() {
   const session = await auth();
@@ -20,15 +20,15 @@ export default async function ParentOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Oportunidades"
-        subtitle="Pruebas y convocatorias abiertas donde tu hijo puede participar"
+        title="Opportunities"
+        subtitle="Pruebas y call-ups open donde tu hijo puede participar"
         icon="target"
       />
 
       {opportunities.length === 0 ? (
         <Card className="animate-fade-up">
           <CardContent className="py-10 text-center">
-            <p className="text-sm text-muted-foreground">No hay oportunidades abiertas.</p>
+            <p className="text-sm text-muted-foreground">There are no open opportunities.</p>
           </CardContent>
         </Card>
       ) : (

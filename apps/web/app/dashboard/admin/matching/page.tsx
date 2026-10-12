@@ -52,15 +52,15 @@ export default async function AdminMatchingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Matching"
-        subtitle="Motor de coincidencia entre jugadores y requisitos de clubes"
+        subtitle="Motor de coincidencia entre players y requirements de clubs"
         icon="target"
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard href="/dashboard/admin/matching/players" icon={IconWhistle} label="Jugadores" value={players.length} />
-        <StatCard href="/dashboard/admin/matching/clubs" icon={IconBriefcase} label="Requisitos abiertos" value={requirements.length} />
+        <StatCard href="/dashboard/admin/matching/players" icon={IconWhistle} label="Players" value={players.length} />
+        <StatCard href="/dashboard/admin/matching/clubs" icon={IconBriefcase} label="Requisitos open" value={requirements.length} />
         <StatCard href="/dashboard/admin/matching" icon={IconTarget} label="Score medio" value={avg} suffix="%" />
-        <StatCard href="/dashboard/admin/opportunities" icon={IconUsers} label="Oportunidades abiertas" value={openOpportunities} />
+        <StatCard href="/dashboard/admin/opportunities" icon={IconUsers} label="Open opportunities" value={openOpportunities} />
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -69,7 +69,7 @@ export default async function AdminMatchingPage() {
             <h2 className="mb-4 font-semibold">Score distribution</h2>
             <CountsBars items={scoreBuckets} />
             <p className="mt-3 text-xs text-muted-foreground">
-              {matches.length} combinaciones jugador × requisito evaluadas por el motor.
+              {matches.length} combinaciones player × requirement evaluadas por el motor.
             </p>
           </CardContent>
         </Card>
@@ -78,10 +78,10 @@ export default async function AdminMatchingPage() {
             <h2 className="mb-4 font-semibold">Quick access</h2>
             <div className="flex flex-col gap-2">
               <Link href="/dashboard/admin/matching/players" className="rounded-md border border-border p-3 text-sm transition-colors hover:bg-muted">
-                Ver scores por jugador →
+                See scores by player →
               </Link>
               <Link href="/dashboard/admin/matching/clubs" className="rounded-md border border-border p-3 text-sm transition-colors hover:bg-muted">
-                Ver requisitos por club →
+                See requirements by club →
               </Link>
             </div>
           </CardContent>
@@ -93,7 +93,7 @@ export default async function AdminMatchingPage() {
           <h2 className="mb-4 font-semibold">Best matches</h2>
           {top.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No hay suficientes jugadores o requisitos para calcular coincidencias.
+              There are not enough players or requirements to compute matches.
             </p>
           ) : (
             <div className="flex flex-col gap-2">

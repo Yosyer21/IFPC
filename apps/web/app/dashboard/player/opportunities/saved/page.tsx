@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Oportunidades guardadas' };
+export const metadata: Metadata = { title: 'Saved opportunities' };
 
 export default async function PlayerSavedOpportunitiesPage() {
   const session = await auth();
@@ -23,7 +23,7 @@ export default async function PlayerSavedOpportunitiesPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <h1 className="mb-6 text-2xl font-bold">Oportunidades guardadas</h1>
+      <h1 className="mb-6 text-2xl font-bold">Saved opportunities</h1>
 
       {saved.length === 0 ? (
         <Card>
@@ -31,7 +31,7 @@ export default async function PlayerSavedOpportunitiesPage() {
             <p className="text-sm text-muted-foreground">
               You haven't saved any opportunity yet.{' '}
               <Link href="/dashboard/player/opportunities" className="text-primary hover:underline">
-                Explorar oportunidades
+                Explore opportunities
               </Link>
             </p>
           </CardContent>

@@ -23,7 +23,7 @@ export default async function PlayerMembershipPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Membership"
-        subtitle="Elige el plan que mejor se adapte a tu etapa como jugador"
+        subtitle="Choose the plan that best fits your stage as a player"
         icon="star"
       />
 
@@ -34,7 +34,7 @@ export default async function PlayerMembershipPage() {
             <p className="text-sm text-muted-foreground">
               {membership?.tier ?? 'FREE'}
               {membership?.endsAt
-                ? ` · Vigente hasta ${membership.endsAt.toLocaleDateString('es')}`
+                ? ` · Valid hasta ${membership.endsAt.toLocaleDateString('es')}`
                 : ''}
             </p>
           </div>
@@ -52,7 +52,7 @@ export default async function PlayerMembershipPage() {
           href="/dashboard/player/settings"
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Ajustes
+          ← Settings
         </Link>
       </div>
     </div>

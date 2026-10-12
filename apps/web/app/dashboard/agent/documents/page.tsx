@@ -3,13 +3,13 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { IconFile } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Documentos' };
+export const metadata: Metadata = { title: 'Documents' };
 
 export default function AgentDocumentsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Documentos"
+        title="Documents"
         subtitle="Contracts, licenses and documentation of your represented players"
         icon="file"
       />

@@ -4,27 +4,27 @@ import type { PlayerStats } from '@/lib/player-stats';
 
 export interface ProfileStatsCardProps {
   stats: PlayerStats;
-  /** Título del panel (por defecto, «Estadísticas»). */
+  /** Title del panel (por defecto, «Stats»). */
   title?: string;
   className?: string;
 }
 
 /**
- * Panel frontal de estadísticas del jugador: nivel global, totales de carrera y
- * nivel por categoría. Lo comparten el perfil propio, el muro de Discovery y el
+ * Panel frontal de estadísticas del player: level global, totals de carrera y
+ * level por category. Lo comparten el perfil propio, el muro de Discovery y el
  * perfil público.
  */
 export function ProfileStatsCard({
   stats,
-  title = 'Estadísticas',
+  title = 'Stats',
   className,
 }: ProfileStatsCardProps) {
   const kpis = [
-    { label: 'Partidos', value: stats.career.appearances },
-    { label: 'Goles', value: stats.career.goals },
-    { label: 'Asistencias', value: stats.career.assists },
+    { label: 'Matches', value: stats.career.appearances },
+    { label: 'Goals', value: stats.career.goals },
+    { label: 'Assists', value: stats.career.assists },
     { label: 'Temporadas', value: stats.career.seasons },
-    { label: 'Vídeos', value: stats.videos },
+    { label: 'Videos', value: stats.videos },
     { label: 'Evaluaciones', value: stats.evaluations },
   ];
   const hasData =
@@ -37,7 +37,7 @@ export function ProfileStatsCard({
           <h2 className="font-semibold">{title}</h2>
           {stats.overall !== null ? (
             <p className="text-sm text-muted-foreground">
-              Nivel global{' '}
+              Overall level{' '}
               <strong className="text-lg font-bold tabular-nums text-foreground">
                 {stats.overall}
               </strong>
@@ -63,7 +63,7 @@ export function ProfileStatsCard({
             {stats.categories.length > 0 ? (
               <div>
                 <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Nivel por categoría
+                  Level by category
                 </h3>
                 <CategoryBars
                   items={stats.categories.map((entry) => ({
@@ -76,7 +76,7 @@ export function ProfileStatsCard({
           </>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Todavía no hay estadísticas: aparecerán con las evaluaciones, la trayectoria y los
+            Todavía no hay estadísticas: aparecerán con las evaluations, la trayectoria y los
             vídeos.
           </p>
         )}

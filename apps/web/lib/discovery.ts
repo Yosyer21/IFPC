@@ -30,18 +30,18 @@ const TRENDING_WINDOW = 60;
 // Consultas
 // ---------------------------------------------------------------------------
 
-/** Feed paginado (cursor = id del último post). Filtra por pestaña y etiqueta. */
+/** Feed paginado (cursor = id del último post). Filtra por pestaña y tag. */
 export async function listFeed(input: {
   /** `null`/`undefined` en el espejo público (no hay "me gusta" del espectador). */
   viewerId?: string | null;
   filters: FeedFilters;
   cursor?: string | null;
-  /** Publicaciones ya mostradas fuera del listado (p. ej. las fijadas). */
+  /** Posts ya mostradas fuera del listado (p. ej. las fijadas). */
   excludeIds?: string[];
 }): Promise<FeedPage> {
   const { filters, viewerId, cursor, excludeIds } = input;
 
-  // Sin sesión no existe "Siguiendo": se devuelve una página vacía en vez de todo el feed.
+  // Sin sesión no existe "Following": se devuelve una página vacía en vez de todo el feed.
   if (filters.tab === 'following' && !viewerId) {
     return { posts: [], nextCursor: null };
   }
@@ -130,7 +130,7 @@ export type { ProfileSummary } from './discovery-content';
 
 /**
  * Directorio de perfiles: busca por nombre y filtra por rol, ordenando por
- * actividad (publicaciones) y dejando fuera lo que el espectador bloqueó o silenció.
+ * actividad (posts) y dejando fuera lo que el espectador bloqueó o silenció.
  */
 export async function listProfiles(input: {
   q?: string | null;
@@ -181,7 +181,7 @@ export async function listProfiles(input: {
   }));
 }
 
-/** Publicaciones fijadas por un admin (las más recientes primero). */
+/** Posts fijadas por un admin (las más recientes primero). */
 export async function listPinnedPosts(viewerId?: string | null, limit = 3): Promise<FeedPost[]> {
   const [hidden, hiddenPosts] = await Promise.all([
     hiddenAuthorIds(viewerId),
@@ -206,7 +206,7 @@ export async function listPinnedPosts(viewerId?: string | null, limit = 3): Prom
 }
 
 /**
- * Una publicación visible para el espectador. Sin sesión (espejo público) solo
+ * Una post visible para el espectador. Sin sesión (espejo público) solo
  * se devuelven las publicadas.
  */
 export async function getPostForViewer(
@@ -227,7 +227,7 @@ export async function getPostForViewer(
   });
   if (!row) return null;
 
-  // Un bloqueo también cierra el acceso por enlace directo.
+  // Un bloqueo también cierra el acceso por link directo.
   if (viewerId && row.author.id !== viewerId) {
     const hidden = await hiddenAuthorIds(viewerId);
     if (hidden.includes(row.author.id)) return null;
@@ -236,7 +236,7 @@ export async function getPostForViewer(
   return toFeedPost(row, viewerId);
 }
 
-/** Comentarios de una publicación, del más antiguo al más nuevo. */
+/** Comentarios de una post, del más antiguo al más nuevo. */
 export async function listComments(
   postId: string,
   viewerId?: string | null
@@ -260,7 +260,7 @@ export async function listComments(
   });
 }
 
-/** Publicaciones publicadas de un autor (vacío si el espectador no puede verlas). */
+/** Posts publicadas de un autor (vacío si el espectador no puede verlas). */
 export async function listPostsByAuthor(
   authorId: string,
   take = DISCOVERY_PAGE_SIZE,
@@ -312,7 +312,7 @@ export async function recordPostView(input: {
 
 /**
  * Registra la apertura cuando hay sesión y el espectador no es el autor.
- * Se llama al renderizar el detalle de una publicación.
+ * Se llama al renderizar el detalle de una post.
  */
 export async function trackPostView(input: {
   postId: string;
@@ -347,12 +347,12 @@ export async function listNotifications(userId: string, limit = 8): Promise<Feed
   });
 }
 
-/** Avisos pendientes (para el contador de la campana). */
+/** Alerts pendientes (para el contador de la campana). */
 export async function countUnreadNotifications(userId: string): Promise<number> {
   return prisma.notification.count({ where: { userId, read: false } });
 }
 
-/** Alcance de una publicación (para el autor). */
+/** Alcance de una post (para el autor). */
 export async function getPostViewStats(postId: string): Promise<PostViewStats> {
   const rows = await prisma.postView.findMany({
     where: { postId },
@@ -363,7 +363,7 @@ export async function getPostViewStats(postId: string): Promise<PostViewStats> {
 
 /**
  * Suma una apertura anónima del espejo público. Sin sesión no hay espectador
- * identificable, así que todas las visitas anónimas comparten fila y solo se
+ * identificable, así que todas las views anónimas comparten fila y solo se
  * acumula el número de aperturas.
  */
 export async function recordAnonymousView(postId: string): Promise<void> {
@@ -379,10 +379,10 @@ export async function recordAnonymousView(postId: string): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
-// Relación social (seguir / seguidores)
+// Relación social (seguir / followers)
 // ---------------------------------------------------------------------------
 
-/** Filtro de la pestaña "Siguiendo": publicaciones de los perfiles seguidos + las propias. */
+/** Filtro de la pestaña "Following": posts de los perfiles seguidos + las propias. */
 type FollowingFilter = { authorId: string } | { authorId: { in: string[] } };
 
 async function followingFilter(viewerId: string): Promise<FollowingFilter[]> {
@@ -432,8 +432,8 @@ export interface SuggestedProfile {
 }
 
 /**
- * Perfiles sugeridos: los más seguidos que el espectador aún no sigue, con su
- * número de publicaciones para dar contexto.
+ * Suggested profiles: los más seguidos que el espectador aún no sigue, con su
+ * número de posts para dar contexto.
  */
 export async function listSuggestedProfiles(
   viewerId: string,
@@ -475,7 +475,7 @@ export async function listSuggestedProfiles(
   });
 }
 
-/** Resúmenes de perfil (con seguimiento del espectador) conservando el orden de los ids. */
+/** Resúmenes de perfil (con tracking del espectador) conservando el orden de los ids. */
 async function profileSummaries(
   ids: string[],
   viewerId?: string | null
@@ -519,7 +519,7 @@ async function profileSummaries(
   });
 }
 
-/** Perfiles que sigue un usuario, de la relación más reciente a la más antigua. */
+/** Profiles que sigue un usuario, de la relación más reciente a la más antigua. */
 export async function listFollowing(
   userId: string,
   viewerId?: string | null
@@ -535,7 +535,7 @@ export async function listFollowing(
   );
 }
 
-/** Perfiles que siguen a un usuario, del seguimiento más reciente al más antiguo. */
+/** Profiles que siguen a un usuario, del tracking más reciente al más antiguo. */
 export async function listFollowers(
   userId: string,
   viewerId?: string | null

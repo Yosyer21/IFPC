@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Privacidad' };
+export const metadata: Metadata = { title: 'Privacy' };
 
 export default async function PlayerPrivacySettingsPage() {
   const session = await auth();
@@ -15,15 +15,15 @@ export default async function PlayerPrivacySettingsPage() {
         href="/dashboard/player/settings"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Ajustes
+        ← Settings
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Privacidad</h1>
+      <h1 className="mb-6 text-2xl font-bold">Privacy</h1>
 
       <Card>
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
           <p>
-            Tu perfil de jugador es visible para clubes, ojeadores y agentes verificados cuando tu
-            estado es <strong>Disponible</strong>.
+            Tu perfil de player es visible para clubs, scouts y agents verificados cuando tu
+            estado es <strong>Available</strong>.
           </p>
           <p>
             Fine-grained privacy controls (who can see your videos, direct contact and

@@ -50,7 +50,7 @@ export default async function AdminSettingsCountriesPage() {
           <CardContent>
             <h2 className="mb-4 font-semibold">Players by country</h2>
             {Object.keys(playersByCountry).length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin nacionalidades registradas.</p>
+              <p className="text-sm text-muted-foreground">Sin nacionalidades registered.</p>
             ) : (
               <CountsBars
                 items={Object.entries(playersByCountry)

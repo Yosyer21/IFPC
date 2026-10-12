@@ -10,7 +10,7 @@ import { IconCalendar, IconClock, IconLive, IconVideo } from '@/components/dashb
 import { changeLiveSessionStatusAction, deleteLiveSessionAction } from '@/app/actions/admin';
 import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Sesiones en vivo' };
+export const metadata: Metadata = { title: 'Live sessions' };
 
 export default async function AdminLiveSessionsPage() {
   const session = await auth();
@@ -32,8 +32,8 @@ export default async function AdminLiveSessionsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Sesiones en vivo"
-        subtitle="Entrenamientos en directo, charlas y pruebas organizadas"
+        title="Live sessions"
+        subtitle="Training sessions en directo, charlas y pruebas organizadas"
         icon="live"
       >
         <Link
@@ -45,7 +45,7 @@ export default async function AdminLiveSessionsPage() {
       </PageHeader>
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard href="/dashboard/admin/live-sessions" icon={IconLive} label="Total sesiones" value={total} />
+        <StatCard href="/dashboard/admin/live-sessions" icon={IconLive} label="Total sessions" value={total} />
         <StatCard href="/dashboard/admin/live-sessions" icon={IconClock} label="Upcoming" value={upcoming} />
         <StatCard href="/dashboard/admin/live-sessions" icon={IconVideo} label="En directo" value={live} />
         <StatCard href="/dashboard/admin/live-sessions" icon={IconCalendar} label="Ended" value={sessions.filter((s) => s.status === 'ENDED').length} />
@@ -89,7 +89,7 @@ export default async function AdminLiveSessionsPage() {
                     ) : null}
                     {session.player ? (
                       <Badge variant="outline">
-                        Jugador: {session.player.firstName} {session.player.lastName}
+                        Player: {session.player.firstName} {session.player.lastName}
                       </Badge>
                     ) : null}
                     {session.meetingUrl ? (
@@ -115,7 +115,7 @@ export default async function AdminLiveSessionsPage() {
                     type="submit"
                     className="rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-muted"
                   >
-                    Actualizar
+                    Update
                   </button>
                 </form>
 
@@ -125,7 +125,7 @@ export default async function AdminLiveSessionsPage() {
                     type="submit"
                     className="rounded-md border border-destructive/40 px-2 py-1 text-xs text-destructive transition-colors hover:bg-destructive/10"
                   >
-                    Eliminar
+                    Delete
                   </button>
                 </form>
               </CardContent>

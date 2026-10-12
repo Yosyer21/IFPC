@@ -5,23 +5,23 @@ import { ROLES } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Permisos · Ajustes' };
+export const metadata: Metadata = { title: 'Permisos · Settings' };
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
-  PLAYER: ['Edit profile', 'Upload videos', 'Subir documentos', 'Aplicar a oportunidades', 'Guardar oportunidades', 'Ver contenido de entrenamiento'],
-  PARENT: ['Ver hijos vinculados', 'Education for families', 'Ver oportunidades de hijos', 'Historial de pagos'],
-  COACH: ['Gestionar jugadores asignados', 'Crear evaluaciones', 'Crear objetivos', 'Asignar contenido'],
-  SCOUT: ['Explore players', 'Guardar jugadores', 'Crear informes de scouting'],
-  AGENT: ['Vincular jugadores', 'Enviar jugadores a clubes', 'Gestionar pruebas, negociaciones y contratos'],
-  CLUB: ['Publicar oportunidades', 'Crear requisitos', 'Revisar solicitudes', 'Responder consultas', 'Gestionar staff'],
-  UNIVERSITY: ['View players', 'Ver oportunidades y becas'],
+  PLAYER: ['Edit profile', 'Upload videos', 'Upload documents', 'Apply to opportunities', 'Save opportunities', 'See training content'],
+  PARENT: ['Ver hijos vinculados', 'Education for families', 'See your children’s opportunities', 'Historial de pagos'],
+  COACH: ['Gestionar players asignados', 'Crear evaluations', 'Crear goals', 'Asignar contenido'],
+  SCOUT: ['Explore players', 'Save players', 'Crear reports de scouting'],
+  AGENT: ['Link players', 'Send players to clubs', 'Gestionar pruebas, negociaciones y contratos'],
+  CLUB: ['Post opportunities', 'Crear requirements', 'Revisar requests', 'Responder consultas', 'Gestionar staff'],
+  UNIVERSITY: ['View players', 'See opportunities and scholarships'],
   SCHOOL: [
-    'Ver participantes disponibles',
-    'Explorar clínicas y programas',
+    'See available participants',
+    'Explore clinics and programs',
     'Inscribir grupos en camps',
-    'Ver oportunidades para sus alumnas',
+    'See opportunities for their students',
   ],
-  ADMIN: ['Acceso total', 'Verificar jugadores y clubes', 'Gestionar usuarios y roles', 'Publicar contenido', 'Ver analytics', 'System settings'],
+  ADMIN: ['Acceso total', 'Verify players and clubs', 'Gestionar usuarios y roles', 'Post content', 'Ver analytics', 'System settings'],
 };
 
 export default async function AdminSettingsPermissionsPage() {

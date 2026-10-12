@@ -9,7 +9,7 @@ import { CountsBars } from '@/components/player/charts';
 import { IconTrendingUp, IconUser, IconUsers, IconWhistle } from '@/components/dashboard/icons';
 import { monthlyCounts } from '@/components/admin/analytics-utils';
 
-export const metadata: Metadata = { title: 'Analytics · Jugadores' };
+export const metadata: Metadata = { title: 'Analytics · Players' };
 
 export default async function AdminAnalyticsPlayersPage() {
   const session = await auth();
@@ -41,15 +41,15 @@ export default async function AdminAnalyticsPlayersPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Analytics de jugadores"
+        title="Player analytics"
         subtitle="Profile distribution and registration growth"
         icon="trending"
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Jugadores totales" value={total} />
+        <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Total players" value={total} />
         <StatCard href="/dashboard/admin/players/active" icon={IconUser} label="Activos" value={active} />
-        <StatCard href="/dashboard/admin/players" icon={IconWhistle} label="Disponibles" value={available} />
+        <StatCard href="/dashboard/admin/players" icon={IconWhistle} label="Available" value={available} />
         <StatCard href="/dashboard/admin/players/pending" icon={IconTrendingUp} label="Pendientes" value={pending} />
       </div>
 
@@ -64,7 +64,7 @@ export default async function AdminAnalyticsPlayersPage() {
           <CardContent>
             <h2 className="mb-4 font-semibold">By position</h2>
             {byPosition.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin posiciones registradas.</p>
+              <p className="text-sm text-muted-foreground">Sin positions registered.</p>
             ) : (
               <CountsBars items={byPosition} />
             )}

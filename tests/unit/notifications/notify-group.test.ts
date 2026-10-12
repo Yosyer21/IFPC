@@ -44,7 +44,7 @@ describe('notifyUser', () => {
 
 describe('notifyGrouped', () => {
   it('crea el aviso si no hay uno pendiente del mismo tipo y destino', async () => {
-    await notifyGrouped({ userId: 'u1', type: 'post_like', title: 'Nuevos me gusta', link: '/post/1' });
+    await notifyGrouped({ userId: 'u1', type: 'post_like', title: 'New likes', link: '/post/1' });
 
     expect(mocks.findFirst).toHaveBeenCalledTimes(1);
     expect(mocks.update).not.toHaveBeenCalled();
@@ -52,7 +52,7 @@ describe('notifyGrouped', () => {
       data: {
         userId: 'u1',
         type: 'post_like',
-        title: 'Nuevos me gusta',
+        title: 'New likes',
         message: null,
         link: '/post/1',
       },
@@ -60,7 +60,7 @@ describe('notifyGrouped', () => {
   });
 
   it('solo agrupa dentro de la ventana y sin leer', async () => {
-    await notifyGrouped({ userId: 'u1', type: 'post_like', title: 'Nuevos me gusta', link: '/post/1' });
+    await notifyGrouped({ userId: 'u1', type: 'post_like', title: 'New likes', link: '/post/1' });
 
     const where = mocks.findFirst.mock.calls[0][0].where;
     expect(where).toMatchObject({ userId: 'u1', type: 'post_like', link: '/post/1', read: false });
@@ -70,30 +70,30 @@ describe('notifyGrouped', () => {
     expect(Math.abs(since.getTime() - expected)).toBeLessThan(5000);
   });
 
-  it('incrementa el contador del aviso existente con el mensaje agrupado', async () => {
+  it('incrementa el contador del aviso existente con el message agrupado', async () => {
     mocks.findFirst.mockResolvedValue({ id: 'n1', count: 2 });
 
     await notifyGrouped({
       userId: 'u1',
       type: 'post_like',
-      title: 'Nuevos me gusta',
+      title: 'New likes',
       message: 'Ana te dio me gusta.',
       link: '/post/1',
-      groupMessage: (count) => `A ${count} personas les gusta tu publicación.`,
+      groupMessage: (count) => `A ${count} personas les gusta tu post.`,
     });
 
     expect(mocks.update).toHaveBeenCalledWith({
       where: { id: 'n1' },
       data: {
         count: 3,
-        message: 'A 3 personas les gusta tu publicación.',
+        message: 'A 3 personas les gusta tu post.',
         createdAt: expect.any(Date),
       },
     });
     expect(mocks.create).not.toHaveBeenCalled();
   });
 
-  it('sin mensaje agrupado mantiene el del evento', async () => {
+  it('sin message agrupado mantiene el del evento', async () => {
     mocks.findFirst.mockResolvedValue({ id: 'n1', count: 1 });
 
     await notifyGrouped({ userId: 'u1', type: 'post_like', title: 't', message: 'evento', link: '/x' });

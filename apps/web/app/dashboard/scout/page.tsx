@@ -63,7 +63,7 @@ export default async function ScoutDashboardPage() {
     {
       href: '/dashboard/scout/saved',
       icon: IconStar,
-      label: 'Jugadores guardados',
+      label: 'Saved players',
       value: saved.length,
     },
     {
@@ -75,7 +75,7 @@ export default async function ScoutDashboardPage() {
     {
       href: '/dashboard/scout/opportunities',
       icon: IconTarget,
-      label: 'Oportunidades abiertas',
+      label: 'Open opportunities',
       value: openOpportunities,
     },
   ];
@@ -84,7 +84,7 @@ export default async function ScoutDashboardPage() {
     {
       href: '/dashboard/scout/players',
       label: 'Explorar',
-      sub: 'jugadores disponibles',
+      sub: 'available players',
       value: availableCount,
       icon: IconSearch,
     },
@@ -110,12 +110,12 @@ export default async function ScoutDashboardPage() {
     pendingActions.push({
       href: '/dashboard/scout/scouting-reports',
       icon: IconWhistle,
-      text: `${savedWithoutReport.length} jugador${savedWithoutReport.length === 1 ? '' : 'es'} guardado${savedWithoutReport.length === 1 ? '' : 's'} sin informe`,
-      meta: 'Crear informe',
+      text: `${savedWithoutReport.length} player${savedWithoutReport.length === 1 ? '' : 'es'} guardado${savedWithoutReport.length === 1 ? '' : 's'} sin report`,
+      meta: 'Crear report',
     });
   }
 
-  const [scoutFirstName = 'Ojeador', scoutLastName = ''] = scout.user.name.split(' ');
+  const [scoutFirstName = 'Scout', scoutLastName = ''] = scout.user.name.split(' ');
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -130,14 +130,14 @@ export default async function ScoutDashboardPage() {
               </h1>
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
                 <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
-                Ojeador
+                Scout
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {scout.agency ?? 'Scouting'}
               {saved.length > 0
-                ? ` · ${saved.length} jugador${saved.length === 1 ? '' : 'es'} en tu radar`
-                : ' · empieza explorando jugadores'}
+                ? ` · ${saved.length} player${saved.length === 1 ? '' : 'es'} en tu radar`
+                : ' · empieza explorando players'}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -162,7 +162,7 @@ export default async function ScoutDashboardPage() {
             { href: '/dashboard/scout/players', icon: IconSearch, label: 'Explore players' },
             { href: '/dashboard/scout/saved', icon: IconStar, label: 'My radar' },
             { href: '/dashboard/scout/scouting-reports', icon: IconWhistle, label: 'Informes' },
-            { href: '/dashboard/scout/opportunities', icon: IconTarget, label: 'Oportunidades' },
+            { href: '/dashboard/scout/opportunities', icon: IconTarget, label: 'Opportunities' },
           ].map((action, i) => {
             const Icon = action.icon;
             return (
@@ -248,7 +248,7 @@ export default async function ScoutDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Valoraciones + guardados sin informe */}
+      {/* Valoraciones + guardados sin report */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
@@ -342,14 +342,14 @@ export default async function ScoutDashboardPage() {
           </CardContent>
         </Card>
       </div>
-      {/* My radar + informes recientes */}
+      {/* My radar + reports recientes */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up" style={{ animationDelay: '620ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">My radar</h2>
               <Link href="/dashboard/scout/saved" className="text-sm text-primary hover:underline">
-                Ver todos →
+                See all →
               </Link>
             </div>
             {saved.length === 0 ? (
@@ -377,7 +377,7 @@ export default async function ScoutDashboardPage() {
                         <div className="truncate text-xs text-muted-foreground">{positionLabel}</div>
                       </div>
                       <Badge variant={hasReport ? 'success' : 'warning'}>
-                        {hasReport ? 'Informado' : 'Sin informe'}
+                        {hasReport ? 'Informado' : 'No report'}
                       </Badge>
                     </div>
                   );
@@ -392,7 +392,7 @@ export default async function ScoutDashboardPage() {
             <h2 className="mb-4 font-semibold">Recent reports</h2>
             {reports.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Crea tu primer informe de scouting para documentar el talento que encuentres.
+                Create your first scouting report to document the talent you find.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">

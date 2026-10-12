@@ -35,7 +35,7 @@ export default async function AdminMatchingClubsPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Matching · Clubs" subtitle="Mejor jugador para cada requisito abierto" icon="briefcase">
+      <PageHeader title="Matching · Clubs" subtitle="Mejor player para cada requirement abierto" icon="briefcase">
         <Link href="/dashboard/admin/matching" className="text-sm text-muted-foreground hover:underline">
           ← Matching
         </Link>
@@ -44,7 +44,7 @@ export default async function AdminMatchingClubsPage() {
       <Card>
         <CardContent>
           {rows.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No hay requisitos abiertos.</p>
+            <p className="text-sm text-muted-foreground">No open requirements.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {rows.map(({ requirement, best }) => (
@@ -61,11 +61,11 @@ export default async function AdminMatchingClubsPage() {
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
                       {requirement.ageMin || requirement.ageMax
-                        ? `Edad ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} · `
+                        ? `Age ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} · `
                         : ''}
                       {best
-                        ? `Mejor candidato: ${best.player.firstName} ${best.player.lastName}`
-                        : 'Sin jugadores que evaluar'}
+                        ? `Mejor candidate: ${best.player.firstName} ${best.player.lastName}`
+                        : 'No players to evaluate'}
                     </div>
                   </div>
                   {best ? (

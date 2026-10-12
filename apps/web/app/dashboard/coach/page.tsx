@@ -15,7 +15,7 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Resumen entrenador' };
+export const metadata: Metadata = { title: 'Coach summary' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -25,7 +25,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };
@@ -72,7 +72,7 @@ export default async function CoachDashboardPage() {
     }),
   ]);
 
-  // Average by category (nivel medio de mis jugadores)
+  // Average by category (level medio de mis players)
   const byCategory = new Map<string, number[]>();
   for (const evaluation of evaluations) {
     const list = byCategory.get(evaluation.category) ?? [];
@@ -86,7 +86,7 @@ export default async function CoachDashboardPage() {
     radarValues.push(Math.round((scores.reduce((s, n) => s + n, 0) / scores.length) * 10) / 10);
   }
 
-  // Overall average de todos los jugadores
+  // Overall average de todos los players
   const overall =
     evaluations.length > 0
       ? Math.round(
@@ -97,7 +97,7 @@ export default async function CoachDashboardPage() {
       : null;
 
   const stats = [
-    { href: '/dashboard/coach/players', icon: IconUsers, label: 'Jugadores asignados', value: players.length },
+    { href: '/dashboard/coach/players', icon: IconUsers, label: 'Assigned players', value: players.length },
     { href: '/dashboard/coach/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluations.length },
     { href: '/dashboard/coach/players', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/coach/players', icon: IconVideo, label: 'My players\u2019 videos', value: videosCount },
@@ -112,7 +112,7 @@ export default async function CoachDashboardPage() {
     { href: '/dashboard/coach/players', icon: IconUsers, label: 'My players' },
     { href: registerHref, icon: IconWhistle, label: 'Register assessment' },
     { href: '/dashboard/coach/evaluations', icon: IconTrendingUp, label: 'Evaluaciones' },
-    { href: '/dashboard/coach/training', icon: IconPlay, label: 'Entrenamiento' },
+    { href: '/dashboard/coach/training', icon: IconPlay, label: 'Training' },
   ];
 
   const activity = [
@@ -134,7 +134,7 @@ export default async function CoachDashboardPage() {
     .sort((a, b) => b.date.getTime() - a.date.getTime())
     .slice(0, 5);
 
-  const [coachFirstName = 'Entrenador', coachLastName = ''] = coach.user.name.split(' ');
+  const [coachFirstName = 'Coach', coachLastName = ''] = coach.user.name.split(' ');
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -149,14 +149,14 @@ export default async function CoachDashboardPage() {
               </h1>
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
                 <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
-                Entrenador
+                Coach
               </span>
               {coach.clubName ? <Badge>{coach.clubName}</Badge> : null}
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Gestiona el desarrollo de tus jugadores
+              Gestiona el desarrollo de tus players
               {players.length > 0
-                ? ` · ${players.length} jugador${players.length === 1 ? '' : 'es'} a tu cargo`
+                ? ` · ${players.length} player${players.length === 1 ? '' : 'es'} a tu cargo`
                 : ' · no players assigned yet'}
             </p>
           </div>
@@ -212,7 +212,7 @@ export default async function CoachDashboardPage() {
                   href="/dashboard/coach/evaluations"
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver evaluaciones →
+                  Ver evaluations →
                 </Link>
               ) : null}
             </div>
@@ -245,7 +245,7 @@ export default async function CoachDashboardPage() {
                 <DonutChart
                   value={overall * 10}
                   label={`${overall}`}
-                  sublabel={`sobre 10 · ${evaluations.length} evaluaciones`}
+                  sublabel={`out of 10 · ${evaluations.length} evaluations`}
                 />
                 <p className="text-center text-sm text-muted-foreground">
                   Average score of all the players under your charge.
@@ -269,7 +269,7 @@ export default async function CoachDashboardPage() {
               href="/dashboard/coach/evaluations"
               className="text-sm text-primary hover:underline"
             >
-              Ver evaluaciones →
+              Ver evaluations →
             </Link>
           </div>
           {activity.length === 0 ? (
@@ -305,7 +305,7 @@ export default async function CoachDashboardPage() {
           <h2 className="text-lg font-semibold">My players</h2>
           {players.length > 0 ? (
             <Link href="/dashboard/coach/players" className="text-sm text-primary hover:underline">
-              Ver todos →
+              See all →
             </Link>
           ) : null}
         </div>
@@ -313,7 +313,7 @@ export default async function CoachDashboardPage() {
           <Card className="animate-fade-up">
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                You have no assigned players yet. Cuando la plataforma te vincule jugadores,
+                You have no assigned players yet. Cuando la plataforma te vincule players,
                 will appear here so you can assess them and assign goals.
               </p>
             </CardContent>

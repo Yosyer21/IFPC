@@ -47,7 +47,7 @@ export async function addPlayerAction(
   }
   const email = str(formData, 'email');
   if (!email) {
-    return { error: 'Email del jugador obligatorio.' };
+    return { error: 'Player email is required.' };
   }
 
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
@@ -80,7 +80,7 @@ export async function createSubmissionAction(
   const playerId = str(formData, 'playerId');
   const clubId = str(formData, 'clubId');
   if (!playerId || !clubId) {
-    return { error: 'Selecciona jugador y club.' };
+    return { error: 'Select a player and a club.' };
   }
 
   try {

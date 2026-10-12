@@ -66,7 +66,7 @@ export default async function PublicCampDetailPage({
 
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-xl border border-border/60 p-4">
-              <div className="text-xs text-muted-foreground">Precio</div>
+              <div className="text-xs text-muted-foreground">Price</div>
               <div className="mt-1 text-lg font-semibold text-emerald-400">
                 {camp.price
                   ? (camp.price / 100).toLocaleString('es-ES', {

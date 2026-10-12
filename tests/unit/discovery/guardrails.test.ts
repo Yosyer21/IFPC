@@ -33,26 +33,26 @@ beforeEach(() => {
 describe('containsBannedWord', () => {
   it('detecta la palabra completa sin distinguir mayúsculas', () => {
     expect(containsBannedWord('Eres un IDIOTA')).toBe(true);
-    expect(containsBannedWord('qué mierda de partido')).toBe(true);
+    expect(containsBannedWord('qué mierda de match')).toBe(true);
   });
 
   it('no salta con subcadenas ni textos limpios', () => {
-    expect(containsBannedWord('un partido intenso')).toBe(false);
+    expect(containsBannedWord('an intense match')).toBe(false);
     expect(containsBannedWord('idiotez no, pero idiomático sí')).toBe(false);
     expect(containsBannedWord(null)).toBe(false);
   });
 });
 
 describe('countLinks', () => {
-  it('cuenta los enlaces http(s)', () => {
+  it('cuenta los links http(s)', () => {
     expect(countLinks('mira https://a.com y http://b.com')).toBe(2);
-    expect(countLinks('sin enlaces')).toBe(0);
+    expect(countLinks('no links')).toBe(0);
     expect(countLinks(undefined)).toBe(0);
   });
 });
 
 describe('withinRateLimit', () => {
-  it('cuenta publicaciones de la última hora', async () => {
+  it('counts posts from the last hour', async () => {
     await expect(withinRateLimit('u1', 'post')).resolves.toBe(true);
 
     const where = mocks.postCount.mock.calls[0][0].where;
@@ -84,11 +84,11 @@ describe('isDuplicatePost', () => {
 });
 
 describe('reviewPost', () => {
-  it('deja pasar una publicación normal', async () => {
+  it('lets a normal post through', async () => {
     await expect(reviewPost({ userId: 'u1', title: 'Fichaje', body: 'Buen refuerzo' })).resolves.toBeNull();
   });
 
-  it('corta por ritmo antes que por lo demás', async () => {
+  it('rate-limits antes que por lo demás', async () => {
     mocks.postCount.mockResolvedValue(99);
     mocks.postFindFirst.mockResolvedValue({ id: 'post-1' });
 
@@ -97,7 +97,7 @@ describe('reviewPost', () => {
     });
   });
 
-  it('detecta duplicados y exceso de enlaces', async () => {
+  it('detecta duplicados y exceso de links', async () => {
     mocks.postFindFirst.mockResolvedValue({ id: 'post-1' });
     await expect(reviewPost({ userId: 'u1', title: null, body: 'x' })).resolves.toEqual({
       reason: 'duplicate',
@@ -109,7 +109,7 @@ describe('reviewPost', () => {
     ).resolves.toEqual({ reason: 'too_many_links' });
   });
 
-  it('marca para revisión el lenguaje prohibido en vez de bloquearlo', async () => {
+  it('marca para revisión el banned language en vez de bloquearlo', async () => {
     await expect(reviewPost({ userId: 'u1', title: 'eres un idiota', body: 'x' })).resolves.toEqual({
       hidden: true,
     });
@@ -117,7 +117,7 @@ describe('reviewPost', () => {
 });
 
 describe('reviewComment', () => {
-  it('corta por ritmo y rechaza lenguaje prohibido', async () => {
+  it('rate-limits y rechaza banned language', async () => {
     mocks.commentCount.mockResolvedValue(30);
     await expect(reviewComment({ userId: 'u1', body: 'hola' })).resolves.toEqual({
       reason: 'rate_limit',
@@ -127,12 +127,12 @@ describe('reviewComment', () => {
     await expect(reviewComment({ userId: 'u1', body: 'puta' })).resolves.toEqual({
       reason: 'banned_words',
     });
-    await expect(reviewComment({ userId: 'u1', body: 'buen partido' })).resolves.toBeNull();
+    await expect(reviewComment({ userId: 'u1', body: 'good match' })).resolves.toBeNull();
   });
 });
 
 describe('GUARDRAIL_MESSAGES', () => {
-  it('cubre todos los motivos con un mensaje para el autor', () => {
+  it('cubre todos los motivos con un message para el autor', () => {
     for (const reason of ['rate_limit', 'duplicate', 'too_many_links', 'banned_words'] as const) {
       expect(GUARDRAIL_MESSAGES[reason]).toBeTruthy();
     }

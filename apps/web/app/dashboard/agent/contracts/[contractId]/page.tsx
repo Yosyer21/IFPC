@@ -39,7 +39,7 @@ export default async function AgentContractDetailPage({
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
-              ['Jugador', `${contract.player.firstName} ${contract.player.lastName}`],
+              ['Player', `${contract.player.firstName} ${contract.player.lastName}`],
               ['Club', contract.club.name],
               ['Inicio', contract.startsAt.toLocaleDateString('es')],
               ['Fin', contract.endsAt ? contract.endsAt.toLocaleDateString('es') : '—'],

@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { PlayerFilterLinks } from '@/components/admin/player-filter-links';
 import { PlayerRow } from '@/components/admin/player-row';
 
-export const metadata: Metadata = { title: 'Jugadores pendientes' };
+export const metadata: Metadata = { title: 'Pending players' };
 
 export default async function AdminPlayersPendingPage() {
   const session = await auth();
@@ -22,7 +22,7 @@ export default async function AdminPlayersPendingPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Jugadores pendientes"
+        title="Pending players"
         subtitle="Profiles awaiting verification and activation"
         icon="whistle"
       />

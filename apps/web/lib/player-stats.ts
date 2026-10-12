@@ -1,7 +1,7 @@
 import { prisma } from '@ifpc/database';
 import { CATEGORY_LABELS } from './labels';
 
-/** Media de evaluaciones en una categoría de desarrollo (`Evaluation.category`). */
+/** Media de evaluations en una category de desarrollo (`Evaluation.category`). */
 export interface PlayerStatsCategory {
   category: string;
   label: string;
@@ -10,12 +10,12 @@ export interface PlayerStatsCategory {
 }
 
 export interface PlayerStats {
-  /** Media global sobre 10 (una decimal) o `null` si aún no hay evaluaciones. */
+  /** Media global sobre 10 (una decimal) o `null` si aún no hay evaluations. */
   overall: number | null;
   evaluations: number;
   categories: PlayerStatsCategory[];
   career: {
-    /** Registros de trayectoria (club + temporada). */
+    /** Registros de trayectoria (club + season). */
     entries: number;
     /** Temporadas distintas. */
     seasons: number;
@@ -31,10 +31,10 @@ function round1(value: number): number {
 }
 
 /**
- * Estadísticas deportivas de un jugador para su perfil: media global y por
- * categoría, totales de trayectoria y vídeos.
+ * Stats deportivas de un player para su perfil: media global y por
+ * category, totals de trayectoria y vídeos.
  *
- * Solo datos deportivos: quién visita el perfil no sale de aquí (eso es privado
+ * Solo datos deportivos: quién view el perfil no sale de aquí (eso es privado
  * del dueño y vive en `profile-views.ts`).
  */
 export async function getPlayerStats(playerId: string): Promise<PlayerStats> {
@@ -69,8 +69,8 @@ export async function getPlayerStats(playerId: string): Promise<PlayerStats> {
     .filter((entry) => entry.count > 0)
     .sort((a, b) => b.average - a.average);
 
-  // La media global es la de todas las evaluaciones: ponderar las medias por su
-  // número de evaluaciones da exactamente lo mismo sin traerse las filas.
+  // La media global es la de todas las evaluations: ponderar las medias por su
+  // número de evaluations da exactamente lo mismo sin traerse las filas.
   const overall = evaluations
     ? round1(categories.reduce((sum, entry) => sum + entry.average * entry.count, 0) / evaluations)
     : null;

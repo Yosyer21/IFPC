@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Evaluaciones del jugador' };
+export const metadata: Metadata = { title: 'Player evaluations' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -41,14 +41,14 @@ export default async function AgentPlayerEvaluationsPage({
         href={`/dashboard/agent/players/${playerId}`}
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Jugador
+        ← Player
       </Link>
       <h1 className="mb-6 text-2xl font-bold">Evaluaciones</h1>
 
       {evaluations.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay evaluaciones registradas.</p>
+            <p className="text-sm text-muted-foreground">No evaluations recorded.</p>
           </CardContent>
         </Card>
       ) : (

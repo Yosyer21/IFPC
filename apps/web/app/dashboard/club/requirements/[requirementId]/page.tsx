@@ -33,7 +33,7 @@ export default async function ClubRequirementDetailPage({
         ? `${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} years old`
         : '—',
     ],
-    ['Nivel', requirement.level ?? '—'],
+    ['Level', requirement.level ?? '—'],
     ['Estado', requirement.status],
   ];
 

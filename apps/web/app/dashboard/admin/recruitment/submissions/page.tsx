@@ -67,7 +67,7 @@ export default async function AdminRecruitmentSubmissionsPage() {
                   </p>
                   <p className="text-sm text-muted-foreground">
                     → {submission.club.name}
-                    {submission.agent ? ` · agente: ${submission.agent.user.name}` : ''}
+                    {submission.agent ? ` · agent: ${submission.agent.user.name}` : ''}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {submission.createdAt.toLocaleDateString('es')}

@@ -7,7 +7,7 @@ import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
   title: 'Clubes — Future Baller',
-  description: 'Directorio de clubes y academias que reclutan en Future Baller.',
+  description: 'Directory of clubs and academies that recruit on Future Baller.',
 };
 
 export default async function PublicClubsPage() {
@@ -26,10 +26,10 @@ export default async function PublicClubsPage() {
       <main className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="mb-10">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Clubs</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">Clubes que reclutan</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">Clubs that recruit</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {clubs.length} verified clubs · {countries} countries. They post trials, scholarships and
-            convocatorias en la plataforma.
+            call-ups en la plataforma.
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export default async function PublicClubsPage() {
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2 text-xs">
                   {club.league ? <Badge variant="outline">{club.league}</Badge> : null}
-                  <Badge variant="outline">{club._count.opportunities} oportunidades</Badge>
+                  <Badge variant="outline">{club._count.opportunities} opportunities</Badge>
                 </div>
               </Link>
             ))}

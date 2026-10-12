@@ -9,11 +9,11 @@ export function AccountForm({ name, email }: { name: string; email: string }) {
 
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
-      <Input name="name" label="Nombre completo" defaultValue={name} required />
+      <Input name="name" label="Name completo" defaultValue={name} required />
       <Input name="email" label="Email" defaultValue={email} disabled />
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Guardar cambios'}
+        {pending ? 'Guardando…' : 'Save changes'}
       </Button>
     </form>
   );

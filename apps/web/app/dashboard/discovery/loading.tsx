@@ -10,7 +10,7 @@ export default function DiscoveryLoading() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Discovery"
-        subtitle="Anuncios, vídeos y logros de todos los perfiles"
+        subtitle="Announcements, videos and milestones from every profile"
         icon="compass"
       />
       <FeedSkeleton posts={3} />

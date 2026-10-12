@@ -8,7 +8,7 @@ import { StatusBadge } from '@/components/admin/status-badge';
 import { createCoachLiveSessionAction } from '@/app/actions/coach';
 import { SESSION_TYPE_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Sesiones en vivo' };
+export const metadata: Metadata = { title: 'Live sessions' };
 
 export default async function CoachLiveSessionsPage() {
   const session = await auth();
@@ -27,8 +27,8 @@ export default async function CoachLiveSessionsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Sesiones en vivo"
-        subtitle="Tus entrenamientos en directo, charlas y pruebas con jugadores"
+        title="Live sessions"
+        subtitle="Tus training sessions en directo, charlas y pruebas con players"
         icon="live"
       />
 
@@ -42,7 +42,7 @@ export default async function CoachLiveSessionsPage() {
                 required
                 name="title"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
-                placeholder="Entrenamiento en directo…"
+                placeholder="Training live…"
               />
             </label>
             <label className="text-sm">
@@ -122,7 +122,7 @@ export default async function CoachLiveSessionsPage() {
               {liveSession.meetingUrl ? (
                 <Badge variant="outline">Enlace listo</Badge>
               ) : (
-                <Badge variant="outline">Sin enlace</Badge>
+                <Badge variant="outline">No link</Badge>
               )}
             </div>
           ))}

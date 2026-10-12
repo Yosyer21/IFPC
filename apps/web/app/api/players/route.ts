@@ -10,9 +10,9 @@ import {
 
 /**
  * GET /api/players
- * - Jugador: su propio perfil.
- * - Admin: todos los jugadores.
- * - Otros roles: jugadores disponibles/activos (directorio).
+ * - Player: su propio perfil.
+ * - Admin: todos los players.
+ * - Otros roles: available players/activos (directorio).
  */
 export async function GET() {
   const session = await requireUser();
@@ -40,7 +40,7 @@ export async function GET() {
   return NextResponse.json({ ok: true, players });
 }
 
-/** POST /api/players — crea/actualiza el perfil deportivo del jugador autenticado. */
+/** POST /api/players — crea/actualiza el perfil deportivo del player autenticado. */
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {

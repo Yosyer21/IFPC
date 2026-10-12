@@ -3,7 +3,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { TrainingGrid } from '@/components/player/training-grid';
 
-export const metadata: Metadata = { title: 'Entrenamiento · Fuerza' };
+export const metadata: Metadata = { title: 'Training · Strength' };
 
 export default async function PlayerTrainingStrengthPage() {
   const session = await auth();

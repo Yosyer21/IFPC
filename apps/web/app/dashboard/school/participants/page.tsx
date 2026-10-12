@@ -25,14 +25,14 @@ export default async function SchoolParticipantsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Participantes"
-        subtitle="Jugadoras que pueden incorporarse a vuestros programas y clínicas"
+        subtitle="Female players who can join your programs and clinics"
         icon="users"
       />
 
       {players.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay jugadoras disponibles todavía.</p>
+            <p className="text-sm text-muted-foreground">No female players available yet.</p>
           </CardContent>
         </Card>
       ) : (
@@ -40,7 +40,7 @@ export default async function SchoolParticipantsPage() {
           {players.map((player) => {
             const positionLabel = player.position
               ? (POSITION_LABELS[player.position as keyof typeof POSITION_LABELS] ?? player.position)
-              : 'Sin posición';
+              : 'No position';
             return (
               <Card key={player.id} className="card-hover animate-fade-up">
                 <CardContent className="flex items-center gap-3">
@@ -54,7 +54,7 @@ export default async function SchoolParticipantsPage() {
                       {player.nationality ? ` · ${player.nationality}` : ''}
                     </div>
                   </div>
-                  <Badge variant="success">Disponible</Badge>
+                  <Badge variant="success">Available</Badge>
                 </CardContent>
               </Card>
             );

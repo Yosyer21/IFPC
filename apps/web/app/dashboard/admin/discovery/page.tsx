@@ -19,7 +19,7 @@ import { MODERATION_ACTION_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Discovery — Moderación' };
 
-/** Panel de moderación del feed: denuncias pendientes y traza de acciones. */
+/** Panel de moderación del feed: reports pendientes y traza de acciones. */
 export default async function AdminDiscoveryPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
@@ -35,16 +35,16 @@ export default async function AdminDiscoveryPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Moderación de Discovery"
+        title="Discovery moderation"
         subtitle={
           reported.length === 0
-            ? 'Sin denuncias pendientes'
-            : `${pendingReports} denuncias pendientes en ${reported.length} publicaciones`
+            ? 'No pending reports'
+            : `${pendingReports} reports pendientes en ${reported.length} posts`
         }
         icon="shield"
       >
         <Link href="/dashboard/discovery" className="text-sm text-muted-foreground hover:underline">
-          Ver el feed →
+          See the feed →
         </Link>
       </PageHeader>
 
@@ -52,7 +52,7 @@ export default async function AdminDiscoveryPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay publicaciones denunciadas. Las denuncias que atiendas desaparecen de esta cola.
+              No hay posts denunciadas. Las reports que atiendas desaparecen de esta cola.
             </p>
           </CardContent>
         </Card>
@@ -63,7 +63,7 @@ export default async function AdminDiscoveryPage() {
               <CardContent className="flex flex-col gap-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="danger">
-                    {entry.reports.length} {entry.reports.length === 1 ? 'denuncia' : 'denuncias'}
+                    {entry.reports.length} {entry.reports.length === 1 ? 'report' : 'reports'}
                   </Badge>
                   <Badge variant="outline">{POST_TYPE_LABELS[entry.type] ?? entry.type}</Badge>
                   {entry.pinned ? <Badge variant="success">Fijado</Badge> : null}
@@ -95,7 +95,7 @@ export default async function AdminDiscoveryPage() {
                     href={`/dashboard/discovery/${entry.id}`}
                     className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
                   >
-                    Ver publicación
+                    See post
                   </Link>
 
                   <form action={moderatePostAction}>
@@ -106,7 +106,7 @@ export default async function AdminDiscoveryPage() {
                       value={entry.status === 'HIDDEN' ? 'PUBLISHED' : 'HIDDEN'}
                     />
                     <ActionSubmit
-                      label={entry.status === 'HIDDEN' ? 'Volver a publicar' : 'Ocultar'}
+                      label={entry.status === 'HIDDEN' ? 'Republish' : 'Ocultar'}
                       variant="primary"
                     />
                   </form>
@@ -118,7 +118,7 @@ export default async function AdminDiscoveryPage() {
 
                   <form action={resolveReportsAction}>
                     <input type="hidden" name="postId" value={entry.id} />
-                    <ActionSubmit label="Atender denuncias" />
+                    <ActionSubmit label="Atender reports" />
                   </form>
 
                   <form action={deletePostAction}>
@@ -127,7 +127,7 @@ export default async function AdminDiscoveryPage() {
                     <ActionSubmit
                       label="Borrar"
                       variant="danger"
-                      confirmText="¿Borrar la publicación definitivamente?"
+                      confirmText="¿Borrar la post definitivamente?"
                     />
                   </form>
                 </div>
@@ -139,7 +139,7 @@ export default async function AdminDiscoveryPage() {
 
       <Card className="mt-6">
         <CardContent className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold">Salud del feed</h2>
+          <h2 className="text-sm font-semibold">Feed health</h2>
           <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
             <div>
               <div className="text-lg font-bold tabular-nums">{health.published}</div>
@@ -159,7 +159,7 @@ export default async function AdminDiscoveryPage() {
                   ? `${health.averageResolutionHours} h`
                   : '—'}
               </div>
-              <div className="text-xs text-muted-foreground">Resolución media de denuncias</div>
+              <div className="text-xs text-muted-foreground">Average report resolution</div>
             </div>
           </div>
 
@@ -167,15 +167,15 @@ export default async function AdminDiscoveryPage() {
             {health.postsByDay.map((day) => (
               <div
                 key={day.day}
-                title={`${day.day}: ${day.posts} publicaciones`}
+                title={`${day.day}: ${day.posts} posts`}
                 className="w-full rounded-t bg-emerald-500/40"
                 style={{ height: `${Math.max(4, day.posts * 12)}px` }}
               />
             ))}
           </div>
           <p className="text-xs text-muted-foreground">
-            Publicaciones por día en las dos últimas semanas · {health.pendingReports} denuncias
-            pendientes ({health.reportRatePer100} por cada 100 publicaciones)
+            Posts por day en las dos últimas weeks · {health.pendingReports} reports
+            pendientes ({health.reportRatePer100} por cada 100 posts)
           </p>
 
           {health.topTags.length > 0 ? (
@@ -195,9 +195,9 @@ export default async function AdminDiscoveryPage() {
 
       <Card className="mt-6">
         <CardContent className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold">Actividad de moderación</h2>
+          <h2 className="text-sm font-semibold">Moderation activity</h2>
           {log.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Todavía no hay acciones registradas.</p>
+            <p className="text-sm text-muted-foreground">No actions recorded yet.</p>
           ) : (
             <ul className="flex flex-col gap-2">
               {log.map((entry) => (

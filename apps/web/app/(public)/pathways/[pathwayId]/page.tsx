@@ -12,10 +12,10 @@ const STAGES: Record<string, { title: string; age: string; focus: string; goals:
     age: '6–14 years',
     focus: 'Individual technique, coordination and training habits.',
     goals: [
-      'Dominar el control y el primer toque con ambas piernas',
+      'Master ball control and first touch with both feet',
       'Develop dribbling with change of pace',
       'Build warm-up and recovery habits',
-      'Disputar el primer torneo oficial',
+      'Play the first official tournament',
     ],
   },
   formacion: {
@@ -32,7 +32,7 @@ const STAGES: Record<string, { title: string; age: string; focus: string; goals:
   profesional: {
     title: 'Pre-profesional',
     age: '17–21 years',
-    focus: 'Rendimiento, becas universitarias y primeros contratos.',
+    focus: 'Performance, university scholarships and first contracts.',
     goals: [
       'Maintain a professional physical level',
       'Earn academic-sports scholarships',
@@ -46,8 +46,8 @@ const STAGES: Record<string, { title: string; age: string; focus: string; goals:
     focus: 'Academic-sports scholarships or professional contracts.',
     goals: [
       'Combine studies and competitive football',
-      'Representar a la universidad en liga nacional',
-      'Firmar contrato profesional si el rendimiento lo permite',
+      'Represent the university in the national league',
+      'Sign a professional contract if performance allows',
     ],
   },
 };
@@ -106,7 +106,7 @@ async function PathwayContent({ params }: { params: Promise<{ pathwayId: string 
 
       <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
         <p className="text-sm text-muted-foreground">
-          La plataforma asigna objetivos, evaluaciones y oportunidades de esta etapa a cada jugador.
+          La plataforma asigna goals, evaluations y opportunities de esta etapa a cada player.
         </p>
         <Link
           href="/register"

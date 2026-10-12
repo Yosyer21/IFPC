@@ -22,7 +22,7 @@ export default async function AdminUsersSchoolsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Escuelas / Comunidad"
-        subtitle="Colegios, clubes escolares y servicios comunitarios con acceso a programas"
+        subtitle="Colegios, clubs escolares y servicios comunitarios con acceso a programas"
         icon="users"
       />
       <RoleLinks />
@@ -31,7 +31,7 @@ export default async function AdminUsersSchoolsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay escuelas ni servicios comunitarios registrados.
+              No schools or community services registered.
             </p>
           </CardContent>
         </Card>
@@ -50,7 +50,7 @@ export default async function AdminUsersSchoolsPage() {
                 <div className="flex items-center gap-2">
                   <Badge>{SCHOOL_TYPE_LABELS[school.type] ?? school.type}</Badge>
                   <Badge variant={school.verified ? 'success' : 'outline'}>
-                    {school.verified ? 'Verificada' : 'Pendiente'}
+                    {school.verified ? 'Verificada' : 'Pending'}
                   </Badge>
                 </div>
               </CardContent>

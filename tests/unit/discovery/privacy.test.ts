@@ -106,7 +106,7 @@ describe('togglePrivacyRule', () => {
     expect(mocks.privacyCreate).not.toHaveBeenCalled();
   });
 
-  it('crea la regla y corta los seguimientos al bloquear', async () => {
+  it('crea la regla y corta los follows al bloquear', async () => {
     const result = await togglePrivacyRule({ ownerId: 'yo', targetId: 'otro', kind: 'BLOCK' });
 
     expect(result).toEqual({ active: true });
@@ -116,7 +116,7 @@ describe('togglePrivacyRule', () => {
     expect(mocks.followDeleteMany).toHaveBeenCalledTimes(1);
   });
 
-  it('silenciar no toca los seguimientos', async () => {
+  it('silenciar no toca los follows', async () => {
     await togglePrivacyRule({ ownerId: 'yo', targetId: 'otro', kind: 'MUTE' });
     expect(mocks.followDeleteMany).not.toHaveBeenCalled();
   });
@@ -148,7 +148,7 @@ describe('canComment', () => {
     await expect(canComment({ viewerId: 'yo', authorId: 'yo', policy: 'NOBODY' })).resolves.toBe(true);
   });
 
-  it('la política NOBODY cierra los comentarios', async () => {
+  it('la política NOBODY cierra los comments', async () => {
     await expect(canComment({ viewerId: 'yo', authorId: 'otro', policy: 'NOBODY' })).resolves.toBe(false);
   });
 

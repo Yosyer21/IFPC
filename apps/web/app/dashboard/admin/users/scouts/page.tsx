@@ -32,7 +32,7 @@ export default async function AdminUsersScoutsPage() {
       {scouts.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay ojeadores registrados.</p>
+            <p className="text-sm text-muted-foreground">No scouts registered.</p>
           </CardContent>
         </Card>
       ) : (
@@ -48,7 +48,7 @@ export default async function AdminUsersScoutsPage() {
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="outline">{scout._count.scoutingReports} informes</Badge>
+                  <Badge variant="outline">{scout._count.scoutingReports} reports</Badge>
                   <Badge variant="outline">{scout._count.savedPlayers} guardados</Badge>
                 </div>
               </CardContent>

@@ -29,7 +29,7 @@ export default async function AdminUsersUniversitiesPage() {
       {universities.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay universidades registradas.</p>
+            <p className="text-sm text-muted-foreground">No universities registered.</p>
           </CardContent>
         </Card>
       ) : (

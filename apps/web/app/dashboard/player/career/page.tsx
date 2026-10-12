@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { CareerForm } from '@/components/player/career-form';
 import { removeCareerEntryAction } from '@/app/actions/player';
 
-export const metadata: Metadata = { title: 'Trayectoria' };
+export const metadata: Metadata = { title: 'Career history' };
 
 export default async function PlayerCareerPage() {
   const session = await auth();
@@ -31,15 +31,15 @@ export default async function PlayerCareerPage() {
 
   const summary = [
     { label: 'Temporadas', value: entries.length },
-    { label: 'Partidos', value: totals.appearances },
-    { label: 'Goles', value: totals.goals },
-    { label: 'Asistencias', value: totals.assists },
+    { label: 'Matches', value: totals.appearances },
+    { label: 'Goals', value: totals.goals },
+    { label: 'Assists', value: totals.assists },
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Trayectoria"
+        title="Career history"
         subtitle="Your club and season history: clubs, categories and stats"
         icon="trophy"
       />
@@ -62,8 +62,8 @@ export default async function PlayerCareerPage() {
           <Card>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Todavía no has añadido tu trayectoria. Clubes y ojeadores la ven en tu perfil
-                público, así que mantenerla al día ayuda a que te encuentren.
+                Todavía no has añadido tu trayectoria. Clubes y scouts la ven en tu perfil
+                público, así que mantenerla al day ayuda a que te encuentren.
               </p>
             </CardContent>
           </Card>
@@ -79,24 +79,24 @@ export default async function PlayerCareerPage() {
                         <span className="text-muted-foreground"> · {entry.category}</span>
                       ) : null}
                     </h2>
-                    <p className="text-xs text-muted-foreground">Temporada {entry.season}</p>
+                    <p className="text-xs text-muted-foreground">Season {entry.season}</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    {entry.isCurrent ? <Badge variant="success">Equipo actual</Badge> : null}
+                    {entry.isCurrent ? <Badge variant="success">Current team</Badge> : null}
                     <form action={removeCareerEntryAction}>
                       <input type="hidden" name="entryId" value={entry.id} />
                       <button
                         type="submit"
                         className="text-xs text-destructive hover:underline"
                       >
-                        Eliminar
+                        Delete
                       </button>
                     </form>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                  <span>{entry.appearances} partidos</span>
+                  <span>{entry.appearances} matches</span>
                   <span>{entry.goals} goles</span>
                   <span>{entry.assists} asistencias</span>
                 </div>
@@ -119,7 +119,7 @@ export default async function PlayerCareerPage() {
 
       <Card className="animate-fade-up">
         <CardContent>
-          <h2 className="mb-4 font-semibold">Añadir temporada</h2>
+          <h2 className="mb-4 font-semibold">Add season</h2>
           <CareerForm />
         </CardContent>
       </Card>

@@ -7,7 +7,7 @@ import { Card, CardContent } from '@ifpc/ui';
 
 const bar = 'animate-pulse rounded bg-white/10';
 
-/** Esqueleto de una publicación. */
+/** Esqueleto de una post. */
 export function PostSkeleton() {
   return (
     <Card>
@@ -29,11 +29,11 @@ export function PostSkeleton() {
   );
 }
 
-/** Esqueleto de la lista de publicaciones. */
+/** Esqueleto de la lista de posts. */
 export function FeedSkeleton({ posts = 3 }: { posts?: number }) {
   return (
     <div role="status" aria-busy="true" className="flex flex-col gap-4">
-      <span className="sr-only">Cargando publicaciones…</span>
+      <span className="sr-only">Cargando posts…</span>
       {Array.from({ length: posts }, (_value, index) => (
         <PostSkeleton key={index} />
       ))}

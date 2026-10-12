@@ -45,7 +45,7 @@ export default async function PlayerLiveSessionDetailPage({
         icon="live"
       >
         <Link href="/dashboard/player/live-sessions" className="text-sm text-muted-foreground hover:underline">
-          ← Sesiones en vivo
+          ← Live sessions
         </Link>
       </PageHeader>
 

@@ -16,7 +16,7 @@ export interface CareerEntryValues {
   notes: string | null;
 }
 
-/** Formulario de una temporada de la trayectoria (alta sin `entry`, edición con él). */
+/** Formulario de una season de la trayectoria (alta sin `entry`, edición con él). */
 export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
   const [state, formAction, pending] = useActionState(saveCareerEntryAction, {});
 
@@ -27,13 +27,13 @@ export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
         <Input name="clubName" label="Club" defaultValue={entry?.clubName ?? ''} required />
         <Input
           name="category"
-          label="Categoría"
-          placeholder="Sub-17, Primer equipo…"
+          label="Category"
+          placeholder="Sub-17, Primer team…"
           defaultValue={entry?.category ?? ''}
         />
         <Input
           name="season"
-          label="Temporada"
+          label="Season"
           placeholder="2024/25"
           defaultValue={entry?.season ?? ''}
           required
@@ -43,15 +43,15 @@ export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
           name="appearances"
           type="number"
           min={0}
-          label="Partidos"
+          label="Matches"
           defaultValue={entry?.appearances ?? ''}
         />
-        <Input name="goals" type="number" min={0} label="Goles" defaultValue={entry?.goals ?? ''} />
+        <Input name="goals" type="number" min={0} label="Goals" defaultValue={entry?.goals ?? ''} />
         <Input
           name="assists"
           type="number"
           min={0}
-          label="Asistencias"
+          label="Assists"
           defaultValue={entry?.assists ?? ''}
         />
       </div>
@@ -62,7 +62,7 @@ export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
           defaultChecked={entry?.isCurrent ?? false}
           className="h-4 w-4 rounded border-border"
         />
-        Equipo actual
+        Current team
       </label>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="career-notes" className="text-sm font-medium">
@@ -78,7 +78,7 @@ export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending} className="self-start">
-        {pending ? 'Guardando…' : entry ? 'Guardar cambios' : 'Añadir temporada'}
+        {pending ? 'Guardando…' : entry ? 'Save changes' : 'Add season'}
       </Button>
     </form>
   );

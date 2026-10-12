@@ -10,7 +10,7 @@ import { ActionSubmit } from './action-submit';
 const actionClass =
   'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors';
 
-/** Barra de interacción de una publicación: me gusta, comentar, compartir, borrar y denunciar. */
+/** Barra de interacción de una post: me gusta, comentar, compartir, borrar y denunciar. */
 export function PostActions({
   postId,
   likes,
@@ -33,7 +33,7 @@ export function PostActions({
 }) {
   const [copied, setCopied] = useState(false);
   const [reportState, reportAction, reporting] = useActionState(reportPostAction, {});
-  // El "me gusta" se pinta al instante y se confirma con la respuesta del servidor.
+  // El "me gusta" se pinta al instante y se confirma con la reply del servidor.
   const [like, setLike] = useOptimistic({ liked: likedByMe, count: likes });
   const [pending, startTransition] = useTransition();
 
@@ -93,7 +93,7 @@ export function PostActions({
           onClick={share}
           className={`${actionClass} text-muted-foreground hover:bg-white/5 hover:text-foreground`}
         >
-          {copied ? 'Enlace copiado' : 'Compartir'}
+          {copied ? 'Enlace copiado' : 'Share'}
         </button>
 
         {canReport ? (
@@ -102,7 +102,7 @@ export function PostActions({
             <input type="hidden" name="value" value={notInterested ? 'off' : 'on'} />
             <input type="hidden" name="from" value={redirectTo} />
             <ActionSubmit
-              label={notInterested ? 'Volver a mostrar' : 'No me interesa'}
+              label={notInterested ? 'Show again' : 'No me interesa'}
               variant="ghost"
             />
           </form>
@@ -115,7 +115,7 @@ export function PostActions({
             <ActionSubmit
               label="Borrar"
               variant="danger"
-              confirmText="¿Borrar la publicación?"
+              confirmText="¿Borrar la post?"
             />
           </form>
         ) : null}
@@ -123,7 +123,7 @@ export function PostActions({
         {canReport ? (
           <details className={canDelete ? '' : 'ml-auto'}>
             <summary className="cursor-pointer list-none text-xs text-muted-foreground hover:text-foreground">
-              Denunciar
+              Report
             </summary>
             <form action={reportAction} className="mt-2 flex w-64 max-w-full flex-col gap-2">
               <input type="hidden" name="postId" value={postId} />
@@ -131,7 +131,7 @@ export function PostActions({
                 name="reason"
                 rows={2}
                 required
-                placeholder="Motivo de la denuncia"
+                placeholder="Motivo de la report"
                 className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-xs outline-none focus:border-primary/60"
               />
               {reportState.error ? (
@@ -141,7 +141,7 @@ export function PostActions({
                 <p className="text-xs text-emerald-400">{reportState.success}</p>
               ) : null}
               <Button type="submit" variant="outline" disabled={reporting} className="self-start text-xs">
-                Enviar
+                Send
               </Button>
             </form>
           </details>

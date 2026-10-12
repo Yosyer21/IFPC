@@ -31,8 +31,8 @@ export async function main() {
     update: {},
     create: {
       userId: playerUser.id,
-      firstName: 'Jugador',
-      lastName: 'Demo',
+      firstName: 'Demo',
+      lastName: 'Player',
       position: 'DEL',
       competitionLevel: 'nacional',
       status: 'AVAILABLE',
@@ -147,7 +147,7 @@ export async function main() {
 
   const playerProfile = await prisma.player.findUnique({ where: { userId: playerUser.id } });
 
-  // ─── Trayectoria deportiva del jugador demo ──────────────
+  // ─── Career history deportiva del player demo ──────────────
   if (playerProfile) {
     const career = [
       { clubName: 'Future Baller Academy', category: 'Sub-17', season: '2025/26', appearances: 18, goals: 12, assists: 7, isCurrent: true },
@@ -211,11 +211,11 @@ export async function main() {
     });
   }
 
-  // ─── Contenido de entrenamiento ──────────────────────────────
+  // ─── Training content ──────────────────────────────
   const trainingContents = [
     {
       id: 'tc-tech-1',
-      title: 'Control y primer toque',
+      title: 'Control and first touch',
       category: 'technical',
       description:
         'Oriented receiving and first-touch exercises with both feet. Improves the ability to play under pressure.',
@@ -242,7 +242,7 @@ export async function main() {
     },
     {
       id: 'tc-strength-1',
-      title: 'Fuerza del core',
+      title: 'Core strength',
       category: 'strength-conditioning',
       description:
         '15-minute core routine for stability and injury prevention. Recommended 3 times per week.',
@@ -251,7 +251,7 @@ export async function main() {
     },
     {
       id: 'tc-strength-2',
-      title: 'Potencia de tren inferior',
+      title: 'Lower-body power',
       category: 'strength-conditioning',
       description:
         'Squats, lunges and plyometric jumps to improve acceleration and jumping.',
@@ -334,7 +334,7 @@ export async function main() {
           '12-month development program focused on decision-making, physical work and exposure to scouts.',
         level: 'Sub-17',
         focus: 'Decision-making, execution speed, lower-body power.',
-        goals: 'Sumar 20 apariciones oficiales, mejorar el tiempo en sprints de 30m y completar el perfil.',
+        goals: 'Reach 20 official appearances, improve 30m sprint times and complete the profile.',
         startsAt: new Date(),
         endsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
         status: 'active',
@@ -346,7 +346,7 @@ export async function main() {
         {
           id: 'goal-player-1',
           playerId: playerProfile.id,
-          title: 'Mejorar pierna no dominante',
+          title: 'Improve weaker foot',
           description: 'Do 15 minutes daily of dribbling and passing with the non-dominant foot.',
           status: 'in_progress',
           dueDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
@@ -354,8 +354,8 @@ export async function main() {
         {
           id: 'goal-player-2',
           playerId: playerProfile.id,
-          title: 'Reducir tiempo en 30m sprint',
-          description: 'Objetivo: bajar de 4.2s en sprint de 30 metros.',
+          title: 'Reduce 30m sprint time',
+          description: 'Goal: get under 4.2s in the 30-metre sprint.',
           status: 'pending',
           dueDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         },
@@ -382,7 +382,7 @@ export async function main() {
         id: 'ev-player-3',
         category: 'tactical',
         score: 6,
-        notes: 'Buena lectura de espacios en ataque. Trabajar el posicionamiento defensivo.',
+        notes: 'Good reading of space in attack. Work on defensive positioning.',
         createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
       },
       {
@@ -411,7 +411,7 @@ export async function main() {
           category: evaluation.category,
           score: evaluation.score,
           notes: evaluation.notes,
-          evaluatedBy: 'Entrenador Demo',
+          evaluatedBy: 'Demo Coach',
           createdAt: evaluation.createdAt,
         },
       });
@@ -430,14 +430,14 @@ export async function main() {
     });
   }
 
-  // ─── Reclutamiento (agente, ojeador, staff, requirements, inquiry, submission, trial) ──
+  // ─── Reclutamiento (agent, scout, staff, requirements, inquiry, submission, trial) ──
   const agentHash = await bcrypt.hash('agent123', 10);
   const agentUser = await prisma.user.upsert({
     where: { email: 'agent@demo.com' },
     update: {},
     create: {
       email: 'agent@demo.com',
-      name: 'Agente Demo',
+      name: 'Demo Agent',
       role: 'AGENT',
       passwordHash: agentHash,
     },
@@ -454,7 +454,7 @@ export async function main() {
     update: {},
     create: {
       email: 'scout@demo.com',
-      name: 'Ojeador Demo',
+      name: 'Demo Scout',
       role: 'SCOUT',
       passwordHash: scoutHash,
     },
@@ -502,7 +502,7 @@ export async function main() {
         agentId: agent.id,
         stage: 'TRIAL',
         status: 'IN_REVIEW',
-        notes: 'Enviado por el agente tras ver el perfil del jugador.',
+        notes: 'Sent by the agent after viewing the player profile.',
       },
     });
 
@@ -540,7 +540,7 @@ export async function main() {
       ageMax: 17,
       level: 'nacional',
       country: 'Spain',
-      description: 'Buscamos un delantero con buen golpeo y movilidad para el equipo juvenil.',
+      description: 'We are looking for a striker with good striking and mobility for the youth team.',
       status: 'OPEN',
     },
   });
@@ -553,7 +553,7 @@ export async function main() {
       clubId: club.id,
       name: 'María López',
       email: 'maria@example.com',
-      subject: 'Prueba para mi hijo',
+      subject: 'Trial for my son',
       message: 'My son plays center midfield and we would like to know how to take part in a trial.',
       status: 'NEW',
     },
@@ -565,7 +565,7 @@ export async function main() {
     create: {
       id: 'opp-club-1',
       clubId: club.id,
-      title: 'Prueba para juvenil Sub-17',
+      title: 'U-17 youth trial',
       type: 'TRIAL',
       status: 'OPEN',
       position: 'DEL',
@@ -583,7 +583,7 @@ export async function main() {
     create: {
       id: 'opp-club-2',
       clubId: club.id,
-      title: 'Beca deportiva para delanteros',
+      title: 'Sports scholarship for strikers',
       type: 'SCHOLARSHIP',
       status: 'OPEN',
       position: 'DEL',
@@ -626,8 +626,8 @@ export async function main() {
       id: 'notif-demo-1',
       userId: playerUser.id,
       type: 'opportunity',
-      title: 'Nueva oportunidad disponible',
-      message: 'Club Demo busca delanteros para su prueba Sub-17. Aplica antes de que cierre.',
+      title: 'New opportunity available',
+      message: 'Club Demo is looking for strikers for their U-17 trial. Apply before it closes.',
       link: '/dashboard/player/opportunities/opp-club-1',
     },
   });
@@ -664,7 +664,7 @@ export async function main() {
     update: {},
     create: {
       id: 'camp-1',
-      title: 'Campus de verano IFPC',
+      title: 'IFPC summer camp',
       description:
         'Intensive preseason camp: technical-tactical in the morning and physical in the afternoon. Limited spots with individualized follow-up.',
       country: 'Spain',
@@ -683,7 +683,7 @@ export async function main() {
     update: {},
     create: {
       id: 'camp-2',
-      title: 'Clinic de delanteros (borrador)',
+      title: 'Strikers clinic (draft)',
       description: '3-day clinic for U15–U18 strikers with guest coaches.',
       country: 'Spain',
       city: 'Madrid',
@@ -725,8 +725,8 @@ export async function main() {
     update: {},
     create: {
       id: 'live-2',
-      title: 'Prueba individual con visor',
-      description: 'Prueba 1:1 en directo con un ojeador para evaluar tu nivel competitivo actual.',
+      title: 'One-to-one trial with a scout',
+      description: 'Live 1:1 trial with a scout to assess your current competitive level.',
       type: 'TRIAL',
       status: 'SCHEDULED',
       startsAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
@@ -780,7 +780,7 @@ export async function main() {
     },
   });
 
-  // ─── Visitas al perfil del jugador demo (métricas de interés) ───
+  // ─── Visitas al perfil del player demo (métricas de interés) ───
   if (playerProfile) {
     const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     const profileViews = [
@@ -801,7 +801,7 @@ export async function main() {
     }
   }
 
-  // ─── Discovery: publicaciones de ejemplo (una por tipo de perfil) ───
+  // ─── Discovery: posts de ejemplo (una por tipo de perfil) ───
   const opportunity = await prisma.opportunity.findFirst({ where: { creatorType: 'CLUB' } });
   const daysAgoPost = (days: number, hours = 0) =>
     new Date(Date.now() - (days * 24 + hours) * 60 * 60 * 1000);
@@ -811,64 +811,64 @@ export async function main() {
       id: 'seed-post-1',
       authorId: clubUser.id,
       type: 'ANNOUNCEMENT' as const,
-      title: 'Buscamos lateral izquierdo sub-17',
-      body: 'Abrimos convocatoria para la próxima temporada. Entrenamientos en el club y posibilidad de beca deportiva. #sub17 #lateral',
+      title: 'Looking for a U-17 left-back',
+      body: 'We are opening the call-up for next season. Training sessions at the club and the chance of a sports scholarship. #sub17 #leftback',
       opportunityId: opportunity?.id ?? null,
-      tags: ['sub17', 'lateral'],
+      tags: ['sub17', 'leftback'],
       createdAt: daysAgoPost(0, 2),
     },
     {
       id: 'seed-post-2',
       authorId: playerUser.id,
       type: 'VIDEO' as const,
-      body: 'Mis mejores jugadas de la temporada. #highlights #delantero',
+      body: 'My best plays of the season. #highlights #striker',
       mediaUrl: 'https://www.youtube.com/embed/M7lc1UVf-VE',
       mediaKind: 'embed',
-      tags: ['highlights', 'delantero'],
+      tags: ['highlights', 'striker'],
       createdAt: daysAgoPost(1),
     },
     {
       id: 'seed-post-3',
       authorId: universityUser.id,
       type: 'ANNOUNCEMENT' as const,
-      title: 'Becas deportivas 2026',
-      body: 'Ya está abierta la convocatoria de becas para deportistas: matrícula completa y alojamiento. #becas #universidad',
-      linkUrl: 'https://example.com/becas',
-      tags: ['becas', 'universidad'],
+      title: 'Sports scholarships 2026',
+      body: 'The call-up for athletes is open: full tuition and accommodation. #scholarships #university',
+      linkUrl: 'https://example.com/scholarships',
+      tags: ['scholarships', 'university'],
       createdAt: daysAgoPost(2),
     },
     {
       id: 'seed-post-4',
       authorId: schoolUser.id,
       type: 'ACHIEVEMENT' as const,
-      body: 'Nuestro equipo escolar se lleva el torneo regional tras una final increíble. ¡Enhorabuena a todo el grupo! #escuela #torneo',
-      tags: ['escuela', 'torneo'],
+      body: 'Our school team wins the regional tournament after an incredible final. Congratulations to the whole group! #school #tournament',
+      tags: ['school', 'tournament'],
       createdAt: daysAgoPost(3),
     },
     {
       id: 'seed-post-5',
       authorId: coachUser.id,
       type: 'PHOTO' as const,
-      body: 'Sesión de finalización en el entrenamiento de hoy. #entrenamiento',
+      body: 'Finishing session in today’s training. #training',
       mediaUrl: '/images/football-03.jpg',
       mediaKind: 'image',
-      tags: ['entrenamiento'],
+      tags: ['training'],
       createdAt: daysAgoPost(4),
     },
     {
       id: 'seed-post-6',
       authorId: scoutUser.id,
       type: 'ANNOUNCEMENT' as const,
-      body: 'Preparando la ronda de seguimiento de enero. Las familias pueden escribirme por la plataforma. #ojeadores #seguimiento',
-      tags: ['ojeadores', 'seguimiento'],
+      body: 'Preparing the January tracking round. Families can message me through the platform. #scouts #tracking',
+      tags: ['scouts', 'tracking'],
       createdAt: daysAgoPost(5),
     },
     {
       id: 'seed-post-7',
       authorId: parentUser.id,
       type: 'ACHIEVEMENT' as const,
-      body: 'Orgullosos del primer contrato formativo de nuestro hijo. Gracias a todos los que han acompañado el camino. #familia',
-      tags: ['familia'],
+      body: 'Proud of our son’s first youth contract. Thank you to everyone who has been part of the journey. #family',
+      tags: ['family'],
       createdAt: daysAgoPost(6),
     },
   ];
@@ -877,7 +877,7 @@ export async function main() {
     await prisma.post.upsert({ where: { id: post.id }, update: {}, create: post });
   }
 
-  // Reacciones de ejemplo sobre las publicaciones de demo.
+  // Reacciones de ejemplo sobre las posts de demo.
   const demoLikes = [
     { postId: 'seed-post-1', userId: playerUser.id },
     { postId: 'seed-post-1', userId: scoutUser.id },
@@ -902,21 +902,21 @@ export async function main() {
       id: 'seed-comment-1',
       postId: 'seed-post-1',
       authorId: parentUser.id,
-      body: '¿Hay opción de prueba antes de la convocatoria?',
+      body: 'Is there a chance of a trial before the call-up?',
       createdAt: daysAgoPost(0, 1),
     },
     {
       id: 'seed-comment-2',
       postId: 'seed-post-1',
       authorId: clubUser.id,
-      body: 'Sí, escribimos por privado a las familias interesadas.',
+      body: 'Yes, we will message the interested families privately.',
       createdAt: daysAgoPost(0, 1),
     },
     {
       id: 'seed-comment-3',
       postId: 'seed-post-2',
       authorId: scoutUser.id,
-      body: 'Buen primer toque y desmarque. Lo seguimos.',
+      body: 'Good first touch and movement. We are tracking him.',
       createdAt: daysAgoPost(0, 20),
     },
   ];
@@ -938,7 +938,7 @@ export async function main() {
     });
   }
 
-  // Relaciones de seguimiento de ejemplo (pestaña "Siguiendo" y sugerencias).
+  // Relaciones de tracking de ejemplo (pestaña "Following" y sugerencias).
   const demoFollows: { followerId: string; followingId: string }[] = [
     { followerId: playerUser.id, followingId: clubUser.id },
     { followerId: playerUser.id, followingId: universityUser.id },
@@ -963,15 +963,15 @@ export async function main() {
     });
   }
 
-  // Denuncias de ejemplo (cola de moderación) y una publicación fijada.
+  // Denuncias de ejemplo (cola de moderación) y una post fijada.
   const demoReports = [
     {
       postId: 'seed-post-6',
       reporterId: parentUser.id,
-      reason: 'Contacto directo fuera de la plataforma',
+      reason: 'Direct contact outside the platform',
     },
     { postId: 'seed-post-6', reporterId: coachUser.id, reason: 'Publicidad encubierta' },
-    { postId: 'seed-post-3', reporterId: playerUser.id, reason: 'El enlace no carga' },
+    { postId: 'seed-post-3', reporterId: playerUser.id, reason: 'The link does not load' },
   ];
   for (const report of demoReports) {
     await prisma.postReport.upsert({
@@ -990,13 +990,13 @@ export async function main() {
 
   console.log('Seed completado:');
   console.log(`- admin: admin@ifpc.com / admin123`);
-  console.log(`- jugador: player@demo.com / player123`);
+  console.log(`- player: player@demo.com / player123`);
   console.log(`- familiar: parent@demo.com / parent123`);
   console.log(`- club: club@demo.com / club123`);
-  console.log(`- agente: agent@demo.com / agent123`);
-  console.log(`- ojeador: scout@demo.com / scout123`);
-  console.log(`- entrenador: coach@demo.com / coach123`);
-  console.log(`- universidad: university@demo.com / university123`);
+  console.log(`- agent: agent@demo.com / agent123`);
+  console.log(`- scout: scout@demo.com / scout123`);
+  console.log(`- coach: coach@demo.com / coach123`);
+  console.log(`- university: university@demo.com / university123`);
   console.log(`- club id: ${club.id}`);
   console.log(`- training content: ${trainingContents.length} items`);
 }

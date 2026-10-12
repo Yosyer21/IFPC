@@ -68,7 +68,7 @@ export default async function AdminCampDetailPage({
         </Card>
         <Card>
           <CardContent className="py-4">
-            <div className="text-xs text-muted-foreground">Precio</div>
+            <div className="text-xs text-muted-foreground">Price</div>
             <div className="mt-1 text-sm font-semibold">
               {camp.price
                 ? (camp.price / 100).toLocaleString('es-ES', {

@@ -68,7 +68,7 @@ describe('extractMentions', () => {
   });
 
   it('extrae el nombre de dos palabras típico del directorio', () => {
-    expect(extractMentions('Gracias @Demo Club por la convocatoria')).toEqual(['Demo Club']);
+    expect(extractMentions('Thanks @Demo Club for the call-up')).toEqual(['Demo Club']);
   });
 
   it('admite nombres de una sola palabra', () => {
@@ -118,7 +118,7 @@ describe('toFeedPost con los campos del compositor', () => {
   it('cuenta los votos de la encuesta y marca el voto propio', () => {
     const post = toFeedPost(
       row({
-        pollOptions: ['Sí', 'No'],
+        pollOptions: ['Yes', 'No'],
         pollVotes: [
           { optionIndex: 1, userId: 'viewer-1' },
           { optionIndex: 1, userId: 'otro' },
@@ -134,7 +134,7 @@ describe('toFeedPost con los campos del compositor', () => {
 
   it('sin espectador no hay voto propio', () => {
     const post = toFeedPost(
-      row({ pollOptions: ['Sí'], pollVotes: [{ optionIndex: 0, userId: 'viewer-1' }] })
+      row({ pollOptions: ['Yes'], pollVotes: [{ optionIndex: 0, userId: 'viewer-1' }] })
     );
 
     expect(post.pollCounts).toEqual([1]);

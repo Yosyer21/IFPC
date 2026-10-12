@@ -4,8 +4,8 @@ import type { ProfileChecklistState } from '@ifpc/config';
 import { DonutChart } from '@/components/player/charts';
 
 /**
- * Fuerza del perfil: donut ponderado + lo que falta por completar, cada punto
- * con su enlace. Al 100% la lista desaparece: solo queda la confirmación.
+ * Profile strength: donut ponderado + lo que falta por completar, cada punto
+ * con su link. Al 100% la lista desaparece: solo queda la confirmación.
  */
 export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }) {
   const { percent, completed, total, next, items } = state;
@@ -14,7 +14,7 @@ export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }
   return (
     <Card className="animate-fade-up" style={{ animationDelay: '160ms' }}>
       <CardContent className="flex w-full flex-col items-center gap-4">
-        <h2 className="self-start font-semibold">Fuerza del perfil</h2>
+        <h2 className="self-start font-semibold">Profile strength</h2>
         <DonutChart
           value={percent}
           label={`${percent}%`}
@@ -28,14 +28,14 @@ export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }
             style={{ borderColor: 'var(--profile-accent, currentColor)' }}
           >
             <span className="text-xs uppercase tracking-wide text-muted-foreground">
-              Siguiente mejor paso
+              Next best step
             </span>
             <span className="mt-0.5 block text-sm font-medium">{next.label}</span>
             <span className="mt-0.5 block text-xs text-muted-foreground">{next.hint}</span>
           </Link>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Perfil completo: clubes y ojeadores ven todo lo que buscan.
+            Perfil completo: clubs y scouts ven todo lo que buscan.
           </p>
         )}
 

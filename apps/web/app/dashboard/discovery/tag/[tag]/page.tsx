@@ -3,7 +3,7 @@ import { parseFeedFilters } from '@/lib/discovery';
 
 /**
  * Etiqueta del feed. En F1 el feed ya filtra por `?tag=`, así que esta ruta solo
- * valida la etiqueta y redirige (evita duplicar el renderizado del feed).
+ * valida la tag y redirige (evita duplicar el renderizado del feed).
  */
 export default async function DiscoveryTagPage({
   params,

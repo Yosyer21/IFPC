@@ -7,8 +7,8 @@ import { Button, Input, Select } from '@ifpc/ui';
 const ROLES = [
   { value: 'STAFF', label: 'Staff' },
   { value: 'MANAGER', label: 'Manager' },
-  { value: 'COACH', label: 'Entrenador' },
-  { value: 'SCOUT', label: 'Ojeador' },
+  { value: 'COACH', label: 'Coach' },
+  { value: 'SCOUT', label: 'Scout' },
 ];
 
 export function InviteStaffForm() {
@@ -19,8 +19,8 @@ export function InviteStaffForm() {
       <Input
         name="email"
         type="email"
-        label="Email del miembro"
-        placeholder="miembro@email.com"
+        label="Member email"
+        placeholder="member@email.com"
         required
       />
       <Select name="role" label="Rol" options={ROLES} defaultValue="STAFF" />

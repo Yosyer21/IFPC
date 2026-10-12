@@ -49,7 +49,7 @@ describe('preferenceWeight', () => {
     );
   });
 
-  it('«ver más» suma encima del seguimiento', () => {
+  it('«ver más» suma encima del tracking', () => {
     expect(preferenceWeight({ isFollowed: true, preference: 'MORE' })).toBe(
       FEED_PREFERENCE_WEIGHTS.followed + FEED_PREFERENCE_WEIGHTS.more
     );
@@ -58,14 +58,14 @@ describe('preferenceWeight', () => {
     );
   });
 
-  it('«ver menos» manda sobre el seguimiento', () => {
+  it('«ver menos» manda sobre el tracking', () => {
     expect(preferenceWeight({ isFollowed: true, preference: 'LESS' })).toBe(
       FEED_PREFERENCE_WEIGHTS.less
     );
     expect(preferenceWeight({ isFollowed: false, preference: 'LESS' })).toBeLessThan(0);
   });
 
-  it('sin seguimiento ni preferencia no pesa', () => {
+  it('sin tracking ni preferencia no pesa', () => {
     expect(preferenceWeight({ isFollowed: false, preference: null })).toBe(0);
   });
 });
@@ -126,7 +126,7 @@ describe('followedAuthorIds y downrankedAuthorIds', () => {
 });
 
 describe('feedPreferenceContext', () => {
-  it('resuelve el peso de cada autor con seguimiento y preferencia', async () => {
+  it('resuelve el peso de cada autor con tracking y preferencia', async () => {
     mocks.followFindMany.mockResolvedValue([{ followingId: 'seguido-1' }]);
     mocks.preferenceFindMany.mockResolvedValue([{ authorId: 'seguido-1', kind: 'MORE' }]);
 

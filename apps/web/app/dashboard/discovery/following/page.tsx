@@ -14,9 +14,9 @@ import {
 } from '@/lib/discovery';
 import { listAuthorPreferences } from '@/lib/discovery-preferences';
 
-export const metadata: Metadata = { title: 'Siguiendo y preferencias' };
+export const metadata: Metadata = { title: 'Following and preferences' };
 
-/** Roles que se muestran como organización (clubes, universidades y escuelas). */
+/** Roles que se muestran como organización (clubs, universities y schools). */
 const ORGANIZATION_ROLES = ['CLUB', 'UNIVERSITY', 'SCHOOL'];
 
 /**
@@ -46,13 +46,13 @@ export default async function FollowingPage() {
         href="/dashboard/discovery"
         className="text-sm text-muted-foreground hover:text-foreground"
       >
-        ← Volver al feed
+        ← Back to feed
       </Link>
 
       <PageHeader
-        title="Siguiendo y preferencias"
+        title="Following and preferences"
         subtitle={`${stats.following} siguiendo · ${stats.followers} ${
-          stats.followers === 1 ? 'seguidor' : 'seguidores'
+          stats.followers === 1 ? 'follower' : 'followers'
         }`}
         icon="users"
       />
@@ -62,28 +62,28 @@ export default async function FollowingPage() {
           <div>
             <h2 className="text-sm font-semibold">Tus preferencias</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              A quien sigues se le da prioridad en «Para ti» y «Tendencias». Aquí puedes afinarlo
+              People you follow are prioritised in “For you” and “Trending”. Here you can fine-tune it
               perfil a perfil: «ver más» lo sube y «ver menos» lo saca de esos dos listados (en
-              «Recientes» y «Siguiendo» sus publicaciones siguen apareciendo).
+              «Recientes» y «Following» sus posts siguen apareciendo).
             </p>
           </div>
 
           <PreferenceRow
-            title="Ver más"
+            title="Show more"
             entries={preferences.filter((entry) => entry.kind === 'MORE')}
             emptyMessage="Todavía no has pedido ver más de nadie."
           />
           <PreferenceRow
-            title="Ver menos"
+            title="Show less"
             entries={preferences.filter((entry) => entry.kind === 'LESS')}
-            emptyMessage="No has descartado a nadie."
+            emptyMessage="You have not dismissed anyone."
           />
         </CardContent>
       </Card>
 
       <section className="mb-6">
         <h2 className="mb-3 text-sm font-semibold">
-          A quién sigues <span className="text-muted-foreground">({following.length})</span>
+          Who you follow <span className="text-muted-foreground">({following.length})</span>
         </h2>
 
         {following.length === 0 ? (
@@ -99,7 +99,7 @@ export default async function FollowingPage() {
           <div className="flex flex-col gap-3">
             {organizations.length > 0 ? (
               <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Clubes, universidades y escuelas
+                Clubes, universities y schools
               </h3>
             ) : null}
             {organizations.map((profile) => (
@@ -120,7 +120,7 @@ export default async function FollowingPage() {
 
       <section className="mb-6">
         <h2 className="mb-3 text-sm font-semibold">
-          Quién te sigue <span className="text-muted-foreground">({followers.length})</span>
+          Who follows you <span className="text-muted-foreground">({followers.length})</span>
         </h2>
 
         {followers.length === 0 ? (
@@ -165,7 +165,7 @@ function PreferenceRow({
             <input type="hidden" name="kind" value="" />
             <button
               type="submit"
-              title={`Quitar la preferencia de ${entry.name}`}
+              title={`Remove the preference for ${entry.name}`}
               className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-destructive/60 hover:text-destructive"
             >
               {entry.name} ✕

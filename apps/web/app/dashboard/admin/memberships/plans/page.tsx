@@ -6,10 +6,10 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 export const metadata: Metadata = { title: 'Membership plans' };
 
 const PLANS = [
-  { tier: 'FREE', price: '0 €', features: ['Basic profile', 'Contenido', 'Aplicar a oportunidades'] },
+  { tier: 'FREE', price: '0 €', features: ['Basic profile', 'Contenido', 'Apply to opportunities'] },
   { tier: 'PREMIUM', price: '€59.99/year', features: ['Profile destacado', 'Unlimited videos', 'Statistics'] },
   { tier: 'SCOUT', price: '€149.99/year', features: ['Informes de scouting', 'Advanced search'] },
-  { tier: 'CLUB', price: '€299.99/year', features: ['Oportunidades', 'Requisitos', 'Matching completo'] },
+  { tier: 'CLUB', price: '€299.99/year', features: ['Opportunities', 'Requisitos', 'Matching completo'] },
 ];
 
 export default async function AdminMembershipPlansPage() {

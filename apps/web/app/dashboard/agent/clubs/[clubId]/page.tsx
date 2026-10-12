@@ -28,7 +28,7 @@ export default async function AgentClubDetailPage({
         href="/dashboard/agent/opportunities"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Oportunidades
+        ← Opportunities
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{club.name}</h1>
       <Badge variant={club.verified ? 'success' : 'warning'}>
@@ -54,7 +54,7 @@ export default async function AgentClubDetailPage({
 
       {club.opportunities.length > 0 ? (
         <div className="flex flex-col gap-2">
-          <h2 className="font-semibold">Oportunidades abiertas</h2>
+          <h2 className="font-semibold">Open opportunities</h2>
           {club.opportunities.map((opportunity) => (
             <Card key={opportunity.id}>
               <CardContent>

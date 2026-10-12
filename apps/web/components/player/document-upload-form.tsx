@@ -38,7 +38,7 @@ export function DocumentUploadForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Subiendo…' : 'Subir documento'}
+        {pending ? 'Uploading…' : 'Upload document'}
       </Button>
     </form>
   );

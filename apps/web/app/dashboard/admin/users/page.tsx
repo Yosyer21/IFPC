@@ -40,7 +40,7 @@ export default async function AdminUsersPage({
       {users.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay usuarios con este filtro.</p>
+            <p className="text-sm text-muted-foreground">No users with this filter.</p>
           </CardContent>
         </Card>
       ) : (
@@ -71,7 +71,7 @@ export default async function AdminUsersPage({
                       type="submit"
                       className="ml-2 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
                     >
-                      Actualizar
+                      Update
                     </button>
                   </form>
                   {user.id !== session.user.id ? (
@@ -81,7 +81,7 @@ export default async function AdminUsersPage({
                         type="submit"
                         className="rounded-md border border-destructive/40 px-3 py-1.5 text-sm text-destructive hover:bg-destructive/10"
                       >
-                        Eliminar
+                        Delete
                       </button>
                     </form>
                   ) : null}

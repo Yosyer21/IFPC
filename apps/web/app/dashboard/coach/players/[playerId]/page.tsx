@@ -9,7 +9,7 @@ import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
 import { trackProfileView } from '@/lib/profile-views';
 
-export const metadata: Metadata = { title: 'Jugador' };
+export const metadata: Metadata = { title: 'Player' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -44,7 +44,7 @@ export default async function CoachPlayerDetailPage({
   });
   if (!player) notFound();
 
-  // Interés de terceros: visita registrada para las métricas del jugador.
+  // Interés de terceros: view registrada para las métricas del player.
   await trackProfileView({ playerId: player.id, ownerUserId: player.userId });
 
   const age = player.dateOfBirth
@@ -78,8 +78,8 @@ export default async function CoachPlayerDetailPage({
 
   const rows: [string, string][] = [
     ['Position', positionLabel],
-    ['Edad', age !== null ? `${age} years old` : '—'],
-    ['Nacionalidad', player.nationality ?? '—'],
+    ['Age', age !== null ? `${age} years old` : '—'],
+    ['Nationality', player.nationality ?? '—'],
     ['Club actual', player.clubName ?? '—'],
     ['Estado', player.status],
     ['Goals', String(player._count.goals)],
@@ -95,7 +95,7 @@ export default async function CoachPlayerDetailPage({
         ← My players
       </Link>
 
-      {/* Hero del jugador */}
+      {/* Hero del player */}
       <section className="animate-fade-up mb-6 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-card via-card to-primary/5 p-6">
         <div className="flex flex-wrap items-center gap-5">
           <PlayerAvatar firstName={player.firstName} lastName={player.lastName} size="lg" />
@@ -120,13 +120,13 @@ export default async function CoachPlayerDetailPage({
               href={`/dashboard/coach/players/${player.id}/development`}
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Ver objetivos y crear
+              Ver goals y crear
             </Link>
             <Link
               href={`/dashboard/coach/players/${player.id}/evaluations`}
               className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-muted"
             >
-              Ver evaluaciones y registrar
+              Ver evaluations y registrar
             </Link>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default async function CoachPlayerDetailPage({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '120ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Nivel del jugador</h2>
+            <h2 className="mb-4 font-semibold">Player level</h2>
             {radarValues.length >= 3 ? (
               <div className="animate-scale-in mx-auto max-w-sm">
                 <RadarChart categories={radarCategories} values={radarValues} />
@@ -166,7 +166,7 @@ export default async function CoachPlayerDetailPage({
                 <DonutChart
                   value={overall * 10}
                   label={`${overall}`}
-                  sublabel={`sobre 10 · ${player.evaluations.length} evaluaciones`}
+                  sublabel={`out of 10 · ${player.evaluations.length} evaluations`}
                 />
               ) : (
                 <p className="py-8 text-sm text-muted-foreground">No assessments yet.</p>

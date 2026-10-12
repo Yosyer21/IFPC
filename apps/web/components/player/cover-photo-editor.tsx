@@ -33,14 +33,14 @@ export function CoverPhotoEditor({ hasBanner, redirectTo }: CoverPhotoEditorProp
           onChange={(event) => event.currentTarget.form?.requestSubmit()}
         />
         <label htmlFor={inputId} className={`cursor-pointer ${chip}`}>
-          {pending ? 'Subiendo…' : 'Cambiar portada'}
+          {pending ? 'Uploading…' : 'Change cover'}
         </label>
       </form>
       {hasBanner ? (
         <form action={removeProfileBannerAction}>
           <input type="hidden" name="redirectTo" value={redirectTo ?? ''} />
           <button type="submit" className={chip}>
-            Quitar portada
+            Remove cover
           </button>
         </form>
       ) : null}

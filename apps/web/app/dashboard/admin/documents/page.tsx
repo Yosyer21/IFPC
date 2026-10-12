@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
 import { IconFile, IconShield, IconUser } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Documentos' };
+export const metadata: Metadata = { title: 'Documents' };
 
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
@@ -32,14 +32,14 @@ export default async function AdminDocumentsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Documentos"
+        title="Documents"
         subtitle="Documents uploaded by players (passports, contracts, medical…)"
         icon="file"
       />
 
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <StatCard href="/dashboard/admin/documents" icon={IconFile} label="Documentos" value={documents.length} />
-        <StatCard href="/dashboard/admin/documents" icon={IconUser} label="Jugadores" value={players} />
+        <StatCard href="/dashboard/admin/documents" icon={IconFile} label="Documents" value={documents.length} />
+        <StatCard href="/dashboard/admin/documents" icon={IconUser} label="Players" value={players} />
         <StatCard href="/dashboard/admin/documents" icon={IconShield} label="Contratos" value={contracts} />
       </div>
 

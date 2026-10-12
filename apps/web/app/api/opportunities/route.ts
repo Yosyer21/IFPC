@@ -12,9 +12,9 @@ import {
 
 /**
  * GET /api/opportunities
- * - Club: sus propias oportunidades.
- * - Universidad: las suyas.
- * - Otros roles (incluido admin): oportunidades abiertas.
+ * - Club: sus propias opportunities.
+ * - University: las suyas.
+ * - Otros roles (incluido admin): opportunities open.
  */
 export async function GET() {
   const session = await requireUser();
@@ -55,7 +55,7 @@ export async function GET() {
   return NextResponse.json({ ok: true, opportunities });
 }
 
-/** POST /api/opportunities — publica una oportunidad (club, universidad o admin). */
+/** POST /api/opportunities — publica una oportunidad (club, university o admin). */
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
   } else {
     return forbidden();
   }
-  if (!clubId && !universityId) return forbidden('Sin entidad propietaria');
+  if (!clubId && !universityId) return forbidden('No owning entity');
 
   const opportunity = await prisma.opportunity.create({
     data: {

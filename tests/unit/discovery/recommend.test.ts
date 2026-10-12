@@ -37,7 +37,7 @@ import {
   type ScorablePlayer,
 } from '@/lib/discovery-recommend';
 
-/** Fecha de nacimiento con 18 años cumplidos en el año en curso (estable). */
+/** Date of birth con 18 years cumplidos en el year en curso (estable). */
 function age18(): Date {
   return new Date(new Date().getFullYear() - 18, 0, 1);
 }
@@ -80,7 +80,7 @@ describe('relevanceForPlayer', () => {
   });
 
   it('la oportunidad que encaja puntúa por encima de la que no', () => {
-    // Posición coincidente y resto neutro → 100; posición distinta → 75.
+    // Position coincidente y resto neutro → 100; position distinta → 75.
     expect(relevanceForPlayer(opportunity('DEL'), player)).toBe(100);
     expect(relevanceForPlayer(opportunity('POR'), player)).toBe(75);
   });
@@ -94,12 +94,12 @@ describe('relevanceForPlayer', () => {
 });
 
 describe('relevanceForOpportunities', () => {
-  it('sin autor jugador o sin oportunidades no hay relevancia', () => {
+  it('sin autor player o sin opportunities no hay relevancia', () => {
     expect(relevanceForOpportunities(null, [opportunity('DEL')])).toBeNull();
     expect(relevanceForOpportunities(player, [])).toBeNull();
   });
 
-  it('se queda con el mejor encaje de todas las oportunidades', () => {
+  it('se queda con el mejor encaje de todas las opportunities', () => {
     expect(relevanceForOpportunities(player, [opportunity('POR'), opportunity('DEL')])).toBe(100);
     expect(relevanceForOpportunities(player, [opportunity('POR')])).toBe(75);
   });
@@ -173,13 +173,13 @@ describe('listForYouFeed', () => {
 
   const matchedOpportunity = {
     id: 'opp-1',
-    title: 'Buscamos delantero',
+    title: 'Buscamos striker',
     position: 'DEL',
     ageMin: null,
     ageMax: null,
   };
 
-  it('para un jugador sube las publicaciones cuya oportunidad encaja', async () => {
+  it('para un player sube las posts cuya oportunidad encaja', async () => {
     mocks.playerFindUnique.mockResolvedValue(player);
     mocks.postFindMany.mockResolvedValue([
       row('sin-oportunidad'),
@@ -193,20 +193,20 @@ describe('listForYouFeed', () => {
     expect(posts[1]?.relevance).toBeNull();
   });
 
-  it('para un club sube las publicaciones de jugadores que encajan con sus oportunidades', async () => {
+  it('para un club sube las posts de players que encajan con sus opportunities', async () => {
     mocks.clubFindUnique.mockResolvedValue({ id: 'club-1' });
     mocks.opportunityFindMany.mockResolvedValue([opportunity('DEL')]);
     mocks.playerFindMany.mockResolvedValue([{ userId: 'author-1', ...player }]);
     mocks.postFindMany.mockResolvedValue([
       row('de-club', { author: { id: 'author-2', name: 'Otro club', role: 'CLUB', image: null } }),
-      row('de-jugador', {
-        author: { id: 'author-1', name: 'Jugador Demo', role: 'PLAYER', image: null },
+      row('de-player', {
+        author: { id: 'author-1', name: 'Demo Player', role: 'PLAYER', image: null },
       }),
     ]);
 
     const posts = await listForYouFeed({ viewerId: 'viewer-club', viewerRole: 'CLUB' });
 
-    expect(posts.map((post) => post.id)).toEqual(['de-jugador', 'de-club']);
+    expect(posts.map((post) => post.id)).toEqual(['de-player', 'de-club']);
     expect(posts[0]?.relevance).toBe(100);
     expect(posts[1]?.relevance).toBeNull();
   });
@@ -250,7 +250,7 @@ describe('listForYouFeed', () => {
     expect(posts.map((post) => post.id)).toEqual(['p2', 'p1']);
   });
 
-  it('quien tiene «ver menos» queda fuera de Para ti', async () => {
+  it('quien tiene «ver menos» queda fuera de For you', async () => {
     mocks.authorPreferenceFindMany.mockResolvedValue([{ authorId: 'autor-menos', kind: 'LESS' }]);
 
     await listForYouFeed({ viewerId: 'viewer-1', viewerRole: 'PARENT' });
@@ -258,7 +258,7 @@ describe('listForYouFeed', () => {
     expect(mocks.postFindMany.mock.calls[0][0].where.authorId).toEqual({ notIn: ['autor-menos'] });
   });
 
-  it('un club sin oportunidades abiertas no puntúa nada', async () => {
+  it('un club sin opportunities open no puntúa nada', async () => {
     mocks.clubFindUnique.mockResolvedValue({ id: 'club-1' });
     mocks.opportunityFindMany.mockResolvedValue([]);
     mocks.postFindMany.mockResolvedValue([row('p1')]);

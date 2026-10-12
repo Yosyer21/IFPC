@@ -42,7 +42,7 @@ export default async function PlayerPathwayPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             {pathway.level ? (
-              <p className="text-sm text-muted-foreground">Nivel: {pathway.level}</p>
+              <p className="text-sm text-muted-foreground">Level: {pathway.level}</p>
             ) : null}
             {pathway.description ? (
               <p className="text-sm text-muted-foreground">{pathway.description}</p>

@@ -254,7 +254,7 @@ export async function completeOnboardingAction(
           city: str('city'),
           description: str('description'),
         });
-        if (!parsed.success) return { error: 'Revisa los datos de la universidad.' };
+        if (!parsed.success) return { error: 'Revisa los datos de la university.' };
         await prisma.university.update({ where: { userId }, data: parsed.data });
         break;
       }
@@ -268,7 +268,7 @@ export async function completeOnboardingAction(
           website: str('website'),
           description: str('description'),
         });
-        if (!parsed.success) return { error: 'Revisa los datos de la escuela.' };
+        if (!parsed.success) return { error: 'Revisa los datos de la school.' };
         const { type, ...schoolData } = parsed.data;
         await prisma.school.update({
           where: { userId },

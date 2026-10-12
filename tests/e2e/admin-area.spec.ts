@@ -24,9 +24,9 @@ test('Admin: control center and management pages', async ({ page }) => {
   // 2. Management pages
   for (const [url, heading] of [
     ['/dashboard/admin/users', 'Users'],
-    ['/dashboard/admin/players', 'Jugadores'],
+    ['/dashboard/admin/players', 'Players'],
     ['/dashboard/admin/clubs', 'Clubes'],
-    ['/dashboard/admin/opportunities', 'Oportunidades'],
+    ['/dashboard/admin/opportunities', 'Opportunities'],
     ['/dashboard/admin/memberships', 'Memberships'],
     ['/dashboard/admin/recruitment', 'Reclutamiento'],
   ] as const) {

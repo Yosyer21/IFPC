@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser } from '@/lib/api/respond';
 
-/** GET /api/notifications — notificaciones del usuario autenticado. */
+/** GET /api/notifications — notifications del usuario autenticado. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

@@ -38,16 +38,16 @@ export function PlayerRow({ player }: { player: PlayerRowData }) {
               defaultValue={player.status}
               className="h-8 rounded-md border border-border bg-background px-2 text-sm"
             >
-              <option value="PENDING_VERIFICATION">Pendiente</option>
-              <option value="ACTIVE">Activo</option>
-              <option value="AVAILABLE">Disponible</option>
+              <option value="PENDING_VERIFICATION">Pending</option>
+              <option value="ACTIVE">Active</option>
+              <option value="AVAILABLE">Available</option>
               <option value="INACTIVE">Inactivo</option>
             </select>
             <button
               type="submit"
               className="ml-2 rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
             >
-              Actualizar
+              Update
             </button>
           </form>
           <Link

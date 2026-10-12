@@ -10,16 +10,16 @@ export const POST_TITLE_MAX = 120;
 export const POST_COMMENT_MAX = 500;
 export const POST_TAGS_MAX = 5;
 export const POST_TAG_MAX = 24;
-/** Motivo de una denuncia. */
+/** Motivo de una report. */
 export const POST_REPORT_MAX = 300;
 
-/** Etiquetas: `#sub17`, `sub17` → siempre en minúsculas y sin `#` ni espacios. */
+/** Tags: `#sub17`, `sub17` → siempre en minúsculas y sin `#` ni espacios. */
 const tagSchema = z
   .string()
   .trim()
   .transform((value) => value.replace(/^#+/, '').toLowerCase())
-  .refine((value) => /^[a-z0-9][a-z0-9_-]*$/.test(value), 'Etiqueta no válida')
-  .refine((value) => value.length <= POST_TAG_MAX, `Máximo ${POST_TAG_MAX} caracteres`);
+  .refine((value) => /^[a-z0-9][a-z0-9_-]*$/.test(value), 'Invalid tag')
+  .refine((value) => value.length <= POST_TAG_MAX, `Maximum ${POST_TAG_MAX} characters`);
 
 export const postBaseSchema = z.object({
   // Mismo enum que `PostType` (el precedente en `opportunitySchema` duplica los literales).
@@ -28,14 +28,14 @@ export const postBaseSchema = z.object({
   body: z.string().trim().max(POST_BODY_MAX).optional().nullable(),
   mediaUrl: z.string().trim().max(500).optional().nullable(),
   mediaKind: z.enum(['image', 'video', 'embed']).optional().nullable(),
-  linkUrl: z.string().trim().url('URL no válida').max(500).optional().nullable(),
+  linkUrl: z.string().trim().url('Invalid URL').max(500).optional().nullable(),
   opportunityId: z.string().trim().max(40).optional().nullable(),
-  tags: z.array(tagSchema).max(POST_TAGS_MAX, `Máximo ${POST_TAGS_MAX} etiquetas`).optional(),
+  tags: z.array(tagSchema).max(POST_TAGS_MAX, `Maximum ${POST_TAGS_MAX} tags`).optional(),
   /** Quién puede comentar (mismo enum que `CommentsPolicy`). */
   commentsPolicy: z.enum(['EVERYONE', 'FOLLOWERS', 'NOBODY']).optional(),
   /** Texto alternativo del medio (accesibilidad). */
   mediaAlt: z.string().trim().max(200).optional().nullable(),
-  /** Fecha de publicación programada (ISO). */
+  /** Fecha de post programada (ISO). */
   publishAt: z.string().optional().nullable(),
   /** Opciones de encuesta (2-4). */
   pollOptions: z.array(z.string().trim().min(1).max(80)).max(4).optional(),
@@ -43,16 +43,16 @@ export const postBaseSchema = z.object({
 
 export const postSchema = postBaseSchema.refine(
   (data) => Boolean(data.body || data.title || data.mediaUrl),
-  { message: 'La publicación necesita texto o contenido multimedia', path: ['body'] }
+  { message: 'The post needs text or media', path: ['body'] }
 );
 
 export type PostInput = z.infer<typeof postBaseSchema>;
 
-/** Edición del texto de una publicación (el medio no se toca aquí). */
+/** Edición del texto de una post (el medio no se toca aquí). */
 export const postEditSchema = postBaseSchema
   .pick({ title: true, body: true, tags: true })
   .refine((data) => Boolean(data.body || data.title), {
-    message: 'La publicación necesita texto',
+    message: 'The post needs text',
     path: ['body'],
   });
 
@@ -66,7 +66,7 @@ export const postCommentSchema = z.object({
 
 export type PostCommentInput = z.infer<typeof postCommentSchema>;
 
-/** Edición del texto de un comentario propio. */
+/** Edición del texto de un comment propio. */
 export const postCommentEditSchema = z.object({
   body: z.string().trim().min(1).max(POST_COMMENT_MAX),
 });

@@ -56,7 +56,7 @@ export default async function AdminClubsPendingPage() {
                   ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="warning">Pendiente</Badge>
+                  <Badge variant="warning">Pending</Badge>
                   <form action={verifyClubAction}>
                     <input type="hidden" name="clubId" value={club.id} />
                     <button

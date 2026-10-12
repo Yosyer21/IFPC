@@ -8,7 +8,7 @@ import { Button } from '@ifpc/ui';
 const fieldClass =
   'w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
 
-/** Edita el texto de un comentario propio. */
+/** Edita el texto de un comment propio. */
 export function EditCommentForm({ commentId, body }: { commentId: string; body: string }) {
   const [state, formAction, pending] = useActionState(updateCommentAction, {});
 
@@ -21,13 +21,13 @@ export function EditCommentForm({ commentId, body }: { commentId: string; body: 
         required
         maxLength={POST_COMMENT_MAX}
         defaultValue={body}
-        aria-label="Editar comentario"
+        aria-label="Editar comment"
         className={fieldClass}
       />
       {state.error ? <p className="text-xs text-destructive">{state.error}</p> : null}
       {state.success ? <p className="text-xs text-emerald-400">{state.success}</p> : null}
       <Button type="submit" variant="outline" disabled={pending} className="self-start text-xs">
-        {pending ? 'Guardando…' : 'Guardar'}
+        {pending ? 'Guardando…' : 'Save'}
       </Button>
     </form>
   );

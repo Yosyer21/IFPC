@@ -4,7 +4,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Ajustes' };
+export const metadata: Metadata = { title: 'Settings' };
 
 export default async function ParentSettingsPage() {
   const session = await auth();
@@ -16,7 +16,7 @@ export default async function ParentSettingsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Ajustes"
+        title="Settings"
         subtitle="Your family account information"
         icon="settings"
       />
@@ -25,7 +25,7 @@ export default async function ParentSettingsPage() {
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="rounded-md border border-border p-3">
-              <dt className="text-xs text-muted-foreground">Nombre</dt>
+              <dt className="text-xs text-muted-foreground">Name</dt>
               <dd className="mt-1 font-medium">{user.name}</dd>
             </div>
             <div className="rounded-md border border-border p-3">

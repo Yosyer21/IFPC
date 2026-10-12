@@ -37,56 +37,56 @@ export function ProfileEditForm({ player }: { player: Player }) {
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <div className="grid grid-cols-2 gap-3">
-        <Input name="firstName" label="Nombre" defaultValue={player.firstName} required />
+        <Input name="firstName" label="Name" defaultValue={player.firstName} required />
         <Input name="lastName" label="Apellidos" defaultValue={player.lastName} required />
       </div>
       <Input
         name="dateOfBirth"
         type="date"
-        label="Fecha de nacimiento"
+        label="Date of birth"
         defaultValue={player.dateOfBirth ? player.dateOfBirth.toISOString().split('T')[0] : ''}
       />
       <Select
         name="nationality"
-        label="Nacionalidad"
+        label="Nationality"
         options={nationalityOptions}
         defaultValue={player.nationality ?? ''}
-        placeholder="Selecciona…"
+        placeholder="Select…"
       />
       <Select
         name="position"
         label="Position"
         options={positionOptions}
         defaultValue={player.position ?? ''}
-        placeholder="Selecciona…"
+        placeholder="Select…"
       />
       <Select
         name="foot"
         label="Preferred foot"
         options={footOptions}
         defaultValue={player.foot ?? ''}
-        placeholder="Selecciona…"
+        placeholder="Select…"
       />
       <div className="grid grid-cols-2 gap-3">
         <Input
           name="heightCm"
           type="number"
-          label="Altura (cm)"
+          label="Height (cm)"
           defaultValue={player.heightCm ?? ''}
         />
         <Input
           name="weightKg"
           type="number"
-          label="Peso (kg)"
+          label="Weight (kg)"
           defaultValue={player.weightKg ?? ''}
         />
       </div>
       <Select
         name="competitionLevel"
-        label="Nivel competitivo"
+        label="Level competitivo"
         options={competitionOptions}
         defaultValue={player.competitionLevel ?? ''}
-        placeholder="Selecciona…"
+        placeholder="Select…"
       />
       <Input name="clubName" label="Club actual" defaultValue={player.clubName ?? ''} />
       <div className="flex flex-col gap-1.5">
@@ -101,25 +101,25 @@ export function ProfileEditForm({ player }: { player: Player }) {
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring"
         />
       </div>
-      {/* Personalización del perfil: titular, ubicación, señales y acento. */}
+      {/* Profile customisation: headline, ubicación, señales y acento. */}
       <fieldset
         id="personalizacion"
         className="flex flex-col gap-4 rounded-xl border border-border/60 p-4"
       >
-        <legend className="px-1 text-sm font-semibold">Personalización del perfil</legend>
+        <legend className="px-1 text-sm font-semibold">Profile customisation</legend>
 
         <Input
           name="headline"
-          label="Titular"
+          label="Headline"
           maxLength={PROFILE_HEADLINE_MAX}
           placeholder="Ej.: Extremo zurdo, rápido al espacio"
           defaultValue={player.headline ?? ''}
         />
         <Input
           name="location"
-          label="Ubicación"
+          label="Location"
           maxLength={PROFILE_LOCATION_MAX}
-          placeholder="Ej.: Valencia, España"
+          placeholder="Ej.: Valencia, Spain"
           defaultValue={player.location ?? ''}
         />
 
@@ -144,7 +144,7 @@ export function ProfileEditForm({ player }: { player: Player }) {
         </fieldset>
 
         <fieldset className="flex flex-col gap-2">
-          <legend className="text-sm font-medium">Color del perfil</legend>
+          <legend className="text-sm font-medium">Profile colour</legend>
           <div className="flex flex-wrap gap-2">
             {PROFILE_ACCENTS.map((accent) => {
               const { label, hex } = PROFILE_ACCENT_PALETTE[accent];
@@ -168,13 +168,13 @@ export function ProfileEditForm({ player }: { player: Player }) {
             })}
           </div>
           <p className="text-xs text-muted-foreground">
-            Se aplica al anillo del avatar, al titular y a los chips de tu perfil.
+            It applies to the avatar ring, the headline and your profile chips.
           </p>
         </fieldset>
       </fieldset>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Guardar cambios'}
+        {pending ? 'Guardando…' : 'Save changes'}
       </Button>
     </form>
   );

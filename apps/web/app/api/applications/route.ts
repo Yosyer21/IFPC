@@ -10,8 +10,8 @@ import {
 
 /**
  * GET /api/applications
- * - Jugador: sus solicitudes.
- * - Club: solicitudes recibidas en sus oportunidades.
+ * - Player: sus requests.
+ * - Club: requests recibidas en sus opportunities.
  * - Admin: todas.
  */
 export async function GET() {
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
   if (!opportunityId) return badRequest('opportunityId es obligatorio');
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
-  if (!player) return forbidden('Profile de jugador no encontrado');
+  if (!player) return forbidden('Profile de player no encontrado');
 
   const application = await prisma.application.upsert({
     where: { playerId_opportunityId: { playerId: player.id, opportunityId } },

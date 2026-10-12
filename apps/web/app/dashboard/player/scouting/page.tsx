@@ -35,12 +35,12 @@ export default async function PlayerScoutingPage() {
 
   const rows: [string, string][] = [
     ['Position', positionLabel],
-    ['Edad', player.dateOfBirth ? `${Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years old` : '—'],
+    ['Age', player.dateOfBirth ? `${Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years old` : '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Preferred foot', footLabel],
-    ['Nacionalidad', player.nationality ?? '—'],
-    ['Nivel competitivo', competitionLabel],
+    ['Nationality', player.nationality ?? '—'],
+    ['Level competitivo', competitionLabel],
     ['Club actual', player.clubName ?? '—'],
     ['Available videos', String(videoCount)],
   ];

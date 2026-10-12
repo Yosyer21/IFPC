@@ -1,10 +1,10 @@
 import { prisma } from '@ifpc/database';
 
 /**
- * Privacidad social del feed: **bloquear** y **silenciar**.
+ * Privacy social del feed: **bloquear** y **silenciar**.
  *
  * - `BLOCK`: mutuo. Ninguno de los dos ve el contenido del otro ni puede
- *   interactuar (comentar o seguir). Bloquear corta los seguimientos en ambos
+ *   interactuar (comentar o seguir). Block corta los follows en ambos
  *   sentidos.
  * - `MUTE`: unilateral. Solo dejo de ver su contenido; la otra persona no lo sabe.
  *
@@ -102,7 +102,7 @@ export async function togglePrivacyRule(input: {
   }
 
   if (input.kind === 'BLOCK') {
-    // Un bloqueo corta los seguimientos en los dos sentidos.
+    // Un bloqueo corta los follows en los dos sentidos.
     await prisma.follow.deleteMany({
       where: {
         OR: [

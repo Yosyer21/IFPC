@@ -20,7 +20,7 @@ export default async function ParentPaymentsPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Payments"
-        subtitle="Historial de pagos de tu cuenta familiar"
+        subtitle="Payment history of your family account"
         icon="star"
       />
 

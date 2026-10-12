@@ -7,7 +7,7 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 export const metadata: Metadata = { title: 'My goals' };
 
 const STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };

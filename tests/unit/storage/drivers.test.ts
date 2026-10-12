@@ -135,7 +135,7 @@ describe('s3Driver contra un S3 local', () => {
 
   it('sube con PUT firmado y devuelve la URL pública', async () => {
     const driver = s3Driver(settings());
-    const body = Buffer.from('contenido del vídeo');
+    const body = Buffer.from('video content');
 
     const { url } = await driver.save({ key: 'posts/video.mp4', body, contentType: 'video/mp4' });
 
@@ -144,7 +144,7 @@ describe('s3Driver contra un S3 local', () => {
     expect(request?.method).toBe('PUT');
     expect(request?.url).toBe('/ifpc/posts/video.mp4');
     expect(request?.headers['content-type']).toBe('video/mp4');
-    expect(request?.body.toString()).toBe('contenido del vídeo');
+    expect(request?.body.toString()).toBe('video content');
   });
 
   it('la firma coincide con un verificador independiente', () => {

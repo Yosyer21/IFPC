@@ -7,7 +7,7 @@ import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Oportunidad — Future Baller' };
+export const metadata: Metadata = { title: 'Opportunity — Future Baller' };
 
 export default async function PublicOpportunityDetailPage({
   params,
@@ -44,7 +44,7 @@ export default async function PublicOpportunityDetailPage({
           href="/opportunities"
           className="text-sm text-muted-foreground hover:text-emerald-400"
         >
-          ← Oportunidades
+          ← Opportunities
         </Link>
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
@@ -77,7 +77,7 @@ export default async function PublicOpportunityDetailPage({
             ) : null}
             {opportunity.ageMin || opportunity.ageMax ? (
               <Badge variant="outline">
-                Edad: {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'}
+                Age: {opportunity.ageMin ?? '?'}–{opportunity.ageMax ?? '?'}
               </Badge>
             ) : null}
             {opportunity.location ? (

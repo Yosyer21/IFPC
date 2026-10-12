@@ -12,7 +12,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
   'strength-conditioning': 'Strength and conditioning',
   psychology: 'Psychology',
-  'parent-education': 'Para familias',
+  'parent-education': 'For families',
 };
 
 export default async function PublicTrainingDetailPage({
@@ -30,7 +30,7 @@ export default async function PublicTrainingDetailPage({
       <Navbar />
       <main className="mx-auto w-full max-w-4xl px-4 py-16">
         <Link href="/training" className="text-sm text-muted-foreground hover:text-emerald-400">
-          ← Entrenamiento
+          ← Training
         </Link>
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
@@ -42,7 +42,7 @@ export default async function PublicTrainingDetailPage({
               <span className="text-sm text-muted-foreground">{content.durationMinutes} min</span>
             ) : null}
             {content.difficulty ? (
-              <span className="text-sm text-muted-foreground">Nivel {content.difficulty}/5</span>
+              <span className="text-sm text-muted-foreground">Level {content.difficulty}/5</span>
             ) : null}
           </div>
 
@@ -73,7 +73,7 @@ export default async function PublicTrainingDetailPage({
               href="/register"
               className="mt-4 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Crear cuenta de jugador
+              Crear cuenta de player
             </Link>
           </div>
         </div>

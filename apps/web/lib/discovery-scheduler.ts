@@ -1,7 +1,7 @@
 import { prisma } from '@ifpc/database';
 
 /**
- * Publicación programada de Discovery. Vive aparte de `lib/discovery` a propósito:
+ * Post programada de Discovery. Vive aparte de `lib/discovery` a propósito:
  * este módulo solo depende de la base de datos, así que un script o un cron
  * (`pnpm scripts:publish-scheduled`) puede importarlo sin arrastrar la sesión.
  */

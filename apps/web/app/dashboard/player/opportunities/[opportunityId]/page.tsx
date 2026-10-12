@@ -11,7 +11,7 @@ import { MatchBreakdown, MatchScoreBadge } from '@/components/player/match-score
 import { matchOpportunity } from '@/lib/matching';
 import { saveOpportunityAction, unsaveOpportunityAction } from '@/app/actions/player';
 
-export const metadata: Metadata = { title: 'Oportunidad' };
+export const metadata: Metadata = { title: 'Opportunity' };
 
 export default async function PlayerOpportunityDetailPage({
   params,
@@ -65,7 +65,7 @@ export default async function PlayerOpportunityDetailPage({
         href="/dashboard/player/opportunities"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Oportunidades
+        ← Opportunities
       </Link>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">{opportunity.title}</h1>
@@ -76,7 +76,7 @@ export default async function PlayerOpportunityDetailPage({
               type="submit"
               className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-muted"
             >
-              Quitar de guardadas
+              Remove from saved
             </button>
           </form>
         ) : (
@@ -86,7 +86,7 @@ export default async function PlayerOpportunityDetailPage({
               type="submit"
               className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-muted"
             >
-              Guardar oportunidad
+              Save opportunity
             </button>
           </form>
         )}
@@ -116,7 +116,7 @@ export default async function PlayerOpportunityDetailPage({
 
       <Card>
         <CardContent>
-          <h2 className="mb-4 font-semibold">Enviar solicitud</h2>
+          <h2 className="mb-4 font-semibold">Send request</h2>
           <ApplyForm
             opportunityId={opportunity.id}
             alreadyApplied={Boolean(existingApplication)}

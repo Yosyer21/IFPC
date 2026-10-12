@@ -18,7 +18,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };
@@ -80,8 +80,8 @@ export default async function ParentChildDetailPage({
 
   const rows: [string, string][] = [
     ['Position', positionLabel],
-    ['Edad', age !== null ? `${age} years old` : '—'],
-    ['Nacionalidad', player.nationality ?? '—'],
+    ['Age', age !== null ? `${age} years old` : '—'],
+    ['Nationality', player.nationality ?? '—'],
     ['Club actual', player.clubName ?? '—'],
     ['Estado', player.status],
     ['Videos', String(player._count.videos)],
@@ -121,7 +121,7 @@ export default async function ParentChildDetailPage({
               href="/dashboard/parent/opportunities"
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Ver oportunidades
+              See opportunities
             </Link>
             <Link
               href="/dashboard/parent/education"
@@ -137,7 +137,7 @@ export default async function ParentChildDetailPage({
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '120ms' }}>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Nivel de {player.firstName}</h2>
+            <h2 className="mb-4 font-semibold">Level de {player.firstName}</h2>
             {radarValues.length >= 3 ? (
               <div className="animate-scale-in mx-auto max-w-sm">
                 <RadarChart categories={radarCategories} values={radarValues} />
@@ -160,7 +160,7 @@ export default async function ParentChildDetailPage({
                 <DonutChart
                   value={overall * 10}
                   label={`${overall}`}
-                  sublabel={`sobre 10 · ${player.evaluations.length} evaluaciones`}
+                  sublabel={`out of 10 · ${player.evaluations.length} evaluations`}
                 />
               ) : (
                 <p className="py-8 text-sm text-muted-foreground">No assessments yet.</p>
@@ -182,7 +182,7 @@ export default async function ParentChildDetailPage({
           </Card>
         </div>
       </div>
-      {/* Evaluaciones y objetivos recientes */}
+      {/* Evaluaciones y goals recientes */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="animate-fade-up" style={{ animationDelay: '360ms' }}>
           <CardContent>
@@ -200,7 +200,7 @@ export default async function ParentChildDetailPage({
                         {CATEGORY_LABELS[evaluation.category] ?? evaluation.category}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {evaluation.evaluatedBy ?? 'Entrenador'} ·{' '}
+                        {evaluation.evaluatedBy ?? 'Coach'} ·{' '}
                         {evaluation.createdAt.toLocaleDateString('es')}
                       </div>
                     </div>

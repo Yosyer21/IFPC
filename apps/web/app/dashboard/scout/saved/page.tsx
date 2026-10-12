@@ -8,7 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Jugadores guardados' };
+export const metadata: Metadata = { title: 'Saved players' };
 
 export default async function ScoutSavedPage() {
   const session = await auth();
@@ -26,8 +26,8 @@ export default async function ScoutSavedPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Jugadores guardados"
-        subtitle="Tu radar de talento: jugadores que sigues de cerca"
+        title="Saved players"
+        subtitle="Tu radar de talento: players que sigues de cerca"
         icon="star"
       />
 
@@ -35,7 +35,7 @@ export default async function ScoutSavedPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No has guardado jugadores.{' '}
+              No has guardado players.{' '}
               <Link href="/dashboard/scout/players" className="text-primary hover:underline">
                 Explore players
               </Link>

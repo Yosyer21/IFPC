@@ -15,7 +15,7 @@ import { nameParts } from '@/lib/names';
 
 const BASE = '/discovery';
 
-/** Datos de jugador que personalizan el muro público. */
+/** Datos de player que personalizan el muro público. */
 const PLAYER_PROFILE_SELECT = {
   id: true,
   headline: true,
@@ -47,7 +47,7 @@ export async function generateMetadata({
     return { title: 'Perfil no encontrado — Future Baller' };
   }
 
-  const description = `Publicaciones de ${author.name} (${
+  const description = `Posts de ${author.name} (${
     ROLE_LABELS[author.role] ?? author.role
   }) en Discovery, el feed de la comunidad Future Baller.`;
 
@@ -59,7 +59,7 @@ export async function generateMetadata({
   };
 }
 
-/** Muro público de un autor: sus publicaciones, sin acciones sociales. */
+/** Muro público de un autor: sus posts, sin acciones sociales. */
 export default async function PublicAuthorPage({
   params,
 }: {
@@ -95,7 +95,7 @@ export default async function PublicAuthorPage({
       <Navbar />
       <main className="mx-auto w-full max-w-3xl px-4 py-24">
         <Link href={BASE} className="text-sm text-muted-foreground hover:text-foreground">
-          ← Volver a Discovery
+          ← Back to Discovery
         </Link>
 
         <div className="mt-4 mb-4">
@@ -113,8 +113,8 @@ export default async function PublicAuthorPage({
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="outline">{ROLE_LABELS[author.role] ?? author.role}</Badge>
                 <span className="text-xs text-muted-foreground">
-                  {posts.length} {posts.length === 1 ? 'publicación' : 'publicaciones'} ·{' '}
-                  {followStats.followers} {followStats.followers === 1 ? 'seguidor' : 'seguidores'}{' '}
+                  {posts.length} {posts.length === 1 ? 'post' : 'posts'} ·{' '}
+                  {followStats.followers} {followStats.followers === 1 ? 'follower' : 'followers'}{' '}
                   · {followStats.following} siguiendo
                 </span>
               </div>
@@ -124,7 +124,7 @@ export default async function PublicAuthorPage({
                 href="/login"
                 className="rounded-full border border-border bg-white/5 px-4 py-2 text-sm font-semibold transition-colors hover:bg-white/10"
               >
-                Entrar para seguir
+                Sign in to follow
               </Link>
             }
           />
@@ -135,7 +135,7 @@ export default async function PublicAuthorPage({
         {posts.length === 0 ? (
           <Card>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Todavía no ha publicado nada.</p>
+              <p className="text-sm text-muted-foreground">They have not posted anything yet.</p>
             </CardContent>
           </Card>
         ) : (

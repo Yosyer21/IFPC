@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { auth } from '@ifpc/auth';
 import { Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Preferencias de notificaciones' };
+export const metadata: Metadata = { title: 'Notification preferences' };
 
 export default async function PlayerNotificationSettingsPage() {
   const session = await auth();
@@ -15,22 +15,22 @@ export default async function PlayerNotificationSettingsPage() {
         href="/dashboard/player/settings"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Ajustes
+        ← Settings
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Notificaciones</h1>
+      <h1 className="mb-6 text-2xl font-bold">Notifications</h1>
 
       <Card>
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
           <p>You will receive notifications within the platform for events such as:</p>
           <ul className="list-inside list-disc">
-            <li>Respuesta de un club a tu solicitud</li>
+            <li>Respuesta de un club a tu request</li>
             <li>New opportunities that match your profile</li>
-            <li>Resultados de pruebas y evaluaciones</li>
-            <li>Mensajes de ojeadores y agentes</li>
+            <li>Resultados de pruebas y evaluations</li>
+            <li>Messages de scouts y agents</li>
           </ul>
           <p>
             Channel preferences (email/push) will be configured in upcoming phases. Notifications
-            actuales aparecen en <Link href="/dashboard/player/notifications" className="text-primary hover:underline">Notificaciones</Link>.
+            actuales aparecen en <Link href="/dashboard/player/notifications" className="text-primary hover:underline">Notifications</Link>.
           </p>
         </CardContent>
       </Card>

@@ -19,13 +19,13 @@ export function RespondInquiryForm({ inquiryId }: { inquiryId: string }) {
           name="response"
           rows={5}
           required
-          placeholder="Escribe tu respuesta…"
+          placeholder="Escribe tu reply…"
           className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring"
         />
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Enviando…' : 'Enviar respuesta'}
+        {pending ? 'Enviando…' : 'Send reply'}
       </Button>
     </form>
   );

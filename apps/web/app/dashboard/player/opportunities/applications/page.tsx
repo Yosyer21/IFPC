@@ -31,7 +31,7 @@ export default async function PlayerApplicationsPage() {
             <p className="text-sm text-muted-foreground">
               You haven't sent any applications yet.{' '}
               <Link href="/dashboard/player/opportunities" className="text-primary hover:underline">
-                Ver oportunidades
+                See opportunities
               </Link>
             </p>
           </CardContent>

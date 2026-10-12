@@ -49,11 +49,11 @@ beforeEach(() => {
 describe('updateProfilePhotoAction', () => {
   it('pide una imagen cuando no se envía archivo', async () => {
     const result = await updateProfilePhotoAction({}, form());
-    expect(result).toEqual({ error: 'Selecciona una imagen.' });
+    expect(result).toEqual({ error: 'Select an image.' });
     expect(mocks.writeFile).not.toHaveBeenCalled();
   });
 
-  it('rechaza tipos que no son JPG, PNG o WebP', async () => {
+  it('rechaza tipos que no son JPG, PNG or WebP', async () => {
     const result = await updateProfilePhotoAction(
       {},
       form({ file: photo('application/pdf', 1024, 'doc.pdf') })
@@ -137,7 +137,7 @@ describe('updateProfilePhotoAction', () => {
     expect(mocks.unlink).not.toHaveBeenCalled();
   });
 
-  it('falla con sesión inválida', async () => {
+  it('fails with an invalid session', async () => {
     mocks.auth.mockResolvedValue(null);
     const result = await updateProfilePhotoAction({}, form({ file: photo('image/png') }));
     expect(result).toEqual({ error: 'Invalid session.' });
@@ -168,7 +168,7 @@ describe('removeProfilePhotoAction', () => {
     expect(target).toBe('/dashboard');
   });
 
-  it('no hace nada sin sesión', async () => {
+  it('does nothing without a session', async () => {
     mocks.auth.mockResolvedValue(null);
     const target = await captureRedirect(() => removeProfilePhotoAction(form()));
     expect(target).toBeNull();

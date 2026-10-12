@@ -7,7 +7,7 @@ import { nameParts } from '@/lib/names';
 import { FollowButton } from './follow-button';
 
 /**
- * Perfiles sugeridos: los más seguidos que el espectador todavía no sigue (por
+ * Suggested profiles: los más seguidos que el espectador todavía no sigue (por
  * eso siempre se pintan como "Seguir").
  */
 export function SuggestedProfiles({ profiles }: { profiles: SuggestedProfile[] }) {
@@ -16,7 +16,7 @@ export function SuggestedProfiles({ profiles }: { profiles: SuggestedProfile[] }
   return (
     <Card className="mt-6">
       <CardContent className="flex flex-col gap-3">
-        <h2 className="text-sm font-semibold">Perfiles sugeridos</h2>
+        <h2 className="text-sm font-semibold">Suggested profiles</h2>
         <ul className="flex flex-col gap-3">
           {profiles.map((profile) => {
             const { firstName, lastName } = nameParts(profile.name);
@@ -43,7 +43,7 @@ export function SuggestedProfiles({ profiles }: { profiles: SuggestedProfile[] }
                   </Link>
                   <span className="text-xs text-muted-foreground">
                     {ROLE_LABELS[profile.role] ?? profile.role} · {profile.posts}{' '}
-                    {profile.posts === 1 ? 'publicación' : 'publicaciones'}
+                    {profile.posts === 1 ? 'post' : 'posts'}
                   </span>
                 </div>
                 <FollowButton userId={profile.id} isFollowing={false} compact />

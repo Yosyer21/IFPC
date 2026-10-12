@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
 import { IconBell, IconFile, IconUsers, IconVideo } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Sistema · Ajustes' };
+export const metadata: Metadata = { title: 'Sistema · Settings' };
 
 export default async function AdminSettingsSystemPage() {
   const session = await auth();
@@ -30,7 +30,7 @@ export default async function AdminSettingsSystemPage() {
     'Almacenamiento': process.env.S3_ENDPOINT ? 'S3/MinIO' : 'Local (public/uploads)',
     'Correo': process.env.RESEND_API_KEY ? 'Resend' : 'No configurado',
     'Payments': process.env.STRIPE_SECRET_KEY ? 'Stripe' : 'Simulados',
-    'Workers (BullMQ)': 'Disponibles en apps/worker',
+    'Workers (BullMQ)': 'Available en apps/worker',
   };
 
   const info: [string, string][] = Object.entries(platform);
@@ -45,9 +45,9 @@ export default async function AdminSettingsSystemPage() {
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard href="/dashboard/admin/users" icon={IconUsers} label="Users" value={users} />
-        <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Jugadores" value={players} />
+        <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Players" value={players} />
         <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubes" value={clubs} />
-        <StatCard href="/dashboard/admin/opportunities" icon={IconBell} label="Oportunidades" value={opportunities} />
+        <StatCard href="/dashboard/admin/opportunities" icon={IconBell} label="Opportunities" value={opportunities} />
         <StatCard href="/dashboard/admin/players/evaluations" icon={IconFile} label="Contenidos" value={contents} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconBell} label="Submissions" value={submissions} />
         <StatCard href="/dashboard/admin/memberships/payments" icon={IconBell} label="Payments" value={payments} />

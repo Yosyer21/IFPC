@@ -94,8 +94,8 @@ describe('createPostAction: galería y accesibilidad', () => {
       createPostAction(
         {},
         form({
-          body: 'Entreno de hoy',
-          mediaAlt: 'El equipo calentando',
+          body: 'Today’s session',
+          mediaAlt: 'The team warming up',
           files: [
             file('image/png', 1024, 'a.png'),
             file('image/jpeg', 1024, 'b.jpg'),
@@ -111,17 +111,17 @@ describe('createPostAction: galería y accesibilidad', () => {
     expect(data.mediaUrl).toBe(data.mediaUrls[0]);
     expect(data.mediaKind).toBe('image');
     expect(data.type).toBe('PHOTO');
-    expect(data.mediaAlt).toBe('El equipo calentando');
+    expect(data.mediaAlt).toBe('The team warming up');
     expect(mocks.writeFile).toHaveBeenCalledTimes(3);
   });
 
-  it('la galería solo admite imágenes', async () => {
+  it('la galería only accepts images', async () => {
     const result = await createPostAction(
       {},
       form({ body: 'x', files: [file('video/mp4', 2048, 'v.mp4')] })
     );
 
-    expect(result.error).toContain('solo admite imágenes');
+    expect(result.error).toContain('only accepts images');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
@@ -146,16 +146,16 @@ describe('createPostAction: encuesta', () => {
     await captureRedirect(() =>
       createPostAction(
         {},
-        form({ body: '¿Jugamos?', pollOption: [' Sí ', 'Sí', 'No', '  '] })
+        form({ body: '¿Jugamos?', pollOption: [' Yes ', 'Yes', 'No', '  '] })
       )
     );
 
-    expect(mocks.postCreate.mock.calls[0][0].data.pollOptions).toEqual(['Sí', 'No']);
+    expect(mocks.postCreate.mock.calls[0][0].data.pollOptions).toEqual(['Yes', 'No']);
   });
 
   it('con una sola opción no hay encuesta', async () => {
     await captureRedirect(() =>
-      createPostAction({}, form({ body: 'Sin encuesta', pollOption: ['Solo una'] }))
+      createPostAction({}, form({ body: 'No poll', pollOption: ['Solo una'] }))
     );
 
     expect(mocks.postCreate.mock.calls[0][0].data.pollOptions).toEqual([]);
@@ -176,7 +176,7 @@ describe('createPostAction: encuesta', () => {
 describe('createPostAction: borradores y programación', () => {
   it('guarda un borrador sin avisar a nadie', async () => {
     const target = await captureRedirect(() =>
-      createPostAction({}, form({ body: 'Mañana lo cuento', intent: 'draft' }))
+      createPostAction({}, form({ body: 'I will tell it tomorrow', intent: 'draft' }))
     );
 
     expect(mocks.postCreate.mock.calls[0][0].data.status).toBe('DRAFT');
@@ -205,13 +205,13 @@ describe('createPostAction: borradores y programación', () => {
   });
 
   it('rechaza una fecha de programación inválida', async () => {
-    const result = await createPostAction({}, form({ body: 'x', publishAt: 'mañana' }));
+    const result = await createPostAction({}, form({ body: 'x', publishAt: 'tomorrow' }));
 
-    expect(result.error).toContain('no es válida');
+    expect(result.error).toContain('is not valid');
     expect(mocks.postCreate).not.toHaveBeenCalled();
   });
 
-  it('un borrador con lenguaje prohibido sigue siendo borrador', async () => {
+  it('un borrador con banned language sigue siendo borrador', async () => {
     await captureRedirect(() =>
       createPostAction({}, form({ body: 'qué idiota soy', intent: 'draft' }))
     );
@@ -220,7 +220,7 @@ describe('createPostAction: borradores y programación', () => {
     expect(mocks.moderationCreate).not.toHaveBeenCalled();
   });
 
-  it('una publicación con lenguaje prohibido queda oculta y con registro', async () => {
+  it('una post con banned language queda oculta y con registro', async () => {
     await captureRedirect(() =>
       createPostAction({}, form({ body: 'qué idiota soy' }))
     );
@@ -237,7 +237,7 @@ describe('createPostAction: menciones', () => {
     mocks.userFindMany.mockResolvedValue([{ id: 'club-2', name: 'Demo Club' }]);
 
     await captureRedirect(() =>
-      createPostAction({}, form({ body: 'Gracias @Demo Club por la convocatoria' }))
+      createPostAction({}, form({ body: 'Thanks @Demo Club for the call-up' }))
     );
 
     expect(mocks.userFindMany).toHaveBeenCalledWith(
@@ -258,13 +258,13 @@ describe('createPostAction: menciones', () => {
   });
 
   it('sin menciones no busca perfiles ni avisa', async () => {
-    await captureRedirect(() => createPostAction({}, form({ body: 'Sin menciones' })));
+    await captureRedirect(() => createPostAction({}, form({ body: 'No mentions' })));
 
     expect(mocks.userFindMany).not.toHaveBeenCalled();
     expect(mocks.notifyGrouped).not.toHaveBeenCalled();
   });
 
-  it('un aviso fallido no rompe la publicación', async () => {
+  it('un aviso fallido no rompe la post', async () => {
     mocks.userFindMany.mockResolvedValue([{ id: 'club-2', name: 'Demo Club' }]);
     mocks.notifyGrouped.mockRejectedValue(new Error('boom'));
 
@@ -322,7 +322,7 @@ describe('votePollAction', () => {
     expect(mocks.pollUpsert).not.toHaveBeenCalled();
   });
 
-  it('ignora publicaciones que no existen o no tienen encuesta', async () => {
+  it('ignores posts that do not exist o no tienen encuesta', async () => {
     await votePollAction(form({ postId: 'post-1', optionIndex: '0' }));
     expect(mocks.pollUpsert).not.toHaveBeenCalled();
 
@@ -332,7 +332,7 @@ describe('votePollAction', () => {
   });
 
   it('ignora una opción fuera de rango', async () => {
-    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Sí', 'No'] });
+    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Yes', 'No'] });
 
     await votePollAction(form({ postId: 'post-1', optionIndex: '7' }));
 
@@ -340,7 +340,7 @@ describe('votePollAction', () => {
   });
 
   it('registra el voto y revalida el feed y el detalle', async () => {
-    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Sí', 'No'] });
+    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Yes', 'No'] });
 
     await votePollAction(form({ postId: 'post-1', optionIndex: '1' }));
 
@@ -356,7 +356,7 @@ describe('votePollAction', () => {
   });
 
   it('votar de nuevo cambia la opción elegida', async () => {
-    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Sí', 'No'] });
+    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Yes', 'No'] });
 
     await votePollAction(form({ postId: 'post-1', optionIndex: '0', from: '/dashboard/discovery' }));
 
@@ -364,7 +364,7 @@ describe('votePollAction', () => {
   });
 
   it('un fallo al votar no rompe nada', async () => {
-    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Sí', 'No'] });
+    mocks.postFindFirst.mockResolvedValue({ id: 'post-1', pollOptions: ['Yes', 'No'] });
     mocks.pollUpsert.mockRejectedValue(new Error('boom'));
 
     await expect(
@@ -405,7 +405,7 @@ describe('publishDraftAction', () => {
     expect(target).toBe('/dashboard/discovery/post-1');
   });
 
-  it('si el texto tiene lenguaje prohibido se publica oculto y con registro', async () => {
+  it('si el texto tiene banned language se publica oculto y con registro', async () => {
     mocks.postFindFirst.mockResolvedValue({ id: 'post-1', title: null, body: 'eres un idiota' });
 
     await captureRedirect(() => publishDraftAction(form({ postId: 'post-1' })));

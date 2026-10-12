@@ -7,7 +7,7 @@ import { getAuthorAnalytics } from '@/lib/discovery-analytics';
 
 export const metadata: Metadata = { title: 'Rendimiento en Discovery' };
 
-/** Una cifra del panel, con su etiqueta. */
+/** Una cifra del panel, con su tag. */
 function Metric({ label, value, hint }: { label: string; value: number; hint?: string }) {
   return (
     <Card>
@@ -20,7 +20,7 @@ function Metric({ label, value, hint }: { label: string; value: number; hint?: s
   );
 }
 
-/** Rendimiento de las publicaciones del perfil: alcance, engagement y etiquetas. */
+/** Rendimiento de las posts del perfil: alcance, engagement y tags. */
 export default async function DiscoveryAnalyticsPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
@@ -33,7 +33,7 @@ export default async function DiscoveryAnalyticsPage() {
         title="Rendimiento en Discovery"
         subtitle={
           analytics.posts > 0
-            ? `Tus ${analytics.posts} publicaciones en ${analytics.reach + analytics.anonymousOpenings} aperturas`
+            ? `Your ${analytics.posts} posts across ${analytics.reach + analytics.anonymousOpenings} openings`
             : 'Todavía no has publicado nada'
         }
         icon="trending"
@@ -42,23 +42,23 @@ export default async function DiscoveryAnalyticsPage() {
           href="/dashboard/discovery"
           className="text-sm text-muted-foreground hover:underline"
         >
-          Volver al feed →
+          Back to the feed →
         </Link>
       </PageHeader>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <Metric label="Publicaciones" value={analytics.posts} />
+        <Metric label="Posts" value={analytics.posts} />
         <Metric
           label="Personas alcanzadas"
           value={analytics.reach}
-          hint="Perfiles identificables que abrieron tus publicaciones"
+          hint="Identifiable profiles that opened your posts"
         />
         <Metric
-          label="Aperturas anónimas"
+          label="Anonymous openings"
           value={analytics.anonymousOpenings}
           hint="Desde el Discovery público"
         />
-        <Metric label="Engagement" value={analytics.engagement} hint="Me gusta ×3 + comentarios ×2 + alcance" />
+        <Metric label="Engagement" value={analytics.engagement} hint="Me gusta ×3 + comments ×2 + alcance" />
         <Metric label="Me gusta" value={analytics.likes} />
         <Metric label="Comentarios" value={analytics.comments} />
       </div>
@@ -80,9 +80,9 @@ export default async function DiscoveryAnalyticsPage() {
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Card>
           <CardContent className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold">Tus publicaciones con más interacción</h2>
+            <h2 className="text-sm font-semibold">Your posts with the most engagement</h2>
             {analytics.topPosts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin datos todavía.</p>
+              <p className="text-sm text-muted-foreground">No data yet.</p>
             ) : (
               <ul className="flex flex-col gap-2">
                 {analytics.topPosts.map((post) => (
@@ -105,9 +105,9 @@ export default async function DiscoveryAnalyticsPage() {
 
         <Card>
           <CardContent className="flex flex-col gap-3">
-            <h2 className="text-sm font-semibold">Etiquetas que más usas</h2>
+            <h2 className="text-sm font-semibold">Tags you use most</h2>
             {analytics.topTags.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin etiquetas todavía.</p>
+              <p className="text-sm text-muted-foreground">No tags yet.</p>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {analytics.topTags.map((tag) => (

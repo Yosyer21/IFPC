@@ -50,7 +50,7 @@ export default async function ParentEducationPage() {
                   </p>
                   <div className="mt-auto flex items-center gap-3 pt-2 text-xs text-muted-foreground">
                     {content.durationMinutes ? <span>{content.durationMinutes} min</span> : null}
-                    {content.difficulty ? <span>Nivel {content.difficulty}/5</span> : null}
+                    {content.difficulty ? <span>Level {content.difficulty}/5</span> : null}
                   </div>
                 </CardContent>
               </Card>

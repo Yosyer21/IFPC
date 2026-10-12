@@ -9,8 +9,8 @@ import {
 } from '@/lib/api/respond';
 
 /**
- * GET /api/scouting — informes de scouting.
- * - Scout: sus informes.
+ * GET /api/scouting — reports de scouting.
+ * - Scout: sus reports.
  * - Admin: todos.
  */
 export async function GET() {
@@ -41,7 +41,7 @@ export async function GET() {
   return NextResponse.json({ ok: true, reports });
 }
 
-/** POST /api/scouting — el scout crea un informe de un jugador. */
+/** POST /api/scouting — el scout crea un report de un player. */
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
   const scout = await prisma.scout.findUnique({ where: { userId: session.user.id } });
   if (!scout) {
-    return NextResponse.json({ ok: false, error: 'Profile de ojeador no encontrado' }, { status: 403 });
+    return NextResponse.json({ ok: false, error: 'Profile de scout no encontrado' }, { status: 403 });
   }
 
   const report = await prisma.scoutingReport.create({

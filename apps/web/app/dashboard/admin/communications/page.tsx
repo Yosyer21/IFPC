@@ -37,21 +37,21 @@ export default async function AdminCommunicationsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Comunicaciones"
-        subtitle="Conversaciones de la plataforma y mensajes internos"
+        subtitle="Conversaciones de la plataforma y messages internos"
         icon="mail"
       >
         <Link
           href="/dashboard/admin/communications/messages"
           className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Ver mensajes
+          See messages
         </Link>
       </PageHeader>
 
       <div className="mb-6 grid grid-cols-3 gap-4">
         <StatCard href="/dashboard/admin/communications" icon={IconMessageCircle} label="Conversaciones" value={conversations.length} />
-        <StatCard href="/dashboard/admin/communications/messages" icon={IconMail} label="Mensajes" value={totalMessages} />
-        <StatCard href="/dashboard/admin/communications/messages" icon={IconUsers} label="Sin leer" value={unread} />
+        <StatCard href="/dashboard/admin/communications/messages" icon={IconMail} label="Messages" value={totalMessages} />
+        <StatCard href="/dashboard/admin/communications/messages" icon={IconUsers} label="Unread" value={unread} />
       </div>
 
       {conversations.length === 0 ? (
@@ -73,7 +73,7 @@ export default async function AdminCommunicationsPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-semibold">{conversation.subject}</span>
-                      <Badge variant="outline">{conversation.messages.length} mensajes</Badge>
+                      <Badge variant="outline">{conversation.messages.length} messages</Badge>
                       {last && last.senderId !== session.user.id && !last.readAt ? (
                         <Badge variant="warning">New</Badge>
                       ) : null}

@@ -2,6 +2,17 @@ import { prisma } from '@ifpc/database';
 
 async function main() {
   await prisma.$transaction([
+    // Discovery (feed): se limpia antes que usuarios y perfiles.
+    prisma.authorPreference.deleteMany(),
+    prisma.postNotInterested.deleteMany(),
+    prisma.postPollVote.deleteMany(),
+    prisma.moderationLog.deleteMany(),
+    prisma.postReport.deleteMany(),
+    prisma.postView.deleteMany(),
+    prisma.postComment.deleteMany(),
+    prisma.postLike.deleteMany(),
+    prisma.post.deleteMany(),
+    prisma.follow.deleteMany(),
     prisma.passwordResetToken.deleteMany(),
     prisma.savedPlayer.deleteMany(),
     prisma.scoutingReport.deleteMany(),
@@ -42,7 +53,7 @@ async function main() {
     prisma.player.deleteMany(),
     prisma.user.deleteMany(),
   ]);
-  console.log('Base de datos reseteada.');
+  console.log('Database reset.');
 }
 
 main()

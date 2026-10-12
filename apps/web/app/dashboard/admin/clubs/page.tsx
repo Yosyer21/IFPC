@@ -44,7 +44,7 @@ export default async function AdminClubsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={club.verified ? 'success' : 'warning'}>
-                    {club.verified ? 'Verificado' : 'Pendiente'}
+                    {club.verified ? 'Verificado' : 'Pending'}
                   </Badge>
                   {!club.verified ? (
                     <form action={verifyClubAction}>

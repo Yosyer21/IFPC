@@ -32,7 +32,7 @@ export async function ContentCategory({
 
       <Card className="animate-fade-up">
         <CardContent>
-          <h2 className="mb-3 font-semibold">Publicar contenido</h2>
+          <h2 className="mb-3 font-semibold">Post content</h2>
           <form action={createTrainingContentAction} className="flex flex-col gap-3">
             <input type="hidden" name="category" value={category} />
             <input
@@ -76,7 +76,7 @@ export async function ContentCategory({
                 type="submit"
                 className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
               >
-                Publicar
+                Publish
               </button>
             </div>
           </form>
@@ -111,7 +111,7 @@ export async function ContentCategory({
                     type="submit"
                     className="rounded-md border border-destructive/40 px-3 py-1.5 text-sm text-destructive hover:bg-destructive/10"
                   >
-                    Eliminar
+                    Delete
                   </button>
                 </form>
               </CardContent>

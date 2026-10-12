@@ -7,13 +7,13 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 
-export const metadata: Metadata = { title: 'Entrenamiento de mi hijo' };
+export const metadata: Metadata = { title: 'My child’s training' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
   'strength-conditioning': 'Strength and conditioning',
   psychology: 'Psychology',
-  'parent-education': 'Para familias',
+  'parent-education': 'For families',
 };
 
 export default async function ParentChildTrainingPage({
@@ -54,8 +54,8 @@ export default async function ParentChildTrainingPage({
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title={`Entrenamiento · ${player.firstName}`}
-        subtitle="Sesiones en vivo y contenido de entrenamiento recomendado"
+        title={`Training · ${player.firstName}`}
+        subtitle="Live sessions and recommended training content"
         icon="play"
       >
         <Link
@@ -68,7 +68,7 @@ export default async function ParentChildTrainingPage({
 
       <Card className="mb-6">
         <CardContent>
-          <h2 className="mb-4 font-semibold">Sesiones en vivo ({sessions.length})</h2>
+          <h2 className="mb-4 font-semibold">Live sessions ({sessions.length})</h2>
           {sessions.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Tu hijo no tiene sesiones en vivo asignadas.
@@ -98,7 +98,7 @@ export default async function ParentChildTrainingPage({
 
       <Card>
         <CardContent>
-          <h2 className="mb-4 font-semibold">Contenido de entrenamiento</h2>
+          <h2 className="mb-4 font-semibold">Training content</h2>
           {content.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No content published yet.
@@ -115,7 +115,7 @@ export default async function ParentChildTrainingPage({
                     <div className="mt-1 text-xs text-muted-foreground">
                       {CATEGORY_LABELS[item.category] ?? item.category}
                       {item.durationMinutes ? ` · ${item.durationMinutes} min` : ''}
-                      {item.difficulty ? ` · Nivel ${item.difficulty}/5` : ''}
+                      {item.difficulty ? ` · Level ${item.difficulty}/5` : ''}
                     </div>
                   </div>
                   <Link

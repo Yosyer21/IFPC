@@ -23,7 +23,7 @@ export default async function AdminInquiriesPage() {
       {inquiries.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay consultas registradas.</p>
+            <p className="text-sm text-muted-foreground">No enquiries recorded.</p>
           </CardContent>
         </Card>
       ) : (

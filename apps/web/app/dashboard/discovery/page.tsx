@@ -27,7 +27,7 @@ import { listForYouFeed } from '@/lib/discovery-recommend';
 export const metadata: Metadata = { title: 'Discovery' };
 
 /**
- * Feed compartido por todos los perfiles. El estado del filtro vive en la URL
+ * Feed compartido por todos los perfiles. El estado del filter vive en la URL
  * (`?tab=` y `?tag=`), igual que el cursor de paginación.
  *
  * La cabecera, las pestañas y el buscador se pintan de inmediato; los datos que
@@ -65,7 +65,7 @@ export default async function DiscoveryPage({
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Discovery"
-        subtitle="Anuncios, vídeos y logros de todos los perfiles"
+        subtitle="Announcements, videos and milestones from every profile"
         icon="compass"
       >
         <Link
@@ -78,7 +78,7 @@ export default async function DiscoveryPage({
           href="/dashboard/discovery/following"
           className="text-sm text-muted-foreground hover:underline"
         >
-          Siguiendo y preferencias →
+          Following and preferences →
         </Link>
       </PageHeader>
 
@@ -120,7 +120,7 @@ async function ComposerSection({ viewerId }: { viewerId: string }) {
   );
 }
 
-/** Cuerpo del feed: fijados, perfiles o publicaciones, y sugerencias de perfiles. */
+/** Cuerpo del feed: fijados, perfiles o posts, y sugerencias de perfiles. */
 async function FeedSection({
   filters,
   viewerId,
@@ -132,16 +132,16 @@ async function FeedSection({
   viewerRole: string;
   cursor: string | null;
 }) {
-  // El directorio de perfiles no consulta publicaciones.
+  // El directorio de perfiles no consulta posts.
   const profiles =
     filters.tab === 'profiles'
       ? await listProfiles({ q: filters.q, role: filters.role, viewerId })
       : [];
 
-  // Las publicaciones fijadas se muestran aparte (y se excluyen del listado).
+  // Las posts fijadas se muestran aparte (y se excluyen del listado).
   const pinned = filters.tab === 'recent' && !filters.q ? await listPinnedPosts(viewerId) : [];
 
-  // "Para ti" se ordena con el motor de matching y no pagina (una sola página).
+  // "For you" se ordena con el motor de matching y no pagina (una sola página).
   const { posts, nextCursor } =
     filters.tab === 'profiles'
       ? { posts: [], nextCursor: null }
@@ -161,19 +161,19 @@ async function FeedSection({
       : [];
 
   const emptyMessage = filters.q
-    ? `No hay publicaciones que coincidan con “${filters.q}”.`
+    ? `No posts match “${filters.q}”.`
     : filters.tag
-      ? `Todavía no hay publicaciones con #${filters.tag}.`
+      ? `No posts with #${filters.tag} yet.`
       : filters.tab === 'following'
-        ? 'Aquí verás lo que publican los perfiles que sigues. Empieza siguiendo a alguien.'
-        : 'Todavía no hay publicaciones. Publica la primera.';
+        ? 'Here you will see what the profiles you follow post. Start by following someone.'
+        : 'Todavía no hay posts. Publica la primera.';
 
   if (filters.tab === 'profiles') {
     return profiles.length === 0 ? (
       <Card>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            No hay perfiles que coincidan con los filtros.
+            No profiles match the filters.
           </p>
         </CardContent>
       </Card>

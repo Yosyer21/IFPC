@@ -5,10 +5,10 @@ import { Tabs } from '@ifpc/ui';
 import { TrainingGrid } from '@/components/player/training-grid';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Entrenamiento' };
+export const metadata: Metadata = { title: 'Training' };
 
 const CATEGORIES = [
-  { value: 'all', label: 'Todos' },
+  { value: 'all', label: 'All' },
   { value: 'technical', label: 'Technique' },
   { value: 'strength-conditioning', label: 'Fuerza' },
   { value: 'psychology', label: 'Psychology' },
@@ -38,7 +38,7 @@ export default async function PlayerTrainingPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Entrenamiento"
+        title="Training"
         subtitle="Content to improve your technique, strength and mindset"
         icon="play"
       />

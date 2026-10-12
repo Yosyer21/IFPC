@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/communications — conversaciones y mensajes (solo admin). */
+/** GET /api/communications — conversaciones y messages (solo admin). */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

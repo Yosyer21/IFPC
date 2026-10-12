@@ -6,7 +6,7 @@ import { Button } from '@ifpc/ui';
 import { removeProfileBannerAction, updateProfileBannerAction } from '@/app/actions/player';
 
 export interface BannerFormProps {
-  /** Portada actual, si la hay (se muestra como vista previa). */
+  /** Current cover, si la hay (se muestra como vista previa). */
   imageUrl?: string | null;
   /** Página a la que volver tras guardar (el servidor valida que sea interna). */
   redirectTo?: string;
@@ -21,7 +21,7 @@ export function BannerForm({ imageUrl, redirectTo }: BannerFormProps) {
       {imageUrl ? (
         <Image
           src={imageUrl}
-          alt="Portada actual"
+          alt="Current cover"
           width={1200}
           height={300}
           unoptimized
@@ -39,18 +39,18 @@ export function BannerForm({ imageUrl, redirectTo }: BannerFormProps) {
           className="w-full text-xs file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary-foreground"
         />
         <p className="text-xs text-muted-foreground">
-          JPG, PNG o WebP · máx. 4 MB · se recorta en horizontal
+          JPG, PNG or WebP · max. 4 MB · cropped horizontally
         </p>
         {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
         <Button type="submit" disabled={pending} className="self-start">
-          {pending ? 'Subiendo…' : 'Guardar portada'}
+          {pending ? 'Uploading…' : 'Save cover'}
         </Button>
       </form>
       {imageUrl ? (
         <form action={removeProfileBannerAction}>
           <input type="hidden" name="redirectTo" value={redirectTo ?? ''} />
           <button type="submit" className="text-xs text-muted-foreground hover:underline">
-            Quitar portada
+            Remove cover
           </button>
         </form>
       ) : null}

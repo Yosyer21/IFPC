@@ -7,10 +7,10 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from '@ifpc/ui';
 import { CreateGoalForm } from '@/components/coach/create-goal-form';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Goals del jugador' };
+export const metadata: Metadata = { title: 'Player goals' };
 
 const STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };
@@ -67,7 +67,7 @@ export default async function CoachPlayerDevelopmentPage({
       {goals.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay objetivos registrados.</p>
+            <p className="text-sm text-muted-foreground">No goals recorded.</p>
           </CardContent>
         </Card>
       ) : (

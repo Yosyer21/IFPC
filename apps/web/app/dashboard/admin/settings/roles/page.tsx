@@ -5,12 +5,12 @@ import { ROLES } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Roles · Ajustes' };
+export const metadata: Metadata = { title: 'Roles · Settings' };
 
 const ROLE_INFO: Record<string, { label: string; description: string; prefix: string }> = {
   PLAYER: {
-    label: 'Jugador',
-    description: 'Profile profesional, desarrollo, oportunidades y contenidos de entrenamiento.',
+    label: 'Player',
+    description: 'Profile profesional, desarrollo, opportunities y contenidos de training.',
     prefix: '/dashboard/player',
   },
   PARENT: {
@@ -19,12 +19,12 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
     prefix: '/dashboard/parent',
   },
   COACH: {
-    label: 'Entrenador',
-    description: 'Evaluaciones, objetivos y seguimiento de sus jugadores.',
+    label: 'Coach',
+    description: 'Evaluations, goals and tracking for their players.',
     prefix: '/dashboard/coach',
   },
   SCOUT: {
-    label: 'Ojeador',
+    label: 'Scout',
     description: 'Discovery, saved players and scouting reports.',
     prefix: '/dashboard/scout',
   },
@@ -35,18 +35,18 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
   },
   CLUB: {
     label: 'Club',
-    description: 'Centro de reclutamiento, oportunidades y requisitos.',
+    description: 'Centro de reclutamiento, opportunities y requirements.',
     prefix: '/dashboard/club',
   },
   UNIVERSITY: {
-    label: 'Universidad',
+    label: 'University',
     description: 'Academic-sports recruitment and scholarships.',
     prefix: '/dashboard/university',
   },
   SCHOOL: {
-    label: 'Escuela / Servicio comunitario',
+    label: 'School / Community service',
     description:
-      'Colegios, clubes escolares y servicios comunitarios: programas, grupos y clínicas inclusivas.',
+      'Colegios, clubs escolares y servicios comunitarios: programas, grupos y clinics inclusivas.',
     prefix: '/dashboard/school',
   },
   ADMIN: {

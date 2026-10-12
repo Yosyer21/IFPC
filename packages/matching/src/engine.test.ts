@@ -50,7 +50,7 @@ describe('matchScore', () => {
     expect(result.total).toBe(100);
   });
 
-  it('jugador no disponible pierde puntos de disponibilidad', () => {
+  it('player no disponible pierde puntos de disponibilidad', () => {
     const result = matchScore({ ...player, status: 'INACTIVE' }, {});
     const availability = result.criteria.find((criterion) => criterion.key === 'availability');
     expect(availability?.score).toBe(0);

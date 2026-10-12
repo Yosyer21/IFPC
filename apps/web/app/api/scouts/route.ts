@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
 
-/** GET /api/scouts — listado de ojeadores con sus usuarios. */
+/** GET /api/scouts — listado de scouts con sus usuarios. */
 export async function GET() {
   const session = await requireUser();
   if (!session) {

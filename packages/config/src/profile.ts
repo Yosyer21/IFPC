@@ -1,5 +1,5 @@
 /**
- * Personalización del perfil del jugador: portada, titular, acento de color,
+ * Profile customisation del player: portada, headline, acento de color,
  * chips de «abierto a» y la checklist ponderada que mide la fuerza del perfil.
  *
  * Única fuente de verdad: la página del perfil, el formulario de edición, el
@@ -48,24 +48,24 @@ export function profileAccentColors(value: string | null | undefined): {
 }
 
 // ---------------------------------------------------------------------------
-// Titular, ubicación y «abierto a»
+// Headline, ubicación y «abierto a»
 // ---------------------------------------------------------------------------
 
-/** Longitud máxima del titular que se muestra bajo el nombre. */
+/** Longitud máxima del headline que se muestra bajo el nombre. */
 export const PROFILE_HEADLINE_MAX = 120;
 /** Longitud máxima de la ubicación (ciudad y país). */
 export const PROFILE_LOCATION_MAX = 80;
 
-/** Señales de disponibilidad que el jugador puede mostrar como chips. */
+/** Señales de disponibilidad que el player puede mostrar como chips. */
 export const PROFILE_OPEN_TO = ['CLUB', 'TRIAL', 'SCHOLARSHIP', 'COLLEGE', 'AGENT'] as const;
 export type ProfileOpenTo = (typeof PROFILE_OPEN_TO)[number];
 
 export const PROFILE_OPEN_TO_LABELS: Record<ProfileOpenTo, string> = {
-  CLUB: 'Busco club',
+  CLUB: 'Looking for a club',
   TRIAL: 'Abierto a pruebas',
-  SCHOLARSHIP: 'Beca deportiva',
-  COLLEGE: 'Fútbol universitario',
-  AGENT: 'Busco representante',
+  SCHOLARSHIP: 'Scholarship deportiva',
+  COLLEGE: 'College football',
+  AGENT: 'Looking for an agent',
 };
 
 /** Máximo de chips publicados (el formulario corta al guardar). */
@@ -88,7 +88,7 @@ export function sanitizeProfileOpenTo(values: readonly unknown[]): ProfileOpenTo
   return [...seen].slice(0, PROFILE_OPEN_TO_MAX);
 }
 
-/** Etiquetas listas para pintar un array guardado (ignora lo desconocido). */
+/** Tags listas para pintar un array guardado (ignora lo desconocido). */
 export function profileOpenToLabels(values: readonly string[]): string[] {
   return values.filter(isProfileOpenTo).map((value) => PROFILE_OPEN_TO_LABELS[value]);
 }
@@ -106,7 +106,7 @@ export const PROFILE_BANNER_MIME_EXT: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Fuerza del perfil (checklist ponderada)
+// Profile strength (checklist ponderada)
 // ---------------------------------------------------------------------------
 
 /** Claves de la checklist, en orden de presentación. */
@@ -142,50 +142,50 @@ export interface ProfileChecklistItem {
 export const PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
   {
     key: 'name',
-    label: 'Nombre y apellidos',
-    hint: 'Es lo primero que ven clubes y ojeadores.',
+    label: 'Full name',
+    hint: 'It is the first thing clubs and scouts see.',
     weight: 8,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'dateOfBirth',
-    label: 'Fecha de nacimiento',
-    hint: 'Marca tu categoría y los filtros de edad del reclutamiento.',
+    label: 'Date of birth',
+    hint: 'Set your category and the recruitment age filters.',
     weight: 6,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'nationality',
-    label: 'Nacionalidad',
-    hint: 'Necesaria para becas y oportunidades internacionales.',
+    label: 'Nationality',
+    hint: 'Needed for scholarships and international opportunities.',
     weight: 6,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'position',
-    label: 'Posición',
-    hint: 'El filtro principal de búsqueda de los clubes.',
+    label: 'Position',
+    hint: 'The main search filter for clubs.',
     weight: 10,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'foot',
     label: 'Pierna buena',
-    hint: 'Un detalle que los ojeadores revisan siempre.',
+    hint: 'A detail that scouts always check.',
     weight: 4,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'competitionLevel',
-    label: 'Nivel competitivo',
-    hint: 'Ubica tu perfil entre los candidatos.',
+    label: 'Level competitivo',
+    hint: 'Place your profile among the candidates.',
     weight: 8,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'physicalData',
     label: 'Altura y peso',
-    hint: 'Se completan los dos datos a la vez.',
+    hint: 'Both details are filled in together.',
     weight: 10,
     href: '/dashboard/player/profile/edit',
   },
@@ -198,56 +198,56 @@ export const PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
   },
   {
     key: 'bio',
-    label: 'Biografía',
-    hint: 'Cuenta tu historia en primera persona.',
+    label: 'Biography',
+    hint: 'Tell your story in the first person.',
     weight: 8,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'photo',
-    label: 'Foto de perfil',
-    hint: 'Los perfiles con foto reciben muchas más visitas.',
+    label: 'Profile photo',
+    hint: 'Profiles with a photo get far more views.',
     weight: 8,
     href: '/dashboard/player/profile',
   },
   {
     key: 'banner',
     label: 'Portada',
-    hint: 'Personaliza la cabecera de tu perfil.',
+    hint: 'Customise your profile header.',
     weight: 6,
     href: '/dashboard/player/profile/edit#personalizacion',
   },
   {
     key: 'headline',
-    label: 'Titular',
-    hint: 'Una frase corta que resuma tu juego.',
+    label: 'Headline',
+    hint: 'A short line that sums up your game.',
     weight: 6,
     href: '/dashboard/player/profile/edit#personalizacion',
   },
   {
     key: 'video',
-    label: 'Al menos un vídeo',
-    hint: 'Un highlight vale más que mil palabras.',
+    label: 'At least one video',
+    hint: 'A highlight reel is worth a thousand words.',
     weight: 6,
     href: '/dashboard/player/videos',
   },
   {
     key: 'career',
-    label: 'Trayectoria',
-    hint: 'Clubes, categorías y estadísticas por temporada.',
+    label: 'Career history',
+    hint: 'Clubs, categories and stats per season.',
     weight: 6,
     href: '/dashboard/player/career',
   },
 ];
 
-/** Puntos totales de la checklist (hoy 100). */
+/** Puntos totals de la checklist (today 100). */
 export const PROFILE_CHECKLIST_POINTS = PROFILE_CHECKLIST.reduce(
   (total, item) => total + item.weight,
   0
 );
 
 export interface ProfileChecklistState {
-  /** Todos los ítems con su estado, en orden de presentación. */
+  /** All los ítems con su estado, en orden de presentación. */
   items: (ProfileChecklistItem & { done: boolean })[];
   percent: number;
   /** Ítems completados (para el «8/14» de la UI). */

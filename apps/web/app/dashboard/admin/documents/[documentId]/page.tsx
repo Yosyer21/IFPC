@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Documento' };
+export const metadata: Metadata = { title: 'Document' };
 
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   passport: 'Pasaporte',
@@ -38,7 +38,7 @@ export default async function AdminDocumentDetailPage({
         icon="file"
       >
         <Link href="/dashboard/admin/documents" className="text-sm text-muted-foreground hover:underline">
-          ← Documentos
+          ← Documents
         </Link>
       </PageHeader>
 
@@ -56,7 +56,7 @@ export default async function AdminDocumentDetailPage({
               <dd className="mt-1 font-medium">{document.createdAt.toLocaleDateString('es')}</dd>
             </div>
             <div className="rounded-md border border-border p-3">
-              <dt className="text-xs text-muted-foreground">Jugador</dt>
+              <dt className="text-xs text-muted-foreground">Player</dt>
               <dd className="mt-1 font-medium">
                 {document.player.firstName} {document.player.lastName}
               </dd>
@@ -74,7 +74,7 @@ export default async function AdminDocumentDetailPage({
               rel="noreferrer"
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Abrir documento
+              Open document
             </a>
             <Badge variant="outline">{document.url}</Badge>
           </div>

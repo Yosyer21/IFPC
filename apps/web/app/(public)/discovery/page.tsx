@@ -20,11 +20,11 @@ import {
 export const metadata: Metadata = {
   title: 'Discovery — Future Baller',
   description:
-    'Anuncios, vídeos y logros de clubes, jugadores, escuelas y universidades en Future Baller.',
+    'Announcements, videos and milestones from clubs, players, schools and universities on Future Baller.',
   alternates: { canonical: '/discovery' },
   openGraph: {
     title: 'Discovery — Future Baller',
-    description: 'El feed público de la comunidad Future Baller.',
+    description: 'The public feed of the Future Baller community.',
     type: 'website',
   },
 };
@@ -51,7 +51,7 @@ export default async function PublicDiscoveryPage({
     })
   );
 
-  // El directorio de perfiles no consulta publicaciones ni fijadas.
+  // El directorio de perfiles no consulta posts ni fijadas.
   const profiles =
     filters.tab === 'profiles'
       ? await listProfiles({ q: filters.q, role: filters.role })
@@ -77,10 +77,10 @@ export default async function PublicDiscoveryPage({
   if (nextCursor) moreQuery.set('cursor', nextCursor);
 
   const emptyMessage = filters.q
-    ? `No hay publicaciones que coincidan con “${filters.q}”.`
+    ? `No posts match “${filters.q}”.`
     : filters.tag
-      ? `Todavía no hay publicaciones con #${filters.tag}.`
-      : 'Todavía no hay publicaciones. Entra y publica la primera.';
+      ? `No posts with #${filters.tag} yet.`
+      : 'Todavía no hay posts. Entra y publica la primera.';
 
   return (
     <div className="min-h-screen bg-[#0a0e0c] text-white">
@@ -88,14 +88,14 @@ export default async function PublicDiscoveryPage({
       <main className="mx-auto w-full max-w-3xl px-4 py-24">
         <PageHeader
           title="Discovery"
-          subtitle="Anuncios, vídeos y logros de todos los perfiles"
+          subtitle="Announcements, videos and milestones from every profile"
           icon="compass"
         />
 
         <Card className="mb-4">
           <CardContent className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
-              Estás viendo Discovery en modo lectura. Entra para publicar, comentar y seguir
+              You are viewing Discovery in read-only mode. Sign in to post, comment and follow
               perfiles.
             </p>
             <div className="flex flex-wrap gap-2">
@@ -131,7 +131,7 @@ export default async function PublicDiscoveryPage({
             <Card>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  No hay perfiles que coincidan con los filtros.
+                  No profiles match the filters.
                 </p>
               </CardContent>
             </Card>
@@ -162,7 +162,7 @@ export default async function PublicDiscoveryPage({
               href={`${BASE}?${moreQuery.toString()}`}
               className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
             >
-              Ver más
+              Show more
             </Link>
           </div>
         ) : null}

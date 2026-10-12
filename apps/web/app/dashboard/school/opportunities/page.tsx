@@ -4,7 +4,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Oportunidades' };
+export const metadata: Metadata = { title: 'Opportunities' };
 
 export default async function SchoolOpportunitiesPage() {
   const session = await auth();
@@ -23,15 +23,15 @@ export default async function SchoolOpportunitiesPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Oportunidades"
-        subtitle="Clínicas, pruebas y becas abiertas en la plataforma"
+        title="Opportunities"
+        subtitle="Clínicas, pruebas y scholarships open en la plataforma"
         icon="target"
       />
 
       {opportunities.length === 0 ? (
         <Card>
           <CardContent>
-            <p className="text-sm text-muted-foreground">No hay oportunidades abiertas ahora mismo.</p>
+            <p className="text-sm text-muted-foreground">There are no open opportunities right now.</p>
           </CardContent>
         </Card>
       ) : (

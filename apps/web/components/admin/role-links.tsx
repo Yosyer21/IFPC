@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 const ROLE_LINKS = [
-  { role: 'PLAYER', label: 'Jugadores', href: '/dashboard/admin/users/players' },
+  { role: 'PLAYER', label: 'Players', href: '/dashboard/admin/users/players' },
   { role: 'PARENT', label: 'Familiares', href: '/dashboard/admin/users/parents' },
   { role: 'COACH', label: 'Entrenadores', href: '/dashboard/admin/users/coaches' },
   { role: 'SCOUT', label: 'Ojeadores', href: '/dashboard/admin/users/scouts' },
@@ -18,7 +18,7 @@ export function RoleLinks() {
         href="/dashboard/admin/users"
         className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
       >
-        Todos
+        All
       </Link>
       {ROLE_LINKS.map((link) => (
         <Link

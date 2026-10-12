@@ -24,7 +24,7 @@ export default async function AdminUsersClubsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Clubes"
-        subtitle="Entidades registradas en la plataforma"
+        subtitle="Entidades registered en la plataforma"
         icon="users"
       />
       <RoleLinks />
@@ -44,15 +44,15 @@ export default async function AdminUsersClubsPage() {
                   <p className="font-semibold">{club.name}</p>
                   <p className="text-sm text-muted-foreground">{club.email}</p>
                   <p className="text-xs text-muted-foreground">
-                    {club.city ?? '—'}, {club.country} · {club.league ?? 'Sin liga'}
+                    {club.city ?? '—'}, {club.country} · {club.league ?? 'No league'}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant={club.verified ? 'success' : 'warning'}>
-                    {club.verified ? 'Verificado' : 'Pendiente'}
+                    {club.verified ? 'Verificado' : 'Pending'}
                   </Badge>
-                  <Badge variant="outline">{club._count.opportunities} oportunidades</Badge>
-                  <Badge variant="outline">{club._count.requirements} requisitos</Badge>
+                  <Badge variant="outline">{club._count.opportunities} opportunities</Badge>
+                  <Badge variant="outline">{club._count.requirements} requirements</Badge>
                   <Badge variant="outline">{club._count.inquiries} consultas</Badge>
                 </div>
               </CardContent>

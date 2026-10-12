@@ -27,7 +27,7 @@ export default async function CoachPlayersPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="My players"
-        subtitle="Jugadores vinculados a ti para su seguimiento y desarrollo"
+        subtitle="Players linked to you for tracking and development"
         icon="users"
       />
 

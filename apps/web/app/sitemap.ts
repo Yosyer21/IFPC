@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       select: { id: true, updatedAt: true },
       take: 200,
     }),
-    // Discovery público: publicaciones y muros de autor con contenido.
+    // Discovery público: posts y muros de autor con contenido.
     prisma.post.findMany({
       where: { status: 'PUBLISHED' },
       select: { id: true, updatedAt: true },

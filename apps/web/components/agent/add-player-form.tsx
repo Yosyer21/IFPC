@@ -12,8 +12,8 @@ export function AddPlayerForm() {
       <Input
         name="email"
         type="email"
-        label="Email del jugador"
-        placeholder="jugador@email.com"
+        label="Player email"
+        placeholder="player@email.com"
         required
       />
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}

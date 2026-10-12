@@ -1,26 +1,26 @@
 import Link from 'next/link';
 
 const ROLES = [
-  { href: '/onboarding/player', label: 'Jugador/a', description: 'Profile deportivo' },
+  { href: '/onboarding/player', label: 'Player', description: 'Profile deportivo' },
   { href: '/onboarding/parent', label: 'Familiar', description: 'Cuenta de padre/madre/tutor' },
-  { href: '/onboarding/coach', label: 'Entrenador/a', description: 'Datos de entrenador' },
-  { href: '/onboarding/scout', label: 'Ojeador/a', description: 'Agencia y cobertura' },
+  { href: '/onboarding/coach', label: 'Coach', description: 'Datos de coach' },
+  { href: '/onboarding/scout', label: 'Scout', description: 'Agencia y cobertura' },
   { href: '/onboarding/agent', label: 'Agente', description: 'Agencia y licencia' },
   { href: '/onboarding/club', label: 'Club', description: 'Datos del club' },
-  { href: '/onboarding/university', label: 'Universidad', description: 'Institución académico-deportiva' },
+  { href: '/onboarding/university', label: 'University', description: 'Academic-sports institution' },
   {
     href: '/onboarding/school',
-    label: 'Escuela / Servicio comunitario',
-    description: 'Colegios, clubes escolares y programas comunitarios',
+    label: 'School / Community service',
+    description: 'Colegios, clubs escolares y programas comunitarios',
   },
 ];
 
 export default function OnboardingPage() {
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">Completa tu perfil</h1>
+      <h1 className="mb-2 text-2xl font-bold">Complete your profile</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Elige tu tipo de cuenta para continuar con el registro.
+        Choose your account type to continue with sign-up.
       </p>
       <div className="flex flex-col gap-2">
         {ROLES.map((item) => (

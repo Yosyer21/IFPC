@@ -114,13 +114,13 @@ export default async function PlayerDashboardPage() {
     { href: '/dashboard/player/videos', icon: IconVideo, label: 'Videos', value: videos },
     { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluationCount },
-    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Oportunidades para ti', value: matchedOpportunities },
+    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Opportunities for you', value: matchedOpportunities },
   ];
 
   const quickActions = [
     { href: '/dashboard/player/training', icon: IconPlay, label: 'Entrenar' },
     { href: '/dashboard/player/videos/upload', icon: IconVideo, label: 'Upload video' },
-    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Buscar oportunidades' },
+    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Find opportunities' },
     { href: '/dashboard/player/pathway', icon: IconRoute, label: 'Mi ruta' },
   ];
 
@@ -129,7 +129,7 @@ export default async function PlayerDashboardPage() {
       key: goal.id,
       icon: IconTrendingUp,
       title: goal.title,
-      meta: `Objetivo · ${GOAL_STATUS_LABELS[goal.status] ?? goal.status}`,
+      meta: `Goal · ${GOAL_STATUS_LABELS[goal.status] ?? goal.status}`,
       date: goal.createdAt,
     })),
     ...recentEvaluations.map((evaluation) => ({
@@ -173,7 +173,7 @@ export default async function PlayerDashboardPage() {
               {positionLabel}
               {competitionLabel ? ` · ${competitionLabel}` : ''}
               {player.clubName ? ` · ${player.clubName}` : ''}
-              {unreadNotifications > 0 ? ` · ${unreadNotifications} notificaciones sin leer` : ''}
+              {unreadNotifications > 0 ? ` · ${unreadNotifications} unread notifications` : ''}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -228,7 +228,7 @@ export default async function PlayerDashboardPage() {
                   href="/dashboard/player/development/evaluations"
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver evaluaciones →
+                  Ver evaluations →
                 </Link>
               ) : null}
             </div>
@@ -249,7 +249,7 @@ export default async function PlayerDashboardPage() {
                   href="/dashboard/player/development/progress"
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver mi progreso →
+                  See my progress →
                 </Link>
               </div>
             )}
@@ -271,7 +271,7 @@ export default async function PlayerDashboardPage() {
               <p className="text-center text-sm text-muted-foreground">
                 {percent === 100
                   ? 'Profile complete! You can now appear in club and scout searches.'
-                  : 'Completa tu perfil para destacar ante clubes y ojeadores.'}
+                  : 'Complete your profile to stand out to clubs and scouts.'}
               </p>
               {percent < 100 ? (
                 <Link
@@ -295,7 +295,7 @@ export default async function PlayerDashboardPage() {
               href="/dashboard/player/notifications"
               className="text-sm text-primary hover:underline"
             >
-              Ver notificaciones →
+              See notifications →
             </Link>
           </div>
           {activity.length === 0 ? (

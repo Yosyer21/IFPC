@@ -62,19 +62,19 @@ export default async function UniversityDashboardPage() {
     {
       href: '/dashboard/university/opportunities',
       icon: IconTarget,
-      label: 'Oportunidades abiertas',
+      label: 'Open opportunities',
       value: openOpportunities.length,
     },
     {
       href: '/dashboard/university/opportunities',
       icon: IconBook,
-      label: 'Becas disponibles',
+      label: 'Scholarships available',
       value: scholarshipCount,
     },
     {
       href: '/dashboard/university/opportunities',
       icon: IconStar,
-      label: 'Applications a becas',
+      label: 'Applications a scholarships',
       value: scholarshipApplications,
     },
   ];
@@ -83,21 +83,21 @@ export default async function UniversityDashboardPage() {
     {
       href: '/dashboard/university/players',
       label: 'Explorar',
-      sub: 'jugadores disponibles',
+      sub: 'available players',
       value: availablePlayers.length,
       icon: IconSearch,
     },
     {
       href: '/dashboard/university/opportunities',
-      label: 'Oportunidades',
-      sub: 'abiertas',
+      label: 'Opportunities',
+      sub: 'open',
       value: openOpportunities.length,
       icon: IconTarget,
     },
     {
       href: '/dashboard/university/opportunities',
-      label: 'Becas',
-      sub: 'disponibles',
+      label: 'Scholarships',
+      sub: 'available',
       value: scholarshipCount,
       icon: IconBook,
     },
@@ -117,13 +117,13 @@ export default async function UniversityDashboardPage() {
     pendingActions.push({
       href: '/dashboard/university/opportunities',
       icon: IconStar,
-      text: `${scholarshipApplications} solicitud${scholarshipApplications === 1 ? '' : 'es'} a becas registrada${scholarshipApplications === 1 ? '' : 's'}`,
+      text: `${scholarshipApplications} request${scholarshipApplications === 1 ? '' : 'es'} a scholarships registrada${scholarshipApplications === 1 ? '' : 's'}`,
       meta: 'Revisar',
     });
   }
 
   const recentOpportunities = openOpportunities.slice(0, 4);
-  const [univFirstName = 'Universidad', univLastName = ''] = university.name.split(' ');
+  const [univFirstName = 'University', univLastName = ''] = university.name.split(' ');
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -136,14 +136,14 @@ export default async function UniversityDashboardPage() {
               <h1 className="text-2xl font-bold tracking-tight">{university.name}</h1>
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
                 <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
-                Universidad
+                University
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {university.city ? `${university.city}, ` : ''}
               {university.country} · Academic-sports portal
               {openOpportunities.length > 0
-                ? ` · ${openOpportunities.length} oportunidad${openOpportunities.length === 1 ? '' : 'es'} para tus candidatos`
+                ? ` · ${openOpportunities.length} oportunidad${openOpportunities.length === 1 ? '' : 'es'} para tus candidates`
                 : ''}
             </p>
           </div>
@@ -158,7 +158,7 @@ export default async function UniversityDashboardPage() {
               href="/dashboard/university/opportunities"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Ver oportunidades
+              See opportunities
             </Link>
           </div>
         </div>
@@ -167,9 +167,9 @@ export default async function UniversityDashboardPage() {
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
             { href: '/dashboard/university/players', icon: IconSearch, label: 'Explorar talento' },
-            { href: '/dashboard/university/opportunities', icon: IconTarget, label: 'Oportunidades' },
-            { href: '/dashboard/university/opportunities', icon: IconBook, label: 'Becas' },
-            { href: '/dashboard/university/profile', icon: IconShield, label: 'Mi universidad' },
+            { href: '/dashboard/university/opportunities', icon: IconTarget, label: 'Opportunities' },
+            { href: '/dashboard/university/opportunities', icon: IconBook, label: 'Scholarships' },
+            { href: '/dashboard/university/profile', icon: IconShield, label: 'My university' },
           ].map((action, i) => {
             const Icon = action.icon;
             return (
@@ -255,14 +255,14 @@ export default async function UniversityDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Jugadores + oportunidades destacadas */}
+      {/* Players + opportunities destacadas */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up" style={{ animationDelay: '440ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Available players</h2>
               <Link href="/dashboard/university/players" className="text-sm text-primary hover:underline">
-                Ver todos →
+                See all →
               </Link>
             </div>
             {availablePlayers.length === 0 ? (
@@ -292,7 +292,7 @@ export default async function UniversityDashboardPage() {
                           {player.heightCm ? ` · ${player.heightCm} cm` : ''}
                         </div>
                       </div>
-                      <Badge variant="success">Disponible</Badge>
+                      <Badge variant="success">Available</Badge>
                     </div>
                   );
                 })}
@@ -306,12 +306,12 @@ export default async function UniversityDashboardPage() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Featured opportunities</h2>
               <Link href="/dashboard/university/opportunities" className="text-sm text-primary hover:underline">
-                Ver todas →
+                See all →
               </Link>
             </div>
             {recentOpportunities.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No hay oportunidades abiertas en la plataforma.
+                There are no open opportunities on the platform.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -338,7 +338,7 @@ export default async function UniversityDashboardPage() {
                       </div>
                     </div>
                     <Badge variant={opportunity.type === 'SCHOLARSHIP' ? 'success' : 'default'}>
-                      {opportunity.type === 'SCHOLARSHIP' ? 'Beca' : opportunity.type}
+                      {opportunity.type === 'SCHOLARSHIP' ? 'Scholarship' : opportunity.type}
                     </Badge>
                   </div>
                 ))}

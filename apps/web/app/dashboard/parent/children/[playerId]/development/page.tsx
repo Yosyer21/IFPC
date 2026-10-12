@@ -19,7 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
-  pending: 'Pendiente',
+  pending: 'Pending',
   in_progress: 'En curso',
   completed: 'Completed',
 };
@@ -91,9 +91,9 @@ export default async function ParentChildDevelopmentPage({
       </PageHeader>
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconStar} label="Nivel global" value={overall} suffix="/10" />
+        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconStar} label="Overall level" value={overall} suffix="/10" />
         <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconTarget} label="Goals completados" value={completedGoals} />
-        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconRoute} label="Goals totales" value={player.goals.length} />
+        <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconRoute} label="Total goals" value={player.goals.length} />
         <StatCard href={`/dashboard/parent/children/${player.id}/development`} icon={IconVideo} label="Videos" value={player._count.videos} />
       </div>
 
@@ -114,11 +114,11 @@ export default async function ParentChildDevelopmentPage({
         </Card>
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Progreso de objetivos</h2>
+            <h2 className="mb-4 font-semibold">Progress de goals</h2>
             <div className="flex flex-col items-center gap-4">
               <DonutChart value={progress} label={`${progress}%`} sublabel="completados" />
               <p className="text-sm text-muted-foreground">
-                {completedGoals} de {player.goals.length} objetivos completados
+                {completedGoals} de {player.goals.length} goals completados
               </p>
             </div>
           </CardContent>
@@ -146,7 +146,7 @@ export default async function ParentChildDevelopmentPage({
             ) : null}
             <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground">
               {player.pathway.level ? (
-                <Badge variant="outline">Nivel: {player.pathway.level}</Badge>
+                <Badge variant="outline">Level: {player.pathway.level}</Badge>
               ) : null}
               {player.pathway.focus ? (
                 <Badge variant="outline">Foco: {player.pathway.focus}</Badge>

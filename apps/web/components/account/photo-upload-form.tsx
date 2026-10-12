@@ -7,7 +7,7 @@ import { PlayerAvatar } from '@/components/player/avatar';
 import { nameParts } from '@/lib/names';
 
 export interface PhotoUploadFormProps {
-  /** Nombre completo; se usan las iniciales como respaldo de la foto. */
+  /** Name completo; se usan las iniciales como respaldo de la foto. */
   name: string;
   imageUrl?: string | null;
   /** Página a la que volver tras guardar (el servidor valida que sea interna). */
@@ -50,11 +50,11 @@ export function PhotoUploadForm({
         className="w-full text-xs file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary-foreground"
       />
       {compact ? null : (
-        <p className="text-xs text-muted-foreground">JPG, PNG o WebP · máx. 2 MB</p>
+        <p className="text-xs text-muted-foreground">JPG, PNG or WebP · max. 2 MB</p>
       )}
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending} className={compact ? 'text-xs' : undefined}>
-        {pending ? 'Subiendo…' : 'Guardar foto'}
+        {pending ? 'Uploading…' : 'Save photo'}
       </Button>
     </form>
   );

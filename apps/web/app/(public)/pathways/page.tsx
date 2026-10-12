@@ -25,7 +25,7 @@ const STAGES = [
     id: 'profesional',
     title: 'Pre-profesional',
     age: '17–21 years',
-    focus: 'Rendimiento, becas universitarias y primeros contratos.',
+    focus: 'Performance, university scholarships and first contracts.',
   },
   {
     id: 'universitario',
@@ -44,9 +44,9 @@ export default function PathwaysPage() {
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">
             Pathways
           </p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">El camino del jugador</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">The player journey</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Cada jugador avanza por etapas. Future Baller estructura ese recorrido con evaluaciones,
+            Cada player avanza por etapas. Future Baller estructura ese recorrido con evaluations,
             goals and opportunities: from the first football school to the university scholarship
             o el contrato profesional.
           </p>
@@ -72,7 +72,7 @@ export default function PathwaysPage() {
         </div>
 
         <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center">
-          <h2 className="text-2xl font-bold">Empieza tu ruta hoy</h2>
+          <h2 className="text-2xl font-bold">Start your journey today</h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
             Create your profile and receive a development plan tailored to your stage and position.
           </p>

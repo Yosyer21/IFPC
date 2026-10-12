@@ -25,7 +25,7 @@ export function VideoUploadForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Subiendo…' : 'Upload video'}
+        {pending ? 'Uploading…' : 'Upload video'}
       </Button>
     </form>
   );
