@@ -37,7 +37,7 @@ export default async function AdminRecruitmentNegotiationsPage() {
 
       <div className="mb-4 flex flex-wrap gap-2">
         <Badge variant="outline">{open} open</Badge>
-        <Badge variant="outline">Ofertas: {(totalOffers / 100).toLocaleString('es')} EUR</Badge>
+        <Badge variant="outline">Ofertas: {(totalOffers / 100).toLocaleString('en-GB')} EUR</Badge>
       </div>
 
       {negotiations.length === 0 ? (
@@ -57,13 +57,13 @@ export default async function AdminRecruitmentNegotiationsPage() {
                   </p>
                   <p className="text-sm text-muted-foreground">→ {negotiation.club.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {negotiation.createdAt.toLocaleDateString('es')}
+                    {negotiation.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   {negotiation.offerAmount ? (
                     <Badge variant="success">
-                      {(negotiation.offerAmount / 100).toLocaleString('es')} {negotiation.currency}
+                      {(negotiation.offerAmount / 100).toLocaleString('en-GB')} {negotiation.currency}
                     </Badge>
                   ) : null}
                   <StatusBadge status={negotiation.status} />

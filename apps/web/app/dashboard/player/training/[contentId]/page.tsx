@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Contenido' };
+export const metadata: Metadata = { title: 'Content' };
 
 export default async function PlayerTrainingDetailPage({
   params,

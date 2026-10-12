@@ -50,7 +50,7 @@ export default async function AgentSubmissionDetailPage({
       <div className="mb-4 flex items-center gap-2">
         <Badge variant="warning">{submission.status}</Badge>
         <span className="text-sm text-muted-foreground">
-          {submission.createdAt.toLocaleDateString('es')}
+          {submission.createdAt.toLocaleDateString('en-GB')}
         </span>
       </div>
 
@@ -94,7 +94,7 @@ export default async function AgentSubmissionDetailPage({
               <CardContent className="flex items-center justify-between">
                 <span className="font-medium">Prueba</span>
                 <span className="text-sm text-muted-foreground">
-                  {submission.trial.startsAt.toLocaleDateString('es')} · {submission.trial.status}
+                  {submission.trial.startsAt.toLocaleDateString('en-GB')} · {submission.trial.status}
                 </span>
               </CardContent>
             </Card>

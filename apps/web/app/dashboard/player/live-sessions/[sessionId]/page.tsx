@@ -54,10 +54,10 @@ export default async function PlayerLiveSessionDetailPage({
           <div className="mb-4 flex items-center gap-2">
             <StatusBadge status={liveSession.status} />
             <Badge variant="outline">
-              {liveSession.startsAt.toLocaleDateString('es')}{' '}
-              {liveSession.startsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+              {liveSession.startsAt.toLocaleDateString('en-GB')}{' '}
+              {liveSession.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
               {liveSession.endsAt
-                ? ` → ${liveSession.endsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`
+                ? ` → ${liveSession.endsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
                 : ''}
             </Badge>
           </div>

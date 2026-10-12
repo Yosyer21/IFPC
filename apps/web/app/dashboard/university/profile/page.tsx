@@ -21,7 +21,7 @@ export default async function UniversityProfilePage() {
     ['Email', university.user?.email ?? '—'],
     ['Country', university.country],
     ['Ciudad', university.city ?? '—'],
-    ['Member since', university.createdAt.toLocaleDateString('es')],
+    ['Member since', university.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (

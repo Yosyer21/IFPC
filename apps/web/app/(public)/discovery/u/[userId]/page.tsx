@@ -44,7 +44,7 @@ export async function generateMetadata({
     select: { name: true, role: true },
   });
   if (!author) {
-    return { title: 'Perfil no encontrado — Future Baller' };
+    return { title: 'Profile not found — Future Baller' };
   }
 
   const description = `Posts de ${author.name} (${

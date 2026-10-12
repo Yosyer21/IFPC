@@ -77,10 +77,10 @@ export default async function AdminLiveSessionsPage() {
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     {LIVE_SESSION_TYPE_LABELS[session.type] ?? session.type} ·{' '}
-                    {session.startsAt.toLocaleDateString('es')}{' '}
-                    {session.startsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                    {session.startsAt.toLocaleDateString('en-GB')}{' '}
+                    {session.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                     {session.endsAt
-                      ? ` → ${session.endsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`
+                      ? ` → ${session.endsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
                       : ''}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-3 text-xs">

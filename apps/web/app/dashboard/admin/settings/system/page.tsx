@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
 import { IconBell, IconFile, IconUsers, IconVideo } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Sistema · Settings' };
+export const metadata: Metadata = { title: 'System · Settings' };
 
 export default async function AdminSettingsSystemPage() {
   const session = await auth();

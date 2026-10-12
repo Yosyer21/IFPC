@@ -21,7 +21,7 @@ export default async function ParentPaymentsHistoryPage() {
 
   const paid = payments.filter((p) => p.status === 'PAID');
   const total = paid.reduce((sum, p) => sum + p.amount, 0);
-  const totalFormatted = `${(total / 100).toLocaleString('es-ES', {
+  const totalFormatted = `${(total / 100).toLocaleString('en-GB', {
     style: 'currency',
     currency: 'EUR',
   })}`;
@@ -59,13 +59,13 @@ export default async function ParentPaymentsHistoryPage() {
                       {payment.description ?? 'Pago'}
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      {payment.createdAt.toLocaleDateString('es')} ·{' '}
-                      {payment.createdAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                      {payment.createdAt.toLocaleDateString('en-GB')} ·{' '}
+                      {payment.createdAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="font-semibold tabular-nums">
-                      {(payment.amount / 100).toLocaleString('es-ES', {
+                      {(payment.amount / 100).toLocaleString('en-GB', {
                         style: 'currency',
                         currency: payment.currency.toUpperCase(),
                       })}

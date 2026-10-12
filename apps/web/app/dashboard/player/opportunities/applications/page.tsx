@@ -61,7 +61,7 @@ export default async function PlayerApplicationsPage() {
                         : ''}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Enviada el {application.createdAt.toLocaleDateString('es')}
+                      Enviada el {application.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <Badge

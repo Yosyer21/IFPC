@@ -60,8 +60,8 @@ export default async function AgentContractsPage() {
                         : ''}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      {contract.startsAt.toLocaleDateString('es')}
-                      {contract.endsAt ? ` → ${contract.endsAt.toLocaleDateString('es')}` : ''}
+                      {contract.startsAt.toLocaleDateString('en-GB')}
+                      {contract.endsAt ? ` → ${contract.endsAt.toLocaleDateString('en-GB')}` : ''}
                     </p>
                   </div>
                   <Badge

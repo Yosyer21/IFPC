@@ -88,7 +88,7 @@ export default async function PublicOpportunitiesPage() {
                     ) : null}
                     {opportunity.closesAt ? (
                       <span className="text-xs text-muted-foreground">
-                        Cierra: {opportunity.closesAt.toLocaleDateString('es')}
+                        Cierra: {opportunity.closesAt.toLocaleDateString('en-GB')}
                       </span>
                     ) : null}
                   </div>

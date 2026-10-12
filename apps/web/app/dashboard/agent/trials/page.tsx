@@ -58,8 +58,8 @@ export default async function AgentTrialsPage() {
                       {trial.location ? ` · ${trial.location}` : ''}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      {trial.startsAt.toLocaleDateString('es')}
-                      {trial.endsAt ? ` → ${trial.endsAt.toLocaleDateString('es')}` : ''}
+                      {trial.startsAt.toLocaleDateString('en-GB')}
+                      {trial.endsAt ? ` → ${trial.endsAt.toLocaleDateString('en-GB')}` : ''}
                     </p>
                   </div>
                   <Badge variant={trial.status === 'SCHEDULED' ? 'warning' : 'success'}>

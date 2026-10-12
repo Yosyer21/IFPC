@@ -55,7 +55,7 @@ export default async function PublicOpportunityDetailPage({
             <Badge variant="success">Abierta</Badge>
             {opportunity.closesAt ? (
               <span className="text-sm text-muted-foreground">
-                Cierra el {opportunity.closesAt.toLocaleDateString('es')}
+                Cierra el {opportunity.closesAt.toLocaleDateString('en-GB')}
               </span>
             ) : null}
           </div>

@@ -3,7 +3,7 @@ import { auth } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Seguridad · Settings' };
+export const metadata: Metadata = { title: 'Security · Settings' };
 
 export default async function AdminSettingsSecurityPage() {
   const session = await auth();

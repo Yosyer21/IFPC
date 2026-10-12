@@ -60,7 +60,7 @@ export default async function AgentNegotiationsPage() {
                         : ''}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
-                      {negotiation.createdAt.toLocaleDateString('es')}
+                      {negotiation.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <Badge variant={negotiation.status === 'OPEN' ? 'warning' : 'success'}>

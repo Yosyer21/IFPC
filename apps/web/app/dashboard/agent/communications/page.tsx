@@ -75,7 +75,7 @@ export default async function AgentCommunicationsPage() {
                             <div className="flex items-baseline justify-between gap-4">
                               <span className="text-xs font-semibold">{message.sender.name}</span>
                               <span className="text-[10px] text-muted-foreground">
-                                {message.createdAt.toLocaleString('es', {
+                                {message.createdAt.toLocaleString('en-GB', {
                                   day: '2-digit',
                                   month: 'short',
                                   hour: '2-digit',

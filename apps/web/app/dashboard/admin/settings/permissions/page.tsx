@@ -5,7 +5,7 @@ import { ROLES } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Permisos · Settings' };
+export const metadata: Metadata = { title: 'Permissions · Settings' };
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
   PLAYER: ['Edit profile', 'Upload videos', 'Upload documents', 'Apply to opportunities', 'Save opportunities', 'See training content'],

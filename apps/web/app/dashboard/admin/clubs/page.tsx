@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { verifyClubAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Clubes' };
+export const metadata: Metadata = { title: 'Clubs' };
 
 export default async function AdminClubsPage() {
   const session = await auth();

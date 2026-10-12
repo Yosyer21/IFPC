@@ -56,7 +56,7 @@ export default async function AgentSubmissionsPage() {
                     </h2>
                     <p className="text-sm text-muted-foreground">
                       {submission.club.name} · Enviado el{' '}
-                      {submission.createdAt.toLocaleDateString('es')}
+                      {submission.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1">

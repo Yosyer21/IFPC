@@ -47,12 +47,12 @@ export default async function ParentPaymentsPage() {
                 <div className="min-w-0">
                   <h2 className="truncate font-semibold">{payment.description ?? 'Pago'}</h2>
                   <p className="text-sm text-muted-foreground">
-                    {payment.createdAt.toLocaleDateString('es')}
+                    {payment.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="text-right">
                   <div className="font-semibold tabular-nums">
-                    {(payment.amount / 100).toLocaleString('es-ES', {
+                    {(payment.amount / 100).toLocaleString('en-GB', {
                       style: 'currency',
                       currency: payment.currency.toUpperCase(),
                     })}

@@ -7,7 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { IconBriefcase } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Clubes' };
+export const metadata: Metadata = { title: 'Clubs' };
 
 export default async function AgentClubsPage() {
   const session = await auth();
@@ -67,9 +67,8 @@ export default async function AgentClubsPage() {
                     </div>
                   </div>
                   <Badge variant="success">
-                    {club._count.opportunities} oportunidad
-                    {club._count.opportunities === 1 ? '' : 'es'} abierta
-                    {club._count.opportunities === 1 ? '' : 's'}
+                    {club._count.opportunities} open opportunit
+                    {club._count.opportunities === 1 ? 'y' : 'ies'}
                   </Badge>
                 </CardContent>
               </Card>

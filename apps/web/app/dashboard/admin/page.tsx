@@ -71,7 +71,7 @@ export default async function AdminDashboardPage() {
     pendingActions.push({
       href: '/dashboard/admin/clubs/pending',
       icon: IconBriefcase,
-      text: `${unverifiedClubs} club${unverifiedClubs === 1 ? '' : 'es'} sin verificar`,
+      text: `${unverifiedClubs} unverified club${unverifiedClubs === 1 ? '' : 's'}`,
       meta: 'Verificar',
     });
   }
@@ -257,7 +257,7 @@ export default async function AdminDashboardPage() {
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{user.name}</div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {user.email} · {user.createdAt.toLocaleDateString('es')}
+                        {user.email} · {user.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge>{user.role}</Badge>
@@ -273,11 +273,11 @@ export default async function AdminDashboardPage() {
                         {payment.description ?? 'Pago'}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {payment.user?.name ?? 'Usuario'} · {payment.createdAt.toLocaleDateString('es')}
+                        {payment.user?.name ?? 'Usuario'} · {payment.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge variant="success">
-                      {(payment.amount / 100).toLocaleString('es-ES', {
+                      {(payment.amount / 100).toLocaleString('en-GB', {
                         style: 'currency',
                         currency: payment.currency.toUpperCase(),
                       })}
@@ -299,7 +299,7 @@ export default async function AdminDashboardPage() {
             </div>
             <div className="mb-4 flex items-baseline gap-2">
               <span className="text-3xl font-bold tabular-nums">
-                {(revenue / 100).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                {(revenue / 100).toLocaleString('en-GB', { style: 'currency', currency: 'EUR' })}
               </span>
               <span className="text-sm text-muted-foreground">total revenue</span>
             </div>
@@ -318,7 +318,7 @@ export default async function AdminDashboardPage() {
                       {payment.user?.name ?? 'Usuario'}
                     </span>
                     <span className="font-semibold tabular-nums">
-                      {(payment.amount / 100).toLocaleString('es-ES', {
+                      {(payment.amount / 100).toLocaleString('en-GB', {
                         style: 'currency',
                         currency: payment.currency.toUpperCase(),
                       })}

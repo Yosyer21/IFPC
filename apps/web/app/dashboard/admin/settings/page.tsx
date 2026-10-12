@@ -13,7 +13,7 @@ const SECTIONS = [
   },
   {
     href: '/dashboard/admin/settings/leagues',
-    title: 'Ligas',
+    title: 'Leagues',
     description: 'Competitions of registered clubs',
   },
   {
@@ -23,17 +23,17 @@ const SECTIONS = [
   },
   {
     href: '/dashboard/admin/settings/permissions',
-    title: 'Permisos',
+    title: 'Permissions',
     description: 'Matriz de capacidades por rol',
   },
   {
     href: '/dashboard/admin/settings/security',
-    title: 'Seguridad',
+    title: 'Security',
     description: 'Environment variables and security practices',
   },
   {
     href: '/dashboard/admin/settings/system',
-    title: 'Sistema',
+    title: 'System',
     description: 'Estado general de la plataforma y workers',
   },
 ];

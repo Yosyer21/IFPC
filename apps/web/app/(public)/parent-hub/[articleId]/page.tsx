@@ -34,7 +34,7 @@ export default async function PublicParentHubArticlePage({
               <span>{article.durationMinutes} min de lectura</span>
             ) : null}
             {article.difficulty ? <span>Level {article.difficulty}/5</span> : null}
-            <span>{article.createdAt.toLocaleDateString('es')}</span>
+            <span>{article.createdAt.toLocaleDateString('en-GB')}</span>
           </div>
 
           {article.description ? (

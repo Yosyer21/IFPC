@@ -55,8 +55,8 @@ export default async function PlayerOpportunityDetailPage({
     ['Position', opportunity.position ?? '—'],
     ['Rango de edad', opportunity.ageMin || opportunity.ageMax ? `${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} years old` : '—'],
     ['Location', opportunity.location ?? '—'],
-    ['Cierra el', opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('es') : '—'],
-    ['Publicada el', opportunity.createdAt.toLocaleDateString('es')],
+    ['Cierra el', opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('en-GB') : '—'],
+    ['Publicada el', opportunity.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (

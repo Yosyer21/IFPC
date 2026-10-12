@@ -60,7 +60,7 @@ export default async function PlayerDocumentsPage() {
                   <div>
                     <h2 className="font-semibold">{document.title}</h2>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {document.createdAt.toLocaleDateString('es')}
+                      {document.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <Badge>{TYPE_LABELS[document.type] ?? document.type}</Badge>

@@ -52,15 +52,15 @@ export default async function AdminLiveSessionDetailPage({
             <div className="rounded-md border border-border p-3">
               <div className="text-xs text-muted-foreground">Inicio</div>
               <div className="mt-1 font-medium">
-                {liveSession.startsAt.toLocaleDateString('es')}{' '}
-                {liveSession.startsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                {liveSession.startsAt.toLocaleDateString('en-GB')}{' '}
+                {liveSession.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
             <div className="rounded-md border border-border p-3">
               <div className="text-xs text-muted-foreground">Fin</div>
               <div className="mt-1 font-medium">
                 {liveSession.endsAt
-                  ? `${liveSession.endsAt.toLocaleDateString('es')} ${liveSession.endsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}`
+                  ? `${liveSession.endsAt.toLocaleDateString('en-GB')} ${liveSession.endsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
                   : '—'}
               </div>
             </div>

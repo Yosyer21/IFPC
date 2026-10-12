@@ -67,7 +67,7 @@ export default async function AdminDocumentsPage() {
                 </Link>
                 <div className="mt-1 text-xs text-muted-foreground">
                   {document.player.firstName} {document.player.lastName} ·{' '}
-                  {document.createdAt.toLocaleDateString('es')}
+                  {document.createdAt.toLocaleDateString('en-GB')}
                 </div>
               </div>
               <Badge variant="outline">

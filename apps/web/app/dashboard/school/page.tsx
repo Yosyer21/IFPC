@@ -135,7 +135,7 @@ export default async function SchoolDashboardPage() {
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{camp.title}</div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {camp.startsAt.toLocaleDateString('es')}
+                        {camp.startsAt.toLocaleDateString('en-GB')}
                         {camp.city ? ` · ${camp.city}` : ''}
                         {camp.country ? `, ${camp.country}` : ''}
                       </div>

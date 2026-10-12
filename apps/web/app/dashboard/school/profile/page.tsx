@@ -25,7 +25,7 @@ export default async function SchoolProfilePage() {
     ['Website', school.website ?? '—'],
     ['Country', school.country],
     ['Ciudad', school.city ?? '—'],
-    ['Alta en la plataforma', school.createdAt.toLocaleDateString('es')],
+    ['Alta en la plataforma', school.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (

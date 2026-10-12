@@ -23,7 +23,7 @@ import { getPrivacyState, hasBlockBetween } from '@/lib/discovery-privacy';
 import { getPlayerStats } from '@/lib/player-stats';
 import { nameParts } from '@/lib/names';
 
-export const metadata: Metadata = { title: 'Perfil' };
+export const metadata: Metadata = { title: 'Profile' };
 
 /** Datos de player que personalizan el muro (portada, acento, headline y chips). */
 const PLAYER_PROFILE_SELECT = {

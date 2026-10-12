@@ -77,7 +77,7 @@ export default async function PlayerProfilePage() {
   const rows: [string, string][] = [
     ['Name', `${player.firstName} ${player.lastName}`],
     ['Email', player.user.email],
-    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
+    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('en-GB') : '—'],
     ['Nationality', player.nationality ?? '—'],
     ['Position', positionLabel],
     ['Preferred foot', footLabel],

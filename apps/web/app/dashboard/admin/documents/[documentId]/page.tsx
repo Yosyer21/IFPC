@@ -53,7 +53,7 @@ export default async function AdminDocumentDetailPage({
             </div>
             <div className="rounded-md border border-border p-3">
               <dt className="text-xs text-muted-foreground">Subido el</dt>
-              <dd className="mt-1 font-medium">{document.createdAt.toLocaleDateString('es')}</dd>
+              <dd className="mt-1 font-medium">{document.createdAt.toLocaleDateString('en-GB')}</dd>
             </div>
             <div className="rounded-md border border-border p-3">
               <dt className="text-xs text-muted-foreground">Player</dt>

@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Familiares · Users' };
+export const metadata: Metadata = { title: 'Parents · Users' };
 
 export default async function AdminUsersParentsPage() {
   const session = await auth();
@@ -44,7 +44,7 @@ export default async function AdminUsersParentsPage() {
                   <p className="font-semibold">{parent.user.name}</p>
                   <p className="text-sm text-muted-foreground">{parent.user.email}</p>
                   <p className="text-xs text-muted-foreground">
-                    Registrado el {parent.createdAt.toLocaleDateString('es')}
+                    Registrado el {parent.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

@@ -34,7 +34,7 @@ export default async function PlayerMembershipPage() {
             <p className="text-sm text-muted-foreground">
               {membership?.tier ?? 'FREE'}
               {membership?.endsAt
-                ? ` · Valid hasta ${membership.endsAt.toLocaleDateString('es')}`
+                ? ` · Valid hasta ${membership.endsAt.toLocaleDateString('en-GB')}`
                 : ''}
             </p>
           </div>

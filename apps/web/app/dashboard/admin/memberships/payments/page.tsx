@@ -45,7 +45,7 @@ export default async function AdminPaymentsPage() {
                 <div>
                   <p className="font-semibold">{payment.user.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {payment.description ?? payment.id} · {payment.createdAt.toLocaleDateString('es')}
+                    {payment.description ?? payment.id} · {payment.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

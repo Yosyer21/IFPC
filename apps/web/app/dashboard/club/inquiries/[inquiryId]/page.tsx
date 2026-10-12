@@ -52,7 +52,7 @@ export default async function ClubInquiryDetailPage({
       {inquiry.response ? (
         <Card className="mb-4 border-emerald-600/30">
           <CardContent className="flex flex-col gap-2">
-            <Badge variant="success">Respondida el {inquiry.respondedAt?.toLocaleDateString('es')}</Badge>
+            <Badge variant="success">Respondida el {inquiry.respondedAt?.toLocaleDateString('en-GB')}</Badge>
             <p className="text-sm text-muted-foreground">{inquiry.response}</p>
           </CardContent>
         </Card>

@@ -5,7 +5,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Universidades · Users' };
+export const metadata: Metadata = { title: 'Universities · Users' };
 
 export default async function AdminUsersUniversitiesPage() {
   const session = await auth();

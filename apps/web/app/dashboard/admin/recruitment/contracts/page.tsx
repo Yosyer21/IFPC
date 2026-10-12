@@ -57,14 +57,14 @@ export default async function AdminRecruitmentContractsPage() {
                   </p>
                   <p className="text-sm text-muted-foreground">→ {contract.club.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {contract.startsAt.toLocaleDateString('es')}
-                    {contract.endsAt ? ` — ${contract.endsAt.toLocaleDateString('es')}` : ''}
+                    {contract.startsAt.toLocaleDateString('en-GB')}
+                    {contract.endsAt ? ` — ${contract.endsAt.toLocaleDateString('en-GB')}` : ''}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   {contract.salary ? (
                     <Badge variant="success">
-                      {(contract.salary / 100).toLocaleString('es')} {contract.currency}
+                      {(contract.salary / 100).toLocaleString('en-GB')} {contract.currency}
                     </Badge>
                   ) : null}
                   <StatusBadge status={contract.status} />

@@ -5,7 +5,7 @@ import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { getAuthorAnalytics } from '@/lib/discovery-analytics';
 
-export const metadata: Metadata = { title: 'Rendimiento en Discovery' };
+export const metadata: Metadata = { title: 'Discovery performance' };
 
 /** Una cifra del panel, con su tag. */
 function Metric({ label, value, hint }: { label: string; value: number; hint?: string }) {

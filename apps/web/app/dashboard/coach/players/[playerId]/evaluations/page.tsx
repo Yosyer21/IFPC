@@ -91,7 +91,7 @@ export default async function CoachPlayerEvaluationsPage({
                     <p className="text-sm text-muted-foreground">{evaluation.notes}</p>
                   ) : null}
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {evaluation.createdAt.toLocaleDateString('es')}
+                    {evaluation.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <Badge variant="success">{evaluation.score}/10</Badge>

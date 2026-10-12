@@ -18,7 +18,7 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Hub familiar' };
+export const metadata: Metadata = { title: 'Family hub' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -132,7 +132,7 @@ export default async function ParentDashboardPage() {
     pendingActions.push({
       href: '/dashboard/parent/opportunities',
       icon: IconTarget,
-      text: `${openOpportunities} oportunidad${openOpportunities === 1 ? '' : 'es'} abierta${openOpportunities === 1 ? '' : 's'} para explorar`,
+      text: `${openOpportunities} open opportunit${openOpportunities === 1 ? 'y' : 'ies'} to explore`,
       meta: 'See opportunities',
     });
   }
@@ -211,7 +211,7 @@ export default async function ParentDashboardPage() {
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            You have <strong>{pendingActions.length} novedad{pendingActions.length === 1 ? '' : 'es'}</strong> para revisar en el hub familiar.
+            You have <strong>{pendingActions.length} new item{pendingActions.length === 1 ? '' : 's'}</strong> to review in the family hub.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -355,7 +355,7 @@ export default async function ParentDashboardPage() {
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
                         {evaluation.evaluatedBy ?? 'Coach'} ·{' '}
-                        {evaluation.createdAt.toLocaleDateString('es')}
+                        {evaluation.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge variant="success">{evaluation.score}/10</Badge>
@@ -371,7 +371,7 @@ export default async function ParentDashboardPage() {
                         Prueba · {trial.player.firstName} en {trial.club.name}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {trial.startsAt.toLocaleDateString('es')} · {trial.status}
+                        {trial.startsAt.toLocaleDateString('en-GB')} · {trial.status}
                       </div>
                     </div>
                   </div>
@@ -406,12 +406,12 @@ export default async function ParentDashboardPage() {
                       {payment.description ?? 'Pago'}
                     </div>
                     <div className="truncate text-xs text-muted-foreground">
-                      {payment.createdAt.toLocaleDateString('es')}
+                      {payment.createdAt.toLocaleDateString('en-GB')}
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-semibold tabular-nums">
-                      {(payment.amount / 100).toLocaleString('es-ES', {
+                      {(payment.amount / 100).toLocaleString('en-GB', {
                         style: 'currency',
                         currency: payment.currency.toUpperCase(),
                       })}

@@ -45,7 +45,7 @@ export default async function SchoolOpportunitiesPage() {
                     {opportunity.club?.name ?? opportunity.university?.name ?? 'Future Baller'}
                     {opportunity.location ? ` · ${opportunity.location}` : ''}
                     {opportunity.closesAt
-                      ? ` · Cierra ${opportunity.closesAt.toLocaleDateString('es')}`
+                      ? ` · Cierra ${opportunity.closesAt.toLocaleDateString('en-GB')}`
                       : ''}
                   </p>
                 </div>

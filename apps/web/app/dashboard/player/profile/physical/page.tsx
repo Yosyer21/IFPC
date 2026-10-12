@@ -21,7 +21,7 @@ export default async function PlayerPhysicalPage() {
 
   const rows: [string, string][] = [
     ['Age', age !== null ? `${age} years old` : '—'],
-    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
+    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('en-GB') : '—'],
     ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
     ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Nationality', player.nationality ?? '—'],

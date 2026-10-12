@@ -117,7 +117,7 @@ export default async function UniversityDashboardPage() {
     pendingActions.push({
       href: '/dashboard/university/opportunities',
       icon: IconStar,
-      text: `${scholarshipApplications} request${scholarshipApplications === 1 ? '' : 'es'} a scholarships registrada${scholarshipApplications === 1 ? '' : 's'}`,
+      text: `${scholarshipApplications} scholarship application${scholarshipApplications === 1 ? '' : 's'} submitted`,
       meta: 'Revisar',
     });
   }
@@ -143,7 +143,7 @@ export default async function UniversityDashboardPage() {
               {university.city ? `${university.city}, ` : ''}
               {university.country} · Academic-sports portal
               {openOpportunities.length > 0
-                ? ` · ${openOpportunities.length} oportunidad${openOpportunities.length === 1 ? '' : 'es'} para tus candidates`
+                ? ` · ${openOpportunities.length} opportunit${openOpportunities.length === 1 ? 'y' : 'ies'} for your candidates`
                 : ''}
             </p>
           </div>
@@ -194,7 +194,7 @@ export default async function UniversityDashboardPage() {
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            You have <strong>{pendingActions.length} novedad{pendingActions.length === 1 ? '' : 'es'}</strong> en tu portal universitario.
+            You have <strong>{pendingActions.length} new item{pendingActions.length === 1 ? '' : 's'}</strong> in your university portal.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -333,7 +333,7 @@ export default async function UniversityDashboardPage() {
                         {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
                         {opportunity.location ? ` · ${opportunity.location}` : ''}
                         {opportunity.closesAt
-                          ? ` · Cierra ${opportunity.closesAt.toLocaleDateString('es')}`
+                          ? ` · Cierra ${opportunity.closesAt.toLocaleDateString('en-GB')}`
                           : ''}
                       </div>
                     </div>

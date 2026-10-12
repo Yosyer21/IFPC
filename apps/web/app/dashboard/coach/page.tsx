@@ -156,7 +156,7 @@ export default async function CoachDashboardPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               Gestiona el desarrollo de tus players
               {players.length > 0
-                ? ` · ${players.length} player${players.length === 1 ? '' : 'es'} a tu cargo`
+                ? ` · ${players.length} player${players.length === 1 ? '' : 's'} in your care`
                 : ' · no players assigned yet'}
             </p>
           </div>
@@ -290,7 +290,7 @@ export default async function CoachDashboardPage() {
                       <div className="truncate text-xs text-muted-foreground">{item.meta}</div>
                     </div>
                     <span className="shrink-0 text-xs text-muted-foreground">
-                      {item.date.toLocaleDateString('es')}
+                      {item.date.toLocaleDateString('en-GB')}
                     </span>
                   </div>
                 );

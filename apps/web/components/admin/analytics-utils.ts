@@ -11,7 +11,7 @@ export function monthlyCounts(records: { createdAt: Date }[], months = 6): Month
   for (let i = months - 1; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     buckets.push({
-      label: d.toLocaleDateString('es', { month: 'short' }),
+      label: d.toLocaleDateString('en-GB', { month: 'short' }),
       value: 0,
     });
   }

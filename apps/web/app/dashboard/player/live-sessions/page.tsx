@@ -64,8 +64,8 @@ export default async function PlayerLiveSessionsPage() {
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {SESSION_TYPE_LABELS[liveSession.type] ?? liveSession.type} ·{' '}
-                      {liveSession.startsAt.toLocaleDateString('es')}{' '}
-                      {liveSession.startsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                      {liveSession.startsAt.toLocaleDateString('en-GB')}{' '}
+                      {liveSession.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                     </p>
                     {liveSession.coach?.user?.name ? (
                       <p className="mt-2 text-xs text-muted-foreground">
@@ -98,7 +98,7 @@ export default async function PlayerLiveSessionsPage() {
                 <div className="min-w-0">
                   <div className="text-sm font-medium">{liveSession.title}</div>
                   <div className="mt-1 text-xs text-muted-foreground">
-                    {liveSession.startsAt.toLocaleDateString('es')}
+                    {liveSession.startsAt.toLocaleDateString('en-GB')}
                   </div>
                 </div>
                 <StatusBadge status={liveSession.status} />

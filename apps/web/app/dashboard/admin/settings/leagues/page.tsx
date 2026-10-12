@@ -8,7 +8,7 @@ import { StatCard } from '@/components/player/stat-card';
 import { CountsBars } from '@/components/player/charts';
 import { IconBriefcase, IconShield } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Ligas · Settings' };
+export const metadata: Metadata = { title: 'Leagues · Settings' };
 
 export default async function AdminSettingsLeaguesPage() {
   const session = await auth();

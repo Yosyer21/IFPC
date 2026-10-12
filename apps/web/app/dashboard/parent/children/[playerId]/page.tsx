@@ -8,7 +8,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
 
-export const metadata: Metadata = { title: 'Mi hijo' };
+export const metadata: Metadata = { title: 'My child' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -201,7 +201,7 @@ export default async function ParentChildDetailPage({
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
                         {evaluation.evaluatedBy ?? 'Coach'} ·{' '}
-                        {evaluation.createdAt.toLocaleDateString('es')}
+                        {evaluation.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge variant="success">{evaluation.score}/10</Badge>

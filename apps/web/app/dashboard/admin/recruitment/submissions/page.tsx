@@ -70,7 +70,7 @@ export default async function AdminRecruitmentSubmissionsPage() {
                     {submission.agent ? ` · agent: ${submission.agent.user.name}` : ''}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {submission.createdAt.toLocaleDateString('es')}
+                    {submission.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

@@ -54,8 +54,8 @@ export default async function PublicCampsPage() {
                   <div className="flex items-center justify-between">
                     <Badge variant="outline">{camp.status === 'FULL' ? 'Completo' : 'Abierto'}</Badge>
                     <span className="text-xs text-muted-foreground">
-                      {camp.startsAt.toLocaleDateString('es')}
-                      {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('es')}` : ''}
+                      {camp.startsAt.toLocaleDateString('en-GB')}
+                      {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}
                     </span>
                   </div>
                   <h2 className="mt-4 text-lg font-semibold group-hover:text-emerald-400">
@@ -71,7 +71,7 @@ export default async function PublicCampsPage() {
                     </span>
                     {camp.price ? (
                       <span className="font-semibold text-emerald-400">
-                        {(camp.price / 100).toLocaleString('es-ES', {
+                        {(camp.price / 100).toLocaleString('en-GB', {
                           style: 'currency',
                           currency: camp.currency.toUpperCase(),
                         })}

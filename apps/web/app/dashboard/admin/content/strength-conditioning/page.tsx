@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ContentCategory } from '@/components/admin/content-category';
 
-export const metadata: Metadata = { title: 'Contenido · Fuerza' };
+export const metadata: Metadata = { title: 'Content · Strength' };
 
 export default async function AdminContentStrengthConditioningPage() {
   return (

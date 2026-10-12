@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { verifyClubAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Clubes pendientes' };
+export const metadata: Metadata = { title: 'Pending clubs' };
 
 export default async function AdminClubsPendingPage() {
   const session = await auth();

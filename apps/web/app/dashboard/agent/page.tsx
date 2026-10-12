@@ -19,7 +19,7 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Mi agencia' };
+export const metadata: Metadata = { title: 'My agency' };
 
 const STAGE_LABELS: Record<string, string> = {
   SUBMISSION: 'Submission',
@@ -203,7 +203,7 @@ export default async function AgentDashboardPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               {agent.user.email} · Representation agency
               {players.length > 0
-                ? ` · ${players.length} player${players.length === 1 ? '' : 'es'} representado${players.length === 1 ? '' : 's'}`
+                ? ` · ${players.length} represented player${players.length === 1 ? '' : 's'}`
                 : ''}
             </p>
           </div>
@@ -448,7 +448,7 @@ export default async function AgentDashboardPage() {
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
                         {STAGE_LABELS[submission.stage] ?? submission.stage} ·{' '}
-                        {submission.createdAt.toLocaleDateString('es')}
+                        {submission.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge variant={submission.status === 'IN_REVIEW' ? 'warning' : 'default'}>
@@ -466,7 +466,7 @@ export default async function AgentDashboardPage() {
                         Prueba · {trial.player.firstName} {trial.player.lastName} en {trial.club.name}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {trial.startsAt.toLocaleDateString('es')} · {trial.status}
+                        {trial.startsAt.toLocaleDateString('en-GB')} · {trial.status}
                       </div>
                     </div>
                   </div>

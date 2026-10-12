@@ -6,7 +6,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Clubes — Future Baller',
+  title: 'Clubs — Future Baller',
   description: 'Directory of clubs and academies that recruit on Future Baller.',
 };
 

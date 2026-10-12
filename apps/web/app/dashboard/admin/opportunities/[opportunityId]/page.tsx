@@ -69,7 +69,7 @@ export default async function AdminOpportunityDetailPage({
           <CardContent className="py-4">
             <div className="text-xs text-muted-foreground">Cierra el</div>
             <div className="mt-1 text-sm font-semibold">
-              {opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('es') : '—'}
+              {opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('en-GB') : '—'}
             </div>
           </CardContent>
         </Card>
@@ -129,7 +129,7 @@ export default async function AdminOpportunityDetailPage({
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
                       {application.player.position ?? 'No position'} ·{' '}
-                      {application.createdAt.toLocaleDateString('es')}
+                      {application.createdAt.toLocaleDateString('en-GB')}
                       {application.message ? ` · "${application.message.slice(0, 90)}"` : ''}
                     </div>
                   </div>

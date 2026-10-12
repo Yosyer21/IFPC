@@ -61,8 +61,8 @@ export default async function AdminCampDetailPage({
           <CardContent className="py-4">
             <div className="text-xs text-muted-foreground">Fechas</div>
             <div className="mt-1 text-sm font-semibold">
-              {camp.startsAt.toLocaleDateString('es')}
-              {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('es')}` : ''}
+              {camp.startsAt.toLocaleDateString('en-GB')}
+              {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}
             </div>
           </CardContent>
         </Card>
@@ -71,7 +71,7 @@ export default async function AdminCampDetailPage({
             <div className="text-xs text-muted-foreground">Price</div>
             <div className="mt-1 text-sm font-semibold">
               {camp.price
-                ? (camp.price / 100).toLocaleString('es-ES', {
+                ? (camp.price / 100).toLocaleString('en-GB', {
                     style: 'currency',
                     currency: camp.currency.toUpperCase(),
                   })
@@ -148,7 +148,7 @@ export default async function AdminCampDetailPage({
                     </div>
                     <div className="text-xs text-muted-foreground">
                       {registration.player.position ?? 'No position'} ·{' '}
-                      {registration.createdAt.toLocaleDateString('es')}
+                      {registration.createdAt.toLocaleDateString('en-GB')}
                     </div>
                   </div>
                   <StatusBadge status={registration.status} />

@@ -92,7 +92,7 @@ export default async function PublicClubDetailPage({
                   {opportunity.position ? `Position: ${opportunity.position} · ` : ''}
                   {opportunity.location ?? 'Location to be defined'}
                   {opportunity.closesAt
-                    ? ` · Cierra: ${opportunity.closesAt.toLocaleDateString('es')}`
+                    ? ` · Cierra: ${opportunity.closesAt.toLocaleDateString('en-GB')}`
                     : ''}
                 </p>
               </Link>

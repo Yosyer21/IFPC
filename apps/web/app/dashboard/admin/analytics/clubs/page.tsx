@@ -9,7 +9,7 @@ import { CountsBars } from '@/components/player/charts';
 import { IconBriefcase, IconShield, IconUsers } from '@/components/dashboard/icons';
 import { monthlyCounts } from '@/components/admin/analytics-utils';
 
-export const metadata: Metadata = { title: 'Analytics · Clubes' };
+export const metadata: Metadata = { title: 'Analytics · Clubs' };
 
 export default async function AdminAnalyticsClubsPage() {
   const session = await auth();

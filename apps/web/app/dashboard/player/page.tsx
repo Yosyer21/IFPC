@@ -316,7 +316,7 @@ export default async function PlayerDashboardPage() {
                       <div className="truncate text-xs text-muted-foreground">{item.meta}</div>
                     </div>
                     <span className="shrink-0 text-xs text-muted-foreground">
-                      {item.date.toLocaleDateString('es')}
+                      {item.date.toLocaleDateString('en-GB')}
                     </span>
                   </div>
                 );

@@ -59,7 +59,7 @@ export default async function PlayerSavedOpportunitiesPage() {
                         : ''}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Guardada el {item.createdAt.toLocaleDateString('es')}
+                      Guardada el {item.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <Badge>Guardada</Badge>

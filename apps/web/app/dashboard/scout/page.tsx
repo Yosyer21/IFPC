@@ -110,7 +110,7 @@ export default async function ScoutDashboardPage() {
     pendingActions.push({
       href: '/dashboard/scout/scouting-reports',
       icon: IconWhistle,
-      text: `${savedWithoutReport.length} player${savedWithoutReport.length === 1 ? '' : 'es'} guardado${savedWithoutReport.length === 1 ? '' : 's'} sin report`,
+      text: `${savedWithoutReport.length} saved player${savedWithoutReport.length === 1 ? '' : 's'} without a report`,
       meta: 'Crear report',
     });
   }
@@ -136,7 +136,7 @@ export default async function ScoutDashboardPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               {scout.agency ?? 'Scouting'}
               {saved.length > 0
-                ? ` · ${saved.length} player${saved.length === 1 ? '' : 'es'} en tu radar`
+                ? ` · ${saved.length} player${saved.length === 1 ? '' : 's'} on your radar`
                 : ' · empieza explorando players'}
             </p>
           </div>
@@ -409,7 +409,7 @@ export default async function ScoutDashboardPage() {
                         {report.strengths ? `Fortalezas: ${report.strengths}` : ''}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {report.createdAt.toLocaleDateString('es')}
+                        {report.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge

@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Evaluaciones realizadas' };
+export const metadata: Metadata = { title: 'Assessments completed' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -71,7 +71,7 @@ export default async function CoachEvaluationsPage() {
                       <p className="mt-1 text-sm text-muted-foreground">{evaluation.notes}</p>
                     ) : null}
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {evaluation.createdAt.toLocaleDateString('es')}
+                      {evaluation.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <Badge variant="success">{evaluation.score}/10</Badge>

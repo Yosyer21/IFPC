@@ -134,7 +134,7 @@ export default async function ClubDashboardPage() {
     pendingActions.push({
       href: '/dashboard/club/opportunities',
       icon: IconFile,
-      text: `${draftOpportunities.length} oportunidad${draftOpportunities.length === 1 ? '' : 'es'} en borrador sin publicar`,
+      text: `${draftOpportunities.length} unpublished draft opportunit${draftOpportunities.length === 1 ? 'y' : 'ies'}`,
       meta: 'Publish',
     });
   }

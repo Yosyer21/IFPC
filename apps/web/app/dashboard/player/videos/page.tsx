@@ -58,7 +58,7 @@ export default async function PlayerVideosPage() {
                       {video.status}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {video.createdAt.toLocaleDateString('es')}
+                      {video.createdAt.toLocaleDateString('en-GB')}
                     </span>
                   </div>
                 </CardContent>

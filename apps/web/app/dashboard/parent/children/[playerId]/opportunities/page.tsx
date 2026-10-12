@@ -81,7 +81,7 @@ export default async function ParentChildOpportunitiesPage({
                         application.opportunity.university?.name ??
                         '—'}
                       {' · '}
-                      {application.createdAt.toLocaleDateString('es')}
+                      {application.createdAt.toLocaleDateString('en-GB')}
                     </div>
                   </div>
                   <StatusBadge status={application.status} />
@@ -139,7 +139,7 @@ export default async function ParentChildOpportunitiesPage({
                     <div className="mt-1 text-xs text-muted-foreground">
                       {registration.camp.city ?? ''}
                       {registration.camp.country ? `, ${registration.camp.country}` : ''} ·{' '}
-                      {registration.camp.startsAt.toLocaleDateString('es')}
+                      {registration.camp.startsAt.toLocaleDateString('en-GB')}
                     </div>
                   </div>
                   <StatusBadge status={registration.status} />

@@ -6,7 +6,7 @@ import { SCHOOL_TYPE_LABELS } from '@/lib/labels';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Escuelas · Users' };
+export const metadata: Metadata = { title: 'Schools · Users' };
 
 export default async function AdminUsersSchoolsPage() {
   const session = await auth();

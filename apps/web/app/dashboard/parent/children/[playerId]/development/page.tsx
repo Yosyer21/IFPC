@@ -175,7 +175,7 @@ export default async function ParentChildDevelopmentPage({
                     <div className="text-sm font-medium">{goal.title}</div>
                     <div className="mt-1 text-xs text-muted-foreground">
                       {goal.description ?? 'No description'}
-                      {goal.dueDate ? ` · Vence: ${goal.dueDate.toLocaleDateString('es')}` : ''}
+                      {goal.dueDate ? ` · Vence: ${goal.dueDate.toLocaleDateString('en-GB')}` : ''}
                     </div>
                   </div>
                   <Badge

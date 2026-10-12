@@ -286,7 +286,7 @@ export function formatRelativeTime(date: Date, now: Date = new Date()): string {
   if (hours < 24) return `hace ${hours} h`;
   const days = Math.round(hours / 24);
   if (days < 7) return `hace ${days} d`;
-  return date.toLocaleDateString('es', { day: 'numeric', month: 'short' });
+  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
 /** Campos de `PostView` necesarios para agregar el alcance de una post. */

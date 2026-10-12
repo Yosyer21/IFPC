@@ -49,8 +49,8 @@ export default async function PublicCampDetailPage({
           <div className="flex flex-wrap items-center gap-3">
             <Badge variant="outline">{camp.status === 'FULL' ? 'Completo' : 'Abierto'}</Badge>
             <span className="text-sm text-muted-foreground">
-              {camp.startsAt.toLocaleDateString('es')}
-              {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('es')}` : ''}
+              {camp.startsAt.toLocaleDateString('en-GB')}
+              {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}
             </span>
           </div>
 
@@ -69,7 +69,7 @@ export default async function PublicCampDetailPage({
               <div className="text-xs text-muted-foreground">Price</div>
               <div className="mt-1 text-lg font-semibold text-emerald-400">
                 {camp.price
-                  ? (camp.price / 100).toLocaleString('es-ES', {
+                  ? (camp.price / 100).toLocaleString('en-GB', {
                       style: 'currency',
                       currency: camp.currency.toUpperCase(),
                     })

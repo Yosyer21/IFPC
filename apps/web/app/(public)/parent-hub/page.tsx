@@ -57,7 +57,7 @@ export default async function PublicParentHubPage() {
                   {article.durationMinutes ? (
                     <span>{article.durationMinutes} min de lectura</span>
                   ) : null}
-                  <span>{article.createdAt.toLocaleDateString('es')}</span>
+                  <span>{article.createdAt.toLocaleDateString('en-GB')}</span>
                 </div>
               </Link>
             ))}

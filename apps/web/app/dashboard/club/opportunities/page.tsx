@@ -64,7 +64,7 @@ export default async function ClubOpportunitiesPage() {
                   {opportunity.location ? ` · ${opportunity.location}` : ''}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Creada el {opportunity.createdAt.toLocaleDateString('es')}
+                  Creada el {opportunity.createdAt.toLocaleDateString('en-GB')}
                 </p>
                 <Link
                   href={`/dashboard/club/players`}

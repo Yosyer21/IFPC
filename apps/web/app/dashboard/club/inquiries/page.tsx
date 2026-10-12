@@ -52,7 +52,7 @@ export default async function ClubInquiriesPage() {
                       {inquiry.name} · {inquiry.email}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {inquiry.createdAt.toLocaleDateString('es')}
+                      {inquiry.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                   <Badge variant={inquiry.status === 'NEW' ? 'warning' : 'success'}>

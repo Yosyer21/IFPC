@@ -74,7 +74,7 @@ export default async function ScoutReportsPage() {
                     <p className="mt-1 text-sm text-muted-foreground">{report.notes}</p>
                   ) : null}
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {report.createdAt.toLocaleDateString('es')}
+                    {report.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <Badge variant="success">{report.rating}/10</Badge>

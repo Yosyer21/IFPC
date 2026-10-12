@@ -46,7 +46,7 @@ export default async function PlayerDocumentDetailPage({
           <div className="flex items-center gap-3">
             <Badge>{TYPE_LABELS[document.type] ?? document.type}</Badge>
             <span className="text-sm text-muted-foreground">
-              Subido el {document.createdAt.toLocaleDateString('es')}
+              Subido el {document.createdAt.toLocaleDateString('en-GB')}
             </span>
           </div>
           <a

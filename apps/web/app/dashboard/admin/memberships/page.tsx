@@ -56,7 +56,7 @@ export default async function AdminMembershipsPage() {
                   <p className="font-semibold">{membership.user.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {membership.user.email} · Hasta{' '}
-                    {membership.endsAt ? membership.endsAt.toLocaleDateString('es') : '—'}
+                    {membership.endsAt ? membership.endsAt.toLocaleDateString('en-GB') : '—'}
                   </p>
                 </div>
                 <Badge variant={membership.tier !== 'FREE' ? 'success' : 'default'}>

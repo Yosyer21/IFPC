@@ -50,7 +50,7 @@ export default async function AdminAnalyticsPage() {
     },
     {
       href: '/dashboard/admin/analytics/clubs',
-      title: 'Clubes',
+      title: 'Clubs',
       description: 'Verification, countries and registration growth',
     },
     {

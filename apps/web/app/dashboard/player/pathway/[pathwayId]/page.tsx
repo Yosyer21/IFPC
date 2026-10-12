@@ -22,7 +22,7 @@ export default async function PlayerPathwayDetailPage({
   if (!pathway) notFound();
 
   const formatDate = (date: Date | null) =>
-    date ? date.toLocaleDateString('es') : '—';
+    date ? date.toLocaleDateString('en-GB') : '—';
 
   return (
     <div className="mx-auto max-w-3xl">

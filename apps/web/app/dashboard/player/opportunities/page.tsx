@@ -87,7 +87,7 @@ export default async function PlayerOpportunitiesPage() {
                     {opportunity.position ? <span>Position: {opportunity.position}</span> : null}
                     {opportunity.location ? <span>{opportunity.location}</span> : null}
                     {opportunity.closesAt ? (
-                      <span>Cierra: {opportunity.closesAt.toLocaleDateString('es')}</span>
+                      <span>Cierra: {opportunity.closesAt.toLocaleDateString('en-GB')}</span>
                     ) : null}
                   </div>
                 </CardContent>

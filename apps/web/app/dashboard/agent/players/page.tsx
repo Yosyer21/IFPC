@@ -74,7 +74,7 @@ export default async function AgentPlayersPage() {
                     <div className="mt-1 flex items-center gap-2">
                       <Badge variant="success">{entry.player.status}</Badge>
                       <span className="text-xs text-muted-foreground">
-                        Desde {entry.since.toLocaleDateString('es')}
+                        Desde {entry.since.toLocaleDateString('en-GB')}
                       </span>
                     </div>
                   </div>

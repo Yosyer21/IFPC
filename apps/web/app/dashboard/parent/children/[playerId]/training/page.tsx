@@ -83,8 +83,8 @@ export default async function ParentChildTrainingPage({
                   <div className="min-w-0">
                     <div className="text-sm font-medium">{liveSession.title}</div>
                     <div className="mt-1 text-xs text-muted-foreground">
-                      {liveSession.startsAt.toLocaleDateString('es')}{' '}
-                      {liveSession.startsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                      {liveSession.startsAt.toLocaleDateString('en-GB')}{' '}
+                      {liveSession.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                       {liveSession.coach?.user?.name ? ` · ${liveSession.coach.user.name}` : ''}
                     </div>
                   </div>

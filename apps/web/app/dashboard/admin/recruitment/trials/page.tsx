@@ -59,8 +59,8 @@ export default async function AdminRecruitmentTrialsPage() {
                     → {trial.club.name} · {trial.location ?? 'No location'}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {trial.startsAt.toLocaleDateString('es')}
-                    {trial.endsAt ? ` — ${trial.endsAt.toLocaleDateString('es')}` : ''}
+                    {trial.startsAt.toLocaleDateString('en-GB')}
+                    {trial.endsAt ? ` — ${trial.endsAt.toLocaleDateString('en-GB')}` : ''}
                   </p>
                 </div>
                 <StatusBadge status={trial.status} />

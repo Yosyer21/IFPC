@@ -56,7 +56,7 @@ export default async function PlayerGoalsPage() {
                 ) : null}
                 {goal.dueDate ? (
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Deadline: {goal.dueDate.toLocaleDateString('es')}
+                    Deadline: {goal.dueDate.toLocaleDateString('en-GB')}
                   </p>
                 ) : null}
               </CardContent>

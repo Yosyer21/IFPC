@@ -8,7 +8,7 @@ import { Card, CardContent, Progress } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { playerProfileCompletion } from '@/lib/player';
 
-export const metadata: Metadata = { title: 'Mi desarrollo' };
+export const metadata: Metadata = { title: 'My development' };
 
 export default async function PlayerDevelopmentPage() {
   const session = await auth();

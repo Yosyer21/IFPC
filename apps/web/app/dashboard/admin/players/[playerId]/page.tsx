@@ -55,7 +55,7 @@ export default async function AdminPlayerDetailPage({
 
   const info: [string, string][] = [
     ['Email', player.user.email],
-    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('es') : '—'],
+    ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('en-GB') : '—'],
     ['Nationality', player.nationality ?? '—'],
     [
       'Position',
@@ -162,7 +162,7 @@ export default async function AdminPlayerDetailPage({
                       <p className="mt-1 text-xs text-muted-foreground">{evaluation.notes}</p>
                     ) : null}
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {evaluation.createdAt.toLocaleDateString('es')}
+                      {evaluation.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                 ))}

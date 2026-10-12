@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { OnboardingForm } from '@/components/auth/onboarding-form';
 
-export const metadata: Metadata = { title: 'Onboarding · Familiar' };
+export const metadata: Metadata = { title: 'Onboarding · Parent' };
 
 export default function OnboardingParentPage() {
   return (

@@ -58,7 +58,7 @@ export default async function AgentOpportunitiesPage() {
                   <p className="text-xs text-muted-foreground">
                     {opportunity.position ? `Position: ${opportunity.position}` : ''}
                     {opportunity.closesAt
-                      ? ` · Cierra: ${opportunity.closesAt.toLocaleDateString('es')}`
+                      ? ` · Cierra: ${opportunity.closesAt.toLocaleDateString('en-GB')}`
                       : ''}
                   </p>
                 </CardContent>

@@ -90,7 +90,7 @@ export default async function AdminAnalyticsRevenuePage() {
                   className="flex items-center justify-between gap-2 rounded-md border border-border p-2 text-sm"
                 >
                   <span className="text-muted-foreground">
-                    {payment.createdAt.toLocaleDateString('es')}
+                    {payment.createdAt.toLocaleDateString('en-GB')}
                   </span>
                   <span className="flex items-center gap-2">
                     <Badge variant={payment.status === 'PAID' ? 'success' : 'warning'}>

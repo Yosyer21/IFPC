@@ -64,7 +64,7 @@ export default async function ScoutSavedPage() {
                           ] ?? entry.player.position)
                         : 'No position'}
                       {' · '}
-                      Guardado el {entry.createdAt.toLocaleDateString('es')}
+                      Guardado el {entry.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                 </div>

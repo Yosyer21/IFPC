@@ -41,15 +41,15 @@ export default async function AgentContractDetailPage({
             {[
               ['Player', `${contract.player.firstName} ${contract.player.lastName}`],
               ['Club', contract.club.name],
-              ['Inicio', contract.startsAt.toLocaleDateString('es')],
-              ['Fin', contract.endsAt ? contract.endsAt.toLocaleDateString('es') : '—'],
+              ['Inicio', contract.startsAt.toLocaleDateString('en-GB')],
+              ['Fin', contract.endsAt ? contract.endsAt.toLocaleDateString('en-GB') : '—'],
               [
                 'Salario',
                 contract.salary
                   ? `${contract.salary.toLocaleString('en')} ${contract.currency}/year`
                   : '—',
               ],
-              ['Firmado el', contract.signedAt ? contract.signedAt.toLocaleDateString('es') : '—'],
+              ['Firmado el', contract.signedAt ? contract.signedAt.toLocaleDateString('en-GB') : '—'],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-border p-3">
                 <dt className="text-xs text-muted-foreground">{label}</dt>

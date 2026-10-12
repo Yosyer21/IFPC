@@ -112,8 +112,8 @@ export default async function CoachLiveSessionsPage() {
                 </div>
                 <div className="mt-1 text-xs text-muted-foreground">
                   {SESSION_TYPE_LABELS[liveSession.type] ?? liveSession.type} ·{' '}
-                  {liveSession.startsAt.toLocaleDateString('es')}{' '}
-                  {liveSession.startsAt.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })}
+                  {liveSession.startsAt.toLocaleDateString('en-GB')}{' '}
+                  {liveSession.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                   {liveSession.player
                     ? ` · 1:1 con ${liveSession.player.firstName} ${liveSession.player.lastName}`
                     : ''}

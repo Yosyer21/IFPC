@@ -86,8 +86,8 @@ export default async function AdminCampsPage() {
                     <StatusBadge status={camp.status} />
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {camp.startsAt.toLocaleDateString('es')}
-                    {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('es')}` : ''}
+                    {camp.startsAt.toLocaleDateString('en-GB')}
+                    {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}
                     {camp.city ? ` · ${camp.city}` : ''}
                     {camp.country ? `, ${camp.country}` : ''}
                   </p>
@@ -103,7 +103,7 @@ export default async function AdminCampsPage() {
                     </Badge>
                     {camp.price ? (
                       <Badge variant="outline">
-                        {(camp.price / 100).toLocaleString('es-ES', {
+                        {(camp.price / 100).toLocaleString('en-GB', {
                           style: 'currency',
                           currency: camp.currency.toUpperCase(),
                         })}

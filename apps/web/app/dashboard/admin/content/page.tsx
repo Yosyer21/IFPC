@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Contenido' };
+export const metadata: Metadata = { title: 'Content' };
 
 const CATEGORIES = [
   {

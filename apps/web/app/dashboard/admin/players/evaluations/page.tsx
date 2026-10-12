@@ -7,7 +7,7 @@ import { StatCard } from '@/components/player/stat-card';
 import { CategoryBars } from '@/components/player/charts';
 import { IconTrendingUp, IconWhistle } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Evaluaciones' };
+export const metadata: Metadata = { title: 'Evaluations' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -105,7 +105,7 @@ export default async function AdminPlayersEvaluationsPage() {
                     </div>
                     <p className="text-xs text-muted-foreground">
                       {CATEGORY_LABELS[evaluation.category] ?? evaluation.category} ·{' '}
-                      {evaluation.createdAt.toLocaleDateString('es')}
+                      {evaluation.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                 ))}

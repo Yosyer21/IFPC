@@ -40,7 +40,7 @@ export default async function AdminClubDetailPage({
     ['Ciudad', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
     ['Usuario', club.user?.name ?? 'No linked user'],
-    ['Registrado el', club.createdAt.toLocaleDateString('es')],
+    ['Registrado el', club.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (

@@ -112,7 +112,7 @@ export default async function ClubApplicationsPage() {
                     <div className="flex shrink-0 flex-col items-end gap-1">
                       <Badge variant={status.variant}>{status.label}</Badge>
                       <span className="text-xs text-muted-foreground">
-                        {application.createdAt.toLocaleDateString('es')}
+                        {application.createdAt.toLocaleDateString('en-GB')}
                       </span>
                     </div>
                   </CardContent>

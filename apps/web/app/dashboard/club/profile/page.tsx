@@ -23,7 +23,7 @@ export default async function ClubProfilePage() {
     ['Country', club.country],
     ['Ciudad', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
-    ['Member since', club.createdAt.toLocaleDateString('es')],
+    ['Member since', club.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (

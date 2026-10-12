@@ -61,7 +61,7 @@ export default async function ParentOpportunitiesPage() {
                 </p>
                 {opportunity.closesAt ? (
                   <p className="text-xs text-muted-foreground">
-                    Cierra el {opportunity.closesAt.toLocaleDateString('es')}
+                    Cierra el {opportunity.closesAt.toLocaleDateString('en-GB')}
                   </p>
                 ) : null}
               </CardContent>
