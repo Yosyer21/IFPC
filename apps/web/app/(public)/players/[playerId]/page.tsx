@@ -9,7 +9,9 @@ import { POSITION_LABELS, profileAccentColors, profileOpenToLabels } from '@ifpc
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 import { PlayerAvatar } from '@/components/player/avatar';
+import { ProfileStatsCard } from '@/components/player/profile-stats';
 import { trackProfileView } from '@/lib/profile-views';
+import { getPlayerStats } from '@/lib/player-stats';
 
 function positionLabelOf(position: string | null): string {
   return position
@@ -80,13 +82,8 @@ export default async function PublicPlayerProfilePage({
   const positionLabel = positionLabelOf(player.position);
   const accent = profileAccentColors(player.accentColor);
   const openToChips = profileOpenToLabels(player.openTo);
-
-  const overall =
-    player.evaluations.length > 0
-      ? Math.round(
-          (player.evaluations.reduce((s, e) => s + e.score, 0) / player.evaluations.length) * 10
-        ) / 10
-      : null;
+  // Estadísticas deportivas (nivel global, totales y nivel por categoría).
+  const stats = await getPlayerStats(player.id);
 
   const age = player.dateOfBirth
     ? Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
@@ -133,14 +130,6 @@ export default async function PublicPlayerProfilePage({
                 {player.nationality ?? 'Sin nacionalidad'}
               </p>
             </div>
-            {overall !== null ? (
-              <div className="ml-auto rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-5 py-3 text-center">
-                <div className="text-2xl font-bold text-emerald-400">{overall}</div>
-                <div className="text-[10px] uppercase tracking-wide text-emerald-400/70">
-                  Nivel global
-                </div>
-              </div>
-            ) : null}
           </div>
 
           <div className="mt-6 flex flex-wrap gap-2 text-xs">
@@ -164,6 +153,10 @@ export default async function PublicPlayerProfilePage({
             {player.foot ? <Badge variant="outline">Pierna: {player.foot}</Badge> : null}
             <Badge variant="outline">{player._count.videos} videos</Badge>
             <Badge variant="outline">{player.evaluations.length} evaluaciones</Badge>
+          </div>
+
+          <div className="mt-6">
+            <ProfileStatsCard stats={stats} />
           </div>
 
           {player.bio ? (

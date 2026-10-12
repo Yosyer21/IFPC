@@ -129,7 +129,49 @@ test('Player area: personaliza su perfil (titular, acento, portada y checklist)'
   await page.getByRole('button', { name: 'Quitar portada' }).click();
   await expect(page.getByAltText('Portada actual')).toBeHidden({ timeout: 15_000 });
 
-  // 4. Limpieza: el perfil demo vuelve a como estaba
+  // 4. Panel frontal: estadísticas, muro y chips para cambiar foto y portada
+  await page.goto(`${BASE}/dashboard/player/profile`);
+  await expect(page.getByRole('heading', { name: 'Estadísticas' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Mis publicaciones' })).toBeVisible();
+  await expect(page.getByText('Mis mejores jugadas de la temporada')).toBeVisible();
+  await expect(page.getByLabel('Cambiar foto')).toBeVisible();
+  await expect(page.getByLabel('Cambiar portada')).toBeVisible();
+
+  // La portada se cambia desde la propia cabecera, sin pasar por el formulario
+  await page.getByLabel('Cambiar portada').setInputFiles({
+    name: 'portada.png',
+    mimeType: 'image/png',
+    buffer: PNG_1X1,
+  });
+  await expect(page.getByRole('button', { name: 'Quitar portada' })).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.locator('img[src^="/uploads/banners/"]')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Quitar portada' }).click();
+  await expect(page.getByRole('button', { name: 'Quitar portada' })).toBeHidden({
+    timeout: 15_000,
+  });
+
+  // Y la foto de perfil, igual
+  await page.getByLabel('Cambiar foto').setInputFiles({
+    name: 'foto.png',
+    mimeType: 'image/png',
+    buffer: PNG_1X1,
+  });
+  await expect(page.getByRole('button', { name: 'Quitar foto' })).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('img[src^="/uploads/photos/"]').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Quitar foto' }).click();
+  await expect(page.getByRole('button', { name: 'Quitar foto' })).toBeHidden({ timeout: 15_000 });
+
+  // 5. Mi muro en Discovery: el mismo panel, editable porque es mi perfil
+  await page.getByRole('link', { name: 'Mi muro en Discovery' }).click();
+  await expect(page).toHaveURL(/\/dashboard\/discovery\/u\//, { timeout: 15_000 });
+  await expect(page.getByRole('heading', { name: 'Estadísticas' })).toBeVisible();
+  await expect(page.getByLabel('Cambiar portada')).toBeVisible();
+  await expect(page.getByText('Mis mejores jugadas de la temporada')).toBeVisible();
+
+  // 6. Limpieza: el perfil demo vuelve a como estaba
+  await page.goto(`${BASE}/dashboard/player/profile/edit`);
   await page.getByLabel('Titular').fill('');
   await page.getByLabel('Ubicación').fill('');
   await page.getByLabel('Busco club').uncheck();

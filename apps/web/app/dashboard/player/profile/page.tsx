@@ -16,12 +16,22 @@ import {
 import { ProfileChecklistCard } from '@/components/player/profile-checklist-card';
 import { ProfileGrid } from '@/components/player/profile-grid';
 import { ProfileHeader } from '@/components/player/profile-header';
-import { PhotoUploadForm } from '@/components/account/photo-upload-form';
+import { ProfileStatsCard } from '@/components/player/profile-stats';
+import { CoverPhotoEditor } from '@/components/player/cover-photo-editor';
+import { ProfilePhotoEditor } from '@/components/player/profile-photo-editor';
 import { StatusToggle } from '@/components/player/status-toggle';
+import { PostCard } from '@/components/discovery/post-card';
 import { playerProfileChecklist } from '@/lib/player';
+import { getPlayerStats } from '@/lib/player-stats';
 import { getProfileViewStats } from '@/lib/profile-views';
-import { removeProfilePhotoAction } from '@/app/actions/account';
-import { IconTarget, IconTrendingUp, IconTrophy, IconWhistle } from '@/components/dashboard/icons';
+import { listPostsByAuthor } from '@/lib/discovery';
+import {
+  IconTarget,
+  IconTrendingUp,
+  IconTrophy,
+  IconUsers,
+  IconWhistle,
+} from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'My profile' };
 
@@ -60,6 +70,9 @@ export default async function PlayerProfilePage() {
     careerCount: player._count.career,
   });
   const viewStats = await getProfileViewStats(player.id);
+  const stats = await getPlayerStats(player.id);
+  // Lo que ya has publicado en Discovery: aparece en tu perfil como un muro.
+  const myPosts = await listPostsByAuthor(session.user.id, 5, session.user.id);
 
   const rows: [string, string][] = [
     ['Nombre', `${player.firstName} ${player.lastName}`],
@@ -79,6 +92,11 @@ export default async function PlayerProfilePage() {
     { href: '/dashboard/player/profile/physical', label: 'Physical data', icon: IconTrendingUp },
     { href: '/dashboard/player/profile/technical', label: 'Technical level', icon: IconWhistle },
     { href: '/dashboard/player/career', label: 'Career history', icon: IconTrophy },
+    {
+      href: `/dashboard/discovery/u/${session.user.id}`,
+      label: 'Mi muro en Discovery',
+      icon: IconUsers,
+    },
   ];
 
   return (
@@ -111,11 +129,25 @@ export default async function PlayerProfilePage() {
               </Link>
             </>
           }
+          coverEditor={
+            <CoverPhotoEditor
+              hasBanner={Boolean(player.bannerUrl)}
+              redirectTo="/dashboard/player/profile"
+            />
+          }
+          photoEditor={
+            <ProfilePhotoEditor
+              hasImage={Boolean(player.user.image)}
+              redirectTo="/dashboard/player/profile"
+            />
+          }
         />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
+          <ProfileStatsCard stats={stats} />
+
           <Card className="animate-fade-up" style={{ animationDelay: '120ms' }}>
             <CardContent>
               <ProfileGrid rows={rows} />
@@ -133,25 +165,6 @@ export default async function PlayerProfilePage() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <Card className="animate-fade-up" style={{ animationDelay: '140ms' }}>
-            <CardContent className="flex flex-col items-center gap-3">
-              <h2 className="self-start font-semibold">Foto de perfil</h2>
-              <PhotoUploadForm
-                name={`${player.firstName} ${player.lastName}`}
-                imageUrl={player.user.image}
-                redirectTo="/dashboard/player/profile"
-              />
-              {player.user.image ? (
-                <form action={removeProfilePhotoAction}>
-                  <input type="hidden" name="redirectTo" value="/dashboard/player/profile" />
-                  <button type="submit" className="text-xs text-muted-foreground hover:underline">
-                    Quitar foto
-                  </button>
-                </form>
-              ) : null}
-            </CardContent>
-          </Card>
-
           <Card className="animate-fade-up" style={{ animationDelay: '150ms' }}>
             <CardContent className="flex flex-col gap-3">
               <h2 className="font-semibold">Interés en tu perfil</h2>
@@ -216,6 +229,35 @@ export default async function PlayerProfilePage() {
           </Card>
         </div>
       </div>
+
+      {/* Muro: tus publicaciones de Discovery, como en un perfil social. */}
+      <section className="mt-6 flex flex-col gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold">Mis publicaciones</h2>
+          <Link href="/dashboard/discovery" className="text-sm text-primary hover:underline">
+            Publicar en Discovery →
+          </Link>
+        </div>
+        {myPosts.length === 0 ? (
+          <Card className="animate-fade-up">
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Todavía no has publicado nada. Comparte un vídeo, una foto o un logro en Discovery y
+                aparecerá aquí.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          myPosts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              viewerId={session.user.id}
+              viewerRole={session.user.role}
+            />
+          ))
+        )}
+      </section>
     </div>
   );
 }

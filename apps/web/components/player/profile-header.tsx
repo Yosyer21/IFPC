@@ -22,12 +22,17 @@ export interface ProfileHeaderProps {
   badges?: ReactNode;
   /** Botones de la derecha (estado, editar…). */
   actions?: ReactNode;
+  /** Chips sobre la portada para cambiarla (solo el dueño del perfil). */
+  coverEditor?: ReactNode;
+  /** Chips para cambiar la foto de perfil (solo el dueño). */
+  photoEditor?: ReactNode;
 }
 
 /**
  * Cabecera personalizable del perfil: portada (o degradado del acento),
- * avatar con anillo del acento, titular, ubicación y chips de «abierto a».
- * La comparten el perfil propio y el público.
+ * avatar con anillo del acento, titular, ubicación y chips de «abierto a»,
+ * con hueco para cambiar la portada y la foto sin salir de la página.
+ * La comparten el perfil propio, el muro de Discovery y el público.
  */
 export function ProfileHeader({
   firstName,
@@ -41,6 +46,8 @@ export function ProfileHeader({
   openTo = [],
   badges,
   actions,
+  coverEditor,
+  photoEditor,
 }: ProfileHeaderProps) {
   const accent = profileAccentColors(accentColor);
   const chips = profileOpenToLabels(openTo);
@@ -61,6 +68,9 @@ export function ProfileHeader({
             priority
             className="h-full w-full object-cover"
           />
+        ) : null}
+        {coverEditor ? (
+          <div className="absolute inset-x-3 bottom-3 flex justify-end">{coverEditor}</div>
         ) : null}
       </div>
 
@@ -100,6 +110,7 @@ export function ProfileHeader({
                 ))}
               </ul>
             ) : null}
+            {photoEditor ? <div className="mt-2">{photoEditor}</div> : null}
           </div>
         </div>
 

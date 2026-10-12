@@ -35,6 +35,9 @@ Cambiar estos archivos reestiliza **toda** la app:
 - `apps/web/components/discovery/*` — composer, tarjeta de publicación, comentarios y pestañas del feed.
 - `apps/web/components/player/profile-header.tsx` + `profile-checklist-card.tsx` — cabecera
   personalizable del perfil (portada, acento, titular y chips) y checklist de fuerza.
+- `apps/web/components/player/profile-stats.tsx` — panel de estadísticas del jugador.
+- `apps/web/components/player/cover-photo-editor.tsx` + `profile-photo-editor.tsx` — chips
+  para cambiar portada y foto desde la propia cabecera.
 - `apps/web/app/dashboard/layout.tsx` — fondo ambiental del área privada.
 - `apps/web/app/(auth)/layout.tsx` — tarjeta glass de login/registro/onboarding.
 

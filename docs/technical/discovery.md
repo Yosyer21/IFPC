@@ -151,10 +151,13 @@ Interfaz y acciones:
   _cualquiera · solo quien me sigue · nadie_, y `canComment` la combina con los
   bloqueos. En el detalle, quien no puede comentar ve el motivo en lugar de la
   caja de comentario (el autor siempre puede comentar en lo suyo).
-- El muro (`/dashboard/discovery/u/<id>`) muestra los botones **Seguir**,
-  **Silenciar** y **Bloquear** (con confirmación) o, si ya le bloqueaste, el
-  aviso y el botón para deshacerlo; si te bloqueó él, el muro responde
-  "Este perfil no está disponible".
+- El perfil de un autor (`/dashboard/discovery/u/<id>`) es un **panel frontal** con portada,
+  acento, titular y chips (`ProfileHeader`) más los **botones Seguir, «Ver más»/«Ver menos»,
+  Silenciar y Bloquear** (con confirmación) y, si el autor es jugador, sus **estadísticas**
+  (`lib/player-stats.ts`). Si ya le bloqueaste, aparece el aviso y el botón para deshacerlo; si
+  te bloqueó él, el perfil responde "Este perfil no está disponible". Cuando el perfil es el
+  tuyo, en vez de los botones sociales se ofrecen los chips para cambiar portada y foto y el
+  enlace a editar el perfil.
 - **No me interesa** (`lib/discovery-interest.ts` + `PostNotInterested`): a
   diferencia del bloqueo/silencio, es una decisión **por publicación** y solo
   afecta a los listados de quien la toma (`listFeed` —también tendencias—,

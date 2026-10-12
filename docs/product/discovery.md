@@ -114,8 +114,10 @@ Es reversible en cualquier momento y solo afecta a tu feed.
 2. Publicar desde el compositor de la propia página del feed.
 3. Abrir una publicación (enlace directo `/dashboard/discovery/<postId>`) para
    comentar, ver el alcance (si es tuya) o editar el texto (si es tuya).
-4. Tocar el nombre o el avatar de un autor para ver su muro
-   (`/dashboard/discovery/u/<userId>`).
+4. Tocar el nombre o el avatar de un autor para ver su perfil
+   (`/dashboard/discovery/u/<userId>`): **panel frontal** con portada, acento, titular y
+   chips (editables si es tu perfil), **estadísticas** del jugador cuando lo es y su **muro**
+   de publicaciones.
 5. Tocar una etiqueta para filtrar el feed por `#etiqueta`.
 6. Gestionar la red desde «Siguiendo y preferencias →»
    (`/dashboard/discovery/following`): ver a quién sigues (clubes y personas),
@@ -130,7 +132,8 @@ compartir, encontrar en buscadores y servir de puerta de entrada al registro:
   Vídeos_, buscador, etiquetas y publicaciones fijadas) con un aviso de que está
   en modo lectura y CTAs a _Crear cuenta_ / _Entrar_.
 - `/discovery/<postId>` — publicación y sus comentarios, sin caja de comentario.
-- `/discovery/u/<userId>` — muro del autor con sus contadores, sin botón de seguir.
+- `/discovery/u/<userId>` — perfil del autor con el mismo panel frontal (portada, acento y
+  chips) y sus estadísticas de jugador, sin acciones sociales.
 - `/discovery/tag/<tag>` — redirige al feed filtrado.
 
 En público **no** hay _Para ti_ ni _Siguiendo_ (hacen falta saber quién mira), no

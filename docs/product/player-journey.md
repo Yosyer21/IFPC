@@ -25,3 +25,16 @@ El jugador decide cómo se presenta (`/dashboard/player/profile/edit`):
   (`/players/[playerId]`), y el titular alimenta la descripción para buscadores y redes.
 - La tarjeta **«Fuerza del perfil»** pondera 14 señales sobre 100 (`PROFILE_CHECKLIST`) y
   propone un «siguiente mejor paso» con enlace directo donde se completa.
+
+## Perfil como red social
+
+El perfil se lee como una página de red social (panel frontal + panel lateral + muro):
+
+- **Panel frontal** (`components/player/profile-header.tsx`): portada, avatar con el acento,
+  titular, ubicación y chips. El dueño puede **cambiar la foto y la portada desde el propio
+  panel** (`cover-photo-editor` / `profile-photo-editor`), sin entrar al formulario.
+- **Estadísticas** (`lib/player-stats.ts` + `profile-stats.tsx`): nivel global sobre 10,
+  partidos, goles, asistencias, temporadas, vídeos y evaluaciones, más el nivel por
+  categoría. Se ven en el perfil propio, en el muro de Discovery y en el perfil público.
+- **Muro**: las publicaciones del jugador en Discovery aparecen en su perfil
+  («Mis publicaciones», con enlace al muro completo y al compositor).
