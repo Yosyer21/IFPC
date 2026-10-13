@@ -7,6 +7,7 @@ FROM base AS deps
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
+COPY infrastructure ./infrastructure
 RUN pnpm install --frozen-lockfile --filter @ifpc/web... --filter @ifpc/database
 
 FROM base AS builder
@@ -15,7 +16,23 @@ COPY --from=deps /app/package.json /app/pnpm-workspace.yaml /app/pnpm-lock.yaml 
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/apps ./apps
+COPY --from=deps /app/infrastructure ./infrastructure
 RUN pnpm --filter @ifpc/database db:generate && pnpm --filter @ifpc/web build
+# Seed de demo empaquetado en un único ESM: el cliente Prisma real
+# (`@prisma/client`, con su engine) queda externo y el adaptador PGlite se
+# sustituye por un shim (no se usa en producción). Así el seed puede ejecutarse
+# en el contenedor con `node seed.mjs` sin tsx ni las fuentes TypeScript.
+RUN ESBUILD="$(ls -d node_modules/.pnpm/esbuild@*/node_modules/esbuild/bin/esbuild 2>/dev/null | head -1)" ; \
+    if [ -z "$ESBUILD" ]; then echo 'ERROR: esbuild no está disponible en el builder'; exit 1; fi ; \
+    "$ESBUILD" --version ; \
+    "$ESBUILD" packages/database/prisma/seed.ts \
+      --bundle --platform=node --target=node22 --format=esm \
+      --banner:js="import { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);" \
+      --outfile=/app/seed.mjs \
+      --define:process.env.USE_PGLITE='"false"' \
+      --alias:@electric-sql/pglite=./infrastructure/docker/pglite-shim.js \
+      --alias:pglite-prisma-adapter=./infrastructure/docker/pglite-shim.js \
+      --external:@prisma/client
 
 FROM base AS runner
 ENV NODE_ENV=production
@@ -34,7 +51,10 @@ ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/prisma-engines/libquery_engine-linux-musl-o
 # de modo que la base de datos se mantiene alineada con el código en cada deploy.
 RUN npm i -g prisma@6.19.3
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
+# Seed de demo (ESM) y script de arranque.
+COPY --from=builder /app/seed.mjs ./seed.mjs
+COPY --from=builder /app/infrastructure/docker/start-web.sh ./start-web.sh
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
-CMD ["node", "apps/web/server.js"]
+CMD ["sh", "./start-web.sh"]
