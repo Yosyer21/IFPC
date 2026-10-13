@@ -2,6 +2,7 @@ import {
   canAccessDashboard,
   getToken,
   isRole,
+  isSecureRequest,
   ROLE_DASHBOARD_PREFIXES,
 } from '@ifpc/auth/edge';
 import { NextResponse, type NextRequest } from 'next/server';
@@ -12,7 +13,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = await getToken({ req: request, secret: process.env.AUTH_SECRET });
+  // `getToken` asume por defecto la cookie de sesión NO segura, pero en HTTPS
+  // Auth.js la emite como `__Secure-authjs.session-token` y usa su nombre como
+  // `salt` del JWT: sin indicarlo aquí el token no se descifra y todo el
+  // dashboard redirige a /login.
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: isSecureRequest(request.headers, request.nextUrl.protocol),
+  });
 
   if (!token) {
     const url = new URL('/login', request.url);
