@@ -18,21 +18,22 @@ COPY --from=deps /app/packages ./packages
 COPY --from=deps /app/apps ./apps
 COPY --from=deps /app/infrastructure ./infrastructure
 RUN pnpm --filter @ifpc/database db:generate && pnpm --filter @ifpc/web build
-# Seed de demo empaquetado en un único ESM: el cliente Prisma real
-# (`@prisma/client`, con su engine) queda externo y el adaptador PGlite se
-# sustituye por un shim (no se usa en producción). Así el seed puede ejecutarse
-# en el contenedor con `node seed.mjs` sin tsx ni las fuentes TypeScript.
+# Seed de demo empaquetado en un único ESM: el cliente Prisma y bcryptjs se
+# incluyen en el bundle (igual que hace Next con la app, el output standalone no
+# los deja como paquetes) y el adaptador PGlite se sustituye por un shim (no se
+# usa en producción). El query engine se resuelve en runtime con
+# PRISMA_QUERY_ENGINE_LIBRARY (ver la fase runner). El banner aporta `require`,
+# `__dirname` y `__filename` (ESM) porque bcryptjs/Prisma los necesitan.
 RUN ESBUILD="$(ls -d node_modules/.pnpm/esbuild@*/node_modules/esbuild/bin/esbuild 2>/dev/null | head -1)" ; \
     if [ -z "$ESBUILD" ]; then echo 'ERROR: esbuild no está disponible en el builder'; exit 1; fi ; \
     "$ESBUILD" --version ; \
     "$ESBUILD" packages/database/prisma/seed.ts \
       --bundle --platform=node --target=node22 --format=esm \
-      --banner:js="import { createRequire as __createRequire } from 'node:module'; const require = __createRequire(import.meta.url);" \
+      --banner:js="import { createRequire as __createRequire } from 'node:module'; import { fileURLToPath as __fileURLToPath } from 'node:url'; import { dirname as __pathDirname } from 'node:path'; const require = __createRequire(import.meta.url); const __filename = __fileURLToPath(import.meta.url); const __dirname = __pathDirname(__filename);" \
       --outfile=/app/seed.mjs \
       --define:process.env.USE_PGLITE='"false"' \
       --alias:@electric-sql/pglite=./infrastructure/docker/pglite-shim.js \
-      --alias:pglite-prisma-adapter=./infrastructure/docker/pglite-shim.js \
-      --external:@prisma/client
+      --alias:pglite-prisma-adapter=./infrastructure/docker/pglite-shim.js
 
 FROM base AS runner
 ENV NODE_ENV=production
