@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   TRAINING_AUTHOR_CATEGORIES,
   TRAINING_CATEGORIES,
+  TRAINING_EQUIPMENT,
+  TRAINING_EQUIPMENT_LABELS,
   TRAINING_KINDS,
   TRAINING_KIND_LABELS,
   TRAINING_ORIGINS,
@@ -10,10 +12,14 @@ import {
   TRAINING_STATUSES,
   TRAINING_STATUS_LABELS,
   isTrainingCategory,
+  isTrainingEquipment,
   isTrainingKind,
   isTrainingOrigin,
   isTrainingStatus,
   trainingCategoryLabel,
+  trainingEquipmentLabel,
+  trainingRestLabel,
+  trainingWorkloadLabel,
 } from '@ifpc/config';
 import { trainingContentSchema } from '@ifpc/validation';
 import {
@@ -69,6 +75,17 @@ describe('catálogo de tipos y orígenes', () => {
     expect(isTrainingStatus('HIDDEN')).toBe(false);
   });
 
+  it('expone etiquetas para cada material y lo reconoce', () => {
+    for (const item of TRAINING_EQUIPMENT) expect(TRAINING_EQUIPMENT_LABELS[item]).toBeTruthy();
+    expect(isTrainingEquipment('balls')).toBe(true);
+    expect(isTrainingEquipment('spaceship')).toBe(false);
+  });
+
+  it('la etiqueta de material tolera lo desconocido', () => {
+    expect(trainingEquipmentLabel('balls')).toBe('Balls');
+    expect(trainingEquipmentLabel('spaceship')).toBe('spaceship');
+  });
+
   it('las categorías de autor son un subconjunto de las del catálogo', () => {
     for (const category of TRAINING_AUTHOR_CATEGORIES) {
       expect(TRAINING_CATEGORIES).toContain(category);
@@ -114,6 +131,59 @@ describe('trainingContentSchema', () => {
         difficulty: 9,
       }).success
     ).toBe(false);
+  });
+
+  it('acepta todo el material del catálogo y rechaza lo que no está', () => {
+    for (const item of TRAINING_EQUIPMENT) {
+      const parsed = trainingContentSchema.safeParse({
+        kind: 'EXERCISE',
+        category: 'technical',
+        title: 'Cone drill',
+        equipment: [item],
+      });
+      expect(parsed.success).toBe(true);
+    }
+
+    expect(
+      trainingContentSchema.safeParse({
+        kind: 'EXERCISE',
+        category: 'technical',
+        title: 'Cone drill',
+        equipment: ['spaceship'],
+      }).success
+    ).toBe(false);
+  });
+
+  it('acota la carga del ejercicio estructurado', () => {
+    const base = { kind: 'EXERCISE' as const, category: 'technical', title: 'Cone drill' };
+
+    expect(trainingContentSchema.safeParse({ ...base, series: 4, restSeconds: 90 }).success).toBe(
+      true
+    );
+    expect(trainingContentSchema.safeParse({ ...base, series: 0 }).success).toBe(false);
+    expect(trainingContentSchema.safeParse({ ...base, series: 99 }).success).toBe(false);
+    expect(trainingContentSchema.safeParse({ ...base, restSeconds: 7200 }).success).toBe(false);
+    expect(trainingContentSchema.safeParse({ ...base, reps: 'x'.repeat(61) }).success).toBe(false);
+  });
+});
+
+describe('ficha del ejercicio', () => {
+  it('escribe el descanso en unidades legibles', () => {
+    expect(trainingRestLabel(45)).toBe('45 s');
+    expect(trainingRestLabel(60)).toBe('1 min');
+    expect(trainingRestLabel(90)).toBe('1 min 30 s');
+    expect(trainingRestLabel(0)).toBeNull();
+    expect(trainingRestLabel(null)).toBeNull();
+  });
+
+  it('resume la carga con lo que haya relleno', () => {
+    expect(trainingWorkloadLabel({ series: 4, reps: '4 min', restSeconds: 90 })).toBe(
+      '4 × 4 min · rest 1 min 30 s'
+    );
+    expect(trainingWorkloadLabel({ series: 3 })).toBe('3 series');
+    expect(trainingWorkloadLabel({ reps: '10 each side' })).toBe('10 each side');
+    expect(trainingWorkloadLabel({ restSeconds: 60 })).toBe('rest 1 min');
+    expect(trainingWorkloadLabel({})).toBeNull();
   });
 });
 

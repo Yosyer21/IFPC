@@ -241,3 +241,75 @@ test('Football Center: el borrador no llega al jugador hasta publicarlo', async 
   ]);
   await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
 });
+
+/**
+ * Ejercicio estructurado: el coach arma la ficha (series, reps, descanso, espacio,
+ * jugadores y material) y el jugador la ve tal cual en el detalle.
+ */
+test('Football Center: el coach arma la ficha de un ejercicio', async ({ page, browser }) => {
+  await login(page, 'coach@demo.com', 'coach123');
+  await openCoachCenter(page);
+
+  // 1. Publica un ejercicio nuevo.
+  const title = `E2E sheet ${Date.now()}`;
+  await page.getByLabel('Title', { exact: true }).fill(title);
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Save content' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+
+  // 2. Lo edita y rellena la ficha de campo.
+  await openCoachCenter(page);
+  const card = page.locator('.card-hover', { hasText: title }).first();
+  await expect(card).toBeVisible();
+  await card.getByRole('link', { name: 'Edit', exact: true }).click();
+  await page.waitForURL('**/edit', { timeout: 15_000 });
+  const editUrl = page.url();
+
+  await page.getByLabel('Series').fill('4');
+  await page.getByLabel('Reps or time').fill('4 min');
+  await page.getByLabel('Rest (seconds)').fill('90');
+  await page.getByLabel('Space').fill('30x20 m');
+  await page.getByLabel('Players').fill('4v4 + 2 neutrals');
+  await page.getByLabel('Balls').check();
+  await page.getByLabel('Cones').check();
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Save changes' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+
+  // 3. Al volver a editar, la ficha sigue ahí.
+  await page.goto(editUrl);
+  await expect(page.getByLabel('Series')).toHaveValue('4');
+  await expect(page.getByLabel('Rest (seconds)')).toHaveValue('90');
+  await expect(page.getByLabel('Balls')).toBeChecked();
+
+  // 4. El jugador ve la ficha en el detalle del ejercicio.
+  const seen = await browser.newContext();
+  const seenPage = await seen.newPage();
+  await login(seenPage, 'player@demo.com', 'player123');
+  await seenPage.goto(`${BASE}/dashboard/player/training`);
+  await seenPage.getByRole('button', { name: 'Exercises' }).click();
+  await seenPage.getByRole('link', { name: title }).first().click();
+  await seenPage.waitForURL('**/dashboard/player/training/**');
+  await expect(seenPage.getByRole('heading', { name: 'Exercise sheet' })).toBeVisible();
+  await expect(seenPage.getByText('4 × 4 min · rest 1 min 30 s')).toBeVisible();
+  await expect(seenPage.getByText('30x20 m')).toBeVisible();
+  await expect(seenPage.getByText('4v4 + 2 neutrals')).toBeVisible();
+  await expect(seenPage.getByText('Balls', { exact: true })).toBeVisible();
+  await seen.close();
+
+  // 5. Limpieza: el test borra lo que ha creado.
+  await openCoachCenter(page);
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page
+      .locator('.card-hover', { hasText: title })
+      .first()
+      .getByRole('button', { name: 'Delete' })
+      .click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+});

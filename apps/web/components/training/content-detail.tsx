@@ -4,6 +4,8 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import {
   TRAINING_ORIGIN_LABELS,
   trainingCategoryLabel,
+  trainingEquipmentLabel,
+  trainingWorkloadLabel,
   type TrainingKind,
   type TrainingOrigin,
 } from '@ifpc/config';
@@ -20,6 +22,13 @@ export interface TrainingDetailContent {
   videoUrl: string | null;
   durationMinutes: number | null;
   difficulty: number | null;
+  /** Ejercicio estructurado (ficha de campo). */
+  series: number | null;
+  reps: string | null;
+  restSeconds: number | null;
+  equipment: string[];
+  space: string | null;
+  players: string | null;
   /** Nombre del autor cuando el contenido es de un coach o un club. */
   authorName: string | null;
 }
@@ -30,6 +39,17 @@ export interface TrainingContentDetailProps {
   backLabel: string;
   /** Bloque de acciones propio de cada rol (marcar hecho, quiz, borrar…). */
   actions?: ReactNode;
+}
+
+/** Dato de la ficha: solo se pinta si tiene valor. */
+function SheetField({ label, value }: { label: string; value: string | null }) {
+  if (!value) return null;
+  return (
+    <div>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="font-medium">{value}</p>
+    </div>
+  );
 }
 
 /**
@@ -46,6 +66,12 @@ export function TrainingContentDetail({
     content.ownerType === 'GENERAL'
       ? TRAINING_ORIGIN_LABELS.GENERAL
       : `${TRAINING_ORIGIN_LABELS[content.ownerType]} · ${content.authorName ?? ''}`.trim();
+
+  // Ficha de campo: solo aparece en ejercicios y solo con algo que contar.
+  const workload = trainingWorkloadLabel(content);
+  const hasSheet =
+    content.kind === 'EXERCISE' &&
+    Boolean(workload || content.space || content.players || content.equipment.length > 0);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -79,6 +105,33 @@ export function TrainingContentDetail({
           controls
           className="mt-4 aspect-video w-full rounded-lg border border-border bg-black"
         />
+      ) : null}
+
+      {hasSheet ? (
+        <Card className="mt-6">
+          <CardContent className="flex flex-col gap-4">
+            <h2 className="font-semibold">Exercise sheet</h2>
+            <div className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
+              <SheetField label="Volume" value={workload} />
+              <SheetField
+                label="Duration"
+                value={content.durationMinutes ? `${content.durationMinutes} min` : null}
+              />
+              <SheetField label="Space" value={content.space} />
+              <SheetField label="Players" value={content.players} />
+            </div>
+            {content.equipment.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-medium text-muted-foreground">Material</span>
+                {content.equipment.map((item) => (
+                  <Badge key={item} variant="outline">
+                    {trainingEquipmentLabel(item)}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
       ) : null}
 
       {content.outcomes.length > 0 ? (

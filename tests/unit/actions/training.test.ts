@@ -224,6 +224,41 @@ describe('createTrainingContentAction', () => {
     expect(state.error).toBeTruthy();
     expect(mocks.contentCreate).not.toHaveBeenCalled();
   });
+
+  it('guarda la ficha del ejercicio y descarta el material que no está en el catálogo', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    const formData = form({
+      ...baseFields,
+      series: '4',
+      reps: '4 min',
+      restSeconds: '90',
+      space: '30x20 m',
+      players: '4v4 + 2 neutrals',
+    });
+    formData.append('equipment', 'balls');
+    formData.append('equipment', 'cones');
+    formData.append('equipment', 'spaceship');
+
+    await captureRedirect(() => createTrainingContentAction({}, formData));
+
+    expect(mocks.contentCreate.mock.calls[0][0].data).toMatchObject({
+      series: 4,
+      reps: '4 min',
+      restSeconds: 90,
+      space: '30x20 m',
+      players: '4v4 + 2 neutrals',
+      equipment: ['balls', 'cones'],
+    });
+  });
+
+  it('rechaza una carga fuera de rango', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+
+    const state = await createTrainingContentAction({}, form({ ...baseFields, series: '99' }));
+
+    expect(state.error).toBeTruthy();
+    expect(mocks.contentCreate).not.toHaveBeenCalled();
+  });
 });
 
 describe('deleteTrainingContentAction', () => {

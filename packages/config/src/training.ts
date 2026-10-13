@@ -126,6 +126,87 @@ export const TRAINING_IMAGE_MIME_EXT = POST_IMAGE_MIME_EXT;
 export const TRAINING_VIDEO_MIME_EXT = POST_VIDEO_MIME_EXT;
 
 // ---------------------------------------------------------------------------
+// Ejercicio estructurado (ficha de campo)
+// ---------------------------------------------------------------------------
+
+/**
+ * Material de entrenamiento. Es la lista que ofrece el formulario y la que
+ * valida `packages/validation` (los tests comprueban que no se desincronizan).
+ */
+export const TRAINING_EQUIPMENT = [
+  'balls',
+  'cones',
+  'poles',
+  'bibs',
+  'goals',
+  'mini-goals',
+  'mannequins',
+  'hurdles',
+  'ladder',
+  'markers',
+  'wall',
+  'bands',
+] as const;
+export type TrainingEquipment = (typeof TRAINING_EQUIPMENT)[number];
+
+export const TRAINING_EQUIPMENT_LABELS: Record<TrainingEquipment, string> = {
+  balls: 'Balls',
+  cones: 'Cones',
+  poles: 'Poles',
+  bibs: 'Bibs',
+  goals: 'Goals',
+  'mini-goals': 'Mini goals',
+  mannequins: 'Mannequins',
+  hurdles: 'Hurdles',
+  ladder: 'Agility ladder',
+  markers: 'Flat markers',
+  wall: 'Wall',
+  bands: 'Resistance bands',
+};
+
+export function isTrainingEquipment(value: unknown): value is TrainingEquipment {
+  return typeof value === 'string' && (TRAINING_EQUIPMENT as readonly string[]).includes(value);
+}
+
+/** Etiqueta de material tolerante: lo desconocido se muestra tal cual. */
+export function trainingEquipmentLabel(value: string): string {
+  return TRAINING_EQUIPMENT_LABELS[value as TrainingEquipment] ?? value;
+}
+
+/** Descanso legible: `90` → «1 min 30 s», `120` → «2 min», `45` → «45 s». */
+export function trainingRestLabel(seconds: number | null | undefined): string | null {
+  if (!seconds || seconds <= 0) return null;
+
+  const minutes = Math.floor(seconds / 60);
+  const rest = seconds % 60;
+  if (minutes === 0) return `${rest} s`;
+  if (rest === 0) return `${minutes} min`;
+  return `${minutes} min ${rest} s`;
+}
+
+/**
+ * Resumen de la carga para la ficha: «4 × 4 min · rest 1 min 30 s». Lo que no
+ * esté relleno simplemente no aparece, y sin nada devuelve `null` para poder
+ * ocultar el bloque entero.
+ */
+export function trainingWorkloadLabel(input: {
+  series?: number | null;
+  reps?: string | null;
+  restSeconds?: number | null;
+}): string | null {
+  const volume =
+    input.series && input.reps
+      ? `${input.series} × ${input.reps}`
+      : input.series
+        ? `${input.series} series`
+        : (input.reps ?? null);
+  const rest = trainingRestLabel(input.restSeconds);
+
+  const parts = [volume, rest ? `rest ${rest}` : null].filter(Boolean);
+  return parts.length > 0 ? parts.join(' · ') : null;
+}
+
+// ---------------------------------------------------------------------------
 // Programación
 // ---------------------------------------------------------------------------
 

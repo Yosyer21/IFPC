@@ -158,9 +158,33 @@ export async function main() {
   // ─── Career history deportiva del player demo ──────────────
   if (playerProfile) {
     const career = [
-      { clubName: 'Future Baller Academy', category: 'Sub-17', season: '2025/26', appearances: 18, goals: 12, assists: 7, isCurrent: true },
-      { clubName: 'Ballarat City FC', category: 'Sub-16', season: '2024/25', appearances: 22, goals: 9, assists: 5, isCurrent: false },
-      { clubName: 'Ballarat Grammar', category: 'School', season: '2023/24', appearances: 15, goals: 4, assists: 3, isCurrent: false },
+      {
+        clubName: 'Future Baller Academy',
+        category: 'Sub-17',
+        season: '2025/26',
+        appearances: 18,
+        goals: 12,
+        assists: 7,
+        isCurrent: true,
+      },
+      {
+        clubName: 'Ballarat City FC',
+        category: 'Sub-16',
+        season: '2024/25',
+        appearances: 22,
+        goals: 9,
+        assists: 5,
+        isCurrent: false,
+      },
+      {
+        clubName: 'Ballarat Grammar',
+        category: 'School',
+        season: '2023/24',
+        appearances: 15,
+        goals: 4,
+        assists: 3,
+        isCurrent: false,
+      },
     ];
     for (const entry of career) {
       await prisma.careerEntry.upsert({
@@ -236,8 +260,7 @@ export async function main() {
       id: 'tc-tech-1',
       title: 'Control and first touch',
       category: 'technical',
-      description:
-        'Oriented receiving and first-touch work with both feet to play under pressure.',
+      description: 'Oriented receiving and first-touch work with both feet to play under pressure.',
       durationMinutes: 25,
       difficulty: 2,
       outcomes: [
@@ -405,8 +428,7 @@ Improved when the plank is held with perfect alignment, no rotation during alter
       id: 'tc-strength-2',
       title: 'Lower-body power',
       category: 'strength-conditioning',
-      description:
-        'Squats, lunges and plyometric jumps to improve acceleration and jumping.',
+      description: 'Squats, lunges and plyometric jumps to improve acceleration and jumping.',
       durationMinutes: 30,
       difficulty: 3,
       outcomes: [
@@ -448,8 +470,7 @@ Improved when squats/lunges are perfect before loading, landings are soft and co
       id: 'tc-strength-3',
       title: 'Hamstring injury prevention',
       category: 'strength-conditioning',
-      description:
-        'Specific hamstring work (Nordics, slides) to reduce injury risk.',
+      description: 'Specific hamstring work (Nordics, slides) to reduce injury risk.',
       durationMinutes: 20,
       difficulty: 2,
       outcomes: [
@@ -502,8 +523,7 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       id: 'tc-parent-2',
       title: 'Nutrition and rest for young footballers',
       category: 'parent-education',
-      description:
-        'Keys to nutrition, hydration and sleep for developing young players.',
+      description: 'Keys to nutrition, hydration and sleep for developing young players.',
       durationMinutes: 15,
       difficulty: 1,
     },
@@ -540,10 +560,41 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       description: 'Check your understanding of oriented receiving and first-touch principles.',
       passScore: 70,
       questions: [
-        { prompt: 'What should the first touch always have?', options: ['A purpose', 'Maximum power', 'A bounce off the body', 'Backspin'], correct: 0 },
-        { prompt: 'Which surfaces can be used to control the ball?', options: ['Only the inside of the foot', 'Inside, outside, sole, thigh and chest', 'Only the chest', 'Only the head'], correct: 1 },
-        { prompt: 'How should you receive under pressure?', options: ['Facing your own goal', 'Side-on, facing forward', 'With a closed body', 'Standing still'], correct: 1 },
-        { prompt: 'A cushioned touch means...', options: ['Striking the ball hard', 'Relaxing the surface on contact so the ball does not bounce away', 'Taking a heavy touch', 'Only using the head'], correct: 1 },
+        {
+          prompt: 'What should the first touch always have?',
+          options: ['A purpose', 'Maximum power', 'A bounce off the body', 'Backspin'],
+          correct: 0,
+        },
+        {
+          prompt: 'Which surfaces can be used to control the ball?',
+          options: [
+            'Only the inside of the foot',
+            'Inside, outside, sole, thigh and chest',
+            'Only the chest',
+            'Only the head',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'How should you receive under pressure?',
+          options: [
+            'Facing your own goal',
+            'Side-on, facing forward',
+            'With a closed body',
+            'Standing still',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'A cushioned touch means...',
+          options: [
+            'Striking the ball hard',
+            'Relaxing the surface on contact so the ball does not bounce away',
+            'Taking a heavy touch',
+            'Only using the head',
+          ],
+          correct: 1,
+        },
       ],
     },
     {
@@ -552,10 +603,46 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       description: 'Check your understanding of dribbling, scanning and changing pace.',
       passScore: 70,
       questions: [
-        { prompt: 'What makes the ball get away during a change of pace?', options: ['Too heavy a touch when accelerating', 'Using the sole', 'Keeping the head up', 'A low centre of gravity'], correct: 0 },
-        { prompt: 'Why keep the head up while dribbling?', options: ['To look at the ball', 'To scan for obstacles and space', 'To slow down', 'To protect the ball with the arms'], correct: 1 },
-        { prompt: 'How should a change of direction be treated?', options: ['Like a feint to deceive the opponent', 'Like a pass', 'Like a shot', 'Like a slow turn'], correct: 0 },
-        { prompt: 'What helps balance during a sharp cut?', options: ['A high centre of gravity', 'Bending the knees and getting low', 'Standing tall', 'Holding the ball with the hands'], correct: 1 },
+        {
+          prompt: 'What makes the ball get away during a change of pace?',
+          options: [
+            'Too heavy a touch when accelerating',
+            'Using the sole',
+            'Keeping the head up',
+            'A low centre of gravity',
+          ],
+          correct: 0,
+        },
+        {
+          prompt: 'Why keep the head up while dribbling?',
+          options: [
+            'To look at the ball',
+            'To scan for obstacles and space',
+            'To slow down',
+            'To protect the ball with the arms',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'How should a change of direction be treated?',
+          options: [
+            'Like a feint to deceive the opponent',
+            'Like a pass',
+            'Like a shot',
+            'Like a slow turn',
+          ],
+          correct: 0,
+        },
+        {
+          prompt: 'What helps balance during a sharp cut?',
+          options: [
+            'A high centre of gravity',
+            'Bending the knees and getting low',
+            'Standing tall',
+            'Holding the ball with the hands',
+          ],
+          correct: 1,
+        },
       ],
     },
     {
@@ -564,10 +651,46 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       description: 'Check your understanding of passing technique, weight and BOTS scanning.',
       passScore: 70,
       questions: [
-        { prompt: 'What does BOTS stand for?', options: ['Ball, Opposition, Teammates, Space', 'Body, Options, Touch, Speed', 'Ball, Offside, Time, Shot', 'Back, Over, Turn, Sprint'], correct: 0 },
-        { prompt: 'How should a pass be weighted?', options: ['As hard as possible', 'Firm and accurate, not too hard or too soft', 'Always softly', 'Only long'], correct: 1 },
-        { prompt: 'Which foot should you pass to?', options: ['The nearest foot', 'The correct foot, away from pressure', 'Always the left', 'Always the right'], correct: 1 },
-        { prompt: 'What do players off the ball need to do?', options: ['Stand still', 'Create passing lanes with movement', 'Only defend', 'Hide behind defenders'], correct: 1 },
+        {
+          prompt: 'What does BOTS stand for?',
+          options: [
+            'Ball, Opposition, Teammates, Space',
+            'Body, Options, Touch, Speed',
+            'Ball, Offside, Time, Shot',
+            'Back, Over, Turn, Sprint',
+          ],
+          correct: 0,
+        },
+        {
+          prompt: 'How should a pass be weighted?',
+          options: [
+            'As hard as possible',
+            'Firm and accurate, not too hard or too soft',
+            'Always softly',
+            'Only long',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'Which foot should you pass to?',
+          options: [
+            'The nearest foot',
+            'The correct foot, away from pressure',
+            'Always the left',
+            'Always the right',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'What do players off the ball need to do?',
+          options: [
+            'Stand still',
+            'Create passing lanes with movement',
+            'Only defend',
+            'Hide behind defenders',
+          ],
+          correct: 1,
+        },
       ],
     },
     {
@@ -576,10 +699,46 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       description: 'Check your understanding of core training principles and technique.',
       passScore: 70,
       questions: [
-        { prompt: 'How often is the core routine recommended?', options: ['Every day, twice', '15 minutes, 3 times a week', 'Once a month', 'Only in pre-season'], correct: 1 },
-        { prompt: 'What should the plank look like?', options: ['Hips sagging', 'A straight line from head to toe', 'Hips high up', 'Knees on the floor'], correct: 1 },
-        { prompt: 'During alternating exercises you should...', options: ['Rotate toward the extended arm', 'Not rotate, keeping alignment', 'Hold your breath', 'Go as fast as possible'], correct: 1 },
-        { prompt: 'When should you progress to harder exercises?', options: ['Immediately after one rep', 'Only when excellent control has been achieved', 'After one session', 'Never'], correct: 1 },
+        {
+          prompt: 'How often is the core routine recommended?',
+          options: [
+            'Every day, twice',
+            '15 minutes, 3 times a week',
+            'Once a month',
+            'Only in pre-season',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'What should the plank look like?',
+          options: [
+            'Hips sagging',
+            'A straight line from head to toe',
+            'Hips high up',
+            'Knees on the floor',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'During alternating exercises you should...',
+          options: [
+            'Rotate toward the extended arm',
+            'Not rotate, keeping alignment',
+            'Hold your breath',
+            'Go as fast as possible',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'When should you progress to harder exercises?',
+          options: [
+            'Immediately after one rep',
+            'Only when excellent control has been achieved',
+            'After one session',
+            'Never',
+          ],
+          correct: 1,
+        },
       ],
     },
     {
@@ -588,10 +747,46 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       description: 'Check your understanding of squats, lunges and plyometrics.',
       passScore: 70,
       questions: [
-        { prompt: 'When can load be added to a squat or lunge?', options: ['Straight away', 'Only after perfect technique', 'Never', 'Only with a partner'], correct: 1 },
-        { prompt: 'How should you land from a plyometric jump?', options: ['On the heel, heavily', 'Softly on the front of the foot, absorbing through ankle, knee and hip', 'On a straight leg', 'With locked knees'], correct: 1 },
-        { prompt: 'If the knees collapse inward during a squat...', options: ['Add more weight', 'Emphasise hip abduction and track the knees over the toes', 'Hold the breath', 'Land harder'], correct: 1 },
-        { prompt: 'Which loading should be used?', options: ['Only bilateral', 'Only unilateral', 'Both bilateral and unilateral', 'No loading at all'], correct: 2 },
+        {
+          prompt: 'When can load be added to a squat or lunge?',
+          options: [
+            'Straight away',
+            'Only after perfect technique',
+            'Never',
+            'Only with a partner',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'How should you land from a plyometric jump?',
+          options: [
+            'On the heel, heavily',
+            'Softly on the front of the foot, absorbing through ankle, knee and hip',
+            'On a straight leg',
+            'With locked knees',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'If the knees collapse inward during a squat...',
+          options: [
+            'Add more weight',
+            'Emphasise hip abduction and track the knees over the toes',
+            'Hold the breath',
+            'Land harder',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'Which loading should be used?',
+          options: [
+            'Only bilateral',
+            'Only unilateral',
+            'Both bilateral and unilateral',
+            'No loading at all',
+          ],
+          correct: 2,
+        },
       ],
     },
     {
@@ -600,10 +795,41 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       description: 'Check your understanding of the Nordic programme and hamstring care.',
       passScore: 70,
       questions: [
-        { prompt: 'What does the Nordic Hamstring Exercise mainly train?', options: ['Concentric strength', 'Eccentric strength', 'Flexibility', 'Balance'], correct: 1 },
-        { prompt: 'What is the strongest modifier of programme effectiveness?', options: ['The equipment', 'Adherence (doing the sessions)', 'The time of day', 'The surface'], correct: 1 },
-        { prompt: 'Which exercises complement the NHE?', options: ['Only jumping', 'Hip-dominant exercises such as Romanian deadlifts', 'Only sprinting', 'Only planks'], correct: 1 },
-        { prompt: 'How should the NHE programme progress?', options: ['All weeks at maximum volume', 'Gradually, following the 13-week progression', 'Once a month', 'Only in the off-season'], correct: 1 },
+        {
+          prompt: 'What does the Nordic Hamstring Exercise mainly train?',
+          options: ['Concentric strength', 'Eccentric strength', 'Flexibility', 'Balance'],
+          correct: 1,
+        },
+        {
+          prompt: 'What is the strongest modifier of programme effectiveness?',
+          options: [
+            'The equipment',
+            'Adherence (doing the sessions)',
+            'The time of day',
+            'The surface',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'Which exercises complement the NHE?',
+          options: [
+            'Only jumping',
+            'Hip-dominant exercises such as Romanian deadlifts',
+            'Only sprinting',
+            'Only planks',
+          ],
+          correct: 1,
+        },
+        {
+          prompt: 'How should the NHE programme progress?',
+          options: [
+            'All weeks at maximum volume',
+            'Gradually, following the 13-week progression',
+            'Once a month',
+            'Only in the off-season',
+          ],
+          correct: 1,
+        },
       ],
     },
   ];
@@ -859,7 +1085,8 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       ageMax: 17,
       level: 'nacional',
       country: 'Spain',
-      description: 'We are looking for a striker with good striking and mobility for the youth team.',
+      description:
+        'We are looking for a striker with good striking and mobility for the youth team.',
       status: 'OPEN',
     },
   });
@@ -873,7 +1100,8 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       name: 'María López',
       email: 'maria@example.com',
       subject: 'Trial for my son',
-      message: 'My son plays center midfield and we would like to know how to take part in a trial.',
+      message:
+        'My son plays center midfield and we would like to know how to take part in a trial.',
       status: 'NEW',
     },
   });
@@ -933,7 +1161,8 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       create: {
         playerId: playerProfile.id,
         opportunityId: 'opp-club-1',
-        message: 'I am a U17 striker with national-level experience. I would love to take part in the trial day.',
+        message:
+          'I am a U17 striker with national-level experience. I would love to take part in the trial day.',
       },
     });
   }
@@ -1157,11 +1386,41 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
   if (playerProfile) {
     const daysAgo = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
     const profileViews = [
-      { viewerUserId: clubUser.id, viewerRole: 'CLUB', viewCount: 3, firstViewedAt: daysAgo(1), lastViewedAt: daysAgo(0.05) },
-      { viewerUserId: scoutUser.id, viewerRole: 'SCOUT', viewCount: 1, firstViewedAt: daysAgo(2), lastViewedAt: daysAgo(0.2) },
-      { viewerUserId: agentUser.id, viewerRole: 'AGENT', viewCount: 1, firstViewedAt: daysAgo(3), lastViewedAt: daysAgo(1.5) },
-      { viewerUserId: coachUser.id, viewerRole: 'COACH', viewCount: 1, firstViewedAt: daysAgo(5), lastViewedAt: daysAgo(5) },
-      { viewerUserId: universityUser.id, viewerRole: 'UNIVERSITY', viewCount: 2, firstViewedAt: daysAgo(21), lastViewedAt: daysAgo(9) },
+      {
+        viewerUserId: clubUser.id,
+        viewerRole: 'CLUB',
+        viewCount: 3,
+        firstViewedAt: daysAgo(1),
+        lastViewedAt: daysAgo(0.05),
+      },
+      {
+        viewerUserId: scoutUser.id,
+        viewerRole: 'SCOUT',
+        viewCount: 1,
+        firstViewedAt: daysAgo(2),
+        lastViewedAt: daysAgo(0.2),
+      },
+      {
+        viewerUserId: agentUser.id,
+        viewerRole: 'AGENT',
+        viewCount: 1,
+        firstViewedAt: daysAgo(3),
+        lastViewedAt: daysAgo(1.5),
+      },
+      {
+        viewerUserId: coachUser.id,
+        viewerRole: 'COACH',
+        viewCount: 1,
+        firstViewedAt: daysAgo(5),
+        lastViewedAt: daysAgo(5),
+      },
+      {
+        viewerUserId: universityUser.id,
+        viewerRole: 'UNIVERSITY',
+        viewCount: 2,
+        firstViewedAt: daysAgo(21),
+        lastViewedAt: daysAgo(9),
+      },
     ];
     for (const view of profileViews) {
       await prisma.profileView.upsert({
@@ -1299,9 +1558,27 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
 
   // Alcance del anuncio del club (métricas del autor).
   const demoPostViews = [
-    { viewerUserId: scoutUser.id, viewerRole: 'SCOUT', viewCount: 4, firstViewedAt: daysAgoPost(1), lastViewedAt: daysAgoPost(0, 1) },
-    { viewerUserId: agentUser.id, viewerRole: 'AGENT', viewCount: 2, firstViewedAt: daysAgoPost(1), lastViewedAt: daysAgoPost(0, 3) },
-    { viewerUserId: universityUser.id, viewerRole: 'UNIVERSITY', viewCount: 1, firstViewedAt: daysAgoPost(2), lastViewedAt: daysAgoPost(2) },
+    {
+      viewerUserId: scoutUser.id,
+      viewerRole: 'SCOUT',
+      viewCount: 4,
+      firstViewedAt: daysAgoPost(1),
+      lastViewedAt: daysAgoPost(0, 1),
+    },
+    {
+      viewerUserId: agentUser.id,
+      viewerRole: 'AGENT',
+      viewCount: 2,
+      firstViewedAt: daysAgoPost(1),
+      lastViewedAt: daysAgoPost(0, 3),
+    },
+    {
+      viewerUserId: universityUser.id,
+      viewerRole: 'UNIVERSITY',
+      viewCount: 1,
+      firstViewedAt: daysAgoPost(2),
+      lastViewedAt: daysAgoPost(2),
+    },
   ];
   for (const view of demoPostViews) {
     await prisma.postView.upsert({
@@ -1373,6 +1650,12 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       content:
         'Place 6 cones 1.5 m apart. Dribble through with the inside, outside and sole of the foot.\n4 series per foot with 60 s rest between series.',
       outcomes: ['Keep the ball under control at speed', 'Use both feet and the sole'],
+      series: 4,
+      reps: '1 run per foot',
+      restSeconds: 60,
+      equipment: ['balls', 'cones'],
+      space: '20x10 m',
+      players: 'Individual',
     },
     {
       id: 'tc-gen-ex-2',
@@ -1384,6 +1667,12 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       content:
         '2 minutes per foot against a wall, 5 m away.\nFirst touch away from the wall, second touch back. Alternate inside and outside of the foot.',
       outcomes: ['Control away from pressure', 'Receive side-on'],
+      series: 2,
+      reps: '2 min per foot',
+      restSeconds: 60,
+      equipment: ['balls', 'wall'],
+      space: '5 m from the wall',
+      players: 'Individual or in pairs',
     },
     {
       id: 'tc-gen-ex-3',
@@ -1395,25 +1684,37 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       content:
         'Circuit: front plank 40 s, side plank 30 s per side, dead bug 10 per side.\n3 rounds with 60 s rest between rounds.',
       outcomes: ['Hold a neutral spine', 'Transfer force from the trunk'],
+      series: 3,
+      reps: '1 circuit',
+      restSeconds: 60,
+      equipment: [],
+      space: 'Free space',
+      players: 'Individual',
     },
   ];
 
   for (const exercise of generalExercises) {
+    const data = {
+      title: exercise.title,
+      category: exercise.category,
+      kind: 'EXERCISE' as const,
+      ownerType: 'GENERAL' as const,
+      description: exercise.description,
+      durationMinutes: exercise.durationMinutes,
+      difficulty: exercise.difficulty,
+      content: exercise.content,
+      outcomes: exercise.outcomes,
+      series: exercise.series ?? null,
+      reps: exercise.reps ?? null,
+      restSeconds: exercise.restSeconds ?? null,
+      equipment: exercise.equipment ?? [],
+      space: exercise.space ?? null,
+      players: exercise.players ?? null,
+    };
     await prisma.trainingContent.upsert({
       where: { id: exercise.id },
-      update: {},
-      create: {
-        id: exercise.id,
-        title: exercise.title,
-        category: exercise.category,
-        kind: 'EXERCISE',
-        ownerType: 'GENERAL',
-        description: exercise.description,
-        durationMinutes: exercise.durationMinutes,
-        difficulty: exercise.difficulty,
-        content: exercise.content,
-        outcomes: exercise.outcomes,
-      },
+      update: data,
+      create: { id: exercise.id, ...data },
     });
   }
 
@@ -1453,6 +1754,12 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
         difficulty: 3,
         content: '4 series of 4 minutes with 90 s rest. Two touches maximum per player.',
         outcomes: ['Play around the press', 'Time the third-man run'],
+        series: 4,
+        reps: '4 min',
+        restSeconds: 90,
+        equipment: ['balls', 'cones', 'bibs'],
+        space: '30x20 m',
+        players: '4v4 + 2 neutrals',
       },
     });
 
@@ -1473,6 +1780,12 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
         difficulty: 1,
         content: 'Ankle, hip and shoulder mobility. 2 rounds of 6 exercises.',
         outcomes: ['Prepare joints before training'],
+        series: 2,
+        reps: '8 exercises',
+        restSeconds: 30,
+        equipment: ['markers'],
+        space: 'Half pitch',
+        players: 'Whole squad',
       },
     });
   }
@@ -1528,6 +1841,12 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
       difficulty: 2,
       content: '6v2 in a 12x12 grid. When the defenders win the ball, 5-second counter.',
       outcomes: ['Play away from pressure', 'React immediately after loss'],
+      series: 4,
+      reps: '3 min',
+      restSeconds: 60,
+      equipment: ['balls', 'bibs', 'cones'],
+      space: '12x12 m',
+      players: '6v2',
     },
   });
 
@@ -1558,5 +1877,3 @@ if (isDirectRun) {
       process.exit(0);
     });
 }
-
-

@@ -8,7 +8,9 @@ import {
   TRAINING_IMAGE_MIME_EXT,
   TRAINING_VIDEO_MAX_BYTES,
   TRAINING_VIDEO_MIME_EXT,
+  isTrainingEquipment,
   isTrainingKind,
+  type TrainingEquipment,
   type TrainingStatus,
 } from '@ifpc/config';
 import { trainingContentSchema } from '@ifpc/validation';
@@ -51,6 +53,14 @@ function outcomesFrom(formData: FormData): string[] {
     .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 12);
+}
+
+/**
+ * `equipment` llega como casillas repetidas: se queda solo con el material del
+ * catálogo (nunca con lo que envíe a mano un cliente).
+ */
+function equipmentFrom(formData: FormData): TrainingEquipment[] {
+  return formData.getAll('equipment').filter(isTrainingEquipment).slice(0, 12);
 }
 
 /**
@@ -141,6 +151,12 @@ export async function createTrainingContentAction(
     videoUrl: str(formData, 'videoUrl'),
     durationMinutes: num(formData, 'durationMinutes'),
     difficulty: num(formData, 'difficulty'),
+    series: num(formData, 'series'),
+    reps: str(formData, 'reps'),
+    restSeconds: num(formData, 'restSeconds'),
+    space: str(formData, 'space'),
+    players: str(formData, 'players'),
+    equipment: equipmentFrom(formData),
   });
   if (!parsed.success) {
     return { error: 'Please review the content fields.' };
@@ -315,6 +331,12 @@ export async function updateTrainingContentAction(
     videoUrl: str(formData, 'videoUrl'),
     durationMinutes: num(formData, 'durationMinutes'),
     difficulty: num(formData, 'difficulty'),
+    series: num(formData, 'series'),
+    reps: str(formData, 'reps'),
+    restSeconds: num(formData, 'restSeconds'),
+    space: str(formData, 'space'),
+    players: str(formData, 'players'),
+    equipment: equipmentFrom(formData),
   });
   if (!parsed.success) {
     return { error: 'Please review the content fields.' };

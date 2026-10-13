@@ -6,6 +6,8 @@ import { Button, Input, Select } from '@ifpc/ui';
 import {
   TRAINING_AUTHOR_CATEGORIES,
   TRAINING_CATEGORY_LABELS,
+  TRAINING_EQUIPMENT,
+  TRAINING_EQUIPMENT_LABELS,
   TRAINING_KINDS,
   TRAINING_KIND_LABELS,
 } from '@ifpc/config';
@@ -26,6 +28,13 @@ export interface TrainingContentFormValues {
   status: string;
   /** Fecha de publicación programada, si la tiene. */
   publishAt: Date | null;
+  /** Ejercicio estructurado (ficha de campo). */
+  series: number | null;
+  reps: string | null;
+  restSeconds: number | null;
+  space: string | null;
+  players: string | null;
+  equipment: string[];
 }
 
 export interface TrainingContentFormProps {
@@ -172,6 +181,71 @@ export function TrainingContentForm({
         placeholder="https://… (or upload a file below)"
         defaultValue={content?.videoUrl ?? ''}
       />
+
+      <fieldset className="flex flex-col gap-3 rounded-xl border border-border/70 p-3">
+        <legend className="px-1 text-xs font-medium text-muted-foreground">
+          Exercise details (optional)
+        </legend>
+        <div className="grid grid-cols-2 gap-3">
+          <Input
+            name="series"
+            type="number"
+            min={1}
+            max={50}
+            label="Series"
+            defaultValue={content?.series ?? ''}
+          />
+          <Input
+            name="reps"
+            label="Reps or time"
+            placeholder="10 each side, 4 min…"
+            maxLength={60}
+            defaultValue={content?.reps ?? ''}
+          />
+          <Input
+            name="restSeconds"
+            type="number"
+            min={0}
+            max={3600}
+            label="Rest (seconds)"
+            defaultValue={content?.restSeconds ?? ''}
+          />
+          <Input
+            name="space"
+            label="Space"
+            placeholder="30x20 m, half pitch…"
+            maxLength={60}
+            defaultValue={content?.space ?? ''}
+          />
+        </div>
+        <Input
+          name="players"
+          label="Players"
+          placeholder="4v4 + 2 neutrals"
+          maxLength={60}
+          defaultValue={content?.players ?? ''}
+        />
+        <div className="flex flex-col gap-1.5">
+          <span className="text-sm font-medium">Material</span>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {TRAINING_EQUIPMENT.map((item) => (
+              <label key={item} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  name="equipment"
+                  value={item}
+                  defaultChecked={content?.equipment.includes(item) ?? false}
+                  className="h-3.5 w-3.5 rounded border-border"
+                />
+                {TRAINING_EQUIPMENT_LABELS[item]}
+              </label>
+            ))}
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Series, reps, rest, space and material show up in the exercise sheet.
+        </p>
+      </fieldset>
 
       <fieldset className="flex flex-col gap-3 rounded-xl border border-border/70 p-3">
         <legend className="px-1 text-xs font-medium text-muted-foreground">Visibility</legend>

@@ -44,6 +44,12 @@ export default async function ClubTrainingDetailPage({
         videoUrl: content.videoUrl,
         durationMinutes: content.durationMinutes,
         difficulty: content.difficulty,
+        series: content.series,
+        reps: content.reps,
+        restSeconds: content.restSeconds,
+        equipment: content.equipment,
+        space: content.space,
+        players: content.players,
         authorName: null,
       }}
       backHref="/dashboard/club/training"

@@ -78,6 +78,12 @@ export default async function PlayerTrainingDetailPage({
         videoUrl: content.videoUrl,
         durationMinutes: content.durationMinutes,
         difficulty: content.difficulty,
+        series: content.series,
+        reps: content.reps,
+        restSeconds: content.restSeconds,
+        equipment: content.equipment,
+        space: content.space,
+        players: content.players,
         authorName,
       }}
       backHref="/dashboard/player/training"
@@ -111,16 +117,15 @@ export default async function PlayerTrainingDetailPage({
                   <div>
                     <h2 className="font-semibold">{content.quiz.title} — quiz</h2>
                     <p className="text-xs text-muted-foreground">
-                      {content.quiz._count.questions} questions · pass mark{' '}
-                      {content.quiz.passScore}%
+                      {content.quiz._count.questions} questions · pass mark {content.quiz.passScore}
+                      %
                     </p>
                   </div>
                   {passed ? <Badge variant="success">Passed</Badge> : null}
                 </div>
                 {attempts.length > 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    Best score:{' '}
-                    <span className="font-semibold text-foreground">{best}%</span> ·{' '}
+                    Best score: <span className="font-semibold text-foreground">{best}%</span> ·{' '}
                     {attempts.length} attempt{attempts.length === 1 ? '' : 's'}
                   </p>
                 ) : (

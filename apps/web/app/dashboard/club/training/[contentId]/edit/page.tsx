@@ -87,6 +87,12 @@ export default async function ClubTrainingEditPage({
               difficulty: content.difficulty,
               status: content.status,
               publishAt: content.publishAt,
+              series: content.series,
+              reps: content.reps,
+              restSeconds: content.restSeconds,
+              space: content.space,
+              players: content.players,
+              equipment: content.equipment,
             }}
           />
         </CardContent>

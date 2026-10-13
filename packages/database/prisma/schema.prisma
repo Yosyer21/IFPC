@@ -564,6 +564,18 @@ model TrainingContent {
   thumbnailUrl    String?
   durationMinutes Int?
   difficulty      Int? // 1-5
+  /// Ejercicio estructurado (ficha de campo): nº de series.
+  series          Int?
+  /// Repeticiones o duración por serie, tal cual lo escribe el coach («10 por lado», «4 min»).
+  reps            String?
+  /// Descanso entre series, en segundos.
+  restSeconds     Int?
+  /// Material necesario (ver `TRAINING_EQUIPMENT` en `packages/config/src/training.ts`).
+  equipment       String[] @default([])
+  /// Espacio de trabajo («30x20 m», «medio campo»).
+  space           String?
+  /// Jugadores que participan («4v4 + 2 comodines»).
+  players         String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

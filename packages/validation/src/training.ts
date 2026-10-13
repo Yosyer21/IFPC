@@ -16,6 +16,37 @@ export const trainingContentSchema = z.object({
   videoUrl: z.string().trim().max(500).optional().nullable(),
   durationMinutes: z.number().int().min(1).max(600).optional().nullable(),
   difficulty: z.number().int().min(1).max(5).optional().nullable(),
+  // Ejercicio estructurado (ficha de campo): series, repeticiones, descanso,
+  // material, espacio y jugadores. Todo opcional: un curso no los usa.
+  series: z.number().int().min(1).max(50).optional().nullable(),
+  reps: z.string().trim().max(60).optional().nullable(),
+  restSeconds: z.number().int().min(0).max(3600).optional().nullable(),
+  space: z.string().trim().max(60).optional().nullable(),
+  players: z.string().trim().max(60).optional().nullable(),
+  /**
+   * Material: lista cerrada (mismas claves que `TRAINING_EQUIPMENT`), en literal
+   * a propósito porque este paquete no depende de `@ifpc/config`; el test de
+   * cálculo comprueba que ambas listas siguen coincidiendo.
+   */
+  equipment: z
+    .array(
+      z.enum([
+        'balls',
+        'cones',
+        'poles',
+        'bibs',
+        'goals',
+        'mini-goals',
+        'mannequins',
+        'hurdles',
+        'ladder',
+        'markers',
+        'wall',
+        'bands',
+      ])
+    )
+    .max(12)
+    .optional(),
 });
 
 export type TrainingContentInput = z.infer<typeof trainingContentSchema>;
