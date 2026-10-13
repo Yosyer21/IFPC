@@ -30,6 +30,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 RUN mkdir -p /app/prisma-engines
 COPY --from=builder /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/libquery_engine-linux-musl-openssl-3.0.x.so.node /app/prisma-engines/
 ENV PRISMA_QUERY_ENGINE_LIBRARY=/app/prisma-engines/libquery_engine-linux-musl-openssl-3.0.x.so.node
+# Prisma CLI + schema: permiten aplicar el esquema (`prisma db push`) en el arranque,
+# de modo que la base de datos se mantiene alineada con el código en cada deploy.
+RUN npm i -g prisma@6.19.3
+COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0

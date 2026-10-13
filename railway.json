@@ -5,9 +5,9 @@
     "dockerfilePath": "infrastructure/docker/Dockerfile.web"
   },
   "deploy": {
-    "startCommand": "node apps/web/server.js",
+    "startCommand": "sh -c \"prisma db push --schema packages/database/prisma/schema.prisma --skip-generate && node apps/web/server.js\"",
     "healthcheckPath": "/",
-    "healthcheckTimeout": 120,
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
