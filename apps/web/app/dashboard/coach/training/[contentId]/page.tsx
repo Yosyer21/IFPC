@@ -4,7 +4,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { TrainingContentDetail } from '@/components/training/content-detail';
-import { DeleteTrainingContentButton } from '@/components/training/content-actions';
+import { TrainingContentActions } from '@/components/training/content-actions';
 
 export const metadata: Metadata = { title: 'Football Center' };
 
@@ -56,7 +56,7 @@ export default async function CoachTrainingDetailPage({
                 Your players see it in their own Football Center.
               </p>
             </div>
-            <DeleteTrainingContentButton contentId={content.id} />
+            <TrainingContentActions contentId={content.id} basePath="/dashboard/coach/training" />
           </CardContent>
         </Card>
       }

@@ -18,6 +18,11 @@ import {
   type PlayerTrainingAudience,
   type TrainingItem,
 } from '@/lib/training';
+import {
+  parsePassScore,
+  parseQuizQuestions,
+  quizQuestionsToText,
+} from '@/lib/training-quiz';
 
 function item(overrides: Partial<TrainingItem>): TrainingItem {
   return {
@@ -141,5 +146,60 @@ describe('trainingVisibilityWhere', () => {
     expect(trainingVisibilityWhere({ playerId: 'p', coachIds: [], clubIds: [] })).toEqual({
       OR: [{ ownerType: 'GENERAL' }],
     });
+  });
+});
+
+describe('parseQuizQuestions', () => {
+  it('lee una pregunta por línea con la primera opción como correcta', () => {
+    expect(parseQuizQuestions('What should the first touch have? | A purpose | Maximum power')).toEqual(
+      [
+        {
+          prompt: 'What should the first touch have?',
+          options: ['A purpose', 'Maximum power'],
+        },
+      ]
+    );
+  });
+
+  it('ignora líneas vacías, comentarios y preguntas sin opciones suficientes', () => {
+    const raw = ['# comentario', '', 'Only prompt', 'Prompt | una sola opción', 'Good? | A | B'].join(
+      '\n'
+    );
+    expect(parseQuizQuestions(raw)).toHaveLength(1);
+    expect(parseQuizQuestions(null)).toEqual([]);
+    expect(parseQuizQuestions(undefined)).toEqual([]);
+  });
+
+  it('recorta los espacios de cada parte', () => {
+    expect(parseQuizQuestions('  Q?  |  Correct  |  Wrong  ')).toEqual([
+      { prompt: 'Q?', options: ['Correct', 'Wrong'] },
+    ]);
+  });
+});
+
+describe('quizQuestionsToText', () => {
+  it('vuelca la correcta primero, para poder editarlo y volver a guardarlo', () => {
+    const text = quizQuestionsToText([
+      {
+        prompt: 'Q?',
+        options: [
+          { label: 'Wrong', isCorrect: false },
+          { label: 'Correct', isCorrect: true },
+        ],
+      },
+    ]);
+
+    expect(text).toBe('Q? | Correct | Wrong');
+    expect(parseQuizQuestions(text)[0].options[0]).toBe('Correct');
+  });
+});
+
+describe('parsePassScore', () => {
+  it('acota entre 1 y 100 y usa 70 por defecto', () => {
+    expect(parsePassScore('85')).toBe(85);
+    expect(parsePassScore('0')).toBe(1);
+    expect(parsePassScore('500')).toBe(100);
+    expect(parsePassScore('')).toBe(70);
+    expect(parsePassScore(null)).toBe(70);
   });
 });

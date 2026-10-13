@@ -10,6 +10,13 @@
  * tests, así que añadir una categoría no obliga a tocar componentes.
  */
 
+import {
+  POST_IMAGE_MAX_BYTES,
+  POST_IMAGE_MIME_EXT,
+  POST_VIDEO_MAX_BYTES,
+  POST_VIDEO_MIME_EXT,
+} from './discovery';
+
 // ---------------------------------------------------------------------------
 // Tipo de contenido
 // ---------------------------------------------------------------------------
@@ -78,3 +85,13 @@ export const TRAINING_AUTHOR_CATEGORIES: readonly TrainingCategory[] = [
   'strength-conditioning',
   'psychology',
 ];
+
+// ---------------------------------------------------------------------------
+// Medios (portada y vídeo del contenido)
+// ---------------------------------------------------------------------------
+
+/** Portada y vídeo comparten formatos y límites con el feed de Discovery. */
+export const TRAINING_IMAGE_MAX_BYTES = POST_IMAGE_MAX_BYTES;
+export const TRAINING_VIDEO_MAX_BYTES = POST_VIDEO_MAX_BYTES;
+export const TRAINING_IMAGE_MIME_EXT = POST_IMAGE_MIME_EXT;
+export const TRAINING_VIDEO_MIME_EXT = POST_VIDEO_MIME_EXT;

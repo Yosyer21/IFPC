@@ -9,6 +9,12 @@ const mocks = vi.hoisted(() => ({
   contentFindUnique: vi.fn(),
   contentFindFirst: vi.fn(),
   contentDelete: vi.fn(),
+  contentUpdate: vi.fn(),
+  quizDeleteMany: vi.fn(),
+  quizCreate: vi.fn(),
+  storageSave: vi.fn(),
+  storageRemove: vi.fn(),
+  revalidatePaths: vi.fn(),
   progressFindUnique: vi.fn(),
   progressUpsert: vi.fn(),
   progressDelete: vi.fn(),
@@ -18,6 +24,10 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
+vi.mock('@/lib/revalidate', () => ({ revalidatePaths: mocks.revalidatePaths }));
+vi.mock('@/lib/storage', () => ({
+  resolveStorage: () => ({ save: mocks.storageSave, remove: mocks.storageRemove }),
+}));
 vi.mock('@ifpc/database', () => ({
   prisma: {
     coach: { findUnique: mocks.coachFindUnique },
@@ -27,7 +37,9 @@ vi.mock('@ifpc/database', () => ({
       findUnique: mocks.contentFindUnique,
       findFirst: mocks.contentFindFirst,
       delete: mocks.contentDelete,
+      update: mocks.contentUpdate,
     },
+    quiz: { deleteMany: mocks.quizDeleteMany, create: mocks.quizCreate },
     trainingProgress: {
       findUnique: mocks.progressFindUnique,
       upsert: mocks.progressUpsert,
@@ -42,7 +54,11 @@ vi.mock('@ifpc/database', () => ({
 import {
   createTrainingContentAction,
   deleteTrainingContentAction,
+  deleteContentQuizAction,
+  saveContentQuizAction,
   toggleTrainingProgressAction,
+  updateTrainingContentAction,
+  uploadTrainingCoverAction,
 } from '@/app/actions/training';
 
 function form(fields: Record<string, string>): FormData {
@@ -66,6 +82,11 @@ beforeEach(() => {
   mocks.coachFindUnique.mockResolvedValue(null);
   mocks.clubFindUnique.mockResolvedValue(null);
   mocks.contentCreate.mockResolvedValue({ id: 'content-1' });
+  mocks.contentUpdate.mockResolvedValue({ id: 'content-1' });
+  mocks.quizDeleteMany.mockResolvedValue({ count: 0 });
+  mocks.quizCreate.mockResolvedValue({ id: 'quiz-1' });
+  mocks.storageSave.mockResolvedValue({ url: '/uploads/training/covers/a.png' });
+  mocks.storageRemove.mockResolvedValue(undefined);
 });
 
 describe('createTrainingContentAction', () => {
@@ -187,5 +208,144 @@ describe('toggleTrainingProgressAction', () => {
 
     expect(mocks.progressUpsert).not.toHaveBeenCalled();
     expect(mocks.progressDelete).not.toHaveBeenCalled();
+  });
+});
+
+/** Contenido propio del coach, para editar, poner quiz y subir medios. */
+const ownedContent = {
+  id: 'content-1',
+  coachId: 'coach-1',
+  clubId: null,
+  kind: 'EXERCISE',
+  title: 'Old title',
+  thumbnailUrl: null,
+  videoUrl: null,
+};
+
+describe('updateTrainingContentAction', () => {
+  beforeEach(() => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue(ownedContent);
+  });
+
+  it('actualiza el contenido propio y vuelve a su área', async () => {
+    const redirectTo = await captureRedirect(() =>
+      updateTrainingContentAction(
+        {},
+        form({ ...baseFields, contentId: 'content-1', title: 'New title' })
+      )
+    );
+
+    expect(mocks.contentUpdate.mock.calls[0][0]).toMatchObject({
+      where: { id: 'content-1' },
+      data: { title: 'New title', kind: 'EXERCISE', category: 'technical' },
+    });
+    // La lista del autor se revalida para que el cambio se vea al volver.
+    expect(mocks.revalidatePaths).toHaveBeenCalledWith(
+      '/dashboard/coach/training',
+      '/dashboard/coach/training/content-1',
+      '/dashboard/coach/training/content-1/edit'
+    );
+    expect(redirectTo).toBe('/dashboard/coach/training');
+  });
+
+  it('no deja editar el contenido de otro autor', async () => {
+    mocks.contentFindUnique.mockResolvedValue({ ...ownedContent, coachId: 'coach-2' });
+
+    const state = await updateTrainingContentAction(
+      {},
+      form({ ...baseFields, contentId: 'content-1' })
+    );
+
+    expect(state.error).toBe('Content not found.');
+    expect(mocks.contentUpdate).not.toHaveBeenCalled();
+  });
+});
+
+describe('saveContentQuizAction', () => {
+  beforeEach(() => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue(ownedContent);
+  });
+
+  it('guarda el quiz con la primera opción como correcta', async () => {
+    const redirectTo = await captureRedirect(() =>
+      saveContentQuizAction(
+        {},
+        form({
+          contentId: 'content-1',
+          quizTitle: 'Cone drill quiz',
+          passScore: '80',
+          questions: 'Which surface? | Inside | Head',
+        })
+      )
+    );
+
+    expect(mocks.quizDeleteMany).toHaveBeenCalledWith({ where: { contentId: 'content-1' } });
+    const created = mocks.quizCreate.mock.calls[0][0].data;
+    expect(created).toMatchObject({
+      contentId: 'content-1',
+      title: 'Cone drill quiz',
+      passScore: 80,
+    });
+    expect(created.questions.create[0].options.create).toEqual([
+      { label: 'Inside', isCorrect: true, position: 0 },
+      { label: 'Head', isCorrect: false, position: 1 },
+    ]);
+    expect(redirectTo).toBe('/dashboard/coach/training/content-1/edit');
+  });
+
+  it('exige al menos una pregunta válida', async () => {
+    const state = await saveContentQuizAction(
+      {},
+      form({ contentId: 'content-1', questions: 'solo enunciado' })
+    );
+
+    expect(state.error).toBeTruthy();
+    expect(mocks.quizCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('deleteContentQuizAction', () => {
+  it('quita el quiz del contenido propio', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue(ownedContent);
+
+    await captureRedirect(() => deleteContentQuizAction(form({ contentId: 'content-1' })));
+
+    expect(mocks.quizDeleteMany).toHaveBeenCalledWith({ where: { contentId: 'content-1' } });
+  });
+});
+
+describe('uploadTrainingCoverAction', () => {
+  beforeEach(() => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue(ownedContent);
+  });
+
+  it('sube la portada, guarda la URL y limpia la anterior', async () => {
+    const formData = form({ contentId: 'content-1' });
+    formData.set('file', new File([Buffer.from('image')], 'cover.png', { type: 'image/png' }));
+
+    const redirectTo = await captureRedirect(() => uploadTrainingCoverAction({}, formData));
+
+    expect(mocks.storageSave).toHaveBeenCalledTimes(1);
+    expect(mocks.storageSave.mock.calls[0][0].key.startsWith('training/covers/')).toBe(true);
+    expect(mocks.contentUpdate.mock.calls[0][0]).toMatchObject({
+      where: { id: 'content-1' },
+      data: { thumbnailUrl: '/uploads/training/covers/a.png' },
+    });
+    expect(mocks.storageRemove).toHaveBeenCalledWith(null);
+    expect(redirectTo).toBe('/dashboard/coach/training/content-1/edit');
+  });
+
+  it('rechaza los formatos que no son imagen', async () => {
+    const formData = form({ contentId: 'content-1' });
+    formData.set('file', new File([Buffer.from('pdf')], 'plan.pdf', { type: 'application/pdf' }));
+
+    const state = await uploadTrainingCoverAction({}, formData);
+
+    expect(state.error).toBeTruthy();
+    expect(mocks.storageSave).not.toHaveBeenCalled();
   });
 });

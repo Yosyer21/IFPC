@@ -66,6 +66,15 @@ export async function ContentCategory({
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
+              <label className="text-sm text-muted-foreground">Type</label>
+              <select
+                name="kind"
+                defaultValue="COURSE"
+                className="h-9 rounded-md border border-border bg-background px-2 text-sm"
+              >
+                <option value="COURSE">Course</option>
+                <option value="EXERCISE">Exercise</option>
+              </select>
               <label className="text-sm text-muted-foreground">Dificultad (1-5)</label>
               <select
                 name="difficulty"

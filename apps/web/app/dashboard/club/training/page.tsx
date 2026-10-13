@@ -5,9 +5,9 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent, Tabs } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
-import { CreateTrainingContentForm } from '@/components/training/create-content-form';
+import { TrainingContentForm } from '@/components/training/content-form';
 import { TrainingContentGrid } from '@/components/training/content-grid';
-import { DeleteTrainingContentButton } from '@/components/training/content-actions';
+import { TrainingContentActions } from '@/components/training/content-actions';
 import { IconBook, IconPlay, IconUsers } from '@/components/dashboard/icons';
 import { clubPlayerCount, listAuthoredTraining } from '@/lib/training';
 
@@ -45,12 +45,14 @@ export default async function ClubFootballCenterPage() {
       <TrainingContentGrid
         items={list}
         basePath="/dashboard/club/training"
-        renderActions={(item) => <DeleteTrainingContentButton contentId={item.id} />}
+        renderActions={(item) => (
+          <TrainingContentActions contentId={item.id} basePath="/dashboard/club/training" />
+        )}
       />
       <Card>
         <CardContent>
           <h2 className="mb-4 font-semibold">New {kind === 'COURSE' ? 'course' : 'exercise'}</h2>
-          <CreateTrainingContentForm defaultKind={kind} />
+          <TrainingContentForm defaultKind={kind} />
         </CardContent>
       </Card>
     </div>

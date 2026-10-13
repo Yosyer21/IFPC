@@ -1,18 +1,30 @@
-import {
-  deleteTrainingContentAction,
-  toggleTrainingProgressAction,
-} from '@/app/actions/training';
+import Link from 'next/link';
+import { deleteTrainingContentAction, toggleTrainingProgressAction } from '@/app/actions/training';
 import { Button } from '@ifpc/ui';
 
-/** Borra contenido del propio coach o club (el servidor comprueba la autoría). */
-export function DeleteTrainingContentButton({ contentId }: { contentId: string }) {
+/** Acciones del autor sobre su contenido: editar y borrar. */
+export function TrainingContentActions({
+  contentId,
+  basePath,
+}: {
+  contentId: string;
+  basePath: string;
+}) {
   return (
-    <form action={deleteTrainingContentAction}>
-      <input type="hidden" name="contentId" value={contentId} />
-      <button type="submit" className="text-xs text-muted-foreground hover:underline">
-        Delete
-      </button>
-    </form>
+    <div className="flex items-center gap-3">
+      <Link
+        href={`${basePath}/${contentId}/edit`}
+        className="text-xs font-medium text-primary hover:underline"
+      >
+        Edit
+      </Link>
+      <form action={deleteTrainingContentAction}>
+        <input type="hidden" name="contentId" value={contentId} />
+        <button type="submit" className="text-xs text-muted-foreground hover:underline">
+          Delete
+        </button>
+      </form>
+    </div>
   );
 }
 
