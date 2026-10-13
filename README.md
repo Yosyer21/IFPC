@@ -78,3 +78,18 @@ pnpm dev                      # http://localhost:3000
 - Compact specification for AI agents: `IA_information/IA_agent_info.txt`
 - Detailed directory tree: `IA_information/Estructure.txt`
 
+## Deploy (Railway)
+
+The production web service builds from `infrastructure/docker/Dockerfile.web` and is
+configured by `railway.json`:
+
+- The `runner` stage ships the **Prisma CLI + schema**, and the deploy `startCommand`
+  runs **`prisma db push --skip-generate`** before `node apps/web/server.js`, so the
+  production Postgres is always aligned with `packages/database/prisma/schema.prisma`.
+  When it would drop data, `db push` fails in non-interactive mode and the deploy stops
+  (review the schema change instead of forcing it).
+- Required service variables: `DATABASE_URL` (Railway Postgres, internal host),
+  `AUTH_SECRET`, `NEXT_PUBLIC_APP_URL` (the public domain) and `USE_PGLITE=false`.
+- Optional: `RESEND_API_KEY` (emails), `STRIPE_*` (real checkout) and the S3 variables
+  (otherwise uploads land on the container's ephemeral disk).
+
