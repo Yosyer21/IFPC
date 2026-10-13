@@ -8,11 +8,11 @@ import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { IconRoute } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Rutas de mis hijos' };
+export const metadata: Metadata = { title: 'My children’s pathways' };
 
 const PATHWAY_STATUS_LABELS: Record<string, string> = {
   active: 'Active',
-  completed: 'Completada',
+  completed: 'Completed',
   paused: 'Pausada',
 };
 
@@ -33,7 +33,7 @@ export default async function ParentPathwaysPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Rutas de desarrollo"
+        title="Development pathways"
         subtitle="Sports development plan for each of your children"
         icon="route"
       />

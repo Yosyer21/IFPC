@@ -83,12 +83,12 @@ export function ProfileEditForm({ player }: { player: Player }) {
       </div>
       <Select
         name="competitionLevel"
-        label="Level competitivo"
+        label="Competition level"
         options={competitionOptions}
         defaultValue={player.competitionLevel ?? ''}
         placeholder="Select…"
       />
-      <Input name="clubName" label="Club actual" defaultValue={player.clubName ?? ''} />
+      <Input name="clubName" label="Current club" defaultValue={player.clubName ?? ''} />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="bio" className="text-sm font-medium">
           Biography
@@ -112,20 +112,20 @@ export function ProfileEditForm({ player }: { player: Player }) {
           name="headline"
           label="Headline"
           maxLength={PROFILE_HEADLINE_MAX}
-          placeholder="Ej.: Extremo zurdo, rápido al espacio"
+          placeholder="E.g. left-footed winger, quick into space"
           defaultValue={player.headline ?? ''}
         />
         <Input
           name="location"
           label="Location"
           maxLength={PROFILE_LOCATION_MAX}
-          placeholder="Ej.: Valencia, Spain"
+          placeholder="e.g. Valencia, Spain"
           defaultValue={player.location ?? ''}
         />
 
         <fieldset className="flex flex-col gap-2">
           <legend className="text-sm font-medium">
-            Abierto a <span className="text-muted-foreground">(máx. {PROFILE_OPEN_TO_MAX})</span>
+            Open to <span className="text-muted-foreground">(max. {PROFILE_OPEN_TO_MAX})</span>
           </legend>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {PROFILE_OPEN_TO.map((value) => (
@@ -174,7 +174,7 @@ export function ProfileEditForm({ player }: { player: Player }) {
       </fieldset>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Save changes'}
+        {pending ? 'Saving…' : 'Save changes'}
       </Button>
     </form>
   );

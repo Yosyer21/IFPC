@@ -20,7 +20,7 @@ export default async function UniversityProfilePage() {
     ['Name', university.name],
     ['Email', university.user?.email ?? '—'],
     ['Country', university.country],
-    ['Ciudad', university.city ?? '—'],
+    ['City', university.city ?? '—'],
     ['Member since', university.createdAt.toLocaleDateString('en-GB')],
   ];
 

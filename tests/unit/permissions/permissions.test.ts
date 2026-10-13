@@ -30,6 +30,8 @@ describe('canAccessDashboard', () => {
     for (const role of ROLES) {
       expect(canAccessDashboard(role, '/dashboard/discovery')).toBe(true);
       expect(canAccessDashboard(role, '/dashboard/discovery/abc123')).toBe(true);
+      expect(canAccessDashboard(role, '/dashboard/live-sessions')).toBe(true);
+      expect(canAccessDashboard(role, '/dashboard/live-sessions/abc123')).toBe(true);
     }
   });
 

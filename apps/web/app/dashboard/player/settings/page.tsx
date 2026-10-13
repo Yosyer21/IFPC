@@ -15,7 +15,7 @@ export default async function PlayerSettingsPage() {
   if (!user) return null;
 
   const items = [
-    { href: '/dashboard/player/settings/account', label: 'Cuenta', description: `Name y email (${user.email})` },
+    { href: '/dashboard/player/settings/account', label: 'Account', description: `Name and email (${user.email})` },
     { href: '/dashboard/player/settings/privacy', label: 'Privacy', description: 'Control who sees your profile' },
     { href: '/dashboard/player/settings/notifications', label: 'Notifications', description: 'Alert preferences' },
   ];
@@ -24,7 +24,7 @@ export default async function PlayerSettingsPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Settings"
-        subtitle="Gestiona tu cuenta, privacidad y preferencias"
+        subtitle="Manage your account, privacy and preferences"
         icon="settings"
       />
       <div className="flex flex-col gap-3">

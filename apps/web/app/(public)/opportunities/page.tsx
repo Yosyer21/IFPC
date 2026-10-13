@@ -8,7 +8,7 @@ import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
   title: 'Opportunities — Future Baller',
-  description: 'Pruebas, scholarships y call-ups open de clubs y universities.',
+  description: 'Trials, scholarships and open call-ups from clubs and universities.',
 };
 
 export default async function PublicOpportunitiesPage() {
@@ -37,7 +37,7 @@ export default async function PublicOpportunitiesPage() {
           </h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {opportunities.length} trials · {scholarships} scholarships · {countries} countries.
-            Aplica desde tu perfil de player.
+            Apply from your player profile.
           </p>
         </div>
 

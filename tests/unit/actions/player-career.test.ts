@@ -136,7 +136,7 @@ describe('saveCareerEntryAction', () => {
       careerForm({ ...validEntry, entryId: 'entry-9' })
     );
 
-    expect(result).toEqual({ error: 'Entrada no encontrada.' });
+    expect(result).toEqual({ error: 'Entry not found.' });
     expect(mocks.entryUpdate).not.toHaveBeenCalled();
   });
 

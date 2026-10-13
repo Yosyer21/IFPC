@@ -27,7 +27,7 @@ export default async function ScoutSavedPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Saved players"
-        subtitle="Tu radar de talento: players que sigues de cerca"
+        subtitle="Your talent radar: players you follow closely"
         icon="star"
       />
 
@@ -35,7 +35,7 @@ export default async function ScoutSavedPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No has guardado players.{' '}
+              You have not saved any players.{' '}
               <Link href="/dashboard/scout/players" className="text-primary hover:underline">
                 Explore players
               </Link>
@@ -64,7 +64,7 @@ export default async function ScoutSavedPage() {
                           ] ?? entry.player.position)
                         : 'No position'}
                       {' · '}
-                      Guardado el {entry.createdAt.toLocaleDateString('en-GB')}
+                      Saved on {entry.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
                 </div>

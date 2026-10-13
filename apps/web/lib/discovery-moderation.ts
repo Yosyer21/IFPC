@@ -61,7 +61,7 @@ export interface ReportedPost {
 }
 
 /**
- * Cola de moderación: posts con reports **pendientes**, ordered por
+ * Cola de moderación: posts con reports **pending**, ordered por
  * número de reports y, a igualdad, por la más reciente.
  */
 export async function listReportedPosts(limit = 20): Promise<ReportedPost[]> {

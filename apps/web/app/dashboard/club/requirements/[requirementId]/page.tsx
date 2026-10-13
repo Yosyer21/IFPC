@@ -28,7 +28,7 @@ export default async function ClubRequirementDetailPage({
   const rows: [string, string][] = [
     ['Position', requirement.position ?? 'Any position'],
     [
-      'Rango de edad',
+      'Age range',
       requirement.ageMin || requirement.ageMax
         ? `${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} years old`
         : '—',
@@ -70,11 +70,11 @@ export default async function ClubRequirementDetailPage({
                 type="submit"
                 className="rounded-md border border-border px-4 py-2 text-sm transition-colors hover:bg-muted"
               >
-                Marcar como cubierto
+                Mark as covered
               </button>
             </form>
           ) : (
-            <Badge variant="default">Cerrado</Badge>
+            <Badge variant="default">Closed</Badge>
           )}
         </CardContent>
       </Card>

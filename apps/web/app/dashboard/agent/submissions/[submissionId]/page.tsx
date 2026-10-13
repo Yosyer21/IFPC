@@ -92,7 +92,7 @@ export default async function AgentSubmissionDetailPage({
           <Link href={`/dashboard/agent/trials/${submission.trial.id}`} className="group">
             <Card className="transition-colors group-hover:border-primary">
               <CardContent className="flex items-center justify-between">
-                <span className="font-medium">Prueba</span>
+                <span className="font-medium">Trial</span>
                 <span className="text-sm text-muted-foreground">
                   {submission.trial.startsAt.toLocaleDateString('en-GB')} · {submission.trial.status}
                 </span>
@@ -119,7 +119,7 @@ export default async function AgentSubmissionDetailPage({
           <Link href={`/dashboard/agent/contracts/${submission.contract.id}`} className="group">
             <Card className="transition-colors group-hover:border-primary">
               <CardContent className="flex items-center justify-between">
-                <span className="font-medium">Contrato</span>
+                <span className="font-medium">Contract</span>
                 <span className="text-sm text-muted-foreground">{submission.contract.status}</span>
               </CardContent>
             </Card>

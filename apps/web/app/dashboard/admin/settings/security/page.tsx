@@ -14,7 +14,7 @@ export default async function AdminSettingsSecurityPage() {
       label: 'AUTH_SECRET',
       value: process.env.AUTH_SECRET ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.AUTH_SECRET),
-      hint: 'Secreto de firma de sesiones de Auth.js',
+      hint: 'Auth.js session signing secret',
     },
     {
       label: 'DATABASE_URL',
@@ -38,13 +38,13 @@ export default async function AdminSettingsSecurityPage() {
       label: 'STRIPE_SECRET_KEY',
       value: process.env.STRIPE_SECRET_KEY ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.STRIPE_SECRET_KEY),
-      hint: 'Payments reales (pendiente, today simulados)',
+      hint: 'Real payments (pending, simulated today)',
     },
     {
       label: 'S3_ENDPOINT',
       value: process.env.S3_ENDPOINT ? 'Configurado' : 'Pending',
       ok: Boolean(process.env.S3_ENDPOINT),
-      hint: 'Almacenamiento de objetos (pendiente, today uploads locales)',
+      hint: 'Object storage (pending, local uploads today)',
     },
   ];
 

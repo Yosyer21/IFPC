@@ -68,8 +68,8 @@ export default async function AgentPlayerDetailPage({
             {[
               ['Position', positionLabel],
               ['Nationality', player.nationality ?? '—'],
-              ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-              ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
+              ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+              ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-border p-3">
                 <dt className="text-xs text-muted-foreground">{label}</dt>

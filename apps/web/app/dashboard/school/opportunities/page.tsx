@@ -24,7 +24,7 @@ export default async function SchoolOpportunitiesPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Opportunities"
-        subtitle="Clínicas, pruebas y scholarships open en la plataforma"
+        subtitle="Clinics, trials and open scholarships on the platform"
         icon="target"
       />
 

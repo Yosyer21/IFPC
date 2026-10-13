@@ -22,7 +22,7 @@ export default async function UniversityPlayersPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Available players"
-        subtitle="Talento abierto a nuevas opportunities para reclutar"
+        subtitle="Talent open to new opportunities to recruit"
         icon="users"
       />
 

@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: 'Onboarding · Club' };
 const FIELDS: OnboardingField[] = [
   { name: 'name', label: 'Club name', required: true },
   { name: 'country', label: 'Country', required: true },
-  { name: 'city', label: 'Ciudad' },
-  { name: 'league', label: 'Liga' },
+  { name: 'city', label: 'City' },
+  { name: 'league', label: 'League' },
   { name: 'description', label: 'Description', type: 'textarea' },
 ];
 

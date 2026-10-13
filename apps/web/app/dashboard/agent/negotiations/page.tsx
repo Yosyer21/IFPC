@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Negociaciones' };
+export const metadata: Metadata = { title: 'Negotiations' };
 
 export default async function AgentNegotiationsPage() {
   const session = await auth();
@@ -24,7 +24,7 @@ export default async function AgentNegotiationsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Negociaciones"
+        title="Negotiations"
         subtitle="Negotiation conditions for your represented players"
         icon="briefcase"
       />

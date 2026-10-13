@@ -21,11 +21,11 @@ export const PROFILE_ACCENT_PALETTE: Record<
   ProfileAccent,
   { label: string; hex: string; soft: string }
 > = {
-  emerald: { label: 'Esmeralda', hex: '#34d399', soft: 'rgba(52, 211, 153, 0.16)' },
-  cyan: { label: 'Cian', hex: '#22d3ee', soft: 'rgba(34, 211, 238, 0.16)' },
-  lime: { label: 'Lima', hex: '#a3e635', soft: 'rgba(163, 230, 53, 0.16)' },
-  amber: { label: 'Ámbar', hex: '#fbbf24', soft: 'rgba(251, 191, 36, 0.16)' },
-  violet: { label: 'Violeta', hex: '#c084fc', soft: 'rgba(192, 132, 252, 0.16)' },
+  emerald: { label: 'Emerald', hex: '#34d399', soft: 'rgba(52, 211, 153, 0.16)' },
+  cyan: { label: 'Cyan', hex: '#22d3ee', soft: 'rgba(34, 211, 238, 0.16)' },
+  lime: { label: 'Lime', hex: '#a3e635', soft: 'rgba(163, 230, 53, 0.16)' },
+  amber: { label: 'Amber', hex: '#fbbf24', soft: 'rgba(251, 191, 36, 0.16)' },
+  violet: { label: 'Violet', hex: '#c084fc', soft: 'rgba(192, 132, 252, 0.16)' },
 };
 
 /** ¿Es un acento soportado? */
@@ -62,8 +62,8 @@ export type ProfileOpenTo = (typeof PROFILE_OPEN_TO)[number];
 
 export const PROFILE_OPEN_TO_LABELS: Record<ProfileOpenTo, string> = {
   CLUB: 'Looking for a club',
-  TRIAL: 'Abierto a pruebas',
-  SCHOLARSHIP: 'Scholarship deportiva',
+  TRIAL: 'Open to trials',
+  SCHOLARSHIP: 'Sports scholarship',
   COLLEGE: 'College football',
   AGENT: 'Looking for an agent',
 };
@@ -170,29 +170,29 @@ export const PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
   },
   {
     key: 'foot',
-    label: 'Pierna buena',
+    label: 'Preferred foot',
     hint: 'A detail that scouts always check.',
     weight: 4,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'competitionLevel',
-    label: 'Level competitivo',
+    label: 'Competition level',
     hint: 'Place your profile among the candidates.',
     weight: 8,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'physicalData',
-    label: 'Altura y peso',
+    label: 'Height & weight',
     hint: 'Both details are filled in together.',
     weight: 10,
     href: '/dashboard/player/profile/edit',
   },
   {
     key: 'clubName',
-    label: 'Club actual',
-    hint: 'Da contexto a tu trayectoria.',
+    label: 'Current club',
+    hint: 'Gives context to your career.',
     weight: 8,
     href: '/dashboard/player/profile/edit',
   },
@@ -212,7 +212,7 @@ export const PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
   },
   {
     key: 'banner',
-    label: 'Portada',
+    label: 'Cover photo',
     hint: 'Customise your profile header.',
     weight: 6,
     href: '/dashboard/player/profile/edit#personalizacion',

@@ -94,7 +94,7 @@ export function s3Driver(
     async save({ key, body, contentType }) {
       const response = await request('PUT', key, body, contentType);
       if (!response.ok) {
-        throw new Error(`S3 respondió ${response.status} al subir ${key}`);
+        throw new Error(`S3 responded ${response.status} while uploading ${key}`);
       }
       const encoded = key.split('/').map(encodeURIComponent).join('/');
       return { url: `${settings.publicBaseUrl}/${encoded}` };

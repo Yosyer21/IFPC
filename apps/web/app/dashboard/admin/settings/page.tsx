@@ -19,12 +19,12 @@ const SECTIONS = [
   {
     href: '/dashboard/admin/settings/roles',
     title: 'Roles',
-    description: 'Tipos de cuenta y base de usuarios por rol',
+    description: 'Account types and user base by role',
   },
   {
     href: '/dashboard/admin/settings/permissions',
     title: 'Permissions',
-    description: 'Matriz de capacidades por rol',
+    description: 'Capability matrix by role',
   },
   {
     href: '/dashboard/admin/settings/security',
@@ -34,7 +34,7 @@ const SECTIONS = [
   {
     href: '/dashboard/admin/settings/system',
     title: 'System',
-    description: 'Estado general de la plataforma y workers',
+    description: 'Overall platform and worker status',
   },
 ];
 
@@ -54,7 +54,7 @@ export default async function SettingsPage() {
                 <h2 className="font-semibold">{section.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{section.description}</p>
                 <span className="mt-3 inline-block text-sm text-primary group-hover:underline">
-                  Abrir →
+                  Open →
                 </span>
               </CardContent>
             </Card>

@@ -50,21 +50,22 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/club', label: 'Overview' },
+        { href: '/dashboard/club', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
-        { href: '/dashboard/club/profile', label: 'Club profile' },
-        { href: '/dashboard/club/staff', label: 'Staff' },
+        { href: '/dashboard/club/profile', label: 'Club profile', icon: 'briefcase' },
+        { href: '/dashboard/club/staff', label: 'Staff', icon: 'users' },
+        { href: '/dashboard/club/live-sessions', label: 'Live sessions', icon: 'live' },
       ],
     },
     {
       label: 'Recruitment',
       items: [
-        { href: '/dashboard/club/opportunities', label: 'Opportunities' },
-        { href: '/dashboard/club/requirements', label: 'Requirements' },
-        { href: '/dashboard/club/applications', label: 'Applications' },
-        { href: '/dashboard/club/players', label: 'Players' },
-        { href: '/dashboard/club/matching', label: 'Matching' },
-        { href: '/dashboard/club/inquiries', label: 'Inquiries' },
+        { href: '/dashboard/club/opportunities', label: 'Opportunities', icon: 'target' },
+        { href: '/dashboard/club/requirements', label: 'Requirements', icon: 'check' },
+        { href: '/dashboard/club/applications', label: 'Applications', icon: 'inbox' },
+        { href: '/dashboard/club/players', label: 'Players', icon: 'search' },
+        { href: '/dashboard/club/matching', label: 'Matching', icon: 'sparkles' },
+        { href: '/dashboard/club/inquiries', label: 'Inquiries', icon: 'mail' },
       ],
     },
   ],
@@ -72,29 +73,29 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/agent', label: 'Overview' },
+        { href: '/dashboard/agent', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
       ],
     },
     {
       label: 'Players',
       items: [
-        { href: '/dashboard/agent/players', label: 'My players' },
-        { href: '/dashboard/agent/players/add', label: 'Add player' },
+        { href: '/dashboard/agent/players', label: 'My players', icon: 'users' },
+        { href: '/dashboard/agent/players/add', label: 'Add player', icon: 'user' },
       ],
     },
     {
       label: 'Recruitment',
       items: [
-        { href: '/dashboard/agent/submissions', label: 'Submissions' },
-        { href: '/dashboard/agent/trials', label: 'Trials' },
-        { href: '/dashboard/agent/negotiations', label: 'Negotiations' },
-        { href: '/dashboard/agent/contracts', label: 'Contracts' },
-        { href: '/dashboard/agent/opportunities', label: 'Opportunities' },
-        { href: '/dashboard/agent/matching', label: 'Matching' },
-        { href: '/dashboard/agent/clubs', label: 'Clubs' },
-        { href: '/dashboard/agent/documents', label: 'Documents' },
-        { href: '/dashboard/agent/communications', label: 'Communications' },
+        { href: '/dashboard/agent/submissions', label: 'Submissions', icon: 'mail' },
+        { href: '/dashboard/agent/trials', label: 'Trials', icon: 'whistle' },
+        { href: '/dashboard/agent/negotiations', label: 'Negotiations', icon: 'briefcase' },
+        { href: '/dashboard/agent/contracts', label: 'Contracts', icon: 'file' },
+        { href: '/dashboard/agent/opportunities', label: 'Opportunities', icon: 'target' },
+        { href: '/dashboard/agent/matching', label: 'Matching', icon: 'sparkles' },
+        { href: '/dashboard/agent/clubs', label: 'Clubs', icon: 'shield' },
+        { href: '/dashboard/agent/documents', label: 'Documents', icon: 'file' },
+        { href: '/dashboard/agent/communications', label: 'Communications', icon: 'bell' },
       ],
     },
   ],
@@ -102,17 +103,17 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/scout', label: 'Overview' },
+        { href: '/dashboard/scout', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
       ],
     },
     {
       label: 'Scouting',
       items: [
-        { href: '/dashboard/scout/players', label: 'Players' },
-        { href: '/dashboard/scout/saved', label: 'Saved' },
-        { href: '/dashboard/scout/scouting-reports', label: 'Reports' },
-        { href: '/dashboard/scout/opportunities', label: 'Opportunities' },
+        { href: '/dashboard/scout/players', label: 'Players', icon: 'search' },
+        { href: '/dashboard/scout/saved', label: 'Saved', icon: 'star' },
+        { href: '/dashboard/scout/scouting-reports', label: 'Reports', icon: 'file' },
+        { href: '/dashboard/scout/opportunities', label: 'Opportunities', icon: 'target' },
       ],
     },
   ],
@@ -120,17 +121,17 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/coach', label: 'Overview' },
+        { href: '/dashboard/coach', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
       ],
     },
     {
       label: 'Training',
       items: [
-        { href: '/dashboard/coach/players', label: 'My players' },
-        { href: '/dashboard/coach/evaluations', label: 'Evaluations' },
-        { href: '/dashboard/coach/training', label: 'Training' },
-        { href: '/dashboard/coach/live-sessions', label: 'Live sessions' },
+        { href: '/dashboard/coach/players', label: 'My players', icon: 'users' },
+        { href: '/dashboard/coach/evaluations', label: 'Evaluations', icon: 'check' },
+        { href: '/dashboard/coach/training', label: 'Training', icon: 'play' },
+        { href: '/dashboard/coach/live-sessions', label: 'Live sessions', icon: 'live' },
       ],
     },
   ],
@@ -138,19 +139,19 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/parent', label: 'Overview' },
+        { href: '/dashboard/parent', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
-        { href: '/dashboard/parent/settings', label: 'Settings' },
+        { href: '/dashboard/parent/settings', label: 'Settings', icon: 'settings' },
       ],
     },
     {
       label: 'Family',
       items: [
-        { href: '/dashboard/parent/children', label: 'My children' },
-        { href: '/dashboard/parent/pathways', label: 'Pathways' },
-        { href: '/dashboard/parent/opportunities', label: 'Opportunities' },
-        { href: '/dashboard/parent/education', label: 'Education' },
-        { href: '/dashboard/parent/payments', label: 'Payments' },
+        { href: '/dashboard/parent/children', label: 'My children', icon: 'users' },
+        { href: '/dashboard/parent/pathways', label: 'Pathways', icon: 'route' },
+        { href: '/dashboard/parent/opportunities', label: 'Opportunities', icon: 'target' },
+        { href: '/dashboard/parent/education', label: 'Education', icon: 'book' },
+        { href: '/dashboard/parent/payments', label: 'Payments', icon: 'star' },
       ],
     },
   ],
@@ -158,16 +159,16 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/university', label: 'Overview' },
+        { href: '/dashboard/university', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
-        { href: '/dashboard/university/profile', label: 'Profile' },
+        { href: '/dashboard/university/profile', label: 'Profile', icon: 'briefcase' },
       ],
     },
     {
       label: 'Recruitment',
       items: [
-        { href: '/dashboard/university/opportunities', label: 'Opportunities' },
-        { href: '/dashboard/university/players', label: 'Players' },
+        { href: '/dashboard/university/opportunities', label: 'Opportunities', icon: 'target' },
+        { href: '/dashboard/university/players', label: 'Players', icon: 'users' },
       ],
     },
   ],
@@ -177,7 +178,7 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/school', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
-        { href: '/dashboard/school/profile', label: 'Organization profile', icon: 'user' },
+        { href: '/dashboard/school/profile', label: 'Organization profile', icon: 'briefcase' },
       ],
     },
     {
@@ -192,29 +193,29 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'General',
       items: [
-        { href: '/dashboard/admin', label: 'Overview' },
+        { href: '/dashboard/admin', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
       ],
     },
     {
       label: 'Management',
       items: [
-        { href: '/dashboard/admin/players', label: 'Players' },
-        { href: '/dashboard/admin/clubs', label: 'Clubs' },
-        { href: '/dashboard/admin/users', label: 'Users' },
-        { href: '/dashboard/admin/opportunities', label: 'Opportunities' },
-        { href: '/dashboard/admin/memberships', label: 'Memberships' },
-        { href: '/dashboard/admin/recruitment', label: 'Recruitment' },
+        { href: '/dashboard/admin/players', label: 'Players', icon: 'users' },
+        { href: '/dashboard/admin/clubs', label: 'Clubs', icon: 'briefcase' },
+        { href: '/dashboard/admin/users', label: 'Users', icon: 'user' },
+        { href: '/dashboard/admin/opportunities', label: 'Opportunities', icon: 'target' },
+        { href: '/dashboard/admin/memberships', label: 'Memberships', icon: 'star' },
+        { href: '/dashboard/admin/recruitment', label: 'Recruitment', icon: 'whistle' },
         { href: '/dashboard/admin/camps', label: 'Camps', icon: 'trophy' },
         { href: '/dashboard/admin/live-sessions', label: 'Live sessions', icon: 'live' },
-        { href: '/dashboard/admin/matching', label: 'Matching', icon: 'target' },
+        { href: '/dashboard/admin/matching', label: 'Matching', icon: 'sparkles' },
         { href: '/dashboard/admin/communications', label: 'Communications', icon: 'mail' },
         { href: '/dashboard/admin/documents', label: 'Documents', icon: 'file' },
-        { href: '/dashboard/admin/analytics', label: 'Analytics' },
-        { href: '/dashboard/admin/content', label: 'Content' },
+        { href: '/dashboard/admin/analytics', label: 'Analytics', icon: 'chart' },
+        { href: '/dashboard/admin/content', label: 'Content', icon: 'layers' },
         { href: '/dashboard/admin/discovery', label: 'Discovery moderation', icon: 'shield' },
-        { href: '/dashboard/admin/notifications', label: 'Notifications' },
-        { href: '/dashboard/admin/settings', label: 'Settings' },
+        { href: '/dashboard/admin/notifications', label: 'Notifications', icon: 'bell' },
+        { href: '/dashboard/admin/settings', label: 'Settings', icon: 'settings' },
       ],
     },
   ],
@@ -223,7 +224,7 @@ export const NAV: Record<string, NavSection[]> = {
 export const FALLBACK_NAV: NavSection[] = [
   {
     label: 'General',
-    items: [{ href: '/dashboard', label: 'Overview' }],
+    items: [{ href: '/dashboard', label: 'Overview', icon: 'home' }],
   },
 ];
 

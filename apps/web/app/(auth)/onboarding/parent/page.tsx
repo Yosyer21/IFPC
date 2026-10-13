@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: 'Onboarding · Parent' };
 export default function OnboardingParentPage() {
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">Cuenta de familiar</h1>
+      <h1 className="mb-2 text-2xl font-bold">Family account</h1>
       <p className="mb-6 text-sm text-muted-foreground">
         Your account is ready. You will be able to link your children from the panel.
       </p>

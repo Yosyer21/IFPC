@@ -166,7 +166,7 @@ async function FeedSection({
       ? `No posts with #${filters.tag} yet.`
       : filters.tab === 'following'
         ? 'Here you will see what the profiles you follow post. Start by following someone.'
-        : 'Todavía no hay posts. Publica la primera.';
+        : 'There are no posts yet. Publish the first one.';
 
   if (filters.tab === 'profiles') {
     return profiles.length === 0 ? (

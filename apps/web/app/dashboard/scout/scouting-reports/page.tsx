@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { CreateScoutingReportForm } from '@/components/scout/create-scouting-report-form';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Informes de scouting' };
+export const metadata: Metadata = { title: 'Scouting reports' };
 
 export default async function ScoutReportsPage() {
   const session = await auth();
@@ -36,7 +36,7 @@ export default async function ScoutReportsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Informes de scouting"
+        title="Scouting reports"
         subtitle="Document and rate the talent you find"
         icon="whistle"
       />

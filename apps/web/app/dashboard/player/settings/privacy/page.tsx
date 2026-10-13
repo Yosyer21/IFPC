@@ -22,14 +22,14 @@ export default async function PlayerPrivacySettingsPage() {
       <Card>
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
           <p>
-            Tu perfil de player es visible para clubs, scouts y agents verificados cuando tu
+            Your player profile is visible to verified clubs, scouts and agents when your
             estado es <strong>Available</strong>.
           </p>
           <p>
             Fine-grained privacy controls (who can see your videos, direct contact and
             data export) will be enabled in upcoming platform phases.
           </p>
-          <p>Usuario: {session.user.email}</p>
+          <p>User: {session.user.email}</p>
         </CardContent>
       </Card>
     </div>

@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Prueba' };
+export const metadata: Metadata = { title: 'Trial' };
 
 export default async function AgentTrialDetailPage({
   params,
@@ -33,7 +33,7 @@ export default async function AgentTrialDetailPage({
       >
         ← Submissions
       </Link>
-      <h1 className="mb-4 text-2xl font-bold">Prueba</h1>
+      <h1 className="mb-4 text-2xl font-bold">Trial</h1>
 
       <Card>
         <CardContent>

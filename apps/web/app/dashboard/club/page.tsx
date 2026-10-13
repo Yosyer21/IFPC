@@ -17,7 +17,7 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Centro de reclutamiento' };
+export const metadata: Metadata = { title: 'Recruitment centre' };
 
 export default async function ClubDashboardPage() {
   const session = await auth();
@@ -63,7 +63,7 @@ export default async function ClubDashboardPage() {
     {
       href: '/dashboard/club/applications',
       icon: IconUsers,
-      label: 'Applications pendientes',
+      label: 'Pending applications',
       value: pendingApplications.length,
     },
     {
@@ -92,20 +92,20 @@ export default async function ClubDashboardPage() {
     {
       href: '/dashboard/club/applications',
       label: 'Applications',
-      sub: 'recibidas en total',
+      sub: 'received in total',
       value: applications.length,
       icon: IconUsers,
     },
     {
       href: '/dashboard/club/applications',
-      label: 'Pendientes',
-      sub: 'por revisar',
+      label: 'Pending',
+      sub: 'to review',
       value: pendingApplications.length,
       icon: IconWhistle,
     },
     {
       href: '/dashboard/club/applications',
-      label: 'Aceptadas',
+      label: 'Accepteds',
       sub: 'en proceso',
       value: acceptedApplications.length,
       icon: IconShield,
@@ -119,15 +119,15 @@ export default async function ClubDashboardPage() {
       href: '/dashboard/club/applications',
       icon: IconUsers,
       text: `${pendingApplications.length} pending application${pendingApplications.length === 1 ? '' : 's'} awaiting review`,
-      meta: 'Revisar candidates',
+      meta: 'Review candidates',
     });
   }
   if (newInquiries.length > 0) {
     pendingActions.push({
       href: '/dashboard/club/inquiries',
       icon: IconMail,
-      text: `${newInquiries.length} consulta${newInquiries.length === 1 ? '' : 's'} sin responder`,
-      meta: 'Responder now',
+      text: `${newInquiries.length} unanswered ${newInquiries.length === 1 ? 'enquiry' : 'enquiries'}`,
+      meta: 'Reply now',
     });
   }
   if (draftOpportunities.length > 0) {
@@ -143,7 +143,7 @@ export default async function ClubDashboardPage() {
       href: '/dashboard/club/opportunities',
       icon: IconBell,
       text: `${expiring.length} opportunit${expiring.length === 1 ? 'y' : 'ies'} close in less than 7 days`,
-      meta: 'Ver plazos',
+      meta: 'View deadlines',
     });
   }
 
@@ -163,13 +163,13 @@ export default async function ClubDashboardPage() {
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-bold tracking-tight">{club.name}</h1>
               <Badge variant={club.verified ? 'success' : 'warning'}>
-                {club.verified ? 'Verificado' : 'Pending verification'}
+                {club.verified ? 'Verified' : 'Pending verification'}
               </Badge>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
               {club.city ? `${club.city}, ` : ''}
               {club.country}
-              {club.league ? ` · ${club.league}` : ''} · Centro de reclutamiento
+              {club.league ? ` · ${club.league}` : ''} · Recruitment centre
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -189,7 +189,7 @@ export default async function ClubDashboardPage() {
               href="/dashboard/club/applications"
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
-              Ver requests
+              View requests
             </Link>
           </div>
         </div>
@@ -299,15 +299,15 @@ export default async function ClubDashboardPage() {
                 <div className="mt-4 flex flex-wrap gap-4 text-sm">
                   <span className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
-                    Pendientes <strong className="tabular-nums">{pendingApplications.length}</strong>
+                    Pending <strong className="tabular-nums">{pendingApplications.length}</strong>
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                    Aceptadas <strong className="tabular-nums">{acceptedApplications.length}</strong>
+                    Accepteds <strong className="tabular-nums">{acceptedApplications.length}</strong>
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
-                    Rechazadas <strong className="tabular-nums">{rejectedApplications.length}</strong>
+                    Rejected <strong className="tabular-nums">{rejectedApplications.length}</strong>
                   </span>
                 </div>
               </>
@@ -320,7 +320,7 @@ export default async function ClubDashboardPage() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Active requirements</h2>
               <Link href="/dashboard/club/requirements/new" className="text-sm text-primary hover:underline">
-                Crear →
+                Create →
               </Link>
             </div>
             {openRequirements.length === 0 ? (
@@ -360,7 +360,7 @@ export default async function ClubDashboardPage() {
             <h2 className="mb-4 font-semibold">Recent activity</h2>
             {recentApps.length === 0 && recentInquiries.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Publica opportunities y responde consultas para ver la actividad de tu club.
+                Post opportunities and answer enquiries to see your club's activity.
               </p>
             ) : (
               <div className="flex flex-col divide-y divide-border/60">

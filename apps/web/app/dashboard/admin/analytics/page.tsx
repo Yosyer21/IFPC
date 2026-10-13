@@ -55,7 +55,7 @@ export default async function AdminAnalyticsPage() {
     },
     {
       href: '/dashboard/admin/analytics/recruitment',
-      title: 'Reclutamiento',
+      title: 'Recruitment',
       description: 'Pipeline funnel and conversion between stages',
     },
     {
@@ -77,8 +77,8 @@ export default async function AdminAnalyticsPage() {
         <StatCard href="/dashboard/admin/users" icon={IconUsers} label="Users" value={users} />
         <StatCard href="/dashboard/admin/players" icon={IconUser} label="Players" value={players} />
         <StatCard href="/dashboard/admin/players" icon={IconWhistle} label="Available" value={availablePlayers} />
-        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubes" value={clubs} />
-        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubes verificados" value={verifiedClubs} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Clubs" value={clubs} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconBriefcase} label="Verified clubs" value={verifiedClubs} />
         <StatCard href="/dashboard/admin/opportunities" icon={IconTarget} label="Opportunities" value={opportunities} />
         <StatCard href="/dashboard/admin/players" icon={IconTarget} label="Applications" value={applications} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Submissions" value={submissions} />
@@ -93,7 +93,7 @@ export default async function AdminAnalyticsPage() {
                 <h2 className="font-semibold">{section.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{section.description}</p>
                 <span className="mt-3 inline-block text-sm text-primary group-hover:underline">
-                  Ver analytics →
+                  View analytics →
                 </span>
               </CardContent>
             </Card>

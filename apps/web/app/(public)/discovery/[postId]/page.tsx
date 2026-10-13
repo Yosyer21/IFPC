@@ -23,10 +23,10 @@ export async function generateMetadata({
     return { title: 'Post not found — Future Baller' };
   }
 
-  const title = post.title ?? `${POST_TYPE_LABELS[post.type] ?? 'Post'} de ${post.author.name}`;
+  const title = post.title ?? `${POST_TYPE_LABELS[post.type] ?? 'Post'} by ${post.author.name}`;
   const description =
     (post.body ?? '').slice(0, 150) ||
-    `Post de ${post.author.name} en Discovery (Future Baller).`;
+    `Post by ${post.author.name} on Discovery (Future Baller).`;
 
   // Imagen para compartir: la miniatura del vídeo, la foto o la primera de la
   // galería. Un embed (YouTube/Vimeo) no sirve como imagen.
@@ -84,14 +84,14 @@ export default async function PublicPostPage({
               href="/login"
               className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-lime-400 px-4 py-2 text-sm font-semibold text-emerald-950"
             >
-              Entrar
+              Sign in
             </Link>
           </CardContent>
         </Card>
 
         <Card className="mt-4">
           <CardContent className="flex flex-col gap-4">
-            <h2 className="font-semibold">Comentarios ({comments.length})</h2>
+            <h2 className="font-semibold">Comments ({comments.length})</h2>
             <CommentList
               comments={comments}
               postId={post.id}

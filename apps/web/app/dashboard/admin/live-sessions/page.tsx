@@ -33,7 +33,7 @@ export default async function AdminLiveSessionsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Live sessions"
-        subtitle="Training sessions en directo, charlas y pruebas organizadas"
+        subtitle="Live training, talks and trials organised on the platform"
         icon="live"
       >
         <Link
@@ -47,7 +47,7 @@ export default async function AdminLiveSessionsPage() {
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard href="/dashboard/admin/live-sessions" icon={IconLive} label="Total sessions" value={total} />
         <StatCard href="/dashboard/admin/live-sessions" icon={IconClock} label="Upcoming" value={upcoming} />
-        <StatCard href="/dashboard/admin/live-sessions" icon={IconVideo} label="En directo" value={live} />
+        <StatCard href="/dashboard/admin/live-sessions" icon={IconVideo} label="Live now" value={live} />
         <StatCard href="/dashboard/admin/live-sessions" icon={IconCalendar} label="Ended" value={sessions.filter((s) => s.status === 'ENDED').length} />
       </div>
 
@@ -61,7 +61,6 @@ export default async function AdminLiveSessionsPage() {
         </Card>
       ) : (
         <div className="flex flex-col gap-3">
-          {/* LIVE_ROWS */}
           {sessions.map((session) => (
             <Card key={session.id} className="card-hover">
               <CardContent className="flex flex-wrap items-center gap-4">

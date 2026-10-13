@@ -12,7 +12,7 @@ import {
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   const academies = await prisma.academy.findMany({
@@ -26,7 +26,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   if (session.user.role !== 'ADMIN') return forbidden();
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
   const name = stringField(body, 'name');
   const country = stringField(body, 'country');
-  if (!name || !country) return badRequest('name y country son obligatorios');
+  if (!name || !country) return badRequest('name and country are required');
 
   const academy = await prisma.academy.create({
     data: {

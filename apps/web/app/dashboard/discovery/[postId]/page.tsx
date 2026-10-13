@@ -71,8 +71,7 @@ export default async function PostDetailPage({
         <Card className="mt-4">
           <CardContent>
             <p className="text-sm text-amber-400">
-              Tu post está en revisión por el team de moderación y todavía no es visible
-              para el resto.
+              Your post is under review by the moderation team and is not visible to others yet.
             </p>
           </CardContent>
         </Card>
@@ -81,10 +80,10 @@ export default async function PostDetailPage({
       {isAuthor && stats ? (
         <Card className="mt-4">
           <CardContent className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            <Badge variant="success">Alcance</Badge>
+            <Badge variant="success">Reach</Badge>
             <span>
-              <strong className="text-foreground">{stats.viewers}</strong> personas ·{' '}
-              {stats.views} aperturas
+              <strong className="text-foreground">{stats.viewers}</strong> people ·{' '}
+              {stats.views} views
             </span>
             {stats.byRole.length > 0 ? (
               <span>
@@ -92,7 +91,7 @@ export default async function PostDetailPage({
               </span>
             ) : null}
             {stats.anonymousViews > 0 ? (
-              <span>· {stats.anonymousViews} aperturas anónimas (web pública)</span>
+              <span>· {stats.anonymousViews} anonymous views (public web)</span>
             ) : null}
           </CardContent>
         </Card>
@@ -118,14 +117,14 @@ export default async function PostDetailPage({
 
           <form action={pinPostAction}>
             <input type="hidden" name="postId" value={post.id} />
-            <ActionSubmit label={post.pinned ? 'Unpin from the feed' : 'Fijar en el feed'} />
+            <ActionSubmit label={post.pinned ? 'Unpin from the feed' : 'Pin to the feed'} />
           </form>
         </div>
       ) : null}
 
       <Card className="mt-4">
         <CardContent className="flex flex-col gap-4">
-          <h2 className="font-semibold">Comentarios ({comments.length})</h2>
+          <h2 className="font-semibold">Comments ({comments.length})</h2>
           <CommentList
             comments={comments}
             postId={post.id}

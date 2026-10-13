@@ -6,7 +6,7 @@ import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
-export const metadata: Metadata = { title: 'Participantes' };
+export const metadata: Metadata = { title: 'Participants' };
 
 export default async function SchoolParticipantsPage() {
   const session = await auth();
@@ -24,7 +24,7 @@ export default async function SchoolParticipantsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Participantes"
+        title="Participants"
         subtitle="Female players who can join your programs and clinics"
         icon="users"
       />

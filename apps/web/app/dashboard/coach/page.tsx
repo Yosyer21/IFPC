@@ -26,7 +26,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 
@@ -154,7 +154,7 @@ export default async function CoachDashboardPage() {
               {coach.clubName ? <Badge>{coach.clubName}</Badge> : null}
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Gestiona el desarrollo de tus players
+              Manage your players' development
               {players.length > 0
                 ? ` · ${players.length} player${players.length === 1 ? '' : 's'} in your care`
                 : ' · no players assigned yet'}
@@ -313,7 +313,7 @@ export default async function CoachDashboardPage() {
           <Card className="animate-fade-up">
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                You have no assigned players yet. Cuando la plataforma te vincule players,
+                You have no assigned players yet. When the platform links players to you, they
                 will appear here so you can assess them and assign goals.
               </p>
             </CardContent>

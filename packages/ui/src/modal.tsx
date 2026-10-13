@@ -17,7 +17,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       onClick={onClose}
     >
       <div
-        className="glass-card animate-scale-in w-full max-w-lg rounded-2xl p-6 shadow-2xl"
+        className="surface animate-scale-in w-full max-w-lg rounded-2xl p-6 shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
         {title ? <h2 className="mb-4 text-lg font-semibold">{title}</h2> : null}

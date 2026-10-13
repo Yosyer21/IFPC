@@ -21,8 +21,8 @@ export default async function AdminUsersSchoolsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Escuelas / Comunidad"
-        subtitle="Colegios, clubs escolares y servicios comunitarios con acceso a programas"
+        title="Schools / Community"
+        subtitle="Schools, school clubs and community services with access to programs"
         icon="users"
       />
       <RoleLinks />
@@ -50,7 +50,7 @@ export default async function AdminUsersSchoolsPage() {
                 <div className="flex items-center gap-2">
                   <Badge>{SCHOOL_TYPE_LABELS[school.type] ?? school.type}</Badge>
                   <Badge variant={school.verified ? 'success' : 'outline'}>
-                    {school.verified ? 'Verificada' : 'Pending'}
+                    {school.verified ? 'Verified' : 'Pending'}
                   </Badge>
                 </div>
               </CardContent>

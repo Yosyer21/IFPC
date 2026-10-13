@@ -47,9 +47,9 @@ export async function generateMetadata({
     return { title: 'Profile not found — Future Baller' };
   }
 
-  const description = `Posts de ${author.name} (${
+  const description = `Posts by ${author.name} (${
     ROLE_LABELS[author.role] ?? author.role
-  }) en Discovery, el feed de la comunidad Future Baller.`;
+  }) on Discovery, the Future Baller community feed.`;
 
   return {
     title: `${author.name} — Future Baller`,

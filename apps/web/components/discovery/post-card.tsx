@@ -129,7 +129,7 @@ export function PostCard({
             {post.pollOptions.length > 0 ? (
               <div className="mt-3 flex flex-col gap-2 rounded-xl border border-border/70 p-3">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Encuesta · {pollTotal} {pollTotal === 1 ? 'voto' : 'votos'}
+                  Poll · {pollTotal} {pollTotal === 1 ? 'vote' : 'votes'}
                 </p>
                 <ul className="flex flex-col gap-1.5">
                   {post.pollOptions.map((option, index) => {
@@ -166,7 +166,7 @@ export function PostCard({
                             <button
                               type="submit"
                               className="relative flex flex-1 items-center justify-between gap-2 text-left"
-                              aria-label={`Votar ${option}`}
+                              aria-label={`Vote for ${option}`}
                             >
                               {row}
                             </button>
@@ -178,7 +178,7 @@ export function PostCard({
                 </ul>
                 {readOnly ? null : (
                   <p className="text-xs text-muted-foreground">
-                    Un voto por persona; puedes cambiarlo cuando quieras.
+                    One vote per person; you can change it whenever you want.
                   </p>
                 )}
               </div>
@@ -220,7 +220,7 @@ export function PostCard({
 
             {isAuthor && post.counts.views > 0 ? (
               <p className="mt-2 text-xs text-muted-foreground">
-                {post.counts.views} {post.counts.views === 1 ? 'persona lo vio' : 'personas lo vieron'}
+                {post.counts.views} {post.counts.views === 1 ? 'person viewed it' : 'people viewed it'}
               </p>
             ) : null}
           </div>
@@ -228,7 +228,7 @@ export function PostCard({
 
         {readOnly ? (
           <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-white/10 pt-3 text-xs text-muted-foreground">
-            <span>{post.counts.likes} me gusta</span>
+            <span>{post.counts.likes} likes</span>
             <Link href={`${base}/${post.id}`} className="hover:text-foreground">
               {post.counts.comments} comments
             </Link>

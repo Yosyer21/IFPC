@@ -102,7 +102,7 @@ export async function updateProfileBannerAction(
     return { error: 'Only JPG, PNG or WebP images are allowed.' };
   }
   if (file.size > PROFILE_BANNER_MAX_BYTES) {
-    return { error: 'La imagen debe pesar menos de 4 MB.' };
+    return { error: 'The image must be under 4 MB.' };
   }
 
   const player = await prisma.player.findUnique({
@@ -110,7 +110,7 @@ export async function updateProfileBannerAction(
     select: { bannerUrl: true },
   });
   if (!player) {
-    return { error: 'Profile de player no encontrado.' };
+    return { error: 'Player profile not found.' };
   }
 
   const storage = resolveStorage();
@@ -216,7 +216,7 @@ export async function uploadVideoAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de player no encontrado.' };
+    return { error: 'Player profile not found.' };
   }
 
   const ext = file.name.split('.').pop() ?? 'mp4';
@@ -262,7 +262,7 @@ export async function uploadDocumentAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de player no encontrado.' };
+    return { error: 'Player profile not found.' };
   }
 
   const ext = file.name.split('.').pop() ?? 'pdf';
@@ -303,7 +303,7 @@ export async function saveCareerEntryAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de player no encontrado.' };
+    return { error: 'Player profile not found.' };
   }
 
   const parsed = careerEntrySchema.safeParse({
@@ -348,7 +348,7 @@ export async function saveCareerEntryAction(
     if (entryId) {
       const existing = await prisma.careerEntry.findUnique({ where: { id: entryId } });
       if (!existing || existing.playerId !== player.id) {
-        return { error: 'Entrada no encontrada.' };
+        return { error: 'Entry not found.' };
       }
       await prisma.careerEntry.update({ where: { id: entryId }, data });
     } else {
@@ -405,7 +405,7 @@ export async function applyToOpportunityAction(
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) {
-    return { error: 'Profile de player no encontrado.' };
+    return { error: 'Player profile not found.' };
   }
 
   try {

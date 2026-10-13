@@ -318,6 +318,42 @@ function IconCompass(props: IconProps) {
   );
 }
 
+export function IconInbox(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M4 13h4l2 3h4l2-3h4" />
+      <path d="M5.5 5h13l1.5 8v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4l1.5-8Z" />
+    </Base>
+  );
+}
+
+export function IconSparkles(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M12 3l1.7 4.6L18 9.3l-4.3 1.7L12 15.6l-1.7-4.6L6 9.3l4.3-1.7L12 3Z" />
+      <path d="M18.5 14.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2Z" />
+    </Base>
+  );
+}
+
+export function IconLayers(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+      <path d="m3 13 9 5 9-5" />
+    </Base>
+  );
+}
+
+export function IconPanelLeft(props: IconProps) {
+  return (
+    <Base {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M9.5 4v16" />
+    </Base>
+  );
+}
+
 export const ICONS: Record<string, (props: IconProps) => ReactElement> = {
   home: IconHome,
   trending: IconTrendingUp,
@@ -347,4 +383,9 @@ export const ICONS: Record<string, (props: IconProps) => ReactElement> = {
   trophy: IconTrophy,
   check: IconCheckCircle,
   compass: IconCompass,
+  inbox: IconInbox,
+  sparkles: IconSparkles,
+  layers: IconLayers,
+  panel: IconPanelLeft,
+  chart: IconChart,
 };

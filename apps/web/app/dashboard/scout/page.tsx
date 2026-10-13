@@ -18,7 +18,7 @@ import {
   IconWhistle,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Puesto de scouting' };
+export const metadata: Metadata = { title: 'Scouting desk' };
 
 export default async function ScoutDashboardPage() {
   const session = await auth();
@@ -83,15 +83,15 @@ export default async function ScoutDashboardPage() {
   const pipeline = [
     {
       href: '/dashboard/scout/players',
-      label: 'Explorar',
+      label: 'Explore',
       sub: 'available players',
       value: availableCount,
       icon: IconSearch,
     },
     {
       href: '/dashboard/scout/saved',
-      label: 'Guardados',
-      sub: 'en tu radar',
+      label: 'Saved',
+      sub: 'on your radar',
       value: saved.length,
       icon: IconStar,
     },
@@ -111,7 +111,7 @@ export default async function ScoutDashboardPage() {
       href: '/dashboard/scout/scouting-reports',
       icon: IconWhistle,
       text: `${savedWithoutReport.length} saved player${savedWithoutReport.length === 1 ? '' : 's'} without a report`,
-      meta: 'Crear report',
+      meta: 'Create report',
     });
   }
 
@@ -187,7 +187,7 @@ export default async function ScoutDashboardPage() {
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> en tu puesto de scouting.
+            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> at your scouting desk.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -248,7 +248,7 @@ export default async function ScoutDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Valoraciones + guardados sin report */}
+      {/* Valoraciones + saved sin report */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
@@ -308,7 +308,7 @@ export default async function ScoutDashboardPage() {
                   href="/dashboard/scout/scouting-reports"
                   className="text-sm text-primary hover:underline"
                 >
-                  Crear →
+                  Create →
                 </Link>
               ) : null}
             </div>

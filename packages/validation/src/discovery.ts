@@ -31,7 +31,7 @@ export const postBaseSchema = z.object({
   linkUrl: z.string().trim().url('Invalid URL').max(500).optional().nullable(),
   opportunityId: z.string().trim().max(40).optional().nullable(),
   tags: z.array(tagSchema).max(POST_TAGS_MAX, `Maximum ${POST_TAGS_MAX} tags`).optional(),
-  /** Quién puede comentar (mismo enum que `CommentsPolicy`). */
+  /** Quién puede comentar (mismo enum que `ComentariosPolicy`). */
   commentsPolicy: z.enum(['EVERYONE', 'FOLLOWERS', 'NOBODY']).optional(),
   /** Texto alternativo del medio (accesibilidad). */
   mediaAlt: z.string().trim().max(200).optional().nullable(),

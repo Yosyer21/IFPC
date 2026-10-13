@@ -60,18 +60,18 @@ export default async function FollowingPage() {
       <Card className="mb-6">
         <CardContent className="flex flex-col gap-3">
           <div>
-            <h2 className="text-sm font-semibold">Tus preferencias</h2>
+            <h2 className="text-sm font-semibold">Your preferences</h2>
             <p className="mt-1 text-xs text-muted-foreground">
               People you follow are prioritised in “For you” and “Trending”. Here you can fine-tune it
-              perfil a perfil: «ver más» lo sube y «ver menos» lo saca de esos dos listados (en
-              «Recientes» y «Following» sus posts siguen apareciendo).
+              profile by profile: “Show more” moves them up and “Show less” takes them out of those two
+              listings (their posts still appear under “Latest” and “Following”).
             </p>
           </div>
 
           <PreferenceRow
             title="Show more"
             entries={preferences.filter((entry) => entry.kind === 'MORE')}
-            emptyMessage="Todavía no has pedido ver más de nadie."
+            emptyMessage="You have not asked to see more from anyone yet."
           />
           <PreferenceRow
             title="Show less"
@@ -90,8 +90,8 @@ export default async function FollowingPage() {
           <Card>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Todavía no sigues a nadie. Desde el feed (o desde el directorio de perfiles) puedes
-                seguir a quien te interese: así empezarás a ver más de su contenido.
+                You do not follow anyone yet. From the feed (or the profiles directory) you can follow
+                whoever interests you: that way you will start seeing more of their content.
               </p>
             </CardContent>
           </Card>
@@ -99,7 +99,7 @@ export default async function FollowingPage() {
           <div className="flex flex-col gap-3">
             {organizations.length > 0 ? (
               <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Clubes, universities y schools
+                Clubs, universities and schools
               </h3>
             ) : null}
             {organizations.map((profile) => (
@@ -108,7 +108,7 @@ export default async function FollowingPage() {
 
             {people.length > 0 ? (
               <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Personas
+                People
               </h3>
             ) : null}
             {people.map((profile) => (
@@ -126,7 +126,7 @@ export default async function FollowingPage() {
         {followers.length === 0 ? (
           <Card>
             <CardContent>
-              <p className="text-sm text-muted-foreground">Todavía no te sigue nadie.</p>
+              <p className="text-sm text-muted-foreground">Nobody follows you yet.</p>
             </CardContent>
           </Card>
         ) : (

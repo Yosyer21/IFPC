@@ -35,7 +35,7 @@ export function BannerForm({ imageUrl, redirectTo }: BannerFormProps) {
           type="file"
           accept="image/jpeg,image/png,image/webp"
           required
-          aria-label="Portada"
+          aria-label="Cover photo"
           className="w-full text-xs file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary-foreground"
         />
         <p className="text-xs text-muted-foreground">

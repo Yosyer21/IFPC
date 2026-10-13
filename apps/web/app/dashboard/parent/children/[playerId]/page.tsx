@@ -19,7 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 
@@ -82,7 +82,7 @@ export default async function ParentChildDetailPage({
     ['Position', positionLabel],
     ['Age', age !== null ? `${age} years old` : '—'],
     ['Nationality', player.nationality ?? '—'],
-    ['Club actual', player.clubName ?? '—'],
+    ['Current club', player.clubName ?? '—'],
     ['Estado', player.status],
     ['Videos', String(player._count.videos)],
   ];

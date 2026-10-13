@@ -20,7 +20,7 @@ export function resolveStorage(env: NodeJS.ProcessEnv = process.env): StorageDri
     const settings = s3SettingsFromEnv(env);
     if (settings) return s3Driver(settings);
     console.warn(
-      '[storage] STORAGE_DRIVER=s3 sin S3_ENDPOINT/S3_BUCKET/S3_ACCESS_KEY_ID/S3_SECRET_ACCESS_KEY: se usa el disco.'
+      '[storage] STORAGE_DRIVER=s3 without S3_ENDPOINT/S3_BUCKET/S3_ACCESS_KEY_ID/S3_SECRET_ACCESS_KEY: falling back to disk.'
     );
   }
   return localDriver(env);

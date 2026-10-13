@@ -31,10 +31,10 @@ export default async function PlayerProfileEditPage() {
       <Card className="mb-6">
         <CardContent className="flex flex-col gap-3">
           <div>
-            <h2 className="font-semibold">Portada</h2>
+            <h2 className="font-semibold">Cover photo</h2>
             <p className="text-sm text-muted-foreground">
-              La imagen que encabeza tu perfil. Si no subes ninguna, se usa un degradado con tu
-              color.
+              The image that heads your profile. If you do not upload one, a gradient with your
+              accent colour is used.
             </p>
           </div>
           <BannerForm imageUrl={player.bannerUrl} redirectTo="/dashboard/player/profile/edit" />

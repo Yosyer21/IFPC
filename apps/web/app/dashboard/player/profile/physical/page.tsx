@@ -22,8 +22,8 @@ export default async function PlayerPhysicalPage() {
   const rows: [string, string][] = [
     ['Age', age !== null ? `${age} years old` : '—'],
     ['Date of birth', player.dateOfBirth ? player.dateOfBirth.toLocaleDateString('en-GB') : '—'],
-    ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-    ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
+    ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+    ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Nationality', player.nationality ?? '—'],
   ];
 
@@ -35,7 +35,7 @@ export default async function PlayerPhysicalPage() {
           href="/dashboard/player/profile/edit"
           className="text-sm text-muted-foreground hover:underline"
         >
-          Editar
+          Edit
         </Link>
       </div>
       <Card>

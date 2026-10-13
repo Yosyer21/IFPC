@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Profile del player' };
+export const metadata: Metadata = { title: 'Player profile' };
 
 export default async function AgentPlayerProfilePage({
   params,
@@ -52,9 +52,9 @@ export default async function AgentPlayerProfilePage({
               ['Position', positionLabel],
               ['Nationality', player.nationality ?? '—'],
               ['Preferred foot', player.foot ?? '—'],
-              ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-              ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-              ['Club actual', player.clubName ?? '—'],
+              ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+              ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
+              ['Current club', player.clubName ?? '—'],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-border p-3">
                 <dt className="text-xs text-muted-foreground">{label}</dt>

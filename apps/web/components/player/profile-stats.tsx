@@ -23,7 +23,7 @@ export function ProfileStatsCard({
     { label: 'Matches', value: stats.career.appearances },
     { label: 'Goals', value: stats.career.goals },
     { label: 'Assists', value: stats.career.assists },
-    { label: 'Temporadas', value: stats.career.seasons },
+    { label: 'Seasons', value: stats.career.seasons },
     { label: 'Videos', value: stats.videos },
     { label: 'Evaluaciones', value: stats.evaluations },
   ];
@@ -76,8 +76,7 @@ export function ProfileStatsCard({
           </>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Todavía no hay estadísticas: aparecerán con las evaluations, la trayectoria y los
-            vídeos.
+            No stats yet: they will appear with evaluations, career history and videos.
           </p>
         )}
       </CardContent>

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
-import { DashboardSidebar } from '@/components/dashboard/sidebar';
+import { DashboardShell } from '@/components/dashboard/dashboard-shell';
 import { countUnreadNotifications, listNotifications } from '@/lib/discovery';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   const role = session.user.role.toLowerCase();
 
-  // Cabecera del sidebar (nombre + foto) y bandeja de avisos, para **todos** los roles.
+  // Cabecera (nombre + foto) y bandeja de avisos, para **todos** los roles.
   const [user, unreadCount, notifications] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
@@ -24,24 +24,15 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   ]);
 
   return (
-    <div className="relative flex min-h-screen flex-col md:flex-row">
-      <div
-        className="app-ambient pointer-events-none fixed inset-0 -z-10 bg-[#070b09]"
-        aria-hidden="true"
-      />
-      <div
-        className="bg-grid-faint pointer-events-none fixed inset-0 -z-10 opacity-30"
-        aria-hidden="true"
-      />
-      <DashboardSidebar
-        role={role}
-        unreadCount={unreadCount}
-        userName={user?.name ?? session.user.name ?? ''}
-        userImage={user?.image ?? null}
-        notifications={notifications}
-      />
-      <main className="relative flex-1 p-6">{children}</main>
-    </div>
+    <DashboardShell
+      role={role}
+      userName={user?.name ?? session.user.name ?? ''}
+      userImage={user?.image ?? null}
+      unreadCount={unreadCount}
+      notifications={notifications}
+    >
+      {children}
+    </DashboardShell>
   );
 }
 

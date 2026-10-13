@@ -40,7 +40,7 @@ export default async function PlayerVideoDetailPage({
             </span>
           ) : null}
           <span className="text-sm text-muted-foreground">
-            Subido el {video.createdAt.toLocaleDateString('en-GB')}
+            Uploaded on {video.createdAt.toLocaleDateString('en-GB')}
           </span>
         </CardContent>
       </Card>

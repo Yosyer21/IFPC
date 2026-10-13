@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
-import { OPPORTUNITY_TYPE_LABELS, POSITION_LABELS } from '@ifpc/config';
+import { COMPETITION_LEVEL_LABELS, OPPORTUNITY_TYPE_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
 
@@ -12,9 +12,9 @@ export const metadata: Metadata = { title: 'Applications received' };
 
 const APPLICATION_STATUS_LABELS: Record<string, { label: string; variant: 'default' | 'success' | 'danger' | 'warning' }> = {
   PENDING: { label: 'Pending', variant: 'warning' },
-  ACCEPTED: { label: 'Aceptada', variant: 'success' },
-  REJECTED: { label: 'Rechazada', variant: 'danger' },
-  WITHDRAWN: { label: 'Retirada', variant: 'default' },
+  ACCEPTED: { label: 'Accepted', variant: 'success' },
+  REJECTED: { label: 'Rejected', variant: 'danger' },
+  WITHDRAWN: { label: 'Withdrawn', variant: 'default' },
 };
 
 export default async function ClubApplicationsPage() {
@@ -43,11 +43,11 @@ export default async function ClubApplicationsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Applications received"
-        subtitle="Candidatos que han aplicado a tus opportunities"
+        subtitle="Candidates who applied to your opportunities"
         icon="mail"
       >
         {pendingCount > 0 ? (
-          <Badge variant="warning">{pendingCount} pendientes</Badge>
+          <Badge variant="warning">{pendingCount} pending</Badge>
         ) : null}
       </PageHeader>
 
@@ -93,7 +93,11 @@ export default async function ClubApplicationsPage() {
                       <div className="truncate text-sm text-muted-foreground">
                         {positionLabel}
                         {application.player.competitionLevel
-                          ? ` · ${application.player.competitionLevel}`
+                          ? ` · ${
+                              (COMPETITION_LEVEL_LABELS as Record<string, string | undefined>)[
+                                application.player.competitionLevel
+                              ] ?? application.player.competitionLevel
+                            }`
                           : ''}
                         {application.player.nationality ? ` · ${application.player.nationality}` : ''}
                       </div>

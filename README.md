@@ -33,8 +33,9 @@ pnpm dev                      # http://localhost:3000
 ```
 
 > `PGLITE_DIR` must be an **absolute** path (e.g. `/home/you/Future Baller/.pglite`) and the
-> same value in the root `.env` and in `apps/web/.env.local`. To reset the DB,
-> delete `.pglite/` and run `pnpm db:setup-pglite` again.
+> same value in the root `.env` and in `apps/web/.env.local`. To **reset the whole local
+> system** (embedded DB, uploads, build caches and demo data) run a single command:
+> `pnpm reset` (flags: `--keep-uploads`, `--skip-seed`).
 >
 > Demo users (seeded): `player@demo.com / player123`, `parent@demo.com / parent123`,
 > `coach@demo.com / coach123`, `scout@demo.com / scout123`, `agent@demo.com / agent123`,

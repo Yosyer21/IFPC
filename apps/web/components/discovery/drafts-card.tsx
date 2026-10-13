@@ -18,7 +18,7 @@ export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
   return (
     <section className="glass-card mb-6 flex flex-col gap-3 rounded-2xl p-4">
       <h2 className="text-sm font-semibold">
-        Tus borradores <span className="text-muted-foreground">({drafts.length})</span>
+        Your drafts <span className="text-muted-foreground">({drafts.length})</span>
       </h2>
       <ul className="flex flex-col gap-3">
         {drafts.map((draft) => (
@@ -32,10 +32,10 @@ export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
               </p>
               <p className="text-xs text-muted-foreground">
                 {draft.scheduledAt
-                  ? `Programada para el ${scheduledFormat.format(draft.scheduledAt)}`
+                  ? `Scheduled for ${scheduledFormat.format(draft.scheduledAt)}`
                   : 'Unscheduled draft'}
-                {draft.pollOptions.length > 0 ? ' · con encuesta' : ''}
-                {draft.mediaUrls.length > 0 || draft.mediaUrl ? ' · con medio' : ''}
+                {draft.pollOptions.length > 0 ? ' · with poll' : ''}
+                {draft.mediaUrls.length > 0 || draft.mediaUrl ? ' · with media' : ''}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2">
@@ -53,9 +53,9 @@ export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
                 <input type="hidden" name="postId" value={draft.id} />
                 <input type="hidden" name="redirectTo" value="/dashboard/discovery" />
                 <ActionSubmit
-                  label="Borrar"
+                  label="Delete"
                   variant="danger"
-                  confirmText="¿Borrar el borrador?"
+                  confirmText="Delete the draft?"
                 />
               </form>
             </div>

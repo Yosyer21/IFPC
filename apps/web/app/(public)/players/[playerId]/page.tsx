@@ -5,7 +5,12 @@ import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { prisma } from '@ifpc/database';
 import { Badge } from '@ifpc/ui';
-import { POSITION_LABELS, profileAccentColors, profileOpenToLabels } from '@ifpc/config';
+import {
+  COMPETITION_LEVEL_LABELS,
+  POSITION_LABELS,
+  profileAccentColors,
+  profileOpenToLabels,
+} from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 import { PlayerAvatar } from '@/components/player/avatar';
@@ -55,9 +60,9 @@ export async function generateMetadata({
   const description =
     player.headline?.trim() ||
     player.bio?.slice(0, 155) ||
-    `Perfil deportivo de ${name} (${position}${
+    `Player profile of ${name} (${position}${
       player.nationality ? `, ${player.nationality}` : ''
-    }) en Future Baller.`;
+    }) on Future Baller.`;
 
   return {
     title: `${name} · ${position}`,
@@ -147,10 +152,14 @@ export default async function PublicPlayerProfilePage({
               </span>
             ))}
             {player.competitionLevel ? (
-              <Badge variant="outline">{player.competitionLevel}</Badge>
+              <Badge variant="outline">
+                {(COMPETITION_LEVEL_LABELS as Record<string, string | undefined>)[
+                  player.competitionLevel
+                ] ?? player.competitionLevel}
+              </Badge>
             ) : null}
             {player.clubName ? <Badge variant="outline">{player.clubName}</Badge> : null}
-            {player.foot ? <Badge variant="outline">Pierna: {player.foot}</Badge> : null}
+            {player.foot ? <Badge variant="outline">Foot: {player.foot}</Badge> : null}
             <Badge variant="outline">{player._count.videos} videos</Badge>
             <Badge variant="outline">{player.evaluations.length} evaluations</Badge>
           </div>
@@ -205,7 +214,7 @@ export default async function PublicPlayerProfilePage({
               href="/register"
               className="mt-4 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Crear cuenta y contactar
+              Create an account and get in touch
             </Link>
           </div>
         </div>

@@ -27,7 +27,7 @@ test('Scout: scouting station and radar pages', async ({ page }) => {
   await page.goto(`${BASE}/dashboard/scout/saved`);
   await expect(page.getByRole('heading', { name: 'Saved players' })).toBeVisible();
   await page.goto(`${BASE}/dashboard/scout/scouting-reports`);
-  await expect(page.getByRole('heading', { name: 'Informes de scouting' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Scouting reports' })).toBeVisible();
   await page.goto(`${BASE}/dashboard/scout/opportunities`);
   await expect(page.getByRole('heading', { name: 'Opportunities' })).toBeVisible();
 });

@@ -5,11 +5,11 @@ import { createOpportunityAction } from '@/app/actions/club';
 import { Button, Input, Select } from '@ifpc/ui';
 
 const TYPES = [
-  { value: 'TRIAL', label: 'Prueba' },
+  { value: 'TRIAL', label: 'Trial' },
   { value: 'SCOUTING', label: 'Scouting' },
-  { value: 'CONTRACT', label: 'Contrato' },
+  { value: 'CONTRACT', label: 'Contract' },
   { value: 'SCHOLARSHIP', label: 'Scholarship' },
-  { value: 'ACADEMY', label: 'Academia' },
+  { value: 'ACADEMY', label: 'Academy' },
 ];
 
 export function CreateOpportunityForm() {
@@ -18,14 +18,14 @@ export function CreateOpportunityForm() {
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <Input name="title" label="Title" placeholder="Ej: U-17 youth trial" required />
-      <Select name="type" label="Tipo" options={TYPES} defaultValue="TRIAL" required />
+      <Select name="type" label="Type" options={TYPES} defaultValue="TRIAL" required />
       <Input name="position" label="Position" placeholder="DEL / MED / DEF…" />
       <div className="grid grid-cols-2 gap-3">
         <Input name="ageMin" type="number" label="Minimum age" />
         <Input name="ageMax" type="number" label="Maximum age" />
       </div>
       <Input name="location" label="Location" placeholder="Madrid" />
-      <Input name="closesAt" type="date" label="Fecha de cierre" />
+      <Input name="closesAt" type="date" label="Closing date" />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="description" className="text-sm font-medium">
           Description
@@ -39,7 +39,7 @@ export function CreateOpportunityForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Creando…' : 'Post opportunity'}
+        {pending ? 'Creating…' : 'Post opportunity'}
       </Button>
     </form>
   );

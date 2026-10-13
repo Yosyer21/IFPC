@@ -9,7 +9,7 @@ import { verifyClubAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 
-export const metadata: Metadata = { title: 'Detalle del club' };
+export const metadata: Metadata = { title: 'Club details' };
 
 export default async function AdminClubDetailPage({
   params,
@@ -37,10 +37,10 @@ export default async function AdminClubDetailPage({
   const info: [string, string][] = [
     ['Email', club.email],
     ['Country', club.country],
-    ['Ciudad', club.city ?? '—'],
+    ['City', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
-    ['Usuario', club.user?.name ?? 'No linked user'],
-    ['Registrado el', club.createdAt.toLocaleDateString('en-GB')],
+    ['User', club.user?.name ?? 'No linked user'],
+    ['Registered on', club.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (
@@ -53,7 +53,7 @@ export default async function AdminClubDetailPage({
       </Link>
       <PageHeader title={club.name} subtitle={club.user?.email ?? club.email} icon="briefcase">
         <Badge variant={club.verified ? 'success' : 'warning'}>
-          {club.verified ? 'Verificado' : 'Pending'}
+          {club.verified ? 'Verified' : 'Pending'}
         </Badge>
         {!club.verified ? (
           <form action={verifyClubAction}>
@@ -71,9 +71,9 @@ export default async function AdminClubDetailPage({
       <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {[
           ['Submissions', club._count.submissions],
-          ['Pruebas', club._count.trials],
-          ['Negociaciones', club._count.negotiations],
-          ['Contratos', club._count.contracts],
+          ['Trials', club._count.trials],
+          ['Negotiations', club._count.negotiations],
+          ['Contracts', club._count.contracts],
           ['Inquiries', club._count.inquiries],
         ].map(([label, value]) => (
           <Card key={label}>
@@ -132,7 +132,7 @@ export default async function AdminClubDetailPage({
           <CardContent>
             <h2 className="mb-3 font-semibold">Opportunities ({club.opportunities.length})</h2>
             {club.opportunities.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin opportunities publicadas.</p>
+              <p className="text-sm text-muted-foreground">No published opportunities.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {club.opportunities.slice(0, 10).map((opportunity) => (
@@ -160,7 +160,7 @@ export default async function AdminClubDetailPage({
           <CardContent>
             <h2 className="mb-3 font-semibold">Requisitos ({club.requirements.length})</h2>
             {club.requirements.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin requirements de reclutamiento.</p>
+              <p className="text-sm text-muted-foreground">No recruitment requirements.</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {club.requirements.slice(0, 10).map((requirement) => (

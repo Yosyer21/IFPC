@@ -22,7 +22,7 @@ export default async function ScoutOpportunitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Opportunities"
-        subtitle="Convocatorias open de clubs donde orientar a tus candidates"
+        subtitle="Open club call-ups to guide your candidates"
         icon="target"
       />
 

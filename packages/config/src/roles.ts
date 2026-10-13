@@ -1,13 +1,13 @@
 /** Plural labels for the platform `Role` enum (dashboards, counts, breakdowns). */
 export const ROLE_LABELS: Record<string, string> = {
   PLAYER: 'Players',
-  PARENT: 'Familiares',
-  COACH: 'Entrenadores',
-  SCOUT: 'Ojeadores',
-  AGENT: 'Agentes',
-  CLUB: 'Clubes',
-  UNIVERSITY: 'Universidades',
-  SCHOOL: 'Escuelas / Comunidad',
+  PARENT: 'Families',
+  COACH: 'Coaches',
+  SCOUT: 'Scouts',
+  AGENT: 'Agents',
+  CLUB: 'Clubs',
+  UNIVERSITY: 'Universities',
+  SCHOOL: 'Schools / Community',
   ADMIN: 'Admins',
 };
 

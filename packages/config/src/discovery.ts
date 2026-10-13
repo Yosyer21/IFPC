@@ -8,10 +8,10 @@ export const POST_TYPES = ['ANNOUNCEMENT', 'VIDEO', 'PHOTO', 'ACHIEVEMENT'] as c
 export type PostTypeValue = (typeof POST_TYPES)[number];
 
 export const POST_TYPE_LABELS: Record<string, string> = {
-  ANNOUNCEMENT: 'Anuncio',
+  ANNOUNCEMENT: 'Announcement',
   VIDEO: 'Video',
-  PHOTO: 'Foto',
-  ACHIEVEMENT: 'Logro',
+  PHOTO: 'Photo',
+  ACHIEVEMENT: 'Achievement',
 };
 
 /** Estados: `HIDDEN` solo lo aplica un admin (moderación). */
@@ -48,9 +48,9 @@ export const DISCOVERY_TAB_LABELS: Record<string, string> = {
   foryou: 'For you',
   following: 'Following',
   profiles: 'Profiles',
-  recent: 'Recientes',
-  trending: 'Tendencias',
-  announcements: 'Anuncios',
+  recent: 'Latest',
+  trending: 'Trending',
+  announcements: 'Announcements',
   videos: 'Videos',
 };
 

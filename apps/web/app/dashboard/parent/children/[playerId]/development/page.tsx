@@ -9,7 +9,7 @@ import { StatCard } from '@/components/player/stat-card';
 import { DonutChart, RadarChart } from '@/components/player/charts';
 import { IconRoute, IconStar, IconTarget, IconVideo } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Desarrollo de mi hijo' };
+export const metadata: Metadata = { title: 'My child’s development' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -20,7 +20,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 

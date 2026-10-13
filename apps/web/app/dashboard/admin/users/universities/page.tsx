@@ -20,7 +20,7 @@ export default async function AdminUsersUniversitiesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Universidades"
+        title="Universities"
         subtitle="Academic institutions with recruitment access"
         icon="users"
       />

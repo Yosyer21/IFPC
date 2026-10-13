@@ -35,7 +35,7 @@ export default async function AdminMatchingClubsPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Matching · Clubs" subtitle="Mejor player para cada requirement abierto" icon="briefcase">
+      <PageHeader title="Matching · Clubs" subtitle="Best player for each open requirement" icon="briefcase">
         <Link href="/dashboard/admin/matching" className="text-sm text-muted-foreground hover:underline">
           ← Matching
         </Link>
@@ -64,7 +64,7 @@ export default async function AdminMatchingClubsPage() {
                         ? `Age ${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'} · `
                         : ''}
                       {best
-                        ? `Mejor candidate: ${best.player.firstName} ${best.player.lastName}`
+                        ? `Best candidate: ${best.player.firstName} ${best.player.lastName}`
                         : 'No players to evaluate'}
                     </div>
                   </div>

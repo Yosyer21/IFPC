@@ -10,7 +10,7 @@ import { IconUsers } from '@/components/dashboard/icons';
 import { changeCampStatusAction } from '@/app/actions/admin';
 import { CAMP_STATUS_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Detalle del camp' };
+export const metadata: Metadata = { title: 'Camp details' };
 
 export default async function AdminCampDetailPage({
   params,
@@ -59,7 +59,7 @@ export default async function AdminCampDetailPage({
         </Card>
         <Card>
           <CardContent className="py-4">
-            <div className="text-xs text-muted-foreground">Fechas</div>
+            <div className="text-xs text-muted-foreground">Dates</div>
             <div className="mt-1 text-sm font-semibold">
               {camp.startsAt.toLocaleDateString('en-GB')}
               {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}

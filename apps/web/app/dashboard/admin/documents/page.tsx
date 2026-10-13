@@ -10,10 +10,10 @@ import { IconFile, IconShield, IconUser } from '@/components/dashboard/icons';
 export const metadata: Metadata = { title: 'Documents' };
 
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
-  passport: 'Pasaporte',
-  contract: 'Contrato',
+  passport: 'Passport',
+  contract: 'Contract',
   medical: 'Medical',
-  other: 'Otro',
+  other: 'Other',
 };
 
 export default async function AdminDocumentsPage() {
@@ -40,7 +40,7 @@ export default async function AdminDocumentsPage() {
       <div className="mb-6 grid grid-cols-3 gap-4">
         <StatCard href="/dashboard/admin/documents" icon={IconFile} label="Documents" value={documents.length} />
         <StatCard href="/dashboard/admin/documents" icon={IconUser} label="Players" value={players} />
-        <StatCard href="/dashboard/admin/documents" icon={IconShield} label="Contratos" value={contracts} />
+        <StatCard href="/dashboard/admin/documents" icon={IconShield} label="Contracts" value={contracts} />
       </div>
 
       {documents.length === 0 ? (

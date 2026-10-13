@@ -47,7 +47,7 @@ export default async function AdminOpportunityDetailPage({
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="py-4">
-            <div className="text-xs text-muted-foreground">Tipo</div>
+            <div className="text-xs text-muted-foreground">Type</div>
             <div className="mt-1 text-sm font-semibold">{typeLabel}</div>
           </CardContent>
         </Card>
@@ -67,7 +67,7 @@ export default async function AdminOpportunityDetailPage({
         </Card>
         <Card>
           <CardContent className="py-4">
-            <div className="text-xs text-muted-foreground">Cierra el</div>
+            <div className="text-xs text-muted-foreground">Closes on</div>
             <div className="mt-1 text-sm font-semibold">
               {opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('en-GB') : '—'}
             </div>
@@ -97,9 +97,9 @@ export default async function AdminOpportunityDetailPage({
               defaultValue={opportunity.status}
               className="rounded-md border border-border bg-background px-2 py-1 text-sm"
             >
-              <option value="DRAFT">Borrador</option>
-              <option value="OPEN">Abierta</option>
-              <option value="CLOSED">Cerrada</option>
+              <option value="DRAFT">Draft</option>
+              <option value="OPEN">Open</option>
+              <option value="CLOSED">Closed</option>
             </select>
             <button
               type="submit"

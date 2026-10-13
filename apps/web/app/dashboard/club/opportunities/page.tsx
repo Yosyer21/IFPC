@@ -26,7 +26,7 @@ export default async function ClubOpportunitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Opportunities"
-        subtitle="Publica call-ups para que los players apliquen"
+        subtitle="Publish call-ups for players to apply"
         icon="target"
       />
 
@@ -64,7 +64,7 @@ export default async function ClubOpportunitiesPage() {
                   {opportunity.location ? ` · ${opportunity.location}` : ''}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Creada el {opportunity.createdAt.toLocaleDateString('en-GB')}
+                  Created on {opportunity.createdAt.toLocaleDateString('en-GB')}
                 </p>
                 <Link
                   href={`/dashboard/club/players`}

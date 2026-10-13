@@ -78,7 +78,7 @@ export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending} className="self-start">
-        {pending ? 'Guardando…' : entry ? 'Save changes' : 'Add season'}
+        {pending ? 'Saving…' : entry ? 'Save changes' : 'Add season'}
       </Button>
     </form>
   );

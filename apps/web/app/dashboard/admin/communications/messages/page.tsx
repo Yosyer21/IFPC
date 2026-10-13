@@ -23,7 +23,7 @@ export default async function AdminMessagesPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader title="Messages" subtitle="Hilo de messages de todas las conversaciones" icon="mail">
+      <PageHeader title="Messages" subtitle="Message thread across all conversations" icon="mail">
         <Link href="/dashboard/admin/communications" className="text-sm text-muted-foreground hover:underline">
           ← Comunicaciones
         </Link>
@@ -91,7 +91,7 @@ export default async function AdminMessagesPage() {
                     type="submit"
                     className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                   >
-                    Responder
+                    Reply
                   </button>
                 </form>
               </CardContent>

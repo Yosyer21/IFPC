@@ -5,6 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { isRole } from '@ifpc/auth';
 import type { PlayerStatus, Role } from '@ifpc/types';
+import { announceLiveInDiscovery } from '@/lib/live-sessions';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -120,6 +121,78 @@ export async function deleteTrainingContentAction(formData: FormData): Promise<v
   redirect(`/dashboard/admin/content/${content.category}`);
 }
 
+/**
+ * Crea o reemplaza el quiz de un curso. `questions` son líneas con el formato
+ * `Pregunta | respuesta correcta | incorrecta | incorrecta…` (la primera opción
+ * tras el prompt es la correcta).
+ */
+export async function saveCourseQuizAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+  if (!session) return;
+  const contentId = str(formData, 'contentId');
+  if (!contentId) return;
+  const content = await prisma.trainingContent.findUnique({ where: { id: contentId } });
+  if (!content) return;
+
+  const passRaw = str(formData, 'passScore');
+  const parsedPass = passRaw ? parseInt(passRaw, 10) : NaN;
+  const passScore = Number.isFinite(parsedPass) ? Math.min(Math.max(parsedPass, 1), 100) : 70;
+  const title = str(formData, 'quizTitle') ?? `${content.title} — quiz`;
+
+  const questions = (str(formData, 'questions') ?? '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0 && !line.startsWith('#'))
+    .map((line) => {
+      const parts = line
+        .split('|')
+        .map((part) => part.trim())
+        .filter((part) => part.length > 0);
+      if (parts.length < 3) return null;
+      const [prompt, ...options] = parts;
+      if (!prompt) return null;
+      return { prompt, options };
+    })
+    .filter((question): question is { prompt: string; options: string[] } => question !== null);
+
+  if (questions.length > 0) {
+    await prisma.quiz.deleteMany({ where: { contentId } });
+    await prisma.quiz.create({
+      data: {
+        contentId,
+        title,
+        passScore,
+        questions: {
+          create: questions.map((question, questionIndex) => ({
+            prompt: question.prompt,
+            position: questionIndex,
+            options: {
+              create: question.options.map((label, optionIndex) => ({
+                label,
+                isCorrect: optionIndex === 0,
+                position: optionIndex,
+              })),
+            },
+          })),
+        },
+      },
+    });
+  }
+
+  redirect(`/dashboard/admin/content/${content.category}`);
+}
+
+export async function deleteCourseQuizAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+  if (!session) return;
+  const contentId = str(formData, 'contentId');
+  if (!contentId) return;
+  const content = await prisma.trainingContent.findUnique({ where: { id: contentId } });
+  if (!content) return;
+  await prisma.quiz.deleteMany({ where: { contentId } });
+  redirect(`/dashboard/admin/content/${content.category}`);
+}
+
 function parseDate(value: string | null): Date | null {
   if (!value) return null;
   const date = new Date(value);
@@ -184,19 +257,28 @@ export async function createLiveSessionAction(formData: FormData): Promise<void>
   const title = str(formData, 'title');
   if (!title) return;
 
-  await prisma.liveSession.create({
+  const visibility = str(formData, 'visibility') === 'PUBLIC' ? 'PUBLIC' : 'CLUB';
+
+  const liveSession = await prisma.liveSession.create({
     data: {
       title,
       description: str(formData, 'description'),
       type: (str(formData, 'type') as 'TRAINING' | 'LECTURE' | 'Q_AND_A' | 'TRIAL') ?? 'TRAINING',
       status: (str(formData, 'status') as 'SCHEDULED' | 'LIVE' | 'ENDED' | 'CANCELLED') ?? 'SCHEDULED',
+      visibility,
       startsAt: parseDate(str(formData, 'startsAt')) ?? new Date(),
       endsAt: parseDate(str(formData, 'endsAt')),
       meetingUrl: str(formData, 'meetingUrl'),
       coachId: str(formData, 'coachId'),
       playerId: str(formData, 'playerId'),
+      clubId: str(formData, 'clubId'),
     },
   });
+
+  if (visibility === 'PUBLIC') {
+    await announceLiveInDiscovery(liveSession);
+  }
+
   redirect('/dashboard/admin/live-sessions');
 }
 

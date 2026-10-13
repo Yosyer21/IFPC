@@ -7,30 +7,35 @@ import {
   stringField,
   dateField,
 } from '@/lib/api/respond';
+import { userClubIds } from '@/lib/live-sessions';
 
 /**
  * GET /api/live-sessions
- * - Player: sus sesiones + grupales open.
+ * - Player: sus 1:1, las públicas y las de sus clubes.
  * - Coach: las suyas.
  * - Admin: todas.
  */
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   if (session.user.role === 'PLAYER') {
     const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
     if (!player) return NextResponse.json({ ok: true, sessions: [] });
+    const myClubIds = await userClubIds(session.user.id);
     const sessions = await prisma.liveSession.findMany({
       where: {
         OR: [
           { playerId: player.id },
-          { playerId: null, type: { in: ['TRAINING', 'LECTURE', 'Q_AND_A'] } },
+          { playerId: null, visibility: 'PUBLIC' },
+          ...(myClubIds.length
+            ? [{ playerId: null, visibility: 'CLUB' as const, clubId: { in: myClubIds } }]
+            : []),
         ],
       },
-      include: { coach: { include: { user: true } }, player: true },
+      include: { coach: { include: { user: true } }, club: true, player: true },
       orderBy: { startsAt: 'asc' },
       take: 50,
     });
@@ -50,7 +55,7 @@ export async function GET() {
   }
 
   const sessions = await prisma.liveSession.findMany({
-    include: { coach: { include: { user: true } }, player: true },
+    include: { coach: { include: { user: true } }, player: true, club: true },
     orderBy: { startsAt: 'asc' },
     take: 200,
   });
@@ -61,13 +66,13 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
 
   const title = stringField(body, 'title');
-  if (!title) return badRequest('title es obligatorio');
+  if (!title) return badRequest('title is required');
 
   let coachId: string | null = stringField(body, 'coachId');
   if (session.user.role === 'COACH') {

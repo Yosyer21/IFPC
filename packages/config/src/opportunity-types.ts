@@ -2,9 +2,9 @@ export const OPPORTUNITY_TYPES = ['TRIAL', 'SCOUTING', 'CONTRACT', 'SCHOLARSHIP'
 export type OpportunityType = (typeof OPPORTUNITY_TYPES)[number];
 
 export const OPPORTUNITY_TYPE_LABELS: Record<OpportunityType, string> = {
-  TRIAL: 'Prueba',
+  TRIAL: 'Trial',
   SCOUTING: 'Scouting',
-  CONTRACT: 'Contrato',
+  CONTRACT: 'Contract',
   SCHOLARSHIP: 'Scholarship',
-  ACADEMY: 'Academia',
+  ACADEMY: 'Academy',
 };

@@ -6,7 +6,7 @@ import { requireUser } from '@/lib/api/respond';
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   const notifications = await prisma.notification.findMany({
@@ -22,7 +22,7 @@ export async function GET() {
 export async function POST() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   const result = await prisma.notification.updateMany({

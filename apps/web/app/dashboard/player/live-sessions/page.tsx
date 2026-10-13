@@ -7,6 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { SESSION_TYPE_LABELS } from '@/lib/labels';
+import { userClubIds } from '@/lib/live-sessions';
 
 export const metadata: Metadata = { title: 'Live sessions' };
 
@@ -17,14 +18,20 @@ export default async function PlayerLiveSessionsPage() {
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) notFound();
 
+  // El jugador ve: sus sesiones 1:1, las públicas y las de sus clubes.
+  const myClubIds = await userClubIds(session.user.id);
+
   const sessions = await prisma.liveSession.findMany({
     where: {
       OR: [
         { playerId: player.id },
-        { playerId: null, type: { in: ['TRAINING', 'LECTURE', 'Q_AND_A'] } },
+        { playerId: null, visibility: 'PUBLIC' },
+        ...(myClubIds.length
+          ? [{ playerId: null, visibility: 'CLUB' as const, clubId: { in: myClubIds } }]
+          : []),
       ],
     },
-    include: { coach: { include: { user: true } } },
+    include: { coach: { include: { user: true } }, club: true },
     orderBy: { startsAt: 'asc' },
     take: 50,
   });
@@ -46,7 +53,7 @@ export default async function PlayerLiveSessionsPage() {
         <Card className="mb-6">
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No tienes sesiones en vivo programadas. Cuando tu club o un coach organicen
+              You have no live sessions scheduled. When your club or a coach organise
               sessions (training, talks or trials) will appear here.
             </p>
           </CardContent>
@@ -69,8 +76,11 @@ export default async function PlayerLiveSessionsPage() {
                     </p>
                     {liveSession.coach?.user?.name ? (
                       <p className="mt-2 text-xs text-muted-foreground">
-                        Con {liveSession.coach.user.name}
+                        With {liveSession.coach.user.name}
                       </p>
+                    ) : null}
+                    {liveSession.club ? (
+                      <p className="mt-2 text-xs text-muted-foreground">{liveSession.club.name}</p>
                     ) : null}
                   </div>
                   <Badge variant={liveSession.type === 'TRIAL' ? 'warning' : 'outline'}>

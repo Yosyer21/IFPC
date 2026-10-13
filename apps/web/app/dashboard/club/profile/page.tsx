@@ -21,7 +21,7 @@ export default async function ClubProfilePage() {
     ['Name', club.name],
     ['Email', club.user?.email ?? '—'],
     ['Country', club.country],
-    ['Ciudad', club.city ?? '—'],
+    ['City', club.city ?? '—'],
     ['Liga', club.league ?? '—'],
     ['Member since', club.createdAt.toLocaleDateString('en-GB')],
   ];
@@ -34,7 +34,7 @@ export default async function ClubProfilePage() {
         icon="briefcase"
       />
       <Badge variant={club.verified ? 'success' : 'warning'}>
-        {club.verified ? 'Verificado' : 'Pending verification'}
+        {club.verified ? 'Verified' : 'Pending verification'}
       </Badge>
       <Card className="mt-4">
         <CardHeader>

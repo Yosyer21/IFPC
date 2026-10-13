@@ -37,7 +37,7 @@ export default async function AdminCommunicationsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Comunicaciones"
-        subtitle="Conversaciones de la plataforma y messages internos"
+        subtitle="Platform conversations and internal messages"
         icon="mail"
       >
         <Link
@@ -93,7 +93,7 @@ export default async function AdminCommunicationsPage() {
                       href="/dashboard/admin/communications/messages"
                       className="rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-muted"
                     >
-                      Abrir
+                      Open
                     </Link>
                     <form action={markConversationReadAction}>
                       <input type="hidden" name="conversationId" value={conversation.id} />

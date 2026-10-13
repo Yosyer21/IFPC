@@ -52,10 +52,10 @@ export default async function PublicOpportunityDetailPage({
             <Badge variant={opportunity.type === 'SCHOLARSHIP' ? 'success' : 'outline'}>
               {typeLabel}
             </Badge>
-            <Badge variant="success">Abierta</Badge>
+            <Badge variant="success">Open</Badge>
             {opportunity.closesAt ? (
               <span className="text-sm text-muted-foreground">
-                Cierra el {opportunity.closesAt.toLocaleDateString('en-GB')}
+                Closes on {opportunity.closesAt.toLocaleDateString('en-GB')}
               </span>
             ) : null}
           </div>
@@ -99,7 +99,7 @@ export default async function PublicOpportunityDetailPage({
               href="/register"
               className="mt-4 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Crear cuenta y aplicar
+              Create an account and apply
             </Link>
           </div>
         </div>

@@ -13,7 +13,7 @@ const CATEGORIES = [
   },
   {
     href: '/dashboard/admin/content/strength-conditioning',
-    title: 'Fuerza y acondicionamiento',
+    title: 'Strength & conditioning',
     description: 'Strength routines and injury prevention',
   },
   {
@@ -32,7 +32,7 @@ export default async function ContentPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Contenido"
+        title="Content"
         subtitle="Training and education content published on the platform"
         icon="file"
       />
@@ -44,7 +44,7 @@ export default async function ContentPage() {
                 <h2 className="font-semibold">{category.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{category.description}</p>
                 <span className="mt-3 inline-block text-sm text-primary group-hover:underline">
-                  Gestionar →
+                  Manage →
                 </span>
               </CardContent>
             </Card>

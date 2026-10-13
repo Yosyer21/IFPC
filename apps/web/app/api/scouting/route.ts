@@ -16,7 +16,7 @@ import {
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   if (session.user.role === 'SCOUT') {
@@ -31,7 +31,7 @@ export async function GET() {
   }
 
   if (session.user.role !== 'ADMIN') {
-    return NextResponse.json({ ok: false, error: 'Acceso denegado' }, { status: 403 });
+    return NextResponse.json({ ok: false, error: 'Access denied' }, { status: 403 });
   }
   const reports = await prisma.scoutingReport.findMany({
     include: { player: { include: { user: true } }, scout: { include: { user: true } } },
@@ -45,7 +45,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
@@ -53,12 +53,12 @@ export async function POST(request: Request) {
   const playerId = stringField(body, 'playerId');
   const rating = intField(body, 'rating');
   if (!playerId || rating === null || rating < 1 || rating > 10) {
-    return badRequest('playerId y rating (1-10) son obligatorios');
+    return badRequest('playerId and rating (1-10) are required');
   }
 
   const scout = await prisma.scout.findUnique({ where: { userId: session.user.id } });
   if (!scout) {
-    return NextResponse.json({ ok: false, error: 'Profile de scout no encontrado' }, { status: 403 });
+    return NextResponse.json({ ok: false, error: 'Scout profile not found' }, { status: 403 });
   }
 
   const report = await prisma.scoutingReport.create({

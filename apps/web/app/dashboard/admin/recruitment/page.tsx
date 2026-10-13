@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Reclutamiento' };
+export const metadata: Metadata = { title: 'Recruitment' };
 
 export default async function AdminRecruitmentPage() {
   const session = await auth();
@@ -24,15 +24,15 @@ export default async function AdminRecruitmentPage() {
 
   const sections = [
     { title: 'Submissions', items: submissions, href: '/dashboard/admin/recruitment/submissions' },
-    { title: 'Pruebas', items: trials, href: '/dashboard/admin/recruitment/trials' },
-    { title: 'Negociaciones', items: negotiations, href: '/dashboard/admin/recruitment/negotiations' },
-    { title: 'Contratos', items: contracts, href: '/dashboard/admin/recruitment/contracts' },
+    { title: 'Trials', items: trials, href: '/dashboard/admin/recruitment/trials' },
+    { title: 'Negotiations', items: negotiations, href: '/dashboard/admin/recruitment/negotiations' },
+    { title: 'Contracts', items: contracts, href: '/dashboard/admin/recruitment/contracts' },
   ];
 
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Reclutamiento"
+        title="Recruitment"
         subtitle="Global flow of submissions, trials, negotiations and contracts"
         icon="briefcase"
       />

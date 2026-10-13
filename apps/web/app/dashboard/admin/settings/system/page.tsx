@@ -26,9 +26,9 @@ export default async function AdminSettingsSystemPage() {
 
   const platform = {
     'Entorno': process.env.NODE_ENV ?? 'development',
-    'Motor de base de datos': process.env.DATABASE_URL?.includes('pglite') ? 'PGlite (dev)' : 'PostgreSQL',
+    'Database engine': process.env.DATABASE_URL?.includes('pglite') ? 'PGlite (dev)' : 'PostgreSQL',
     'Almacenamiento': process.env.S3_ENDPOINT ? 'S3/MinIO' : 'Local (public/uploads)',
-    'Correo': process.env.RESEND_API_KEY ? 'Resend' : 'No configurado',
+    'Email': process.env.RESEND_API_KEY ? 'Resend' : 'Not configured',
     'Payments': process.env.STRIPE_SECRET_KEY ? 'Stripe' : 'Simulados',
     'Workers (BullMQ)': 'Available en apps/worker',
   };
@@ -39,14 +39,14 @@ export default async function AdminSettingsSystemPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Sistema"
-        subtitle="Estado general de la plataforma"
+        subtitle="Overall platform status"
         icon="settings"
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <StatCard href="/dashboard/admin/users" icon={IconUsers} label="Users" value={users} />
         <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Players" value={players} />
-        <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubes" value={clubs} />
+        <StatCard href="/dashboard/admin/clubs" icon={IconUsers} label="Clubs" value={clubs} />
         <StatCard href="/dashboard/admin/opportunities" icon={IconBell} label="Opportunities" value={opportunities} />
         <StatCard href="/dashboard/admin/players/evaluations" icon={IconFile} label="Contenidos" value={contents} />
         <StatCard href="/dashboard/admin/recruitment" icon={IconBell} label="Submissions" value={submissions} />

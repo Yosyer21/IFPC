@@ -29,7 +29,7 @@ export default async function AdminOpportunityCreatePage() {
     <div className="mx-auto max-w-2xl">
       <PageHeader
         title="New opportunity"
-        subtitle="Publica una oportunidad en nombre de un club o university"
+        subtitle="Post an opportunity on behalf of a club or university"
         icon="target"
       >
         <Link href="/dashboard/admin/opportunities" className="text-sm text-muted-foreground hover:underline">
@@ -50,20 +50,20 @@ export default async function AdminOpportunityCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Publicado por
+              Posted by
               <select name="creatorType" defaultValue="CLUB" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
                 <option value="CLUB">Club</option>
                 <option value="UNIVERSITY">University</option>
               </select>
             </label>
             <label className="text-sm">
-              Tipo
+              Type
               <select name="type" defaultValue="TRIAL" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
-                <option value="TRIAL">Prueba</option>
+                <option value="TRIAL">Trial</option>
                 <option value="SCOUTING">Scouting</option>
-                <option value="CONTRACT">Contrato</option>
+                <option value="CONTRACT">Contract</option>
                 <option value="SCHOLARSHIP">Scholarship</option>
-                <option value="ACADEMY">Academia</option>
+                <option value="ACADEMY">Academy</option>
               </select>
             </label>
             <label className="text-sm">
@@ -107,13 +107,13 @@ export default async function AdminOpportunityCreatePage() {
             <label className="text-sm">
               Estado
               <select name="status" defaultValue="OPEN" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
-                <option value="DRAFT">Borrador</option>
-                <option value="OPEN">Abierta</option>
-                <option value="CLOSED">Cerrada</option>
+                <option value="DRAFT">Draft</option>
+                <option value="OPEN">Open</option>
+                <option value="CLOSED">Closed</option>
               </select>
             </label>
             <label className="text-sm">
-              Cierra el
+              Closes on
               <input type="date" name="closesAt" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2" />
             </label>
             <label className="text-sm sm:col-span-2">

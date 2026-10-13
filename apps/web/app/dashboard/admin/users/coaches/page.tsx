@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Entrenadores · Users' };
+export const metadata: Metadata = { title: 'Coaches · Users' };
 
 export default async function AdminUsersCoachesPage() {
   const session = await auth();
@@ -23,8 +23,8 @@ export default async function AdminUsersCoachesPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Entrenadores"
-        subtitle="Cuentas de coaches y su grupo de players"
+        title="Coaches"
+        subtitle="Coach accounts and their group of players"
         icon="users"
       />
       <RoleLinks />

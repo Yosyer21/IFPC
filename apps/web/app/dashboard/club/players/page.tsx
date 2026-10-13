@@ -28,7 +28,7 @@ export default async function ClubPlayersPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Available players"
-        subtitle="Profilees open a nuevas opportunities en la plataforma"
+        subtitle="Profiles open to new opportunities on the platform"
         icon="users"
       />
 

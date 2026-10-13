@@ -21,13 +21,13 @@ export function EditCommentForm({ commentId, body }: { commentId: string; body: 
         required
         maxLength={POST_COMMENT_MAX}
         defaultValue={body}
-        aria-label="Editar comment"
+        aria-label="Edit comment"
         className={fieldClass}
       />
       {state.error ? <p className="text-xs text-destructive">{state.error}</p> : null}
       {state.success ? <p className="text-xs text-emerald-400">{state.success}</p> : null}
       <Button type="submit" variant="outline" disabled={pending} className="self-start text-xs">
-        {pending ? 'Guardando…' : 'Save'}
+        {pending ? 'Saving…' : 'Save'}
       </Button>
     </form>
   );

@@ -25,10 +25,10 @@ test('Admin: control center and management pages', async ({ page }) => {
   for (const [url, heading] of [
     ['/dashboard/admin/users', 'Users'],
     ['/dashboard/admin/players', 'Players'],
-    ['/dashboard/admin/clubs', 'Clubes'],
+    ['/dashboard/admin/clubs', 'Clubs'],
     ['/dashboard/admin/opportunities', 'Opportunities'],
     ['/dashboard/admin/memberships', 'Memberships'],
-    ['/dashboard/admin/recruitment', 'Reclutamiento'],
+    ['/dashboard/admin/recruitment', 'Recruitment'],
   ] as const) {
     await page.goto(`${BASE}${url}`);
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();

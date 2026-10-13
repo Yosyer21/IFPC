@@ -39,7 +39,7 @@ export default async function PlayerOpportunitiesPage() {
         title="Opportunities"
         subtitle={
           goodMatches > 0
-            ? `${goodMatches} de ${matches.length} encajan con tu perfil`
+            ? `${goodMatches} of ${matches.length} match your profile`
             : `${matches.length} opportunities open`
         }
         icon="target"

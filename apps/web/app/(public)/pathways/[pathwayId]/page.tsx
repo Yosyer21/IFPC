@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Ruta — Future Baller' };
+export const metadata: Metadata = { title: 'Pathway — Future Baller' };
 
 const STAGES: Record<string, { title: string; age: string; focus: string; goals: string[] }> = {
   base: {
@@ -25,12 +25,12 @@ const STAGES: Record<string, { title: string; age: string; focus: string; goals:
     goals: [
       'Consolidate the tactical role in the position',
       'Raise the competitive level to national',
-      'Participar en jornadas de pruebas (trials)',
+      'Take part in trial days',
       'Build a scouting profile with videos',
     ],
   },
   profesional: {
-    title: 'Pre-profesional',
+    title: 'Pre-professional',
     age: '17–21 years',
     focus: 'Performance, university scholarships and first contracts.',
     goals: [
@@ -62,7 +62,7 @@ export default function PathwayDetailPage({
       <Navbar />
       <main className="mx-auto w-full max-w-4xl px-4 py-16">
         <Link href="/pathways" className="text-sm text-muted-foreground hover:text-emerald-400">
-          ← Rutas de desarrollo
+          ← Development pathways
         </Link>
 
         <div className="mt-6">
@@ -89,7 +89,7 @@ async function PathwayContent({ params }: { params: Promise<{ pathwayId: string 
       </div>
       <p className="mt-3 text-muted-foreground">{stage.focus}</p>
 
-      <h2 className="mb-4 mt-8 text-lg font-semibold">Goals de la etapa</h2>
+      <h2 className="mb-4 mt-8 text-lg font-semibold">Stage goals</h2>
       <div className="flex flex-col gap-2">
         {stage.goals.map((goal) => (
           <div
@@ -106,13 +106,13 @@ async function PathwayContent({ params }: { params: Promise<{ pathwayId: string 
 
       <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
         <p className="text-sm text-muted-foreground">
-          La plataforma asigna goals, evaluations y opportunities de esta etapa a cada player.
+          The platform assigns goals, evaluations and opportunities for this stage to each player.
         </p>
         <Link
           href="/register"
           className="mt-4 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
         >
-          Empezar mi ruta
+          Start my journey
         </Link>
       </div>
     </div>

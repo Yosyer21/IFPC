@@ -141,7 +141,7 @@ export interface FeedHealth {
   published: number;
   hidden: number;
   pendingReports: number;
-  /** Denuncias pendientes por cada 100 posts. */
+  /** Denuncias pending por cada 100 posts. */
   reportRatePer100: number;
   /** Autores distintos que han publicado en los últimos 30 days. */
   activeAuthors: number;

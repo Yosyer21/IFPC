@@ -34,7 +34,7 @@ export default async function DiscoveryAnalyticsPage() {
         subtitle={
           analytics.posts > 0
             ? `Your ${analytics.posts} posts across ${analytics.reach + analytics.anonymousOpenings} openings`
-            : 'Todavía no has publicado nada'
+            : 'You have not posted anything yet'
         }
         icon="trending"
       >
@@ -49,29 +49,29 @@ export default async function DiscoveryAnalyticsPage() {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <Metric label="Posts" value={analytics.posts} />
         <Metric
-          label="Personas alcanzadas"
+          label="People reached"
           value={analytics.reach}
           hint="Identifiable profiles that opened your posts"
         />
         <Metric
           label="Anonymous openings"
           value={analytics.anonymousOpenings}
-          hint="Desde el Discovery público"
+          hint="From the public Discovery"
         />
-        <Metric label="Engagement" value={analytics.engagement} hint="Me gusta ×3 + comments ×2 + alcance" />
-        <Metric label="Me gusta" value={analytics.likes} />
-        <Metric label="Comentarios" value={analytics.comments} />
+        <Metric label="Engagement" value={analytics.engagement} hint="Likes ×3 + comments ×2 + reach" />
+        <Metric label="Likes" value={analytics.likes} />
+        <Metric label="Comments" value={analytics.comments} />
       </div>
 
       {analytics.bestHour !== null ? (
         <Card className="mt-4">
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Tu mejor hora para publicar es alrededor de las{' '}
+              Your best time to post is around{' '}
               <strong className="text-foreground">
                 {String(analytics.bestHour).padStart(2, '0')}:00
               </strong>{' '}
-              (hora del servidor), según el engagement medio de lo que ya has publicado.
+              (server time), based on the average engagement of what you have already published.
             </p>
           </CardContent>
         </Card>

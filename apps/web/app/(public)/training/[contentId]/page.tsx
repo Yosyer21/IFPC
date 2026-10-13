@@ -6,13 +6,11 @@ import { Badge } from '@ifpc/ui';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
-export const metadata: Metadata = { title: 'Ejercicio — Future Baller' };
+export const metadata: Metadata = { title: 'Course — Future Baller' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
   'strength-conditioning': 'Strength and conditioning',
-  psychology: 'Psychology',
-  'parent-education': 'For families',
 };
 
 export default async function PublicTrainingDetailPage({
@@ -65,6 +63,23 @@ export default async function PublicTrainingDetailPage({
             </p>
           ) : null}
 
+          {content.outcomes.length > 0 ? (
+            <div className="mt-6">
+              <h2 className="text-sm font-semibold text-white">What you will learn</h2>
+              <ul className="mt-2 flex flex-col gap-1.5 text-sm text-muted-foreground">
+                {content.outcomes.map((outcome) => (
+                  <li key={outcome}>• {outcome}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {content.content ? (
+            <article className="mt-6 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+              {content.content}
+            </article>
+          ) : null}
+
           <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">
             <p className="text-sm text-muted-foreground">
               Want to follow this plan and receive exercises adapted to your level?
@@ -73,7 +88,7 @@ export default async function PublicTrainingDetailPage({
               href="/register"
               className="mt-4 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Crear cuenta de player
+              Create a player account
             </Link>
           </div>
         </div>

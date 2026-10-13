@@ -22,7 +22,7 @@ export default async function AdminOpportunitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Opportunities"
-        subtitle="Convocatorias publicadas por los clubs"
+        subtitle="Call-ups published by clubs"
         icon="target"
       />
 
@@ -57,7 +57,7 @@ export default async function AdminOpportunitiesPage() {
                         type="submit"
                         className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
                       >
-                        Cerrar
+                        Close
                       </button>
                     </form>
                   ) : null}

@@ -6,7 +6,7 @@ import { createCheckoutSession } from '@/lib/payments/stripe';
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');

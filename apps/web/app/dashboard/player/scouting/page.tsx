@@ -8,7 +8,7 @@ import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@ifpc/co
 import { PageHeader } from '@/components/player/page-header';
 import { ProfileGrid } from '@/components/player/profile-grid';
 
-export const metadata: Metadata = { title: 'My profile de scouting' };
+export const metadata: Metadata = { title: 'My scouting profile' };
 
 export default async function PlayerScoutingPage() {
   const session = await auth();
@@ -36,19 +36,19 @@ export default async function PlayerScoutingPage() {
   const rows: [string, string][] = [
     ['Position', positionLabel],
     ['Age', player.dateOfBirth ? `${Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))} years old` : '—'],
-    ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-    ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
+    ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+    ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
     ['Preferred foot', footLabel],
     ['Nationality', player.nationality ?? '—'],
-    ['Level competitivo', competitionLabel],
-    ['Club actual', player.clubName ?? '—'],
+    ['Competition level', competitionLabel],
+    ['Current club', player.clubName ?? '—'],
     ['Available videos', String(videoCount)],
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
-        title="Profile de scouting"
+        title="Scouting profile"
         subtitle="This is how scouts and clubs see you. Keep your data and videos updated to appear in searches."
         icon="search"
       />

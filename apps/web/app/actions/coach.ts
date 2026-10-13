@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
+import { announceLiveInDiscovery } from '@/lib/live-sessions';
 import type { ActionState } from './auth';
 
 const str = (formData: FormData, key: string): string | null => {
@@ -31,17 +32,26 @@ export async function createCoachLiveSessionAction(formData: FormData): Promise<
   const title = str(formData, 'title');
   if (!title) return;
 
-  await prisma.liveSession.create({
+  const visibility = str(formData, 'visibility') === 'PUBLIC' ? 'PUBLIC' : 'CLUB';
+
+  const liveSession = await prisma.liveSession.create({
     data: {
       title,
       description: str(formData, 'description'),
       type: (str(formData, 'type') as 'TRAINING' | 'LECTURE' | 'Q_AND_A' | 'TRIAL') ?? 'TRAINING',
+      visibility,
       startsAt: parseDate(str(formData, 'startsAt')) ?? new Date(),
       endsAt: parseDate(str(formData, 'endsAt')),
       meetingUrl: str(formData, 'meetingUrl'),
       coachId: coach.id,
     },
   });
+
+  // Un live público se anuncia en Discovery.
+  if (visibility === 'PUBLIC') {
+    await announceLiveInDiscovery(liveSession);
+  }
+
   redirect('/dashboard/coach/live-sessions');
 }
 

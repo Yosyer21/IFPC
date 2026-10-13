@@ -50,7 +50,7 @@ export default async function AdminCampCreatePage() {
                 required
                 name="title"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
-                placeholder="Campus de verano…"
+                placeholder="Summer camp…"
               />
             </label>
             <label className="text-sm">
@@ -102,7 +102,7 @@ export default async function AdminCampCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Ciudad
+              City
               <input
                 name="city"
                 className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
@@ -139,7 +139,7 @@ export default async function AdminCampCreatePage() {
               </select>
             </label>
             <label className="text-sm">
-              Club organizador
+              Organising club
               <select name="clubId" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
                 <option value="">Unassigned</option>
                 {clubs.map((club) => (
@@ -153,7 +153,7 @@ export default async function AdminCampCreatePage() {
               type="submit"
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:col-span-2"
             >
-              Crear camp
+              Create camp
             </button>
           </form>
         </CardContent>

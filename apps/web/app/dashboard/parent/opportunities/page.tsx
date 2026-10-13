@@ -21,7 +21,7 @@ export default async function ParentOpportunitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Opportunities"
-        subtitle="Pruebas y call-ups open donde tu hijo puede participar"
+        subtitle="Trials and open call-ups your child can join"
         icon="target"
       />
 
@@ -46,7 +46,7 @@ export default async function ParentOpportunitiesPage() {
                       opportunity.type
                     ] ?? opportunity.type}
                   </Badge>
-                  <Badge variant="success">Abierta</Badge>
+                  <Badge variant="success">Open</Badge>
                 </div>
                 <h2 className="font-semibold">{opportunity.title}</h2>
                 <p className="text-sm text-muted-foreground">
@@ -61,7 +61,7 @@ export default async function ParentOpportunitiesPage() {
                 </p>
                 {opportunity.closesAt ? (
                   <p className="text-xs text-muted-foreground">
-                    Cierra el {opportunity.closesAt.toLocaleDateString('en-GB')}
+                    Closes on {opportunity.closesAt.toLocaleDateString('en-GB')}
                   </p>
                 ) : null}
               </CardContent>

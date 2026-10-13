@@ -59,7 +59,7 @@ export default async function ClubInquiryDetailPage({
       ) : (
         <Card>
           <CardContent>
-            <h2 className="mb-4 font-semibold">Responder consulta</h2>
+            <h2 className="mb-4 font-semibold">Reply consulta</h2>
             <RespondInquiryForm inquiryId={inquiry.id} />
           </CardContent>
         </Card>

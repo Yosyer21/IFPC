@@ -50,7 +50,7 @@ export function EditPostForm({
         />
         {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
         <Button type="submit" disabled={pending} className="self-start">
-          {pending ? 'Guardando…' : 'Save changes'}
+          {pending ? 'Saving…' : 'Save changes'}
         </Button>
       </form>
     </details>

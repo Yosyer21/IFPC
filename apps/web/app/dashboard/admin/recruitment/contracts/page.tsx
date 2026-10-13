@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 
-export const metadata: Metadata = { title: 'Contratos · Reclutamiento' };
+export const metadata: Metadata = { title: 'Contracts · Recruitment' };
 
 export default async function AdminRecruitmentContractsPage() {
   const session = await auth();
@@ -30,7 +30,7 @@ export default async function AdminRecruitmentContractsPage() {
         ← Recruitment
       </Link>
       <PageHeader
-        title="Contratos"
+        title="Contracts"
         subtitle={`${contracts.length} contratos registered`}
         icon="briefcase"
       />

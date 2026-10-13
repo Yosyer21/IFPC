@@ -18,7 +18,7 @@ import {
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   const camps = await prisma.camp.findMany({
@@ -41,7 +41,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   if (session.user.role !== 'ADMIN') return forbidden();
 
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   if (!body) return badRequest('Invalid JSON body');
 
   const title = stringField(body, 'title');
-  if (!title) return badRequest('title es obligatorio');
+  if (!title) return badRequest('title is required');
 
   const camp = await prisma.camp.create({
     data: {

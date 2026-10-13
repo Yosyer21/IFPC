@@ -80,7 +80,7 @@ export default async function PublicDiscoveryPage({
     ? `No posts match “${filters.q}”.`
     : filters.tag
       ? `No posts with #${filters.tag} yet.`
-      : 'Todavía no hay posts. Entra y publica la primera.';
+      : 'There are no posts yet. Sign in and publish the first one.';
 
   return (
     <div className="min-h-screen bg-[#0a0e0c] text-white">
@@ -96,20 +96,20 @@ export default async function PublicDiscoveryPage({
           <CardContent className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
               You are viewing Discovery in read-only mode. Sign in to post, comment and follow
-              perfiles.
+              profiles.
             </p>
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/register"
                 className="rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-lime-400 px-4 py-2 text-sm font-semibold text-emerald-950"
               >
-                Crear cuenta
+                Create account
               </Link>
               <Link
                 href="/login"
                 className="rounded-full border border-border bg-white/5 px-4 py-2 text-sm font-semibold transition-colors hover:bg-white/10"
               >
-                Entrar
+                Sign in
               </Link>
             </div>
           </CardContent>

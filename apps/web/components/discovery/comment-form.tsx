@@ -27,12 +27,12 @@ export function CommentForm({ postId, parentId }: { postId: string; parentId?: s
         rows={2}
         required
         maxLength={POST_COMMENT_MAX}
-        placeholder={parentId ? 'Responder…' : 'Write a comment…'}
+        placeholder={parentId ? 'Reply…' : 'Write a comment…'}
         className={fieldClass}
       />
       {state.error ? <p className="text-xs text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending} className="self-start text-xs">
-        {pending ? 'Enviando…' : parentId ? 'Responder' : 'Comment'}
+        {pending ? 'Sending…' : parentId ? 'Reply' : 'Comment'}
       </Button>
     </form>
   );

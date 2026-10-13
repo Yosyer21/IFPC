@@ -23,9 +23,9 @@ export const metadata: Metadata = { title: 'My agency' };
 
 const STAGE_LABELS: Record<string, string> = {
   SUBMISSION: 'Submission',
-  TRIAL: 'Prueba',
+  TRIAL: 'Trial',
   NEGOTIATION: 'Negotiation',
-  CONTRACT: 'Contrato',
+  CONTRACT: 'Contract',
 };
 
 export default async function AgentDashboardPage() {
@@ -93,13 +93,13 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/trials',
       icon: IconWhistle,
-      label: 'Pruebas programadas',
+      label: 'Scheduled trials',
       value: scheduledTrials.length,
     },
     {
       href: '/dashboard/agent/negotiations',
       icon: IconBriefcase,
-      label: 'Negociaciones open',
+      label: 'Open negotiations',
       value: openNegotiations.length,
     },
   ];
@@ -108,35 +108,35 @@ export default async function AgentDashboardPage() {
     {
       href: '/dashboard/agent/players',
       label: 'Players',
-      sub: 'representados',
+      sub: 'represented',
       value: players.length,
       icon: IconUsers,
     },
     {
       href: '/dashboard/agent/submissions',
       label: 'Submissions',
-      sub: 'a clubs',
+      sub: 'to clubs',
       value: submissions.length,
       icon: IconMail,
     },
     {
       href: '/dashboard/agent/trials',
-      label: 'Pruebas',
-      sub: 'programadas',
+      label: 'Trials',
+      sub: 'scheduled',
       value: scheduledTrials.length,
       icon: IconWhistle,
     },
     {
       href: '/dashboard/agent/negotiations',
-      label: 'Negociaciones',
+      label: 'Negotiations',
       sub: 'open',
       value: openNegotiations.length,
       icon: IconBriefcase,
     },
     {
       href: '/dashboard/agent/contracts',
-      label: 'Contratos',
-      sub: 'activos',
+      label: 'Contracts',
+      sub: 'active',
       value: activeContracts.length,
       icon: IconFile,
     },
@@ -157,7 +157,7 @@ export default async function AgentDashboardPage() {
       href: '/dashboard/agent/trials',
       icon: IconWhistle,
       text: `${upcomingTrials.length} trial${upcomingTrials.length === 1 ? '' : 's'} in the next 7 days`,
-      meta: 'Ver agenda',
+      meta: 'View schedule',
     });
   }
   if (openNegotiations.length > 0) {
@@ -165,14 +165,14 @@ export default async function AgentDashboardPage() {
       href: '/dashboard/agent/negotiations',
       icon: IconBriefcase,
       text: `${openNegotiations.length} open negotiation${openNegotiations.length === 1 ? '' : 's'}`,
-      meta: 'Revisar ofertas',
+      meta: 'Review offers',
     });
   }
   if (pendingSignature.length > 0) {
     pendingActions.push({
       href: '/dashboard/agent/contracts',
       icon: IconFile,
-      text: `${pendingSignature.length} contrato${pendingSignature.length === 1 ? '' : 's'} pendiente${pendingSignature.length === 1 ? '' : 's'} de firma`,
+      text: `${pendingSignature.length} contract${pendingSignature.length === 1 ? '' : 's'} pending signature`,
       meta: 'Gestionar firma',
     });
   }
@@ -187,7 +187,7 @@ export default async function AgentDashboardPage() {
   const recentSubmissions = submissions.slice(0, 3);
   const recentTrials = trials.slice(0, 2);
 
-  const [agentFirstName = 'Agente', agentLastName = ''] = agent.user.name.split(' ');
+  const [agentFirstName = 'Agent', agentLastName = ''] = agent.user.name.split(' ');
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -228,7 +228,7 @@ export default async function AgentDashboardPage() {
           {[
             { href: '/dashboard/agent/players', icon: IconUsers, label: 'My players' },
             { href: '/dashboard/agent/submissions', icon: IconMail, label: 'Submissions' },
-            { href: '/dashboard/agent/trials', icon: IconWhistle, label: 'Pruebas' },
+            { href: '/dashboard/agent/trials', icon: IconWhistle, label: 'Trials' },
             { href: '/dashboard/agent/opportunities', icon: IconTarget, label: 'Opportunities' },
           ].map((action, i) => {
             const Icon = action.icon;
@@ -254,7 +254,7 @@ export default async function AgentDashboardPage() {
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> en tu cartera.
+            You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> in your portfolio.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -315,15 +315,15 @@ export default async function AgentDashboardPage() {
           </div>
         </CardContent>
       </Card>
-      {/* Submissions by stage + acciones pendientes */}
+      {/* Submissions by stage + acciones pending */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '500ms' }}>
           <CardContent>
             <h2 className="mb-4 font-semibold">Submissions by stage</h2>
             {submissions.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
-                No submissions yet. When you present players to clubs, you will see their distribution here
-                por fase del proceso.
+                No submissions yet. When you present players to clubs, you will see their
+                distribution here by stage of the process.
               </p>
             ) : (
               <>
@@ -463,7 +463,7 @@ export default async function AgentDashboardPage() {
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">
-                        Prueba · {trial.player.firstName} {trial.player.lastName} en {trial.club.name}
+                        Trial · {trial.player.firstName} {trial.player.lastName} en {trial.club.name}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
                         {trial.startsAt.toLocaleDateString('en-GB')} · {trial.status}

@@ -38,7 +38,7 @@ export function PhotoUploadForm({
       />
       {compact ? null : (
         <label htmlFor={inputId} className="self-start text-sm font-medium">
-          Foto
+          Photo
         </label>
       )}
       <input

@@ -347,7 +347,7 @@ export async function listNotifications(userId: string, limit = 8): Promise<Feed
   });
 }
 
-/** Alerts pendientes (para el contador de la campana). */
+/** Alerts pending (para el contador de la campana). */
 export async function countUnreadNotifications(userId: string): Promise<number> {
   return prisma.notification.count({ where: { userId, read: false } });
 }

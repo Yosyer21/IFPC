@@ -9,7 +9,7 @@ import { CountsBars } from '@/components/player/charts';
 import { IconBriefcase, IconTarget, IconUsers } from '@/components/dashboard/icons';
 import { monthlyCounts } from '@/components/admin/analytics-utils';
 
-export const metadata: Metadata = { title: 'Analytics · Reclutamiento' };
+export const metadata: Metadata = { title: 'Analytics · Recruitment' };
 
 export default async function AdminAnalyticsRecruitmentPage() {
   const session = await auth();
@@ -24,9 +24,9 @@ export default async function AdminAnalyticsRecruitmentPage() {
 
   const pipeline = [
     { label: 'Submissions', value: submissions.length },
-    { label: 'Pruebas', value: trials.length },
-    { label: 'Negociaciones', value: negotiations.length },
-    { label: 'Contratos', value: contracts.length },
+    { label: 'Trials', value: trials.length },
+    { label: 'Negotiations', value: negotiations.length },
+    { label: 'Contracts', value: contracts.length },
   ];
 
   const conversion = (from: number, to: number) =>
@@ -47,16 +47,16 @@ export default async function AdminAnalyticsRecruitmentPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Analytics de reclutamiento"
+        title="Recruitment analytics"
         subtitle="Pipeline funnel and conversion between stages"
         icon="trending"
       />
 
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard href="/dashboard/admin/recruitment" icon={IconUsers} label="Submissions" value={submissions.length} />
-        <StatCard href="/dashboard/admin/recruitment" icon={IconTarget} label="Pruebas" value={trials.length} />
-        <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Negociaciones" value={negotiations.length} />
-        <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Contratos" value={contracts.length} />
+        <StatCard href="/dashboard/admin/recruitment" icon={IconTarget} label="Trials" value={trials.length} />
+        <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Negotiations" value={negotiations.length} />
+        <StatCard href="/dashboard/admin/recruitment" icon={IconBriefcase} label="Contracts" value={contracts.length} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -72,11 +72,11 @@ export default async function AdminAnalyticsRecruitmentPage() {
             <div className="flex flex-col gap-4">
               {[
                 ['Submissions → Trials', conversion(submissions.length, trials.length)],
-                ['Pruebas → Negociaciones', conversion(trials.length, negotiations.length)],
-                ['Negociaciones → Contratos', conversion(negotiations.length, contracts.length)],
+                ['Trials → Negotiations', conversion(trials.length, negotiations.length)],
+                ['Negotiations → Contracts', conversion(negotiations.length, contracts.length)],
                 ['Accepted submissions', conversion(submissions.length, acceptedSubmissions)],
-                ['Negociaciones aceptadas', conversion(negotiations.length, acceptedNegotiations)],
-                ['Contratos firmados', conversion(contracts.length, signedContracts)],
+                ['Accepted negotiations', conversion(negotiations.length, acceptedNegotiations)],
+                ['Signed contracts', conversion(contracts.length, signedContracts)],
               ].map(([label, percent]) => (
                 <div key={label}>
                   <div className="mb-1.5 flex items-center justify-between text-sm">

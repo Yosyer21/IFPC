@@ -8,10 +8,10 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 export const metadata: Metadata = { title: 'Player documents' };
 
 const TYPE_LABELS: Record<string, string> = {
-  passport: 'Pasaporte',
-  contract: 'Contrato',
+  passport: 'Passport',
+  contract: 'Contract',
   medical: 'Medical',
-  other: 'Otro',
+  other: 'Other',
 };
 
 export default async function AgentPlayerDocumentsPage({
@@ -65,7 +65,7 @@ export default async function AgentPlayerDocumentsPage({
                     rel="noopener noreferrer"
                     className="text-sm text-primary hover:underline"
                   >
-                    Abrir
+                    Open
                   </a>
                 </div>
               </CardContent>

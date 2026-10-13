@@ -16,7 +16,7 @@ export function ApplyForm({
   if (alreadyApplied) {
     return (
       <p className="rounded-md border border-border bg-muted p-3 text-sm text-muted-foreground">
-        Ya has enviado tu request para esta oportunidad.
+        You have already applied to this opportunity.
       </p>
     );
   }
@@ -26,7 +26,7 @@ export function ApplyForm({
       <input type="hidden" name="opportunityId" value={opportunityId} />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="message" className="text-sm font-medium">
-          Mensaje (opcional)
+          Message (optional)
         </label>
         <textarea
           id="message"
@@ -38,7 +38,7 @@ export function ApplyForm({
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Enviando…' : 'Send request'}
+        {pending ? 'Sending…' : 'Send request'}
       </Button>
     </form>
   );

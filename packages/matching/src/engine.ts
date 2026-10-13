@@ -85,13 +85,13 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     const max = requirement.ageMax ?? Infinity;
     if (age >= min && age <= max) {
       ageScore = ageMax;
-      ageDetail = `Age ${age} dentro del rango requerido`;
+      ageDetail = `Age ${age} within the required range`;
     } else if (age >= min - 2 && age <= max + 2) {
       ageScore = Math.round(ageMax / 2);
-      ageDetail = `Age ${age} cercana al rango requerido (${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'})`;
+      ageDetail = `Age ${age} close to the required range (${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'})`;
     } else {
       ageScore = 0;
-      ageDetail = `Age ${age} fuera del rango requerido (${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'})`;
+      ageDetail = `Age ${age} outside the required range (${requirement.ageMin ?? '?'}–${requirement.ageMax ?? '?'})`;
     }
   }
   criteria.push({ key: 'age', label: 'Age', score: ageScore, max: ageMax, detail: ageDetail });
@@ -105,10 +105,10 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     levelDetail = 'No level required';
   } else if (player.competitionLevel === requirement.level) {
     levelScore = levelMax;
-    levelDetail = `Level competitivo coincidente (${requirement.level})`;
+    levelDetail = `Matching competitive level (${requirement.level})`;
   } else if (player.competitionLevel) {
     levelScore = 10;
-    levelDetail = `Level ${player.competitionLevel} vs requerido ${requirement.level}`;
+    levelDetail = `Level ${player.competitionLevel} vs required ${requirement.level}`;
   } else {
     levelScore = Math.round(levelMax / 2);
     levelDetail = 'Player level not provided (partial score)';
@@ -120,10 +120,10 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
   const available = player.status === 'AVAILABLE' || player.status === 'ACTIVE';
   criteria.push({
     key: 'availability',
-    label: 'Disponibilidad',
+    label: 'Availability',
     score: available ? availabilityMax : 0,
     max: availabilityMax,
-    detail: available ? 'Available player' : `Estado actual: ${player.status}`,
+    detail: available ? 'Available player' : `Current status: ${player.status}`,
   });
 
   // Geography (15)
@@ -139,7 +139,7 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
     requiredPlace.toLowerCase().includes(player.nationality.toLowerCase())
   ) {
     geographyScore = geographyMax;
-    geographyDetail = `Nationality compatible con ${requiredPlace}`;
+    geographyDetail = `Nationality compatible with ${requiredPlace}`;
   } else if (player.nationality) {
     geographyScore = 0;
     geographyDetail = `Nationality ${player.nationality} vs ${requiredPlace}`;
@@ -157,7 +157,7 @@ export function matchScore(player: MatchPlayer, requirement: MatchRequirement): 
 
   const total = criteria.reduce((sum, criterion) => sum + criterion.score, 0);
   const summary =
-    total >= 80 ? 'Muy buena coincidencia' : total >= 60 ? 'Buena coincidencia' : total >= 40 ? 'Coincidencia media' : 'Coincidencia baja';
+    total >= 80 ? 'Very good match' : total >= 60 ? 'Good match' : total >= 40 ? 'Average match' : 'Low match';
 
   return { total, criteria, summary };
 }

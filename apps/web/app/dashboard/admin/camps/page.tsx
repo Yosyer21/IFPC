@@ -43,7 +43,7 @@ export default async function AdminCampsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Camps"
-        subtitle="Campus, clinics y concentraciones organizadas por clubs y coaches"
+        subtitle="Camps, clinics and get-togethers organised by clubs and coaches"
         icon="trophy"
       >
         <Link
@@ -56,7 +56,7 @@ export default async function AdminCampsPage() {
 
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard href="/dashboard/admin/camps" icon={IconTrophy} label="Total camps" value={camps.length} />
-        <StatCard href="/dashboard/admin/camps" icon={IconCheckCircle} label="Abiertos" value={open} />
+        <StatCard href="/dashboard/admin/camps" icon={IconCheckCircle} label="Open" value={open} />
         <StatCard href="/dashboard/admin/camps" icon={IconUsers} label="Inscripciones" value={registrations} />
         <StatCard href="/dashboard/admin/camps" icon={IconCalendar} label="Occupancy" value={occupancy} suffix="%" />
       </div>

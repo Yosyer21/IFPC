@@ -35,10 +35,10 @@ export default async function ClubPlayerDetailPage({
     ['Position', positionLabel],
     ['Nationality', player.nationality ?? '—'],
     ['Preferred foot', player.foot ?? '—'],
-    ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-    ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-    ['Club actual', player.clubName ?? '—'],
-    ['Email de contacto', player.user.email],
+    ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+    ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
+    ['Current club', player.clubName ?? '—'],
+    ['Contact email', player.user.email],
   ];
 
   const average =

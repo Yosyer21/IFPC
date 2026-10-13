@@ -4,19 +4,19 @@ import { OnboardingForm, type OnboardingField } from '@/components/auth/onboardi
 export const metadata: Metadata = { title: 'Onboarding · School / Community' };
 
 const FIELDS: OnboardingField[] = [
-  { name: 'name', label: 'Name de la school / servicio', required: true },
+  { name: 'name', label: 'School / service name', required: true },
   {
     name: 'type',
-    label: 'Tipo de organización',
+    label: 'Organisation type',
     type: 'select',
     options: [
       { value: 'SCHOOL', label: 'School / College' },
-      { value: 'COMMUNITY_SERVICE', label: 'Servicio comunitario' },
+      { value: 'COMMUNITY_SERVICE', label: 'Community service' },
     ],
   },
   { name: 'country', label: 'Country', required: true },
-  { name: 'city', label: 'Ciudad' },
-  { name: 'contactName', label: 'Persona de contacto' },
+  { name: 'city', label: 'City' },
+  { name: 'contactName', label: 'Contact person' },
   { name: 'website', label: 'Website', placeholder: 'https://' },
   { name: 'description', label: 'Description', type: 'textarea' },
 ];
@@ -24,10 +24,10 @@ const FIELDS: OnboardingField[] = [
 export default function OnboardingSchoolPage() {
   return (
     <div>
-      <h1 className="mb-2 text-2xl font-bold">Perfil de school / servicio comunitario</h1>
+      <h1 className="mb-2 text-2xl font-bold">School / community service profile</h1>
       <p className="mb-6 text-sm text-muted-foreground">
-        Colegios, clubs escolares y servicios comunitarios que acercan el fútbol a las niñas:
-        programas, grupos y clinics inclusivas.
+        Schools, school clubs and community services bringing football to girls: programmes,
+        groups and inclusive clinics.
       </p>
       <OnboardingForm role="school" fields={FIELDS} />
     </div>

@@ -203,7 +203,7 @@ export async function completeOnboardingAction(
           bio: null,
           clubName: null,
         });
-        if (!parsed.success) return { error: 'Revisa los datos del perfil.' };
+        if (!parsed.success) return { error: 'Check the profile details.' };
         const { dateOfBirth, ...rest } = parsed.data;
         await prisma.player.update({
           where: { userId },
@@ -234,7 +234,7 @@ export async function completeOnboardingAction(
           league: str('league'),
           description: str('description'),
         });
-        if (!parsed.success) return { error: 'Revisa los datos del club.' };
+        if (!parsed.success) return { error: 'Check the club details.' };
         await prisma.club.update({ where: { userId }, data: parsed.data });
         break;
       }
@@ -254,7 +254,7 @@ export async function completeOnboardingAction(
           city: str('city'),
           description: str('description'),
         });
-        if (!parsed.success) return { error: 'Revisa los datos de la university.' };
+        if (!parsed.success) return { error: 'Check the university details.' };
         await prisma.university.update({ where: { userId }, data: parsed.data });
         break;
       }
@@ -268,7 +268,7 @@ export async function completeOnboardingAction(
           website: str('website'),
           description: str('description'),
         });
-        if (!parsed.success) return { error: 'Revisa los datos de la school.' };
+        if (!parsed.success) return { error: 'Check the school details.' };
         const { type, ...schoolData } = parsed.data;
         await prisma.school.update({
           where: { userId },

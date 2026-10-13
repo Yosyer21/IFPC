@@ -55,7 +55,7 @@ export default async function AgentSubmissionsPage() {
                       {submission.player.firstName} {submission.player.lastName}
                     </h2>
                     <p className="text-sm text-muted-foreground">
-                      {submission.club.name} · Enviado el{' '}
+                      {submission.club.name} · Sent on{' '}
                       {submission.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>

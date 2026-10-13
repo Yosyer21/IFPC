@@ -10,7 +10,7 @@ export function CreateGoalForm({ playerId }: { playerId: string }) {
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <input type="hidden" name="playerId" value={playerId} />
-      <Input name="title" label="Goal title" placeholder="Ej: Mejorar el juego de espaldas" required />
+      <Input name="title" label="Goal title" placeholder="E.g. Improve play with your back to goal" required />
       <Input name="dueDate" type="date" label="Deadline" />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="description" className="text-sm font-medium">
@@ -26,7 +26,7 @@ export function CreateGoalForm({ playerId }: { playerId: string }) {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Crear goal'}
+        {pending ? 'Saving…' : 'Create goal'}
       </Button>
     </form>
   );

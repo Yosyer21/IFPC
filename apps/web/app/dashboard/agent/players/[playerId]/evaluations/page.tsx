@@ -65,7 +65,7 @@ export default async function AgentPlayerEvaluationsPage({
                   ) : null}
                   {evaluation.evaluatedBy ? (
                     <p className="mt-1 text-xs text-muted-foreground">
-                      por {evaluation.evaluatedBy} · {evaluation.createdAt.toLocaleDateString('en-GB')}
+                      by {evaluation.evaluatedBy} · {evaluation.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   ) : null}
                 </div>

@@ -50,7 +50,7 @@ export default async function AdminAnalyticsPlayersPage() {
         <StatCard href="/dashboard/admin/players" icon={IconUsers} label="Total players" value={total} />
         <StatCard href="/dashboard/admin/players/active" icon={IconUser} label="Activos" value={active} />
         <StatCard href="/dashboard/admin/players" icon={IconWhistle} label="Available" value={available} />
-        <StatCard href="/dashboard/admin/players/pending" icon={IconTrendingUp} label="Pendientes" value={pending} />
+        <StatCard href="/dashboard/admin/players/pending" icon={IconTrendingUp} label="Pending" value={pending} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -64,7 +64,7 @@ export default async function AdminAnalyticsPlayersPage() {
           <CardContent>
             <h2 className="mb-4 font-semibold">By position</h2>
             {byPosition.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin positions registered.</p>
+              <p className="text-sm text-muted-foreground">No positions registered.</p>
             ) : (
               <CountsBars items={byPosition} />
             )}

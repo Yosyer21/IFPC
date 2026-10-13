@@ -14,7 +14,7 @@ export function StatusToggle({ status }: { status: string }) {
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <input type="hidden" name="status" value={nextStatus} />
       <Button type="submit" variant={available ? 'outline' : 'primary'} disabled={pending}>
-        {pending ? 'Guardando…' : available ? 'Mark as unavailable' : 'Mark as available'}
+        {pending ? 'Saving…' : available ? 'Mark as unavailable' : 'Mark as available'}
       </Button>
     </form>
   );

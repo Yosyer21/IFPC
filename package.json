@@ -21,6 +21,7 @@
     "db:generate": "pnpm --filter @ifpc/database db:generate",
     "db:migrate": "pnpm --filter @ifpc/database db:migrate",
     "db:seed": "pnpm --filter @ifpc/database db:seed",
+    "reset": "node --env-file-if-exists=.env --import=tsx scripts/development/reset-local.ts",
     "scripts:seed": "node --env-file=.env --import=tsx scripts/database/seed.ts",
     "scripts:reset": "node --env-file=.env --import=tsx scripts/database/reset.ts",
     "scripts:backup": "node --env-file=.env --import=tsx scripts/database/backup.ts",

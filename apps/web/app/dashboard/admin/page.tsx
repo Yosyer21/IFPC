@@ -51,7 +51,7 @@ export default async function AdminDashboardPage() {
   const kpis = [
     { href: '/dashboard/admin/users', icon: IconUsers, label: 'Users', value: users },
     { href: '/dashboard/admin/players', icon: IconWhistle, label: 'Players', value: players },
-    { href: '/dashboard/admin/clubs', icon: IconBriefcase, label: 'Clubes', value: clubs },
+    { href: '/dashboard/admin/clubs', icon: IconBriefcase, label: 'Clubs', value: clubs },
     { href: '/dashboard/admin/opportunities', icon: IconTarget, label: 'Open opportunities', value: openOpportunities },
     { href: '/dashboard/admin/memberships/payments', icon: IconStar, label: 'Payments', value: payments.length },
     { href: '/dashboard/admin/analytics/revenue', icon: IconStar, label: 'Ingresos', value: Math.round(revenue / 100) },
@@ -64,7 +64,7 @@ export default async function AdminDashboardPage() {
       href: '/dashboard/admin/players/pending',
       icon: IconWhistle,
       text: `${pendingPlayers} pending player${pendingPlayers === 1 ? '' : 's'} awaiting verification`,
-      meta: 'Revisar',
+      meta: 'Review',
     });
   }
   if (unverifiedClubs > 0) {
@@ -79,8 +79,8 @@ export default async function AdminDashboardPage() {
     pendingActions.push({
       href: '/dashboard/admin/communications/inquiries',
       icon: IconMail,
-      text: `${newInquiries} consulta${newInquiries === 1 ? '' : 's'} nueva${newInquiries === 1 ? '' : 's'} sin responder`,
-      meta: 'Responder',
+      text: `${newInquiries} new unanswered ${newInquiries === 1 ? 'enquiry' : 'enquiries'}`,
+      meta: 'Reply',
     });
   }
 
@@ -120,7 +120,7 @@ export default async function AdminDashboardPage() {
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Control center de la plataforma · {users} usuarios · {players} players ·{' '}
+              Platform control centre · {users} users · {players} players ·{' '}
               {clubs} clubs
             </p>
           </div>
@@ -179,14 +179,14 @@ export default async function AdminDashboardPage() {
           />
         ))}
       </div>
-      {/* Users by role + acciones pendientes */}
+      {/* Users by role + acciones pending */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '400ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Users by role</h2>
               <Link href="/dashboard/admin/users" className="text-sm text-primary hover:underline">
-                Gestionar usuarios →
+                Manage users →
               </Link>
             </div>
             <div className="flex flex-col gap-3">
@@ -273,7 +273,7 @@ export default async function AdminDashboardPage() {
                         {payment.description ?? 'Pago'}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
-                        {payment.user?.name ?? 'Usuario'} · {payment.createdAt.toLocaleDateString('en-GB')}
+                        {payment.user?.name ?? 'User'} · {payment.createdAt.toLocaleDateString('en-GB')}
                       </div>
                     </div>
                     <Badge variant="success">
@@ -315,7 +315,7 @@ export default async function AdminDashboardPage() {
                     className="flex items-center justify-between rounded-md border border-border p-3 text-sm"
                   >
                     <span className="truncate text-muted-foreground">
-                      {payment.user?.name ?? 'Usuario'}
+                      {payment.user?.name ?? 'User'}
                     </span>
                     <span className="font-semibold tabular-nums">
                       {(payment.amount / 100).toLocaleString('en-GB', {

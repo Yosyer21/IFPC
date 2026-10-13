@@ -52,7 +52,7 @@ export default async function PublicCampsPage() {
                   className="group rounded-2xl border border-border/60 bg-card p-6 transition-all hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/10"
                 >
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">{camp.status === 'FULL' ? 'Completo' : 'Abierto'}</Badge>
+                    <Badge variant="outline">{camp.status === 'FULL' ? 'Full' : 'Open'}</Badge>
                     <span className="text-xs text-muted-foreground">
                       {camp.startsAt.toLocaleDateString('en-GB')}
                       {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}
@@ -82,7 +82,7 @@ export default async function PublicCampsPage() {
                   </div>
                   {spotsLeft !== null ? (
                     <div className="mt-3 text-xs text-muted-foreground">
-                      {spotsLeft > 0 ? `${spotsLeft} plazas available` : 'Sin plazas libres'}
+                      {spotsLeft > 0 ? `${spotsLeft} places available` : 'No places left'}
                     </div>
                   ) : null}
                 </Link>

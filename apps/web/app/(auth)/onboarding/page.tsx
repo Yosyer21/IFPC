@@ -1,17 +1,17 @@
 import Link from 'next/link';
 
 const ROLES = [
-  { href: '/onboarding/player', label: 'Player', description: 'Profile deportivo' },
-  { href: '/onboarding/parent', label: 'Familiar', description: 'Cuenta de padre/madre/tutor' },
-  { href: '/onboarding/coach', label: 'Coach', description: 'Datos de coach' },
-  { href: '/onboarding/scout', label: 'Scout', description: 'Agencia y cobertura' },
-  { href: '/onboarding/agent', label: 'Agente', description: 'Agencia y licencia' },
-  { href: '/onboarding/club', label: 'Club', description: 'Datos del club' },
+  { href: '/onboarding/player', label: 'Player', description: 'Sports profile' },
+  { href: '/onboarding/parent', label: 'Family', description: 'Parent/guardian account' },
+  { href: '/onboarding/coach', label: 'Coach', description: 'Coach details' },
+  { href: '/onboarding/scout', label: 'Scout', description: 'Agency and coverage' },
+  { href: '/onboarding/agent', label: 'Agent', description: 'Agency and licence' },
+  { href: '/onboarding/club', label: 'Club', description: 'Club details' },
   { href: '/onboarding/university', label: 'University', description: 'Academic-sports institution' },
   {
     href: '/onboarding/school',
     label: 'School / Community service',
-    description: 'Colegios, clubs escolares y programas comunitarios',
+    description: 'Schools, school clubs and community programmes',
   },
 ];
 

@@ -17,9 +17,9 @@ import { getFeedHealth } from '@/lib/discovery-analytics';
 import { listModerationLog, listReportedPosts } from '@/lib/discovery-moderation';
 import { MODERATION_ACTION_LABELS } from '@/lib/labels';
 
-export const metadata: Metadata = { title: 'Discovery — Moderación' };
+export const metadata: Metadata = { title: 'Discovery — Moderation' };
 
-/** Panel de moderación del feed: reports pendientes y traza de acciones. */
+/** Panel de moderación del feed: pending reports y traza de acciones. */
 export default async function AdminDiscoveryPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
@@ -39,7 +39,7 @@ export default async function AdminDiscoveryPage() {
         subtitle={
           reported.length === 0
             ? 'No pending reports'
-            : `${pendingReports} reports pendientes en ${reported.length} posts`
+            : `${pendingReports} pending reports en ${reported.length} posts`
         }
         icon="shield"
       >
@@ -52,7 +52,7 @@ export default async function AdminDiscoveryPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No hay posts denunciadas. Las reports que atiendas desaparecen de esta cola.
+              No reported posts. Reports you resolve disappear from this queue.
             </p>
           </CardContent>
         </Card>
@@ -67,7 +67,7 @@ export default async function AdminDiscoveryPage() {
                   </Badge>
                   <Badge variant="outline">{POST_TYPE_LABELS[entry.type] ?? entry.type}</Badge>
                   {entry.pinned ? <Badge variant="success">Fijado</Badge> : null}
-                  {entry.status === 'HIDDEN' ? <Badge variant="warning">Oculta</Badge> : null}
+                  {entry.status === 'HIDDEN' ? <Badge variant="warning">Hidden</Badge> : null}
                   <span className="text-xs text-muted-foreground">
                     {entry.author.name} · {ROLE_LABELS[entry.author.role] ?? entry.author.role} ·{' '}
                     {formatRelativeTime(entry.createdAt)}
@@ -106,14 +106,14 @@ export default async function AdminDiscoveryPage() {
                       value={entry.status === 'HIDDEN' ? 'PUBLISHED' : 'HIDDEN'}
                     />
                     <ActionSubmit
-                      label={entry.status === 'HIDDEN' ? 'Republish' : 'Ocultar'}
+                      label={entry.status === 'HIDDEN' ? 'Republish' : 'Hide'}
                       variant="primary"
                     />
                   </form>
 
                   <form action={pinPostAction}>
                     <input type="hidden" name="postId" value={entry.id} />
-                    <ActionSubmit label={entry.pinned ? 'Desfijar' : 'Fijar'} />
+                    <ActionSubmit label={entry.pinned ? 'Unpin' : 'Pin'} />
                   </form>
 
                   <form action={resolveReportsAction}>
@@ -125,9 +125,9 @@ export default async function AdminDiscoveryPage() {
                     <input type="hidden" name="postId" value={entry.id} />
                     <input type="hidden" name="redirectTo" value="/dashboard/admin/discovery" />
                     <ActionSubmit
-                      label="Borrar"
+                      label="Delete"
                       variant="danger"
-                      confirmText="¿Borrar la post definitivamente?"
+                      confirmText="Delete the post permanently?"
                     />
                   </form>
                 </div>
@@ -147,7 +147,7 @@ export default async function AdminDiscoveryPage() {
             </div>
             <div>
               <div className="text-lg font-bold tabular-nums">{health.hidden}</div>
-              <div className="text-xs text-muted-foreground">Ocultas</div>
+              <div className="text-xs text-muted-foreground">Hiddens</div>
             </div>
             <div>
               <div className="text-lg font-bold tabular-nums">{health.activeAuthors}</div>
@@ -174,8 +174,8 @@ export default async function AdminDiscoveryPage() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground">
-            Posts por day en las dos últimas weeks · {health.pendingReports} reports
-            pendientes ({health.reportRatePer100} por cada 100 posts)
+            Posts per day over the last two weeks · {health.pendingReports} pending reports
+            ({health.reportRatePer100} per 100 posts)
           </p>
 
           {health.topTags.length > 0 ? (
@@ -212,7 +212,7 @@ export default async function AdminDiscoveryPage() {
                     {entry.postId}
                   </Link>
                   <span className="text-muted-foreground">
-                    por {entry.actor.name} · {formatRelativeTime(entry.createdAt)}
+                    by {entry.actor.name} · {formatRelativeTime(entry.createdAt)}
                   </span>
                 </li>
               ))}

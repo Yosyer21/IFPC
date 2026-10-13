@@ -7,6 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { SESSION_TYPE_LABELS } from '@/lib/labels';
+import { canViewLiveSession } from '@/lib/live-sessions';
 
 export const metadata: Metadata = { title: 'Live session' };
 
@@ -24,14 +25,18 @@ export default async function PlayerLiveSessionDetailPage({
 
   const liveSession = await prisma.liveSession.findUnique({
     where: { id: sessionId },
-    include: { coach: { include: { user: true } } },
+    include: { coach: { include: { user: true } }, club: true },
   });
   if (!liveSession) notFound();
 
-  const canView =
-    liveSession.playerId === player.id ||
-    (!liveSession.playerId && liveSession.type !== 'TRIAL');
-  if (!canView) notFound();
+  if (
+    !(await canViewLiveSession(
+      { id: session.user.id, role: session.user.role },
+      liveSession
+    ))
+  ) {
+    notFound();
+  }
 
   const isUpcoming = liveSession.startsAt > new Date();
 
@@ -40,7 +45,7 @@ export default async function PlayerLiveSessionDetailPage({
       <PageHeader
         title={liveSession.title}
         subtitle={`${SESSION_TYPE_LABELS[liveSession.type] ?? liveSession.type} · ${
-          liveSession.coach?.user?.name ?? 'Plataforma'
+          liveSession.coach?.user?.name ?? 'Platform'
         }`}
         icon="live"
       >

@@ -212,15 +212,55 @@ export async function main() {
   }
 
   // ─── Training content ──────────────────────────────
-  const trainingContents = [
+  const trainingContents: {
+    id: string;
+    title: string;
+    category: string;
+    description: string;
+    durationMinutes: number;
+    difficulty: number;
+    outcomes?: string[];
+    content?: string;
+  }[] = [
     {
       id: 'tc-tech-1',
       title: 'Control and first touch',
       category: 'technical',
       description:
-        'Oriented receiving and first-touch exercises with both feet. Improves the ability to play under pressure.',
+        'Oriented receiving and first-touch work with both feet to play under pressure.',
       durationMinutes: 25,
       difficulty: 2,
+      outcomes: [
+        'Take the first touch into space, away from pressure',
+        'Scan (check shoulders) before receiving',
+        'Receive side-on and play forward immediately',
+        'Adjust the body to receive on either foot',
+      ],
+      content: `WHAT THE COURSE COVERS
+Oriented receiving: using the first touch to move the ball into space and set up the next action. The first touch should always have a purpose — escape pressure, face forward or create a passing angle.
+
+KEY COACHING POINTS
+- Body orientation before receiving: open up before the ball arrives, check your shoulders to scan, get on your toes and time your movement to arrive with the ball.
+- The first touch itself: take it into space, use a soft "cushioned" contact, direct it to set up the next action, avoid a heavy touch.
+- Decision-making under pressure: receive side-on, protect the ball with your body, know when to play forward versus shield.
+
+COMMON MISTAKES
+- Ball bounces off the player (tensing up) -> relax the controlling surface, "catch it like an egg".
+- Needs a second touch to get the ball out of feet -> take the first touch into space.
+- Caught in possession, receiving with a closed body -> open up before receiving.
+- Indecisive about which surface to use -> rehearse inside, outside, sole, thigh, chest.
+
+SAMPLE DRILLS
+1) Wall passing (solo): 3-5 m from a wall, control each rebound with a different surface. Aim for 50 clean touches.
+2) Cone receive and turn: four cones in a square; receive and turn toward the next cone.
+3) Oriented control with pressure (pairs): first touch through a gate, then add a passive defender.
+4) 2v2 transition game: a good first touch that sets up a pass or a shot.
+
+SESSION STRUCTURE (25 min)
+5 min dynamic warm-up with ball - 8 min technical drill - 7 min pressure drill - 5 min small-sided game.
+
+ASSESSMENT
+The player has improved when the first touch goes away from pressure without a second touch, scanning is consistent, and they receive side-on to play forward.`,
     },
     {
       id: 'tc-tech-2',
@@ -230,15 +270,81 @@ export async function main() {
         'Dribbling circuits with direction and speed changes. Key to beating opponents in tight spaces.',
       durationMinutes: 30,
       difficulty: 3,
+      outcomes: [
+        'Change pace without losing control of the ball',
+        'Keep the head up while dribbling',
+        'Use both feet and all surfaces',
+        'Accelerate immediately after a change of direction',
+      ],
+      content: `WHAT THE COURSE COVERS
+Dribbling circuits with direction and speed changes: beating opponents in tight spaces. A sudden change of pace moves the ball into dangerous areas quickly; an abrupt change of direction lets the player receive with time and space.
+
+KEY COACHING POINTS
+- Ball manipulation and close control: keep the ball close, use inside, outside and sole of the foot.
+- Awareness and scanning: head up and eyes forward, watch the ball and surroundings, anticipate where space opens.
+- Executing the change: treat a change of direction like a feint, explode out of it, drive into space as soon as it appears.
+- Body positioning: flexible shape, low centre of gravity, relaxed posture to move fluidly.
+
+COMMON MISTAKES
+- Ball gets away during a change of pace -> smaller, controlled touches keep the ball in playing distance.
+- Runs into traffic -> scan ahead, keep the head up.
+- Change of direction too slow -> deceive the opponent first, then explode.
+- Loses balance during a sharp cut -> bend the knees, get low, use the arms for balance.
+
+SAMPLE DRILLS
+1) Gates dribbling (warm-up): dribble through gates, practise a skill then a pace change.
+2) "Pace" and "Change" command drill: react to the coach's call with tempo and direction changes.
+3) 1v1 in a square: drag backs, scissors, Cruyff turns, drag and tap.
+4) Dribble past an opponent: meet in the middle and beat the rival to the opposite cone.
+5) Small-sided game with gates: score by dribbling through gates.
+
+SESSION STRUCTURE (30 min)
+5 min gates warm-up - 8 min command drill - 7 min 1v1 - 5 min small-sided game - 5 min cool-down juggling.
+
+ASSESSMENT
+Improved when the player changes pace without losing control, keeps the head up, uses both feet, and accelerates straight after the change of direction.`,
     },
     {
       id: 'tc-tech-3',
       title: 'Passing accuracy',
       category: 'technical',
       description:
-        'Series of short and long passes aiming for accuracy and rhythm. Includes passing under pressure.',
+        'Short and long passes aiming for accuracy and rhythm, including passing under pressure.',
       durationMinutes: 20,
       difficulty: 2,
+      outcomes: [
+        'Weight passes so a teammate can control with one touch',
+        'Scan for BOTS before receiving',
+        'Receive on the half-turn and play forward',
+        'Create passing lanes with movement off the ball',
+      ],
+      content: `WHAT THE COURSE COVERS
+Short and long passes focused on accuracy and rhythm, including passing under pressure. Small details of body positioning let players receive with more control and play more progressive passes.
+
+KEY COACHING POINTS
+- Body positioning before receiving: open up and play on the half-turn; scan for BOTS (Ball, Opposition, Teammates, Space).
+- First touch: a quality touch away from pressure, firm and close so it does not get stuck under foot.
+- Passing technique: firm and accurate; weight passes so they are neither too hard nor too soft; pass to the correct foot (away from pressure).
+- Movement off the ball: create passing lanes, rotate positions, time movement into space.
+
+COMMON MISTAKES
+- Pass intercepted -> weight the pass ("firm, accurate").
+- Needs an extra touch -> positive first touch away from pressure.
+- Caught in possession -> open the body and play on the half-turn.
+- Passing lane disappears -> teammates must move, not stand still.
+- Pass behind a teammate -> pass to the correct foot.
+
+SAMPLE DRILLS
+1) Two-player wall passes (warm-up): inside of the foot, then switch to the weaker foot.
+2) Triangle passing with movement: pass, follow and rotate, first touch into space.
+3) Passing gates for precision: pass through small gates, then increase distance.
+4) One-touch rondo (4v1 / 5v2): head up, correct surface, support angles.
+
+SESSION STRUCTURE (20 min)
+4 min wall passes - 4 min triangle passing - 4 min passing gates - 4 min rondo - 4 min small-sided game.
+
+ASSESSMENT
+Improved when passes are weighted for a one-touch control, the player scans before receiving, receives on the half-turn and keeps possession under pressure.`,
     },
     {
       id: 'tc-strength-1',
@@ -248,6 +354,42 @@ export async function main() {
         '15-minute core routine for stability and injury prevention. Recommended 3 times per week.',
       durationMinutes: 15,
       difficulty: 1,
+      outcomes: [
+        'Hold a plank with a straight line from head to toe',
+        'Keep alignment when alternating arms or legs',
+        'Progress only when control is excellent',
+        'Breathe steadily during isometric holds',
+      ],
+      content: `WHAT THE COURSE COVERS
+Core strength for stability and injury prevention, recommended 3 times per week. The core is the "epicentre for transferring movement throughout the body": it produces power, absorbs external forces and protects against injury.
+
+KEY COACHING POINTS
+- The core transfers force between the upper and lower body and absorbs stress on the musculoskeletal system.
+- Training principles: master simple exercises with near-perfect execution before progressing; quality over quantity; 15 minutes, 3 times per week; progress gradually.
+- Technique per exercise: plank (straight line, engaged core, neutral spine), alternating arm reach (do not rotate), Superman (engage glutes and spine), glute-hamstring lifts, side plank (hips forward, feet in dorsiflexion).
+
+COMMON MISTAKES
+- Hips sag or rise during the plank -> activate the abs and keep a straight line.
+- Rotating during alternating exercises -> do not rotate toward the extended arm.
+- Progressing too quickly -> only advance when control is excellent.
+- Holding the breath -> breathe steadily.
+- Neglecting the side plank -> it targets hip abductors and obliques.
+
+SAMPLE EXERCISES
+1) Prone isometric hold (plank) - foundation.
+2) Plank with alternating arm reach - progression 1.
+3) Alternating Superman - posterior chain.
+4) Glute-hamstring lifts.
+5) Side plank, legs together.
+6) Side plank, legs apart - progression.
+7) Seated alternating leg raises.
+8) High reach, on-the-spot marching.
+
+SESSION STRUCTURE (15 min)
+3 min plank - 3 min plank with arm reach - 3 min Superman - 3 min side plank (both sides) - 3 min glute-hamstring lifts or seated leg raises.
+
+ASSESSMENT
+Improved when the plank is held with perfect alignment, no rotation during alternating exercises, and progression happens only when control is excellent.`,
     },
     {
       id: 'tc-strength-2',
@@ -257,6 +399,40 @@ export async function main() {
         'Squats, lunges and plyometric jumps to improve acceleration and jumping.',
       durationMinutes: 30,
       difficulty: 3,
+      outcomes: [
+        'Perform bilateral and unilateral squats/lunges with perfect technique',
+        'Land softly and control plyometric landings',
+        'Use both bilateral and unilateral work',
+        'Improve acceleration and jumping in matches',
+      ],
+      content: `WHAT THE COURSE COVERS
+Squats, lunges and plyometric jumps to improve acceleration and jumping. Lower-body power transfers force up the kinetic chain (ankle, knee, hip) and is vital for locomotion, physical duels, acceleration/deceleration and changes of direction.
+
+KEY COACHING POINTS
+- Foundation first: master bodyweight patterns before adding load.
+- Squat technique: head up, chest out, neutral back; drive through glutes and quads; progress to unilateral variations.
+- Lunge technique: lower under control, drive back up powerfully; add a rotational twist to challenge the core.
+- Plyometric jumps: land softly on the front of the foot, control the landing, and use the landing load to recoil into the next jump.
+
+COMMON MISTAKES
+- Knees collapse inward during the squat -> emphasise hip abduction, track knees over toes.
+- Heavy landing on plyometrics -> land on the ball of the foot, absorb through ankle, knee and hip.
+- Progressing to unilateral too early -> only advance when bilateral work is perfect.
+- Adding load before technique -> increase resistance only after perfect form.
+- Neglecting single-leg work -> use both bilateral and unilateral loading.
+
+SAMPLE EXERCISES
+1) Kettlebell split squats / lunge.
+2) Alternating reverse split squats / lunge.
+3) (Unilateral) Bulgarian split squat / skater squat.
+4) Plyometric jumps: seated to vertical, lateral jumps.
+5) Reactive jumps: use the landing load to recoil upward.
+
+SESSION STRUCTURE (30 min)
+5 min dynamic warm-up - 8 min bilateral strength - 7 min unilateral block - 5 min plyometrics - 5 min cool-down.
+
+ASSESSMENT
+Improved when squats/lunges are perfect before loading, landings are soft and controlled, and acceleration and jumping improve in matches.`,
     },
     {
       id: 'tc-strength-3',
@@ -266,33 +442,42 @@ export async function main() {
         'Specific hamstring work (Nordics, slides) to reduce injury risk.',
       durationMinutes: 20,
       difficulty: 2,
-    },
-    {
-      id: 'tc-psych-1',
-      title: 'Match focus',
-      category: 'psychology',
-      description:
-        'Pre-match routine techniques and anchors to stay focused through the 90 minutes.',
-      durationMinutes: 10,
-      difficulty: 1,
-    },
-    {
-      id: 'tc-psych-2',
-      title: 'Pressure management',
-      category: 'psychology',
-      description:
-        'Breathing, visualization and self-talk to perform in high-pressure situations.',
-      durationMinutes: 15,
-      difficulty: 2,
-    },
-    {
-      id: 'tc-psych-3',
-      title: 'Match-play visualization',
-      category: 'psychology',
-      description:
-        'Mental training through visualization of actions and pre-match decision-making.',
-      durationMinutes: 12,
-      difficulty: 2,
+      outcomes: [
+        'Control the eccentric lowering of the Nordic exercise',
+        'Increase eccentric hamstring strength over 4-12 weeks',
+        'Maintain high adherence (>= 75% of sessions)',
+        'Reduce hamstring discomfort in sprinting and changes of direction',
+      ],
+      content: `WHAT THE COURSE COVERS
+Specific hamstring work (Nordics, sliders) to reduce injury risk. Hamstring strain injuries are the most common in football (12-16% of all injuries). The Nordic Hamstring Exercise (NHE) is the best-researched tool: including it in prevention programmes halves the rate of hamstring injuries.
+
+KEY COACHING POINTS
+- Mechanism: injuries occur mainly during sprinting, in the terminal swing phase, when the hamstring decelerates the swinging leg.
+- The NHE: an eccentric exercise providing eccentric overload; high muscle damage and DOMS are common at first, so progression must be gradual.
+- Dose: 1.5-3.5 sessions/week (median 2) over 7-43 weeks; sessions ~15 min.
+- Adherence is the strongest modifier (high adherence >= 75% gives RR ~ 0.36).
+- Combine hip-dominant (RDL, 45-degree hip extensions) with knee-dominant (NHE) work.
+
+CLASSIC NHE PROGRESSION (Petersen / van der Horst)
+Week 1: 1x/week, 2x5 reps. Week 2: 2x/week, 2x6. Week 3: 2x/week, 3x6. Week 4: 2x/week, 3x6-7-8. Week 5: 2x/week, 3x8-9-10. Weeks 6-13: 2x/week, 3x10-9-8.
+
+COMMON MISTAKES
+- Progressing too fast -> follow the gradual progression.
+- Using only knee-dominant work -> add hip-dominant exercises.
+- Neglecting sprint exposure -> include high-speed running and sprinting.
+- Poor adherence -> the programme only works if it is done consistently.
+
+SAMPLE EXERCISES
+1) Nordic Hamstring Exercise (NHE) - foundation.
+2) Romanian deadlift (hip-dominant).
+3) Slider leg curls (eccentric + concentric).
+4) Sprint training (on-field, high specificity).
+
+SESSION STRUCTURE (20 min)
+3 min dynamic warm-up - 7 min NHE (grouped) - 5 min hip-dominant exercise - 5 min core stability.
+
+ASSESSMENT
+Improved when the eccentric lowering is controlled, eccentric strength increases over 4-12 weeks, adherence stays high, and sprinting feels comfortable.`,
     },
     {
       id: 'tc-parent-1',
@@ -314,10 +499,132 @@ export async function main() {
     },
   ];
   for (const content of trainingContents) {
+    const data = {
+      title: content.title,
+      category: content.category,
+      description: content.description,
+      durationMinutes: content.durationMinutes,
+      difficulty: content.difficulty,
+      content: content.content ?? null,
+      outcomes: content.outcomes ?? [],
+    };
     await prisma.trainingContent.upsert({
       where: { id: content.id },
-      update: {},
-      create: { ...content, videoUrl: null, thumbnailUrl: null },
+      update: data,
+      create: { id: content.id, ...data, videoUrl: null, thumbnailUrl: null },
+    });
+  }
+
+  // Ejemplos antiguos que ya no forman parte del catálogo de contenido.
+  await prisma.trainingContent.deleteMany({
+    where: { id: { in: ['tc-psych-1', 'tc-psych-2', 'tc-psych-3'] } },
+  });
+
+  // ─── Course quizzes (one per course) ───────────────
+  const trainingQuizzes = [
+    {
+      contentId: 'tc-tech-1',
+      title: 'Control and first touch',
+      description: 'Check your understanding of oriented receiving and first-touch principles.',
+      passScore: 70,
+      questions: [
+        { prompt: 'What should the first touch always have?', options: ['A purpose', 'Maximum power', 'A bounce off the body', 'Backspin'], correct: 0 },
+        { prompt: 'Which surfaces can be used to control the ball?', options: ['Only the inside of the foot', 'Inside, outside, sole, thigh and chest', 'Only the chest', 'Only the head'], correct: 1 },
+        { prompt: 'How should you receive under pressure?', options: ['Facing your own goal', 'Side-on, facing forward', 'With a closed body', 'Standing still'], correct: 1 },
+        { prompt: 'A cushioned touch means...', options: ['Striking the ball hard', 'Relaxing the surface on contact so the ball does not bounce away', 'Taking a heavy touch', 'Only using the head'], correct: 1 },
+      ],
+    },
+    {
+      contentId: 'tc-tech-2',
+      title: 'Dribbling and change of pace',
+      description: 'Check your understanding of dribbling, scanning and changing pace.',
+      passScore: 70,
+      questions: [
+        { prompt: 'What makes the ball get away during a change of pace?', options: ['Too heavy a touch when accelerating', 'Using the sole', 'Keeping the head up', 'A low centre of gravity'], correct: 0 },
+        { prompt: 'Why keep the head up while dribbling?', options: ['To look at the ball', 'To scan for obstacles and space', 'To slow down', 'To protect the ball with the arms'], correct: 1 },
+        { prompt: 'How should a change of direction be treated?', options: ['Like a feint to deceive the opponent', 'Like a pass', 'Like a shot', 'Like a slow turn'], correct: 0 },
+        { prompt: 'What helps balance during a sharp cut?', options: ['A high centre of gravity', 'Bending the knees and getting low', 'Standing tall', 'Holding the ball with the hands'], correct: 1 },
+      ],
+    },
+    {
+      contentId: 'tc-tech-3',
+      title: 'Passing accuracy',
+      description: 'Check your understanding of passing technique, weight and BOTS scanning.',
+      passScore: 70,
+      questions: [
+        { prompt: 'What does BOTS stand for?', options: ['Ball, Opposition, Teammates, Space', 'Body, Options, Touch, Speed', 'Ball, Offside, Time, Shot', 'Back, Over, Turn, Sprint'], correct: 0 },
+        { prompt: 'How should a pass be weighted?', options: ['As hard as possible', 'Firm and accurate, not too hard or too soft', 'Always softly', 'Only long'], correct: 1 },
+        { prompt: 'Which foot should you pass to?', options: ['The nearest foot', 'The correct foot, away from pressure', 'Always the left', 'Always the right'], correct: 1 },
+        { prompt: 'What do players off the ball need to do?', options: ['Stand still', 'Create passing lanes with movement', 'Only defend', 'Hide behind defenders'], correct: 1 },
+      ],
+    },
+    {
+      contentId: 'tc-strength-1',
+      title: 'Core strength',
+      description: 'Check your understanding of core training principles and technique.',
+      passScore: 70,
+      questions: [
+        { prompt: 'How often is the core routine recommended?', options: ['Every day, twice', '15 minutes, 3 times a week', 'Once a month', 'Only in pre-season'], correct: 1 },
+        { prompt: 'What should the plank look like?', options: ['Hips sagging', 'A straight line from head to toe', 'Hips high up', 'Knees on the floor'], correct: 1 },
+        { prompt: 'During alternating exercises you should...', options: ['Rotate toward the extended arm', 'Not rotate, keeping alignment', 'Hold your breath', 'Go as fast as possible'], correct: 1 },
+        { prompt: 'When should you progress to harder exercises?', options: ['Immediately after one rep', 'Only when excellent control has been achieved', 'After one session', 'Never'], correct: 1 },
+      ],
+    },
+    {
+      contentId: 'tc-strength-2',
+      title: 'Lower-body power',
+      description: 'Check your understanding of squats, lunges and plyometrics.',
+      passScore: 70,
+      questions: [
+        { prompt: 'When can load be added to a squat or lunge?', options: ['Straight away', 'Only after perfect technique', 'Never', 'Only with a partner'], correct: 1 },
+        { prompt: 'How should you land from a plyometric jump?', options: ['On the heel, heavily', 'Softly on the front of the foot, absorbing through ankle, knee and hip', 'On a straight leg', 'With locked knees'], correct: 1 },
+        { prompt: 'If the knees collapse inward during a squat...', options: ['Add more weight', 'Emphasise hip abduction and track the knees over the toes', 'Hold the breath', 'Land harder'], correct: 1 },
+        { prompt: 'Which loading should be used?', options: ['Only bilateral', 'Only unilateral', 'Both bilateral and unilateral', 'No loading at all'], correct: 2 },
+      ],
+    },
+    {
+      contentId: 'tc-strength-3',
+      title: 'Hamstring injury prevention',
+      description: 'Check your understanding of the Nordic programme and hamstring care.',
+      passScore: 70,
+      questions: [
+        { prompt: 'What does the Nordic Hamstring Exercise mainly train?', options: ['Concentric strength', 'Eccentric strength', 'Flexibility', 'Balance'], correct: 1 },
+        { prompt: 'What is the strongest modifier of programme effectiveness?', options: ['The equipment', 'Adherence (doing the sessions)', 'The time of day', 'The surface'], correct: 1 },
+        { prompt: 'Which exercises complement the NHE?', options: ['Only jumping', 'Hip-dominant exercises such as Romanian deadlifts', 'Only sprinting', 'Only planks'], correct: 1 },
+        { prompt: 'How should the NHE programme progress?', options: ['All weeks at maximum volume', 'Gradually, following the 13-week progression', 'Once a month', 'Only in the off-season'], correct: 1 },
+      ],
+    },
+  ];
+
+  for (const quiz of trainingQuizzes) {
+    const existing = await prisma.quiz.findUnique({ where: { contentId: quiz.contentId } });
+    if (existing) {
+      await prisma.quiz.update({
+        where: { id: existing.id },
+        data: { title: quiz.title, description: quiz.description, passScore: quiz.passScore },
+      });
+      continue;
+    }
+    await prisma.quiz.create({
+      data: {
+        contentId: quiz.contentId,
+        title: quiz.title,
+        description: quiz.description,
+        passScore: quiz.passScore,
+        questions: {
+          create: quiz.questions.map((question, questionIndex) => ({
+            prompt: question.prompt,
+            position: questionIndex,
+            options: {
+              create: question.options.map((label, optionIndex) => ({
+                label,
+                isCorrect: optionIndex === question.correct,
+                position: optionIndex,
+              })),
+            },
+          })),
+        },
+      },
     });
   }
 
@@ -751,6 +1058,60 @@ export async function main() {
     },
   });
 
+  // Live de club (privado: solo su staff y jugadores con contrato).
+  await prisma.liveSession.upsert({
+    where: { id: 'live-club-1' },
+    update: { clubId: club.id, visibility: 'CLUB' },
+    create: {
+      id: 'live-club-1',
+      title: 'Club squad session: recovery and set pieces',
+      description: 'Internal session for the club squad and staff.',
+      type: 'TRAINING',
+      status: 'SCHEDULED',
+      visibility: 'CLUB',
+      startsAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      endsAt: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000 + 60 * 60 * 1000),
+      clubId: club.id,
+      coachId: coachProfile?.id,
+    },
+  });
+
+  // Live público + su anuncio en Discovery (post enlazado).
+  const publicLiveStartsAt = new Date(Date.now() + 4 * 24 * 60 * 60 * 1000);
+  const publicLive = await prisma.liveSession.upsert({
+    where: { id: 'live-public-1' },
+    update: { visibility: 'PUBLIC' },
+    create: {
+      id: 'live-public-1',
+      title: 'Open live: build your scouting profile',
+      description:
+        'Free open session for any player: how to build a scouting profile that clubs and scouts actually notice.',
+      type: 'LECTURE',
+      status: 'SCHEDULED',
+      visibility: 'PUBLIC',
+      startsAt: publicLiveStartsAt,
+      endsAt: new Date(publicLiveStartsAt.getTime() + 60 * 60 * 1000),
+      coachId: coachProfile?.id,
+      meetingUrl: 'https://meet.example.com/future-baller-open-live',
+    },
+  });
+
+  await prisma.post.upsert({
+    where: { id: 'seed-post-live-1' },
+    update: { liveSessionId: publicLive.id },
+    create: {
+      id: 'seed-post-live-1',
+      authorId: clubUser.id,
+      type: 'ANNOUNCEMENT',
+      status: 'PUBLISHED',
+      title: publicLive.title,
+      body: 'Free open live session for every player. Open the post for details and to join.\n\n#live',
+      linkUrl: `/dashboard/live-sessions/${publicLive.id}`,
+      liveSessionId: publicLive.id,
+      tags: ['live'],
+    },
+  });
+
   // ─── Demo messaging ───────────────────────────────────────────
   await prisma.conversation.upsert({
     where: { id: 'conv-1' },
@@ -988,10 +1349,10 @@ export async function main() {
     data: { pinnedAt: daysAgoPost(0, 2) },
   });
 
-  console.log('Seed completado:');
+  console.log('Seed completed:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- player: player@demo.com / player123`);
-  console.log(`- familiar: parent@demo.com / parent123`);
+  console.log(`- parent: parent@demo.com / parent123`);
   console.log(`- club: club@demo.com / club123`);
   console.log(`- agent: agent@demo.com / agent123`);
   console.log(`- scout: scout@demo.com / scout123`);

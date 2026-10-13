@@ -19,24 +19,24 @@ export default async function SchoolProfilePage() {
 
   const rows: [string, string][] = [
     ['Name', school.name],
-    ['Tipo', SCHOOL_TYPE_LABELS[school.type] ?? school.type],
+    ['Type', SCHOOL_TYPE_LABELS[school.type] ?? school.type],
     ['Email', school.user?.email ?? '—'],
-    ['Contacto', school.contactName ?? '—'],
+    ['Contact', school.contactName ?? '—'],
     ['Website', school.website ?? '—'],
     ['Country', school.country],
-    ['Ciudad', school.city ?? '—'],
-    ['Alta en la plataforma', school.createdAt.toLocaleDateString('en-GB')],
+    ['City', school.city ?? '—'],
+    ['Joined the platform', school.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title="Organisation"
-        subtitle="Datos públicos de tu school o servicio comunitario"
+        subtitle="Public details of your school or community service"
         icon="book"
       >
         <Badge variant={school.verified ? 'success' : 'outline'}>
-          {school.verified ? 'Verificada' : 'Pending verification'}
+          {school.verified ? 'Verified' : 'Pending verification'}
         </Badge>
       </PageHeader>
 

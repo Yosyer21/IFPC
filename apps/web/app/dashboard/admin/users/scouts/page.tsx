@@ -23,8 +23,8 @@ export default async function AdminUsersScoutsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Ojeadores"
-        subtitle="Cuentas de scouts y su actividad de scouting"
+        title="Scouts"
+        subtitle="Scout accounts and their scouting activity"
         icon="users"
       />
       <RoleLinks />
@@ -49,7 +49,7 @@ export default async function AdminUsersScoutsPage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{scout._count.scoutingReports} reports</Badge>
-                  <Badge variant="outline">{scout._count.savedPlayers} guardados</Badge>
+                  <Badge variant="outline">{scout._count.savedPlayers} saved</Badge>
                 </div>
               </CardContent>
             </Card>

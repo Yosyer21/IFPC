@@ -6,7 +6,7 @@ import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   if (session.user.role === 'CLUB') {

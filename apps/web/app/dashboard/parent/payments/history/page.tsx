@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
 import { IconCalendar, IconStar, IconUsers } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Historial de pagos' };
+export const metadata: Metadata = { title: 'Payment history' };
 
 export default async function ParentPaymentsHistoryPage() {
   const session = await auth();
@@ -29,7 +29,7 @@ export default async function ParentPaymentsHistoryPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Historial de pagos"
+        title="Payment history"
         subtitle="All movements on your family account"
         icon="star"
       >
@@ -39,7 +39,7 @@ export default async function ParentPaymentsHistoryPage() {
       </PageHeader>
 
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <StatCard href="/dashboard/parent/payments/history" icon={IconStar} label="Total pagado" value={Math.round(total / 100)} />
+        <StatCard href="/dashboard/parent/payments/history" icon={IconStar} label="Total paid" value={Math.round(total / 100)} />
         <StatCard href="/dashboard/parent/payments/history" icon={IconUsers} label="Payments" value={payments.length} />
         <StatCard href="/dashboard/parent/payments/history" icon={IconCalendar} label="Pagados" value={paid.length} />
       </div>

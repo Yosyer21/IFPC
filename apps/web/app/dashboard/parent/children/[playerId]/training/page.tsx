@@ -71,7 +71,7 @@ export default async function ParentChildTrainingPage({
           <h2 className="mb-4 font-semibold">Live sessions ({sessions.length})</h2>
           {sessions.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Tu hijo no tiene sesiones en vivo asignadas.
+              Your child has no live sessions assigned.
             </p>
           ) : (
             <div className="flex flex-col gap-2">

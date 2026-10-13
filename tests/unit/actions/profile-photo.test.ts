@@ -68,7 +68,7 @@ describe('updateProfilePhotoAction', () => {
       {},
       form({ file: photo('image/png', 3 * 1024 * 1024) })
     );
-    expect(result).toEqual({ error: 'La imagen debe pesar menos de 2 MB.' });
+    expect(result).toEqual({ error: 'The image must be under 2 MB.' });
     expect(mocks.writeFile).not.toHaveBeenCalled();
   });
 

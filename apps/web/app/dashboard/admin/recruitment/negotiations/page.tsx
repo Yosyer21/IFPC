@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 
-export const metadata: Metadata = { title: 'Negociaciones · Reclutamiento' };
+export const metadata: Metadata = { title: 'Negotiations · Recruitment' };
 
 export default async function AdminRecruitmentNegotiationsPage() {
   const session = await auth();
@@ -30,14 +30,14 @@ export default async function AdminRecruitmentNegotiationsPage() {
         ← Recruitment
       </Link>
       <PageHeader
-        title="Negociaciones"
-        subtitle={`${negotiations.length} negociaciones registered`}
+        title="Negotiations"
+        subtitle={`${negotiations.length} negotiations registered`}
         icon="briefcase"
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
         <Badge variant="outline">{open} open</Badge>
-        <Badge variant="outline">Ofertas: {(totalOffers / 100).toLocaleString('en-GB')} EUR</Badge>
+        <Badge variant="outline">Offers: {(totalOffers / 100).toLocaleString('en-GB')} EUR</Badge>
       </div>
 
       {negotiations.length === 0 ? (

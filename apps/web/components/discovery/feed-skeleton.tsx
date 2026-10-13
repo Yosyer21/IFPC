@@ -33,7 +33,7 @@ export function PostSkeleton() {
 export function FeedSkeleton({ posts = 3 }: { posts?: number }) {
   return (
     <div role="status" aria-busy="true" className="flex flex-col gap-4">
-      <span className="sr-only">Cargando posts…</span>
+      <span className="sr-only">Loading posts…</span>
       {Array.from({ length: posts }, (_value, index) => (
         <PostSkeleton key={index} />
       ))}
@@ -47,9 +47,9 @@ export function ComposerSkeleton() {
     <div
       role="status"
       aria-busy="true"
-      className="glass-card mb-6 flex h-44 animate-pulse flex-col gap-3 rounded-2xl p-4"
+      className="surface mb-6 flex h-44 animate-pulse flex-col gap-3 rounded-2xl p-4"
     >
-      <span className="sr-only">Cargando el compositor…</span>
+      <span className="sr-only">Loading the composer…</span>
       <div className={`h-4 w-24 ${bar}`} />
       <div className={`h-16 w-full ${bar}`} />
       <div className={`h-8 w-32 self-end ${bar}`} />

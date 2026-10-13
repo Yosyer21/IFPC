@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 
-export const metadata: Metadata = { title: 'Pruebas' };
+export const metadata: Metadata = { title: 'Trials' };
 
 export default async function AgentTrialsPage() {
   const session = await auth();
@@ -24,8 +24,8 @@ export default async function AgentTrialsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Pruebas"
-        subtitle="Pruebas programadas para tus players con clubs"
+        title="Trials"
+        subtitle="Trials scheduled for your players with clubs"
         icon="whistle"
       />
 

@@ -51,12 +51,12 @@ export default async function PlayerOpportunityDetailPage({
 
   const details: [string, string][] = [
     ['Club', opportunity.club?.name ?? opportunity.university?.name ?? '—'],
-    ['Tipo', typeLabel],
+    ['Type', typeLabel],
     ['Position', opportunity.position ?? '—'],
-    ['Rango de edad', opportunity.ageMin || opportunity.ageMax ? `${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} years old` : '—'],
+    ['Age range', opportunity.ageMin || opportunity.ageMax ? `${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} years old` : '—'],
     ['Location', opportunity.location ?? '—'],
-    ['Cierra el', opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('en-GB') : '—'],
-    ['Publicada el', opportunity.createdAt.toLocaleDateString('en-GB')],
+    ['Closes on', opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('en-GB') : '—'],
+    ['Published on', opportunity.createdAt.toLocaleDateString('en-GB')],
   ];
 
   return (
@@ -106,7 +106,7 @@ export default async function PlayerOpportunityDetailPage({
       <Card className="mb-6">
         <CardContent>
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-semibold">Encaje con tu perfil</h2>
+            <h2 className="font-semibold">Fit with your profile</h2>
             <MatchScoreBadge score={match.total} />
           </div>
           <p className="mb-4 text-sm text-muted-foreground">{match.summary}</p>

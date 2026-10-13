@@ -51,7 +51,7 @@ export default async function ParentChildOpportunitiesPage({
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="My child’s opportunities"
-        subtitle="Applications enviadas, opportunities guardadas e inscripciones a camps"
+        subtitle="Submitted applications, saved opportunities and camp registrations"
         icon="target"
       >
         <Link
@@ -94,7 +94,7 @@ export default async function ParentChildOpportunitiesPage({
 
       <Card className="mb-6">
         <CardContent>
-          <h2 className="mb-4 font-semibold">Guardadas ({saved.length})</h2>
+          <h2 className="mb-4 font-semibold">Saved ({saved.length})</h2>
           {saved.length === 0 ? (
             <p className="text-sm text-muted-foreground">They have no saved opportunities.</p>
           ) : (

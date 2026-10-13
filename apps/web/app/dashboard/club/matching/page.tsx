@@ -69,9 +69,9 @@ export default async function ClubMatchingPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Crea requirements para recibir sugerencias de players.{' '}
+              Create requirements to receive player suggestions.{' '}
               <Link href="/dashboard/club/requirements/new" className="text-primary hover:underline">
-                Crear requirement
+                Create requirement
               </Link>
             </p>
           </CardContent>
@@ -112,7 +112,7 @@ export default async function ClubMatchingPage() {
                 </div>
                 <div className="flex items-center justify-between gap-4 text-sm">
                   <span className="text-muted-foreground">
-                    {best?.summary} · Mejor ajuste: <strong>{best?.requirementTitle}</strong>
+                    {best?.summary} · Best match: <strong>{best?.requirementTitle}</strong>
                   </span>
                   <Link href={`/dashboard/club/players/${player.id}`} className="text-primary hover:underline">
                     Ver ficha →

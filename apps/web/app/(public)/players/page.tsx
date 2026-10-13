@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { prisma } from '@ifpc/database';
 import { Badge } from '@ifpc/ui';
-import { POSITION_LABELS } from '@ifpc/config';
+import { COMPETITION_LEVEL_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 import { PlayerAvatar } from '@/components/player/avatar';
@@ -28,10 +28,10 @@ export default async function PublicPlayersPage() {
       <main className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="mb-10">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Players</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">Talento disponible</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">Available talent</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
-            {players.length} players con perfil abierto · {countries} nacionalidades. Contacta con
-            them via the platform.
+            {players.length} players with an open profile · {countries} nationalities. Get in touch
+            with them through the platform.
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export default async function PublicPlayersPage() {
                       {player.firstName} {player.lastName}
                     </h2>
                     <p className="text-xs text-muted-foreground">
-                      {player.nationality ?? 'Nationality no indicada'}
+                      {player.nationality ?? 'Nationality not provided'}
                     </p>
                   </div>
                 </div>
@@ -73,7 +73,11 @@ export default async function PublicPlayersPage() {
                       : 'No position'}
                   </Badge>
                   {player.competitionLevel ? (
-                    <Badge variant="outline">{player.competitionLevel}</Badge>
+                    <Badge variant="outline">
+                      {(COMPETITION_LEVEL_LABELS as Record<string, string | undefined>)[
+                        player.competitionLevel
+                      ] ?? player.competitionLevel}
+                    </Badge>
                   ) : null}
                   {player.clubName ? <Badge variant="outline">{player.clubName}</Badge> : null}
                 </div>

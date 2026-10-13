@@ -22,7 +22,7 @@ export default async function ClubRequirementsPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Requisitos del club" icon="file">
+      <PageHeader title="Club requirements" icon="file">
         <Link
           href="/dashboard/club/requirements/new"
           className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"

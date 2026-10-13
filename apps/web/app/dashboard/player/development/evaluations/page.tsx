@@ -49,7 +49,7 @@ export default async function PlayerEvaluationsPage() {
                     </h2>
                     {evaluation.evaluatedBy ? (
                       <span className="text-xs text-muted-foreground">
-                        por {evaluation.evaluatedBy}
+                        by {evaluation.evaluatedBy}
                       </span>
                     ) : null}
                   </div>

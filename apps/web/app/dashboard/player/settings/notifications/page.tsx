@@ -23,9 +23,9 @@ export default async function PlayerNotificationSettingsPage() {
         <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
           <p>You will receive notifications within the platform for events such as:</p>
           <ul className="list-inside list-disc">
-            <li>Respuesta de un club a tu request</li>
+            <li>A club reply to your request</li>
             <li>New opportunities that match your profile</li>
-            <li>Resultados de pruebas y evaluations</li>
+            <li>Trial and evaluation results</li>
             <li>Messages de scouts y agents</li>
           </ul>
           <p>

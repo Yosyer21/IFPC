@@ -30,7 +30,7 @@ export default async function PlayerCareerPage() {
   );
 
   const summary = [
-    { label: 'Temporadas', value: entries.length },
+    { label: 'Seasons', value: entries.length },
     { label: 'Matches', value: totals.appearances },
     { label: 'Goals', value: totals.goals },
     { label: 'Assists', value: totals.assists },
@@ -62,8 +62,8 @@ export default async function PlayerCareerPage() {
           <Card>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Todavía no has añadido tu trayectoria. Clubes y scouts la ven en tu perfil
-                público, así que mantenerla al day ayuda a que te encuentren.
+                You have not added your career history yet. Clubs and scouts see it on your public
+                profile, so keeping it up to date helps them find you.
               </p>
             </CardContent>
           </Card>
@@ -97,8 +97,8 @@ export default async function PlayerCareerPage() {
 
                 <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
                   <span>{entry.appearances} matches</span>
-                  <span>{entry.goals} goles</span>
-                  <span>{entry.assists} asistencias</span>
+                  <span>{entry.goals} goals</span>
+                  <span>{entry.assists} assists</span>
                 </div>
 
                 {entry.notes ? (
@@ -106,7 +106,7 @@ export default async function PlayerCareerPage() {
                 ) : null}
 
                 <details>
-                  <summary className="cursor-pointer text-sm text-primary">Editar</summary>
+                  <summary className="cursor-pointer text-sm text-primary">Edit</summary>
                   <div className="mt-3">
                     <CareerForm entry={entry} />
                   </div>

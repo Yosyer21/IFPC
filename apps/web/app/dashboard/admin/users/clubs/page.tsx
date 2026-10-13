@@ -23,8 +23,8 @@ export default async function AdminUsersClubsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Clubes"
-        subtitle="Entidades registered en la plataforma"
+        title="Clubs"
+        subtitle="Entities registered on the platform"
         icon="users"
       />
       <RoleLinks />
@@ -49,7 +49,7 @@ export default async function AdminUsersClubsPage() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant={club.verified ? 'success' : 'warning'}>
-                    {club.verified ? 'Verificado' : 'Pending'}
+                    {club.verified ? 'Verified' : 'Pending'}
                   </Badge>
                   <Badge variant="outline">{club._count.opportunities} opportunities</Badge>
                   <Badge variant="outline">{club._count.requirements} requirements</Badge>

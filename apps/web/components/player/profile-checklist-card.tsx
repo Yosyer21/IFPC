@@ -18,7 +18,7 @@ export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }
         <DonutChart
           value={percent}
           label={`${percent}%`}
-          sublabel={`${completed}/${total} completados`}
+          sublabel={`${completed}/${total} completed`}
         />
 
         {next ? (
@@ -35,7 +35,7 @@ export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }
           </Link>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Perfil completo: clubs y scouts ven todo lo que buscan.
+            Complete profile: clubs and scouts see everything they look for.
           </p>
         )}
 

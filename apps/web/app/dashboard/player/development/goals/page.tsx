@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'My goals' };
 
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 

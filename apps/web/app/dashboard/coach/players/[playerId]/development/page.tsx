@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: 'Player goals' };
 
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 
@@ -50,7 +50,7 @@ export default async function CoachPlayerDevelopmentPage({
         ← {player.firstName} {player.lastName}
       </Link>
       <PageHeader
-        title="Goals de desarrollo"
+        title="Development goals"
         subtitle={`Goals asignados a ${player.firstName} ${player.lastName}`}
         icon="trending"
       />

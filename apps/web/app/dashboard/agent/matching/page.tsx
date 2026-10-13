@@ -67,7 +67,7 @@ export default async function AgentMatchingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Matching"
-        subtitle="Represented players ordered por compatibilidad con opportunities open"
+        subtitle="Represented players ordered by compatibility with open opportunities"
         icon="target"
       />
 
@@ -97,7 +97,7 @@ export default async function AgentMatchingPage() {
                   <Progress value={best?.total ?? 0} />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {best?.summary} · Mejor ajuste:{' '}
+                  {best?.summary} · Best match:{' '}
                   <strong>
                     {best?.opportunityTitle} ({clubName})
                   </strong>

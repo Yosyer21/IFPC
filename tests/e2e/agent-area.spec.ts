@@ -27,12 +27,12 @@ test('Agent: workspace, pipeline and new pages without 404', async ({ page }) =>
     page.locator('aside').getByRole('link', { name: 'Submissions', exact: true }).first()
   ).toBeVisible();
 
-  // 3. New pages: Trials, Negotiations, Contracts, Clubs (no 404)
+  // 3. New pages: Trials, Negotiations, Contratos, Clubs (no 404)
   for (const [url, heading] of [
-    ['/dashboard/agent/trials', 'Pruebas'],
-    ['/dashboard/agent/negotiations', 'Negociaciones'],
-    ['/dashboard/agent/contracts', 'Contratos'],
-    ['/dashboard/agent/clubs', 'Clubes'],
+    ['/dashboard/agent/trials', 'Trials'],
+    ['/dashboard/agent/negotiations', 'Negotiations'],
+    ['/dashboard/agent/contracts', 'Contracts'],
+    ['/dashboard/agent/clubs', 'Clubs'],
   ] as const) {
     await page.goto(`${BASE}${url}`);
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();

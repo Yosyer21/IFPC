@@ -61,7 +61,7 @@ async function requirePoster(): Promise<{ id: string; name: string; role: string
   const session = await auth();
   const user = session?.user;
   if (!user?.id || !POSTING_ROLES.some((role) => role === user.role)) return null;
-  return { id: user.id, name: user.name ?? 'Un perfil', role: user.role };
+  return { id: user.id, name: user.name ?? 'One profile', role: user.role };
 }
 
 /** Limpia las opciones de encuesta: sin repetir ni vacías, máximo cuatro y mínimo dos. */
@@ -198,7 +198,7 @@ export async function createPostAction(
     tags: extractTags(str(formData, 'body'), splitTags(str(formData, 'tags'))),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Revisa el contenido.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Check the content.' };
   }
 
   // Galería (hasta 4 imágenes), texto alternativo, programación y encuesta.
@@ -321,7 +321,7 @@ export async function createPostAction(
         userId: mentioned.id,
         type: 'post_mention',
         title: 'Te han mencionado',
-        message: `${poster.name} te mencionó en una post.`,
+        message: `${poster.name} mentioned you in a post.`,
         link: `/dashboard/discovery/${created.id}`,
         groupMessage: (count) => `${count} menciones nuevas en Discovery.`,
       });
@@ -335,7 +335,7 @@ export async function createPostAction(
       actorId: poster.id,
       postId: created.id,
       action: 'HIDDEN',
-      notes: 'Automático: el texto contiene language no permitido.',
+      notes: 'Automatic: the text contains language that is not allowed.',
     });
     redirect(`/dashboard/discovery/${created.id}`);
   }
@@ -459,7 +459,7 @@ export async function publishDraftAction(formData: FormData): Promise<void> {
       actorId: userId,
       postId: draft.id,
       action: 'HIDDEN',
-      notes: 'Automático al publicar un borrador: el texto contiene language no permitido.',
+      notes: 'Automatic when publishing a draft: the text contains language that is not allowed.',
     });
   }
 
@@ -499,7 +499,7 @@ export async function updatePostAction(
     tags: extractTags(str(formData, 'body'), splitTags(str(formData, 'tags'))),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Revisa el contenido.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Check the content.' };
   }
 
   try {
@@ -594,9 +594,9 @@ export async function toggleLikeAction(formData: FormData): Promise<void> {
           userId: post.authorId,
           type: 'post_like',
           title: 'New likes',
-          message: `${user.name} ha indicado que le gusta tu post.`,
+          message: `${user.name} liked your post.`,
           link: `/dashboard/discovery/${postId}`,
-          groupMessage: (count) => `A ${count} personas les gusta tu post.`,
+          groupMessage: (count) => `${count} people liked your post.`,
         });
       } catch {
         // El aviso nunca debe romper la interacción.
@@ -621,7 +621,7 @@ export async function createCommentAction(
     body: str(formData, 'body'),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comment.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Check the comment.' };
   }
 
   // Guardarraíles: ritmo y banned language.
@@ -681,12 +681,12 @@ export async function createCommentAction(
         userId: targetUserId,
         type: isReply ? 'comment_reply' : 'post_comment',
         title: isReply ? 'New reply' : 'New comments',
-        message: `${session.user.name} comentó en Discovery.`,
+        message: `${session.user.name} commented on Discovery.`,
         link: `/dashboard/discovery/${parsed.data.postId}`,
         groupMessage: (count) =>
           isReply
-            ? `${count} replies nuevas en la conversación.`
-            : `${count} comments nuevos en tu post.`,
+            ? `${count} new replies in the conversation.`
+            : `${count} new comments on your post.`,
       });
     } catch {
       // El aviso nunca debe romper el comment.
@@ -697,7 +697,7 @@ export async function createCommentAction(
   // hay que revalidar los dos (el refresco automático no alcanza a esta ruta).
   revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${parsed.data.postId}`);
 
-  return { success: 'Comentario publicado.' };
+  return { success: 'Comment published.' };
 }
 /** Edita el texto de un comment propio. */
 export async function updateCommentAction(
@@ -716,7 +716,7 @@ export async function updateCommentAction(
 
   const parsed = postCommentEditSchema.safeParse({ body: str(formData, 'body') });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Revisa el comment.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Check the comment.' };
   }
 
   const comment = await prisma.postComment.findUnique({
@@ -738,7 +738,7 @@ export async function updateCommentAction(
 
   revalidatePaths('/dashboard/discovery', `/dashboard/discovery/${comment.postId}`);
 
-  return { success: 'Comentario actualizado.' };
+  return { success: 'Comment updated.' };
 }
 
 /** Borra un comment propio (o cualquiera si eres el autor del post / admin). */
@@ -788,7 +788,7 @@ export async function reportPostAction(
     reason: str(formData, 'reason'),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? 'Indica el motivo.' };
+    return { error: parsed.error.issues[0]?.message ?? 'Provide a reason.' };
   }
 
   try {
@@ -807,7 +807,7 @@ export async function reportPostAction(
     return { error: 'The report could not be sent.' };
   }
 
-  return { success: 'Gracias, lo revisaremos.' };
+  return { success: 'Thank you, we will review it.' };
 }
 
 /**
@@ -839,7 +839,7 @@ export async function loadMoreFeedAction(input: {
   return { posts: page.posts, nextCursor: page.nextCursor };
 }
 
-/** Oculta o vuelve a publicar contenido (solo ADMIN). Al ocultar, atiende las reports. */
+/** Hidden o vuelve a publicar contenido (solo ADMIN). Al ocultar, atiende las reports. */
 export async function moderatePostAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -855,7 +855,7 @@ export async function moderatePostAction(formData: FormData): Promise<void> {
 
   await prisma.post.update({ where: { id: postId }, data: { status } });
 
-  // Ocultar contenido cierra las reports pendientes que lo señalaban.
+  // Hiddenr contenido cierra las pending reports que lo señalaban.
   if (status === 'HIDDEN') {
     await prisma.postReport.updateMany({
       where: { postId, resolvedAt: null },
@@ -900,7 +900,7 @@ export async function pinPostAction(formData: FormData): Promise<void> {
   await logModeration({ actorId: user.id, postId, action: pin ? 'PINNED' : 'UNPINNED' });
 }
 
-/** Da por atendidas las reports pendientes de una post (solo ADMIN). */
+/** Da por atendidas las pending reports de una post (solo ADMIN). */
 export async function resolveReportsAction(formData: FormData): Promise<void> {
   const session = await auth();
   const user = session?.user;
@@ -978,7 +978,7 @@ export async function toggleFollowAction(formData: FormData): Promise<void> {
       title: 'New followers',
       message: `${user.name} te sigue en Discovery.`,
       link: `/dashboard/discovery/u/${targetId}`,
-      groupMessage: (count) => `${count} personas te siguen en Discovery.`,
+      groupMessage: (count) => `${count} people follow you on Discovery.`,
     });
   } catch {
     // El aviso nunca debe romper el tracking.

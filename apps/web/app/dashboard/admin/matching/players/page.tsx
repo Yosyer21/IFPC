@@ -34,7 +34,7 @@ export default async function AdminMatchingPlayersPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <PageHeader title="Matching · Players" subtitle="Mejor coincidencia de cada player" icon="whistle">
+      <PageHeader title="Matching · Players" subtitle="Best match for each player" icon="whistle">
         <Link href="/dashboard/admin/matching" className="text-sm text-muted-foreground hover:underline">
           ← Matching
         </Link>
@@ -62,7 +62,7 @@ export default async function AdminMatchingPlayersPage() {
                     </div>
                     <div className="mt-1 text-xs text-muted-foreground">
                       {best
-                        ? `Mejor match: ${best.requirement.club?.name ?? 'Club'} · ${best.requirement.title}`
+                        ? `Best match: ${best.requirement.club?.name ?? 'Club'} · ${best.requirement.title}`
                         : 'No open requirements to evaluate'}
                     </div>
                   </div>

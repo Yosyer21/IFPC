@@ -4,12 +4,12 @@ import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
-import { POSITION_LABELS, PLAYER_STATUS_LABELS } from '@ifpc/config';
+import { COMPETITION_LEVEL_LABELS, POSITION_LABELS, PLAYER_STATUS_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { CategoryBars } from '@/components/player/charts';
 
-export const metadata: Metadata = { title: 'Detalle del player' };
+export const metadata: Metadata = { title: 'Player details' };
 
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
@@ -20,7 +20,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 
@@ -64,10 +64,17 @@ export default async function AdminPlayerDetailPage({
         : '—',
     ],
     ['Dominant foot', player.foot ?? '—'],
-    ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-    ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-    ['Competition level', player.competitionLevel ?? '—'],
-    ['Club actual', player.clubName ?? '—'],
+    ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+    ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
+    [
+      'Competition level',
+      player.competitionLevel
+        ? ((COMPETITION_LEVEL_LABELS as Record<string, string | undefined>)[
+            player.competitionLevel
+          ] ?? player.competitionLevel)
+        : '—',
+    ],
+    ['Current club', player.clubName ?? '—'],
   ];
 
   const averages = Object.keys(CATEGORY_LABELS).map((category) => {
@@ -99,10 +106,10 @@ export default async function AdminPlayerDetailPage({
       <div className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {[
           ['Applications', player._count.applications],
-          ['Guardadas', player._count.savedOpportunities],
+          ['Saved', player._count.savedOpportunities],
           ['Submissions', player._count.submissions],
-          ['Pruebas', player._count.trials],
-          ['Contratos', player._count.contracts],
+          ['Trials', player._count.trials],
+          ['Contracts', player._count.contracts],
         ].map(([label, value]) => (
           <Card key={label}>
             <CardContent className="text-center">

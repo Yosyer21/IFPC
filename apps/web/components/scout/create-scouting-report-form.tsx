@@ -30,7 +30,7 @@ export function CreateScoutingReportForm({
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Crear report'}
+        {pending ? 'Saving…' : 'Create report'}
       </Button>
     </form>
   );

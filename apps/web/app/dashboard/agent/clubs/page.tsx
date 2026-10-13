@@ -25,7 +25,7 @@ export default async function AgentClubsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Clubes"
+        title="Clubs"
         subtitle="Clubs you have a relationship with through submissions"
         icon="briefcase"
       />
@@ -38,7 +38,7 @@ export default async function AgentClubsPage() {
               <Link href="/dashboard/agent/submissions/new" className="text-primary hover:underline">
                 new submission
               </Link>{' '}
-              para empezar.
+              to get started.
             </p>
           </CardContent>
         </Card>

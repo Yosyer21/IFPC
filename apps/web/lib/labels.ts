@@ -16,6 +16,11 @@ export const LIVE_SESSION_STATUS_LABELS: Record<string, string> = {
   CANCELLED: 'Cancelled',
 };
 
+export const LIVE_SESSION_VISIBILITY_LABELS: Record<string, string> = {
+  CLUB: 'Club only',
+  PUBLIC: 'Public (Discovery)',
+};
+
 export const CAMP_STATUS_LABELS: Record<string, string> = {
   DRAFT: 'Draft',
   OPEN: 'Open',
@@ -26,7 +31,7 @@ export const CAMP_STATUS_LABELS: Record<string, string> = {
 
 export const SCHOOL_TYPE_LABELS: Record<string, string> = {
   SCHOOL: 'School / College',
-  COMMUNITY_SERVICE: 'Servicio comunitario',
+  COMMUNITY_SERVICE: 'Community service',
 };
 
 /** Player development categories (`Evaluation.category`). */
@@ -37,26 +42,34 @@ export const CATEGORY_LABELS: Record<string, string> = {
   psychological: 'Psychological',
 };
 
+/** Content categories (`TrainingContent.category`). */
+export const TRAINING_CATEGORY_LABELS: Record<string, string> = {
+  technical: 'Technique',
+  'strength-conditioning': 'Strength & conditioning',
+  psychology: 'Psychology',
+  'parent-education': 'For families',
+};
+
 /** Player goal status (`PlayerGoal.status`). */
 export const GOAL_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
-  in_progress: 'En curso',
+  in_progress: 'In progress',
   completed: 'Completed',
 };
 
 /** Política de comments de una post (`Post.commentsPolicy`). */
 export const COMMENTS_POLICY_LABELS: Record<string, string> = {
-  EVERYONE: 'Cualquiera',
-  FOLLOWERS: 'Solo quien me sigue',
+  EVERYONE: 'Everyone',
+  FOLLOWERS: 'Followers only',
   NOBODY: 'Nobody',
 };
 
 /** Acciones de la traza de moderación de Discovery (`ModerationLog.action`). */
 export const MODERATION_ACTION_LABELS: Record<string, string> = {
-  HIDDEN: 'Ocultada',
-  PUBLISHED: 'Republicada',
-  PINNED: 'Fijada',
-  UNPINNED: 'Desfijada',
-  DELETED: 'Borrada',
-  RESOLVED: 'Denuncias atendidas',
+  HIDDEN: 'Hidden',
+  PUBLISHED: 'Republished',
+  PINNED: 'Pinned',
+  UNPINNED: 'Unpinned',
+  DELETED: 'Deleted',
+  RESOLVED: 'Reports resolved',
 };

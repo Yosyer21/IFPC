@@ -26,20 +26,20 @@ test('Coach: assigns assessment and goal to the player, and the player sees them
   // 3. Entrar al player y crear un goal
   await page.goto(`${BASE}/dashboard/coach/players`);
   await page.getByRole('link', { name: /Demo Player/ }).click();
-  await page.getByRole('link', { name: 'Ver goals y crear' }).click();
+  await page.getByRole('link', { name: 'View goals and create' }).click();
 
   const goalTitle = `Goal E2E ${Date.now()}: mejor golpeo`;
   await page.getByLabel('Goal title').fill(goalTitle);
   await page.getByLabel('Deadline').fill('2026-12-31');
   await page.getByLabel('Description').fill('Registrar 50 remates por week en el training.');
-  await page.getByRole('button', { name: 'Crear goal' }).click();
+  await page.getByRole('button', { name: 'Create goal' }).click();
   await page.waitForURL('**/development', { timeout: 15_000 });
   await expect(page.getByText(goalTitle)).toBeVisible();
 
   // 4. Create an assessment
   await page.goto(`${BASE}/dashboard/coach/players`);
   await page.getByRole('link', { name: /Demo Player/ }).first().click();
-  await page.getByRole('link', { name: 'Ver evaluations y registrar' }).click();
+  await page.getByRole('link', { name: 'View evaluations and register' }).click();
 
   await page.getByLabel('Score (1-10)').fill('9');
   const evalNotes = `E2E assessment ${Date.now()}: great progress on first touch.`;

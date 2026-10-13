@@ -47,7 +47,7 @@ export default async function PublicCampDetailPage({
 
         <div className="mt-6 rounded-2xl border border-border/60 bg-card p-8">
           <div className="flex flex-wrap items-center gap-3">
-            <Badge variant="outline">{camp.status === 'FULL' ? 'Completo' : 'Abierto'}</Badge>
+            <Badge variant="outline">{camp.status === 'FULL' ? 'Full' : 'Open'}</Badge>
             <span className="text-sm text-muted-foreground">
               {camp.startsAt.toLocaleDateString('en-GB')}
               {camp.endsAt ? ` → ${camp.endsAt.toLocaleDateString('en-GB')}` : ''}
@@ -79,7 +79,7 @@ export default async function PublicCampDetailPage({
             <div className="rounded-xl border border-border/60 p-4">
               <div className="text-xs text-muted-foreground">Plazas</div>
               <div className="mt-1 text-lg font-semibold">
-                {camp.capacity ? `${spotsLeft ?? 0} de ${camp.capacity}` : 'No limit'}
+                {camp.capacity ? `${spotsLeft ?? 0} of ${camp.capacity}` : 'No limit'}
               </div>
             </div>
             <div className="rounded-xl border border-border/60 p-4">
@@ -103,7 +103,7 @@ export default async function PublicCampDetailPage({
                 className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {camp.status === 'FULL' || (spotsLeft !== null && spotsLeft <= 0)
-                  ? 'Completo'
+                  ? 'Full'
                   : 'Solicitar plaza'}
               </button>
             </form>

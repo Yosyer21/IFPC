@@ -44,7 +44,7 @@ export default async function AdminAnalyticsRevenuePage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Analytics de ingresos"
+        title="Revenue analytics"
         subtitle="Simulated payments, memberships and monthly growth"
         icon="trending"
       />
@@ -59,7 +59,7 @@ export default async function AdminAnalyticsRevenuePage() {
         />
         <StatCard href="/dashboard/admin/memberships/payments" icon={IconUsers} label="Payments realizados" value={paid.length} />
         <StatCard href="/dashboard/admin/memberships" icon={IconTarget} label="Memberships" value={memberships.length} />
-        <StatCard href="/dashboard/admin/memberships/payments" icon={IconTrendingUp} label="Payments pendientes" value={pendingPayments} />
+        <StatCard href="/dashboard/admin/memberships/payments" icon={IconTrendingUp} label="Pending payments" value={pendingPayments} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">

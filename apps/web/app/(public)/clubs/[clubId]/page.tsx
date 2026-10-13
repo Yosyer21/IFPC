@@ -50,7 +50,7 @@ export default async function PublicClubDetailPage({
               </p>
             </div>
             <Badge variant="success" className="ml-auto">
-              Verificado
+              Verified
             </Badge>
           </div>
 

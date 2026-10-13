@@ -22,7 +22,7 @@ export default async function AgentOpportunitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Open opportunities"
-        subtitle="Convocatorias publicadas por clubs en la plataforma"
+        subtitle="Call-ups published by clubs on the platform"
         icon="target"
       />
 

@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { createLiveSessionAction } from '@/app/actions/admin';
-import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS } from '@/lib/labels';
+import { LIVE_SESSION_STATUS_LABELS, LIVE_SESSION_TYPE_LABELS, LIVE_SESSION_VISIBILITY_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'New live session' };
 
@@ -13,7 +13,7 @@ export default async function AdminLiveSessionCreatePage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const [coaches, players] = await Promise.all([
+  const [coaches, players, clubs] = await Promise.all([
     prisma.coach.findMany({
       include: { user: true },
       orderBy: { user: { name: 'asc' } },
@@ -24,13 +24,14 @@ export default async function AdminLiveSessionCreatePage() {
       orderBy: { firstName: 'asc' },
       take: 100,
     }),
+    prisma.club.findMany({ orderBy: { name: 'asc' }, take: 200 }),
   ]);
 
   return (
     <div className="mx-auto max-w-2xl">
       <PageHeader
         title="New live session"
-        subtitle="Organiza un training en directo, charla o prueba"
+        subtitle="Organise a live training, talk or trial"
         icon="live"
       >
         <Link
@@ -62,7 +63,7 @@ export default async function AdminLiveSessionCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Tipo
+              Type
               <select
                 name="type"
                 defaultValue="TRAINING"
@@ -76,7 +77,21 @@ export default async function AdminLiveSessionCreatePage() {
               </select>
             </label>
             <label className="text-sm">
-              Estado
+              Visibility
+              <select
+                name="visibility"
+                defaultValue="CLUB"
+                className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2"
+              >
+                {Object.entries(LIVE_SESSION_VISIBILITY_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm">
+              Status
               <select
                 name="status"
                 defaultValue="SCHEDULED"
@@ -90,7 +105,7 @@ export default async function AdminLiveSessionCreatePage() {
               </select>
             </label>
             <label className="text-sm">
-              Inicio *
+              Starts *
               <input
                 required
                 type="datetime-local"
@@ -99,7 +114,7 @@ export default async function AdminLiveSessionCreatePage() {
               />
             </label>
             <label className="text-sm">
-              Fin
+              Ends
               <input
                 type="datetime-local"
                 name="endsAt"
@@ -121,6 +136,17 @@ export default async function AdminLiveSessionCreatePage() {
                 {coaches.map((coach) => (
                   <option key={coach.id} value={coach.id}>
                     {coach.user.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm">
+              Club (for club-only lives)
+              <select name="clubId" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
+                <option value="">No club</option>
+                {clubs.map((club) => (
+                  <option key={club.id} value={club.id}>
+                    {club.name}
                   </option>
                 ))}
               </select>

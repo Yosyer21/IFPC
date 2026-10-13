@@ -49,7 +49,7 @@ function CommentRow({
           <div className="mt-1 flex flex-wrap items-start gap-3 text-xs">
             <details>
               <summary className="cursor-pointer list-none text-muted-foreground transition-colors hover:text-foreground">
-                Responder
+                Reply
               </summary>
               <div className="mt-2 w-full min-w-0">
                 <CommentForm postId={postId} parentId={comment.id} />
@@ -59,7 +59,7 @@ function CommentRow({
             {canEdit ? (
               <details>
                 <summary className="cursor-pointer list-none text-muted-foreground transition-colors hover:text-foreground">
-                  Editar
+                  Edit
                 </summary>
                 <EditCommentForm commentId={comment.id} body={comment.body} />
               </details>
@@ -72,7 +72,7 @@ function CommentRow({
                   type="submit"
                   className="text-muted-foreground transition-colors hover:text-destructive"
                 >
-                  Borrar
+                  Delete
                 </button>
               </form>
             ) : null}

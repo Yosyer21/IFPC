@@ -6,7 +6,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatusBadge } from '@/components/admin/status-badge';
 import { createCoachLiveSessionAction } from '@/app/actions/coach';
-import { SESSION_TYPE_LABELS } from '@/lib/labels';
+import { SESSION_TYPE_LABELS, LIVE_SESSION_VISIBILITY_LABELS } from '@/lib/labels';
 
 export const metadata: Metadata = { title: 'Live sessions' };
 
@@ -28,7 +28,7 @@ export default async function CoachLiveSessionsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Live sessions"
-        subtitle="Tus training sessions en directo, charlas y pruebas con players"
+        subtitle="Your live training sessions, talks and trials with players"
         icon="live"
       />
 
@@ -46,7 +46,7 @@ export default async function CoachLiveSessionsPage() {
               />
             </label>
             <label className="text-sm">
-              Tipo
+              Type
               <select name="type" defaultValue="TRAINING" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
                 {Object.entries(SESSION_TYPE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -56,7 +56,17 @@ export default async function CoachLiveSessionsPage() {
               </select>
             </label>
             <label className="text-sm">
-              Inicio *
+              Visibility
+              <select name="visibility" defaultValue="CLUB" className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2">
+                {Object.entries(LIVE_SESSION_VISIBILITY_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm">
+              Starts *
               <input
                 required
                 type="datetime-local"
@@ -65,7 +75,7 @@ export default async function CoachLiveSessionsPage() {
               />
             </label>
             <label className="text-sm">
-              Fin
+              Ends
               <input
                 type="datetime-local"
                 name="endsAt"
@@ -84,7 +94,7 @@ export default async function CoachLiveSessionsPage() {
               type="submit"
               className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:col-span-2"
             >
-              Programar
+              Schedule
             </button>
           </form>
         </CardContent>
@@ -115,12 +125,12 @@ export default async function CoachLiveSessionsPage() {
                   {liveSession.startsAt.toLocaleDateString('en-GB')}{' '}
                   {liveSession.startsAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                   {liveSession.player
-                    ? ` · 1:1 con ${liveSession.player.firstName} ${liveSession.player.lastName}`
+                    ? ` · 1:1 with ${liveSession.player.firstName} ${liveSession.player.lastName}`
                     : ''}
                 </div>
               </div>
               {liveSession.meetingUrl ? (
-                <Badge variant="outline">Enlace listo</Badge>
+                <Badge variant="outline">Link ready</Badge>
               ) : (
                 <Badge variant="outline">No link</Badge>
               )}

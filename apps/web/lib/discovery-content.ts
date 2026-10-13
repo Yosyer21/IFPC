@@ -247,7 +247,7 @@ export function resolveEmbed(url: string | null | undefined): string | null {
   return null;
 }
 
-/** Puntuación de engagement: los comments pesan más que los likes. */
+/** Puntuación de engagement: los comments pesan más que los me gusta. */
 export function engagementScore(post: Pick<FeedPost, 'counts'>): number {
   return post.counts.likes * 3 + post.counts.comments * 2 + post.counts.views;
 }

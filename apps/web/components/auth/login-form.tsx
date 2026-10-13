@@ -14,7 +14,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
         name="email"
         type="email"
         label="Email"
-        placeholder="tu@email.com"
+        placeholder="you@email.com"
         required
         autoComplete="email"
       />
@@ -35,7 +35,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
           Forgot your password?
         </a>
         <a href="/register" className="hover:underline">
-          Crear cuenta
+          Create account
         </a>
       </div>
     </form>

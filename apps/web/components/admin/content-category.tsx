@@ -1,7 +1,12 @@
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
-import { createTrainingContentAction, deleteTrainingContentAction } from '@/app/actions/admin';
+import {
+  createTrainingContentAction,
+  deleteTrainingContentAction,
+  deleteCourseQuizAction,
+  saveCourseQuizAction,
+} from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
 
 export async function ContentCategory({
@@ -21,6 +26,7 @@ export async function ContentCategory({
   const contents = await prisma.trainingContent.findMany({
     where: { category },
     orderBy: { createdAt: 'asc' },
+    include: { quiz: { include: { _count: { select: { questions: true, attempts: true } } } } },
   });
 
   const inputClass =
@@ -49,7 +55,7 @@ export async function ContentCategory({
             />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <input name="videoUrl" placeholder="Video URL" className={inputClass} />
-              <input name="thumbnailUrl" placeholder="URL de imagen" className={inputClass} />
+              <input name="thumbnailUrl" placeholder="Image URL" className={inputClass} />
               <input
                 type="number"
                 min={1}
@@ -98,12 +104,72 @@ export async function ContentCategory({
                 <div className="min-w-0">
                   <p className="font-semibold">{content.title}</p>
                   <p className="text-sm text-muted-foreground">
-                    {content.durationMinutes ? `${content.durationMinutes} min` : '—'} · Dificultad{' '}
+                    {content.durationMinutes ? `${content.durationMinutes} min` : '—'} · Level{' '}
                     {content.difficulty ?? '—'}
                   </p>
                   {content.description ? (
                     <p className="mt-1 text-xs text-muted-foreground">{content.description}</p>
                   ) : null}
+
+                  <div className="mt-3 rounded-lg border border-border/60 p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-xs font-medium">
+                        {content.quiz
+                          ? `Quiz · ${content.quiz._count.questions} questions · ${content.quiz._count.attempts} attempts · pass ${content.quiz.passScore}%`
+                          : 'No quiz yet'}
+                      </p>
+                      {content.quiz ? (
+                        <form action={deleteCourseQuizAction}>
+                          <input type="hidden" name="contentId" value={content.id} />
+                          <button
+                            type="submit"
+                            className="text-xs text-destructive hover:underline"
+                          >
+                            Remove quiz
+                          </button>
+                        </form>
+                      ) : null}
+                    </div>
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-xs text-muted-foreground transition-colors hover:text-foreground">
+                        {content.quiz ? 'Replace quiz' : 'Create quiz'}
+                      </summary>
+                      <form action={saveCourseQuizAction} className="mt-2 flex flex-col gap-2">
+                        <input type="hidden" name="contentId" value={content.id} />
+                        <div className="flex flex-wrap items-center gap-2">
+                          <input
+                            name="quizTitle"
+                            placeholder="Quiz title"
+                            defaultValue={content.quiz?.title ?? `${content.title} — quiz`}
+                            className={`${inputClass} flex-1`}
+                          />
+                          <input
+                            type="number"
+                            name="passScore"
+                            min={1}
+                            max={100}
+                            defaultValue={content.quiz?.passScore ?? 70}
+                            className={`${inputClass} w-20`}
+                            aria-label="Pass percentage"
+                          />
+                        </div>
+                        <textarea
+                          name="questions"
+                          rows={4}
+                          placeholder={'One question per line:\nQuestion? | correct answer | wrong answer | wrong answer'}
+                          className={inputClass}
+                        />
+                        <div>
+                          <button
+                            type="submit"
+                            className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+                          >
+                            Save quiz
+                          </button>
+                        </div>
+                      </form>
+                    </details>
+                  </div>
                 </div>
                 <form action={deleteTrainingContentAction}>
                   <input type="hidden" name="contentId" value={content.id} />

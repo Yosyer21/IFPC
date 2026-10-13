@@ -9,7 +9,7 @@ export function CreateRequirementForm() {
 
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
-      <Input name="title" label="Title" placeholder="Ej: Delantero Sub-17" required />
+      <Input name="title" label="Title" placeholder="e.g. Striker U17" required />
       <Input name="position" label="Position" placeholder="DEL / MED / DEF…" />
       <div className="grid grid-cols-2 gap-3">
         <Input name="ageMin" type="number" label="Minimum age" />
@@ -29,7 +29,7 @@ export function CreateRequirementForm() {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Creando…' : 'Crear requirement'}
+        {pending ? 'Creating…' : 'Create requirement'}
       </Button>
     </form>
   );

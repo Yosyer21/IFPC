@@ -18,7 +18,10 @@ export const ROLE_DASHBOARD_PREFIXES: Record<Role, string> = {
  * prefijo de rol. Es la única forma de exponer un área común (p. ej. Discovery)
  * sin abrir el resto de áreas privadas.
  */
-export const SHARED_DASHBOARD_PREFIXES: readonly string[] = ['/dashboard/discovery'];
+export const SHARED_DASHBOARD_PREFIXES: readonly string[] = [
+  '/dashboard/discovery',
+  '/dashboard/live-sessions',
+];
 
 /** `true` si `pathname` es exactamente `prefix` o una ruta por debajo de él. */
 function matchesPrefix(pathname: string, prefix: string): boolean {

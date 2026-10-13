@@ -51,7 +51,7 @@ export default async function AdminInquiriesPage() {
                         type="submit"
                         className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
                       >
-                        Cerrar
+                        Close
                       </button>
                     </form>
                   ) : null}

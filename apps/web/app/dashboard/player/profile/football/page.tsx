@@ -31,9 +31,9 @@ export default async function PlayerFootballPage() {
   const rows: [string, string][] = [
     ['Main position', positionLabel],
     ['Preferred foot', footLabel],
-    ['Level competitivo', competitionLabel],
-    ['Club actual', player.clubName ?? '—'],
-    ['Disponibilidad', player.status === 'AVAILABLE' ? 'Available' : 'Unavailable'],
+    ['Competition level', competitionLabel],
+    ['Current club', player.clubName ?? '—'],
+    ['Availability', player.status === 'AVAILABLE' ? 'Available' : 'Unavailable'],
   ];
 
   return (
@@ -44,7 +44,7 @@ export default async function PlayerFootballPage() {
           href="/dashboard/player/profile/edit"
           className="text-sm text-muted-foreground hover:underline"
         >
-          Editar
+          Edit
         </Link>
       </div>
       <Card>

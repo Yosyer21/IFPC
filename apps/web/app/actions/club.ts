@@ -44,7 +44,7 @@ export async function createOpportunityAction(
     closesAt: str(formData, 'closesAt'),
   });
   if (!parsed.success) {
-    return { error: 'Revisa los datos de la oportunidad.' };
+    return { error: 'Check the opportunity details.' };
   }
 
   const { closesAt, ...rest } = parsed.data;
@@ -125,7 +125,7 @@ export async function respondInquiryAction(
   const inquiryId = str(formData, 'inquiryId');
   const response = str(formData, 'response');
   if (!inquiryId || !response) {
-    return { error: 'Falta el texto de la reply.' };
+    return { error: 'The reply text is missing.' };
   }
 
   try {
@@ -151,7 +151,7 @@ export async function inviteStaffAction(
   const email = str(formData, 'email');
   const role = str(formData, 'role') ?? 'STAFF';
   if (!email) {
-    return { error: 'Email obligatorio.' };
+    return { error: 'Email is required.' };
   }
 
   const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });

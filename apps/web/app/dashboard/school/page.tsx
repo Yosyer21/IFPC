@@ -44,11 +44,11 @@ export default async function SchoolDashboardPage() {
       label: 'Open opportunities',
       value: openOpportunities,
     },
-    { href: '/dashboard/school', icon: IconCalendar, label: 'Clínicas open', value: openCamps },
+    { href: '/dashboard/school', icon: IconCalendar, label: 'Open clinics', value: openCamps },
     {
       href: '/dashboard/school',
       icon: IconWhistle,
-      label: 'Próximas clinics',
+      label: 'Upcoming clinics',
       value: upcomingCamps.length,
     },
   ];
@@ -57,11 +57,11 @@ export default async function SchoolDashboardPage() {
     <div className="mx-auto max-w-6xl">
       <PageHeader
         title={school.name}
-        subtitle="Programa escolar y comunitario — grupos, clinics y opportunities"
+        subtitle="School and community programme — groups, clinics and opportunities"
         icon="book"
       >
         <Badge variant={school.verified ? 'success' : 'outline'}>
-          {school.verified ? 'Verificada' : 'Pending verification'}
+          {school.verified ? 'Verified' : 'Pending verification'}
         </Badge>
         <Badge>{SCHOOL_TYPE_LABELS[school.type] ?? school.type}</Badge>
       </PageHeader>
@@ -75,10 +75,10 @@ export default async function SchoolDashboardPage() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="animate-fade-up">
           <CardContent>
-            <h2 className="mb-3 font-semibold">Ficha de la organización</h2>
+            <h2 className="mb-3 font-semibold">Organisation profile</h2>
             <dl className="flex flex-col gap-2 text-sm">
               <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">Tipo</dt>
+                <dt className="text-muted-foreground">Type</dt>
                 <dd className="font-medium">{SCHOOL_TYPE_LABELS[school.type] ?? school.type}</dd>
               </div>
               <div className="flex justify-between gap-3">
@@ -86,11 +86,11 @@ export default async function SchoolDashboardPage() {
                 <dd className="font-medium">{school.country}</dd>
               </div>
               <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">Ciudad</dt>
+                <dt className="text-muted-foreground">City</dt>
                 <dd className="font-medium">{school.city ?? '—'}</dd>
               </div>
               <div className="flex justify-between gap-3">
-                <dt className="text-muted-foreground">Contacto</dt>
+                <dt className="text-muted-foreground">Contact</dt>
                 <dd className="font-medium">{school.contactName ?? '—'}</dd>
               </div>
               <div className="flex justify-between gap-3">
@@ -110,7 +110,7 @@ export default async function SchoolDashboardPage() {
         <Card className="animate-fade-up lg:col-span-2" style={{ animationDelay: '120ms' }}>
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-semibold">Próximas clinics y camps</h2>
+              <h2 className="font-semibold">Upcoming clinics y camps</h2>
               <Link
                 href="/dashboard/school/opportunities"
                 className="text-sm text-primary hover:underline"
@@ -141,7 +141,7 @@ export default async function SchoolDashboardPage() {
                       </div>
                     </div>
                     <Badge variant={camp.status === 'OPEN' ? 'success' : 'warning'}>
-                      {camp.status === 'OPEN' ? 'Inscripciones open' : 'Completo'}
+                      {camp.status === 'OPEN' ? 'Inscripciones open' : 'Full'}
                     </Badge>
                   </div>
                 ))}

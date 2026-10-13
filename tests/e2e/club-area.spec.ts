@@ -15,7 +15,7 @@ test('Club: centro de reclutamiento y bandeja de requests', async ({ page }) => 
 
   // 1. Dashboard: centro de reclutamiento
   await page.goto(`${BASE}/dashboard/club`);
-  await expect(page.getByText('Centro de reclutamiento').first()).toBeVisible();
+  await expect(page.getByText('Recruitment centre').first()).toBeVisible();
   await expect(page.getByText('Pipeline de reclutamiento')).toBeVisible();
   await expect(page.getByText('Applications by status').first()).toBeVisible();
   await expect(page.getByText('Active requirements').first()).toBeVisible();

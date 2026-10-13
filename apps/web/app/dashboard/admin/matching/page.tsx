@@ -52,7 +52,7 @@ export default async function AdminMatchingPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Matching"
-        subtitle="Motor de coincidencia entre players y requirements de clubs"
+        subtitle="Matching engine between players and club requirements"
         icon="target"
       />
 
@@ -69,7 +69,7 @@ export default async function AdminMatchingPage() {
             <h2 className="mb-4 font-semibold">Score distribution</h2>
             <CountsBars items={scoreBuckets} />
             <p className="mt-3 text-xs text-muted-foreground">
-              {matches.length} combinaciones player × requirement evaluadas por el motor.
+              {matches.length} player × requirement combinations evaluated by the engine.
             </p>
           </CardContent>
         </Card>

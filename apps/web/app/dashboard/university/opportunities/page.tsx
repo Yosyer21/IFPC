@@ -22,7 +22,7 @@ export default async function UniversityOpportunitiesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Opportunities"
-        subtitle="Scholarships y call-ups open para orientar a tus candidates"
+        subtitle="Scholarships and open call-ups to guide your candidates"
         icon="target"
       />
 
@@ -55,7 +55,7 @@ export default async function UniversityOpportunitiesPage() {
                         ] ?? opportunity.type}
                       </Badge>
                     )}
-                    <Badge variant="success">Abierta</Badge>
+                    <Badge variant="success">Open</Badge>
                   </div>
                   <h2 className="font-semibold">{opportunity.title}</h2>
                   <p className="text-sm text-muted-foreground">
@@ -70,7 +70,7 @@ export default async function UniversityOpportunitiesPage() {
                   </p>
                   {opportunity.closesAt ? (
                     <p className="text-xs text-muted-foreground">
-                      Cierra el {opportunity.closesAt.toLocaleDateString('en-GB')}
+                      Closes on {opportunity.closesAt.toLocaleDateString('en-GB')}
                     </p>
                   ) : null}
                   {isScholarship ? (

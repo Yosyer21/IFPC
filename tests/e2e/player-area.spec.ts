@@ -60,7 +60,7 @@ test('Player area: navigation, saving opportunity, status and documents', async 
   await page.goto(`${BASE}/dashboard/player/documents/upload`);
   const docTitle = `Test medical certificate ${Date.now()}`;
   await page.getByLabel('Document title').fill(docTitle);
-  await page.getByLabel('Archivo').setInputFiles({
+  await page.getByLabel('File').setInputFiles({
     name: 'test.pdf',
     mimeType: 'application/pdf',
     buffer: Buffer.from('%PDF-1.4 demo document'),
@@ -97,7 +97,7 @@ test('Player area: personaliza su perfil (headline, acento, portada y checklist)
   await page.getByLabel('Location').fill('Valencia, Spain');
   await page.getByLabel('Looking for a club').check();
   // El swatch se pinta sobre un radio `sr-only`: se marca sin comprobar el puntero.
-  await page.getByRole('radio', { name: 'Cian' }).check({ force: true });
+  await page.getByRole('radio', { name: 'Cyan' }).check({ force: true });
   await page.getByRole('button', { name: 'Save changes' }).click();
   await page.waitForURL('**/dashboard/player/profile', { timeout: 15_000 });
 
@@ -119,7 +119,7 @@ test('Player area: personaliza su perfil (headline, acento, portada y checklist)
 
   // 3. Portada: subir un PNG y quitarla
   await page.goto(`${BASE}/dashboard/player/profile/edit`);
-  await page.getByLabel('Portada').setInputFiles({
+  await page.getByLabel('Cover photo').setInputFiles({
     name: 'banner.png',
     mimeType: 'image/png',
     buffer: PNG_1X1,
@@ -175,7 +175,7 @@ test('Player area: personaliza su perfil (headline, acento, portada y checklist)
   await page.getByLabel('Headline').fill('');
   await page.getByLabel('Location').fill('');
   await page.getByLabel('Looking for a club').uncheck();
-  await page.getByRole('radio', { name: 'Esmeralda' }).check({ force: true });
+  await page.getByRole('radio', { name: 'Emerald' }).check({ force: true });
   await page.getByRole('button', { name: 'Save changes' }).click();
   await page.waitForURL('**/dashboard/player/profile', { timeout: 15_000 });
   await expect(page.getByText(headline)).toBeHidden();

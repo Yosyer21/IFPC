@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
-export const metadata: Metadata = { title: 'Agentes · Users' };
+export const metadata: Metadata = { title: 'Agents · Users' };
 
 export default async function AdminUsersAgentsPage() {
   const session = await auth();
@@ -23,8 +23,8 @@ export default async function AdminUsersAgentsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Agentes"
-        subtitle="Agencias y representantes con players vinculados"
+        title="Agents"
+        subtitle="Agencies and agents with linked players"
         icon="users"
       />
       <RoleLinks />

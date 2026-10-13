@@ -45,7 +45,7 @@ export default async function AdminPlayersEvaluationsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Evaluaciones"
-        subtitle="Valoraciones de players registered por los coaches"
+        subtitle="Player ratings recorded by coaches"
         icon="whistle"
       />
 

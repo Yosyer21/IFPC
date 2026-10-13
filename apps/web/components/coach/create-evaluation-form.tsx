@@ -33,7 +33,7 @@ export function CreateEvaluationForm({ playerId }: { playerId: string }) {
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Register assessment'}
+        {pending ? 'Saving…' : 'Register assessment'}
       </Button>
     </form>
   );

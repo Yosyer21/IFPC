@@ -16,10 +16,10 @@ export default async function AdminSettingsGeneralPage() {
 
   const rows: [string, string][] = [
     ['Entorno', environment],
-    ['URL de la app', appUrl],
-    ['Base de datos', databaseUrl.includes('@') ? `${databaseUrl.split('@')[0]}@…` : databaseUrl],
+    ['App URL', appUrl],
+    ['Database', databaseUrl.includes('@') ? `${databaseUrl.split('@')[0]}@…` : databaseUrl],
     ['Stripe', stripeConfigured ? 'Configurado' : 'No configurado (pagos simulados)'],
-    ['Resend (email)', resendConfigured ? 'Configurado' : 'No configurado'],
+    ['Resend (email)', resendConfigured ? 'Configurado' : 'Not configured'],
   ];
 
   return (

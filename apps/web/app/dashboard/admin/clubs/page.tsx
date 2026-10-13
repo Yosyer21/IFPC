@@ -20,7 +20,7 @@ export default async function AdminClubsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Clubes"
+        title="Clubs"
         subtitle="Registered clubs and entity verification"
         icon="briefcase"
       />
@@ -39,12 +39,12 @@ export default async function AdminClubsPage() {
                 <div>
                   <p className="font-semibold">{club.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {club.city ?? '—'}, {club.country} · {club.user?.email ?? 'sin usuario'}
+                    {club.city ?? '—'}, {club.country} · {club.user?.email ?? 'no user'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={club.verified ? 'success' : 'warning'}>
-                    {club.verified ? 'Verificado' : 'Pending'}
+                    {club.verified ? 'Verified' : 'Pending'}
                   </Badge>
                   {!club.verified ? (
                     <form action={verifyClubAction}>

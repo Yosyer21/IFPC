@@ -13,12 +13,11 @@ export const metadata: Metadata = {
 const CATEGORY_LABELS: Record<string, string> = {
   technical: 'Technique',
   'strength-conditioning': 'Strength and conditioning',
-  psychology: 'Psychology',
 };
 
 export default async function PublicTrainingPage() {
   const content = await prisma.trainingContent.findMany({
-    where: { category: { in: ['technical', 'strength-conditioning', 'psychology'] } },
+    where: { category: { in: ['technical', 'strength-conditioning'] } },
     orderBy: { createdAt: 'desc' },
     take: 100,
   });
@@ -31,10 +30,10 @@ export default async function PublicTrainingPage() {
       <main className="mx-auto w-full max-w-6xl px-4 py-16">
         <div className="mb-10">
           <p className="text-sm font-semibold uppercase tracking-widest text-emerald-400">Training</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight">Plan de training abierto</h1>
+          <h1 className="mt-2 text-4xl font-bold tracking-tight">Open training plan</h1>
           <p className="mt-3 max-w-2xl text-muted-foreground">
             {content.length} exercises · {categories.size} areas. Access the full catalog and your
-            plan personalizado con una cuenta de player.
+            personalised plan with a player account.
           </p>
         </div>
 

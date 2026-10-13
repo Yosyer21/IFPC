@@ -41,7 +41,7 @@ export function PlayerRow({ player }: { player: PlayerRowData }) {
               <option value="PENDING_VERIFICATION">Pending</option>
               <option value="ACTIVE">Active</option>
               <option value="AVAILABLE">Available</option>
-              <option value="INACTIVE">Inactivo</option>
+              <option value="INACTIVE">Inactive</option>
             </select>
             <button
               type="submit"

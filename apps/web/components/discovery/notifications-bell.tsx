@@ -55,7 +55,7 @@ export function NotificationsBell({
 
       {open ? (
         <div
-          className={`absolute top-full z-50 mt-2 max-w-[85vw] rounded-2xl border border-white/10 bg-[#0b0f0d]/95 p-3 shadow-xl backdrop-blur-xl ${
+          className={`absolute top-full z-50 mt-2 max-w-[85vw] rounded-2xl border border-border bg-[#0b0f0d] p-3 shadow-xl ${
             compact ? 'left-0 w-72' : 'right-0 w-80'
           }`}
         >
@@ -67,12 +67,12 @@ export function NotificationsBell({
               disabled={pending || pendingCount === 0}
               className="text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
             >
-              {pending ? 'Marcando…' : 'Mark as read'}
+              {pending ? 'Marking…' : 'Mark as read'}
             </button>
           </div>
 
           {notifications.length === 0 ? (
-            <p className="mt-2 text-xs text-muted-foreground">Todavía no tienes avisos.</p>
+            <p className="mt-2 text-xs text-muted-foreground">You have no notifications yet.</p>
           ) : (
             <ul className="mt-2 flex flex-col gap-1">
               {notifications.map((notification) => (

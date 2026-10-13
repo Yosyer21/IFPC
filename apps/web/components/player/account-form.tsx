@@ -13,7 +13,7 @@ export function AccountForm({ name, email }: { name: string; email: string }) {
       <Input name="email" label="Email" defaultValue={email} disabled />
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Guardando…' : 'Save changes'}
+        {pending ? 'Saving…' : 'Save changes'}
       </Button>
     </form>
   );

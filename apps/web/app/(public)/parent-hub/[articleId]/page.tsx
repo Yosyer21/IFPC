@@ -51,7 +51,7 @@ export default async function PublicParentHubArticlePage({
               href="/register"
               className="mt-4 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
             >
-              Crear cuenta familiar
+              Create a family account
             </Link>
           </div>
         </div>

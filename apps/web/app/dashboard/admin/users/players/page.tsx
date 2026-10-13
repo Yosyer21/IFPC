@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
-import { PLAYER_STATUS_LABELS } from '@ifpc/config';
+import { COMPETITION_LEVEL_LABELS, PLAYER_STATUS_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { RoleLinks } from '@/components/admin/role-links';
 
@@ -25,7 +25,7 @@ export default async function AdminUsersPlayersPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Players"
-        subtitle="Cuentas de players de la plataforma"
+        subtitle="Player accounts on the platform"
         icon="users"
       />
       <RoleLinks />
@@ -48,7 +48,11 @@ export default async function AdminUsersPlayersPage() {
                   <p className="text-sm text-muted-foreground">{player.user.email}</p>
                   <p className="text-xs text-muted-foreground">
                     {player.position ?? 'No position'} · {player.nationality ?? '—'} ·{' '}
-                    {player.competitionLevel ?? '—'}
+                    {player.competitionLevel
+                      ? ((COMPETITION_LEVEL_LABELS as Record<string, string | undefined>)[
+                          player.competitionLevel
+                        ] ?? player.competitionLevel)
+                      : '—'}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

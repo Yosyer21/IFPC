@@ -23,7 +23,7 @@ export default async function AdminPlayersActivePage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Active players"
-        subtitle="Profilees activos y available para reclutamiento"
+        subtitle="Active profiles available for recruitment"
         icon="whistle"
       />
       <PlayerFilterLinks />

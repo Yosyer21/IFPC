@@ -21,19 +21,19 @@ const PLANS: {
     tier: 'PREMIUM',
     label: 'Premium',
     price: '€99/year',
-    features: ['Profile destacado', 'Unlimited videos', 'Development statistics', 'Insignia verificada'],
+    features: ['Featured profile', 'Unlimited videos', 'Development statistics', 'Verified badge'],
   },
   {
     tier: 'SCOUT',
     label: 'Scout',
     price: '€199/year',
-    features: ['Acceso a reports de scouting', 'Advanced player search', 'Save players'],
+    features: ['Access to scouting reports', 'Advanced player search', 'Save players'],
   },
   {
     tier: 'CLUB',
     label: 'Club',
     price: '€499/year',
-    features: ['Post opportunities', 'Requisitos de players', 'Acceso completo al matching'],
+    features: ['Post opportunities', 'Player requirements', 'Full matching access'],
   },
 ];
 
@@ -70,8 +70,8 @@ export function MembershipUpgradeForm({ currentTier }: { currentTier: string }) 
         ))}
       </div>
       <p className="mt-4 text-xs text-muted-foreground">
-        Con Stripe configurado se redirige al pago seguro. En desarrollo sin clave, el pago se
-        registra como simulado.
+        With Stripe configured you are redirected to secure payment. In development without a key,
+        the payment is recorded as simulated.
       </p>
     </div>
   );

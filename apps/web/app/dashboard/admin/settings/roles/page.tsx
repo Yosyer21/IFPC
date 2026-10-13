@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'Roles · Settings' };
 const ROLE_INFO: Record<string, { label: string; description: string; prefix: string }> = {
   PLAYER: {
     label: 'Player',
-    description: 'Profile profesional, desarrollo, opportunities y contenidos de training.',
+    description: 'Professional profile, development, opportunities and training content.',
     prefix: '/dashboard/player',
   },
   PARENT: {
@@ -29,13 +29,13 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
     prefix: '/dashboard/scout',
   },
   AGENT: {
-    label: 'Agente',
+    label: 'Agent',
     description: 'Player representation and recruitment management.',
     prefix: '/dashboard/agent',
   },
   CLUB: {
     label: 'Club',
-    description: 'Centro de reclutamiento, opportunities y requirements.',
+    description: 'Recruitment centre, opportunities and requirements.',
     prefix: '/dashboard/club',
   },
   UNIVERSITY: {
@@ -46,7 +46,7 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
   SCHOOL: {
     label: 'School / Community service',
     description:
-      'Colegios, clubs escolares y servicios comunitarios: programas, grupos y clinics inclusivas.',
+      'Schools, school clubs and community services: programmes, groups and inclusive clinics.',
     prefix: '/dashboard/school',
   },
   ADMIN: {
@@ -67,7 +67,7 @@ export default async function AdminSettingsRolesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Roles"
-        subtitle="Tipos de cuenta de la plataforma y su base de usuarios"
+        subtitle="Account types on the platform and their user base"
         icon="shield"
       />
 
@@ -80,7 +80,7 @@ export default async function AdminSettingsRolesPage() {
               <CardContent>
                 <div className="mb-2 flex items-center justify-between gap-2">
                   <h2 className="font-semibold">{info?.label ?? role}</h2>
-                  <Badge>{count} usuarios</Badge>
+                  <Badge>{count} users</Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">{info?.description}</p>
                 <p className="mt-2 text-xs text-muted-foreground">

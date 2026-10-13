@@ -70,7 +70,7 @@ export function PostComposer({
   const nearLimit = body.length > POST_BODY_MAX * 0.9;
 
   return (
-    <form action={formAction} className="glass-card mb-6 flex flex-col gap-3 rounded-2xl p-4">
+    <form action={formAction} className="surface mb-6 flex flex-col gap-3 rounded-2xl p-4">
       <textarea
         id={bodyId}
         name="body"
@@ -78,8 +78,8 @@ export function PostComposer({
         maxLength={POST_BODY_MAX}
         value={body}
         onChange={(event) => setBody(event.target.value)}
-        placeholder="¿Qué quieres contar?"
-        aria-label="¿Qué quieres contar?"
+        placeholder="What do you want to share?"
+        aria-label="What do you want to share?"
         className="w-full resize-none border-0 bg-transparent p-0 text-sm outline-none placeholder:text-muted-foreground/60"
       />
 
@@ -104,14 +104,14 @@ export function PostComposer({
           id={pollId}
           className="flex flex-col gap-2 rounded-xl border border-border/70 p-3"
         >
-          <legend className="sr-only">Encuesta</legend>
+          <legend className="sr-only">Poll</legend>
           {Array.from({ length: pollCount }, (_value, index) => (
             <input
               key={index}
               name="pollOption"
               maxLength={80}
-              placeholder={`Opción ${index + 1}`}
-              aria-label={`Opción ${index + 1} de la encuesta`}
+              placeholder={`Option ${index + 1}`}
+              aria-label={`Poll option ${index + 1}`}
               className={fieldClass}
             />
           ))}
@@ -122,7 +122,7 @@ export function PostComposer({
                 onClick={() => setPollCount((count) => count + 1)}
                 className="text-xs font-medium text-emerald-300 hover:underline"
               >
-                Añadir opción
+                Add option
               </button>
             ) : (
               <span />
@@ -143,7 +143,7 @@ export function PostComposer({
           <input
             name="publishAt"
             type="datetime-local"
-            aria-label="Programar la post"
+            aria-label="Schedule post"
             className={`${fieldClass} w-auto`}
           />
           <button
@@ -159,23 +159,23 @@ export function PostComposer({
       <details className="group rounded-xl border border-border/60 px-3 py-2">
         <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
           <IconChevronDown className="h-3.5 w-3.5 transition-transform group-open:rotate-180" />
-          Más opciones
+          More options
         </summary>
         <div className="mt-3 flex flex-col gap-3">
           <div className="grid gap-3 sm:grid-cols-2">
             <Input name="title" label="Title (optional)" placeholder="One-line summary" />
-            <Input name="linkUrl" label="Enlace (opcional)" type="url" placeholder="https://…" />
+            <Input name="linkUrl" label="Link (optional)" type="url" placeholder="https://…" />
           </div>
           <Input
             name="mediaUrl"
-            label="Video de YouTube or Vimeo"
+            label="YouTube or Vimeo video"
             placeholder="https://youtu.be/…"
           />
           <Input
             id={altId}
             name="mediaAlt"
-            label="Texto alternativo del medio"
-            placeholder="Describe la imagen (lectores de pantalla)"
+            label="Media alt text"
+            placeholder="Describe the image (screen readers)"
           />
           <Input
             id={tagsId}
@@ -186,7 +186,7 @@ export function PostComposer({
           <div className="flex flex-wrap gap-3">
             <div className="flex flex-col gap-1.5">
               <label htmlFor={policyId} className="text-sm font-medium">
-                Comentarios
+                Comments
               </label>
               <select
                 id={policyId}
@@ -203,7 +203,7 @@ export function PostComposer({
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor={typeId} className="text-sm font-medium">
-                Tipo
+                Type
               </label>
               <select
                 id={typeId}
@@ -215,7 +215,7 @@ export function PostComposer({
                 <option value="ACHIEVEMENT">{POST_TYPE_LABELS.ACHIEVEMENT}</option>
               </select>
               <span className="text-xs text-muted-foreground">
-                Con foto o vídeo se clasifica solo.
+                With a photo or video it is classified automatically.
               </span>
             </div>
           </div>
@@ -240,13 +240,13 @@ export function PostComposer({
             className="sr-only"
           />
           <p id={fileHintId} className="sr-only">
-            Imágenes JPG, PNG or WebP de hasta 4 MB, o vídeos MP4, WebM o MOV de hasta 25 MB. Para
-            vídeos largos, mejor el link en «Más opciones».
+            JPG, PNG or WebP images up to 4 MB, or MP4, WebM or MOV videos up to 25 MB. For long
+            videos, better to add the link under “More options”.
           </p>
 
-          <label htmlFor={galleryId} className={toolClass} title="Galería de imágenes">
+          <label htmlFor={galleryId} className={toolClass} title="Image gallery">
             <IconImages className="h-4 w-4" />
-            <span className="sr-only">Galería de imágenes</span>
+            <span className="sr-only">Image gallery</span>
           </label>
           <input
             id={galleryId}
@@ -262,11 +262,11 @@ export function PostComposer({
             onClick={() => setPollCount((count) => (count === 0 ? POLL_START : 0))}
             aria-expanded={pollCount > 0}
             aria-controls={pollId}
-            title="Encuesta"
+            title="Poll"
             className={toolClass}
           >
             <IconChart className="h-4 w-4" />
-            <span className="sr-only">Encuesta</span>
+            <span className="sr-only">Poll</span>
           </button>
 
           <button
@@ -274,11 +274,11 @@ export function PostComposer({
             onClick={() => setSchedule((value) => !value)}
             aria-expanded={schedule}
             aria-controls={scheduleId}
-            title="Programar"
+            title="Schedule"
             className={toolClass}
           >
             <IconCalendar className="h-4 w-4" />
-            <span className="sr-only">Programar</span>
+            <span className="sr-only">Schedule</span>
           </button>
         </div>
 
@@ -296,9 +296,9 @@ export function PostComposer({
             value="draft"
             variant="ghost"
             disabled={pending}
-            title="Save como borrador"
+            title="Save as draft"
           >
-            Borrador
+            Draft
           </Button>
           <Button type="submit" disabled={pending}>
             {pending ? 'Publicando…' : 'Publish'}

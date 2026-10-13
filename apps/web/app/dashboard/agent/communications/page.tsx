@@ -30,7 +30,7 @@ export default async function AgentCommunicationsPage() {
     <div className="mx-auto max-w-4xl">
       <PageHeader
         title="Comunicaciones"
-        subtitle="Messages con clubs, players y la plataforma"
+        subtitle="Messages with clubs, players and the platform"
         icon="mail"
       />
 
@@ -103,7 +103,7 @@ export default async function AgentCommunicationsPage() {
                       type="submit"
                       className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                     >
-                      Responder
+                      Reply
                     </button>
                   </form>
                 </CardContent>

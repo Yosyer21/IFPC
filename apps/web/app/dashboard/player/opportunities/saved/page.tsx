@@ -59,10 +59,10 @@ export default async function PlayerSavedOpportunitiesPage() {
                         : ''}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Guardada el {item.createdAt.toLocaleDateString('en-GB')}
+                      Saved on {item.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   </div>
-                  <Badge>Guardada</Badge>
+                  <Badge>Saved</Badge>
                 </CardContent>
               </Card>
             </Link>

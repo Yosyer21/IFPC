@@ -54,7 +54,7 @@ export function FeedTabs({
           href={hrefFor(base, filters.tab, { ...filters, tag: null })}
           className="ml-auto rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
         >
-          Quitar #{filters.tag}
+          Remove #{filters.tag}
         </Link>
       ) : null}
     </nav>

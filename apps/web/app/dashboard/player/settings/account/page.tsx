@@ -5,7 +5,7 @@ import { prisma } from '@ifpc/database';
 import { AccountForm } from '@/components/player/account-form';
 import { VerifyEmailBanner } from '@/components/player/verify-email-banner';
 
-export const metadata: Metadata = { title: 'Cuenta' };
+export const metadata: Metadata = { title: 'Account' };
 
 export default async function PlayerAccountSettingsPage() {
   const session = await auth();
@@ -17,7 +17,7 @@ export default async function PlayerAccountSettingsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Cuenta</h1>
+        <h1 className="text-2xl font-bold">Account</h1>
         <Link
           href="/dashboard/player/settings"
           className="text-sm text-muted-foreground hover:underline"

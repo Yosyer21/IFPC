@@ -563,7 +563,7 @@ describe('createCommentAction', () => {
       '/dashboard/discovery',
       '/dashboard/discovery/post-1'
     );
-    expect(result).toEqual({ success: 'Comentario publicado.' });
+    expect(result).toEqual({ success: 'Comment published.' });
   });
 
   it('acepta replies indicando el comment padre', async () => {
@@ -658,7 +658,7 @@ describe('createCommentAction', () => {
 
     const result = await createCommentAction({}, form({ postId: 'post-1', body: 'hola' }));
 
-    expect(result).toEqual({ success: 'Comentario publicado.' });
+    expect(result).toEqual({ success: 'Comment published.' });
     expect(mocks.commentCreate).toHaveBeenCalled();
   });
 });
@@ -740,7 +740,7 @@ describe('updateCommentAction', () => {
       '/dashboard/discovery',
       '/dashboard/discovery/post-1'
     );
-    expect(result).toEqual({ success: 'Comentario actualizado.' });
+    expect(result).toEqual({ success: 'Comment updated.' });
   });
 });
 
@@ -768,7 +768,7 @@ describe('reportPostAction', () => {
       update: { reason: 'Contenido ofensivo' },
       create: { postId: 'post-1', reporterId: 'user-1', reason: 'Contenido ofensivo' },
     });
-    expect(result).toEqual({ success: 'Gracias, lo revisaremos.' });
+    expect(result).toEqual({ success: 'Thank you, we will review it.' });
   });
 });
 

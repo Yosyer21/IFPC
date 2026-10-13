@@ -23,8 +23,8 @@ export default async function AdminUsersParentsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Familiares"
-        subtitle="Cuentas de padres y tutores vinculadas a players"
+        title="Families"
+        subtitle="Parent and guardian accounts linked to players"
         icon="users"
       />
       <RoleLinks />
@@ -44,12 +44,12 @@ export default async function AdminUsersParentsPage() {
                   <p className="font-semibold">{parent.user.name}</p>
                   <p className="text-sm text-muted-foreground">{parent.user.email}</p>
                   <p className="text-xs text-muted-foreground">
-                    Registrado el {parent.createdAt.toLocaleDateString('en-GB')}
+                    Registered on {parent.createdAt.toLocaleDateString('en-GB')}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">
-                    {parent._count.children} {parent._count.children === 1 ? 'hijo' : 'hijos'}
+                    {parent._count.children} {parent._count.children === 1 ? 'child' : 'children'}
                   </Badge>
                 </div>
               </CardContent>

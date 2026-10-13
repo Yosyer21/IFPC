@@ -17,7 +17,7 @@ import {
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   if (session.user.role === 'PLAYER') {
@@ -55,16 +55,16 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
 
   const opportunityId = stringField(body, 'opportunityId');
-  if (!opportunityId) return badRequest('opportunityId es obligatorio');
+  if (!opportunityId) return badRequest('opportunityId is required');
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
-  if (!player) return forbidden('Profile de player no encontrado');
+  if (!player) return forbidden('Player profile not found');
 
   const application = await prisma.application.upsert({
     where: { playerId_opportunityId: { playerId: player.id, opportunityId } },

@@ -73,7 +73,7 @@ export default async function AgentNegotiationDetailPage({
         >
           <Card className="mt-4 transition-colors group-hover:border-primary">
             <CardContent className="flex items-center justify-between">
-              <span className="font-medium">Contrato asociado</span>
+              <span className="font-medium">Linked contract</span>
               <span className="text-sm text-muted-foreground">{negotiation.contract.status}</span>
             </CardContent>
           </Card>

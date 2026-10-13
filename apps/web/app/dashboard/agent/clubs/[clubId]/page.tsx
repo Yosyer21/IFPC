@@ -32,7 +32,7 @@ export default async function AgentClubDetailPage({
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{club.name}</h1>
       <Badge variant={club.verified ? 'success' : 'warning'}>
-        {club.verified ? 'Verificado' : 'Pending verification'}
+        {club.verified ? 'Verified' : 'Pending verification'}
       </Badge>
 
       <Card className="mt-4 mb-4">
@@ -40,7 +40,7 @@ export default async function AgentClubDetailPage({
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
               ['Country', club.country],
-              ['Ciudad', club.city ?? '—'],
+              ['City', club.city ?? '—'],
               ['Liga', club.league ?? '—'],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-border p-3">

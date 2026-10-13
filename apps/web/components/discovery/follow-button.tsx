@@ -43,7 +43,7 @@ export function FollowButton({
       aria-pressed={following}
       className={`inline-flex items-center justify-center rounded-full transition-all disabled:opacity-50 ${size} ${style}`}
     >
-      {following ? 'Following' : 'Seguir'}
+      {following ? 'Following' : 'Follow'}
     </button>
   );
 }

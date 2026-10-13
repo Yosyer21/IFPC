@@ -88,6 +88,11 @@ enum LiveSessionStatus {
   CANCELLED
 }
 
+enum LiveSessionVisibility {
+  CLUB
+  PUBLIC
+}
+
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
@@ -177,6 +182,7 @@ model Player {
   campRegistrations CampRegistration[]
   career        CareerEntry[]
   profileViews  ProfileView[]
+  quizAttempts  QuizAttempt[]
 
   @@index([status])
   @@index([position])
@@ -315,6 +321,7 @@ model Club {
   requirements  Requirement[]
   staff         ClubStaff[]
   camps         Camp[]
+  liveSessions  LiveSession[]
 
   @@index([country])
 }
@@ -505,6 +512,10 @@ model TrainingContent {
   title           String
   category        String // technical | strength-conditioning | psychology | parent-education
   description     String?
+  /// Cuerpo del curso (markdown simple: secciones, listas, tablas).
+  content         String?
+  /// Resultados de aprendizaje / puntos clave.
+  outcomes        String[] @default([])
   videoUrl        String?
   thumbnailUrl    String?
   durationMinutes Int?
@@ -512,7 +523,79 @@ model TrainingContent {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
+  quiz            Quiz?
+
   @@index([category])
+}
+
+/// Quiz de un curso: preguntas de opción múltiple con nota de corte.
+model Quiz {
+  id          String           @id @default(cuid())
+  contentId   String           @unique
+  content     TrainingContent  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  /// Porcentaje mínimo para aprobar (0-100).
+  passScore   Int              @default(70)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+}
+
+model QuizQuestion {
+  id       String       @id @default(cuid())
+  quizId   String
+  quiz     Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  prompt   String
+  /// Explicación mostrada tras responder (opcional).
+  explanation String?
+  position Int          @default(0)
+  options  QuizOption[]
+
+  @@index([quizId])
+}
+
+model QuizOption {
+  id         String       @id @default(cuid())
+  questionId String
+  question   QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label      String
+  isCorrect  Boolean      @default(false)
+  position   Int          @default(0)
+
+  @@index([questionId])
+}
+
+/// Intento de un jugador en el quiz de un curso.
+model QuizAttempt {
+  id        String        @id @default(cuid())
+  quizId    String
+  quiz      Quiz          @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player        @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  correct   Int
+  total     Int
+  percent   Int
+  passed    Boolean
+  createdAt DateTime      @default(now())
+
+  answers   QuizAnswer[]
+
+  @@index([quizId, playerId])
+  @@index([playerId, createdAt])
+}
+
+model QuizAnswer {
+  id         String      @id @default(cuid())
+  attemptId  String
+  attempt    QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId String
+  optionId   String?
+  isCorrect  Boolean     @default(false)
+
+  @@index([attemptId])
 }
 
 model Pathway {
@@ -787,23 +870,31 @@ model CampRegistration {
 }
 
 model LiveSession {
-  id          String            @id @default(cuid())
+  id          String                @id @default(cuid())
   title       String
   description String?
-  type        LiveSessionType   @default(TRAINING)
-  status      LiveSessionStatus @default(SCHEDULED)
+  type        LiveSessionType       @default(TRAINING)
+  status      LiveSessionStatus     @default(SCHEDULED)
+  /// `CLUB` = solo visible para el club; `PUBLIC` = anunciado en Discovery.
+  visibility  LiveSessionVisibility @default(PUBLIC)
   startsAt    DateTime
   endsAt      DateTime?
   meetingUrl  String?
   coachId     String?
-  coach       Coach?            @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  coach       Coach?                @relation(fields: [coachId], references: [id], onDelete: SetNull)
   playerId    String?
-  player      Player?           @relation(fields: [playerId], references: [id], onDelete: SetNull)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  player      Player?               @relation(fields: [playerId], references: [id], onDelete: SetNull)
+  /// Club que organiza el live (obligatorio para `visibility = CLUB`).
+  clubId      String?
+  club        Club?                 @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  posts       Post[]
 
   @@index([status])
   @@index([startsAt])
+  @@index([clubId])
 }
 
 model Conversation {
@@ -891,6 +982,9 @@ model Post {
   linkUrl       String?
   opportunityId String?
   opportunity   Opportunity?   @relation(fields: [opportunityId], references: [id], onDelete: SetNull)
+  /// Live anunciado en el feed (los lives públicos crean un post).
+  liveSessionId String?
+  liveSession   LiveSession?   @relation(fields: [liveSessionId], references: [id], onDelete: SetNull)
   tags          String[]       @default([])
   /// Quién puede comentar esta publicación (el autor decide).
   commentsPolicy CommentsPolicy @default(EVERYONE)

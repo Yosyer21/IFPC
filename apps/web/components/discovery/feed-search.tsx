@@ -52,7 +52,7 @@ export function FeedSearch({
         className={`${fieldClass} min-w-0 flex-1`}
       />
       <select name="type" defaultValue={filters.type ?? ''} aria-label="Post type" className={fieldClass}>
-        <option value="">Todo tipo</option>
+        <option value="">All types</option>
         {FEED_TYPE_FILTERS.map((value) => (
           <option key={value} value={value}>
             {POST_TYPE_LABELS[value] ?? value}

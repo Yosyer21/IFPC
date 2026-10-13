@@ -35,7 +35,7 @@ export default async function AdminSettingsCountriesPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Countries"
-        subtitle="Mercados configurados y presencia de la plataforma"
+        subtitle="Configured markets and platform presence"
         icon="shield"
       />
 
@@ -50,7 +50,7 @@ export default async function AdminSettingsCountriesPage() {
           <CardContent>
             <h2 className="mb-4 font-semibold">Players by country</h2>
             {Object.keys(playersByCountry).length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sin nacionalidades registered.</p>
+              <p className="text-sm text-muted-foreground">No registered nationalities.</p>
             ) : (
               <CountsBars
                 items={Object.entries(playersByCountry)

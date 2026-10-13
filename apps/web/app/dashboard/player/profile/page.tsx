@@ -81,10 +81,10 @@ export default async function PlayerProfilePage() {
     ['Nationality', player.nationality ?? '—'],
     ['Position', positionLabel],
     ['Preferred foot', footLabel],
-    ['Level competitivo', competitionLabel],
-    ['Altura', player.heightCm ? `${player.heightCm} cm` : '—'],
-    ['Peso', player.weightKg ? `${player.weightKg} kg` : '—'],
-    ['Club actual', player.clubName ?? '—'],
+    ['Competition level', competitionLabel],
+    ['Height', player.heightCm ? `${player.heightCm} cm` : '—'],
+    ['Weight', player.weightKg ? `${player.weightKg} kg` : '—'],
+    ['Current club', player.clubName ?? '—'],
   ];
 
   const subLinks = [
@@ -170,23 +170,23 @@ export default async function PlayerProfilePage() {
               <h2 className="font-semibold">Interest in your profile</h2>
               {viewStats.viewers === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  Todavía nadie ha visto tu perfil. Compártelo y mantén tus datos y vídeos al day
-                  para que clubs y scouts te encuentren.
+                  Nobody has viewed your profile yet. Share it and keep your details and videos up to
+                  date so clubs and scouts can find you.
                 </p>
               ) : (
                 <>
                   <div className="flex flex-wrap gap-5">
                     <div>
                       <div className="text-2xl font-bold tabular-nums">{viewStats.viewers}</div>
-                      <div className="text-xs text-muted-foreground">Interesados</div>
+                      <div className="text-xs text-muted-foreground">Interested</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold tabular-nums">{viewStats.views}</div>
-                      <div className="text-xs text-muted-foreground">Visitas</div>
+                      <div className="text-xs text-muted-foreground">Visits</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold tabular-nums">{viewStats.newThisWeek}</div>
-                      <div className="text-xs text-muted-foreground">Nuevos (7 days)</div>
+                      <div className="text-xs text-muted-foreground">New (7 days)</div>
                     </div>
                   </div>
                   <div className="flex flex-col divide-y divide-border/60">
@@ -242,8 +242,8 @@ export default async function PlayerProfilePage() {
           <Card className="animate-fade-up">
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                You have not posted anything yet. Share a video, a photo or a milestone on Discovery and
-                aparecerá aquí.
+                You have not posted anything yet. Share a video, a photo or a milestone on Discovery
+                and it will appear here.
               </p>
             </CardContent>
           </Card>

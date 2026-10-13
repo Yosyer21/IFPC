@@ -186,12 +186,12 @@ export default async function DiscoveryAuthorPage({
                       <form action={toggleBlockAction}>
                         <input type="hidden" name="userId" value={author.id} />
                         <ActionSubmit
-                          label={privacy.blocked ? 'Desbloquear' : 'Block'}
+                          label={privacy.blocked ? 'Unblock' : 'Block'}
                           variant={privacy.blocked ? 'outline' : 'danger'}
                           confirmText={
                             privacy.blocked
                               ? undefined
-                              : '¿Block a este perfil? Dejaréis de veros y se cancelan los follows.'
+                              : 'Block this profile? You will stop seeing each other and follows are cancelled.'
                           }
                         />
                       </form>
@@ -229,7 +229,7 @@ export default async function DiscoveryAuthorPage({
             <Card>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Has bloqueado a este perfil: no ves su contenido y no puede interactuar contigo.
+                  You have blocked this profile: you cannot see their content and they cannot interact with you.
                 </p>
               </CardContent>
             </Card>

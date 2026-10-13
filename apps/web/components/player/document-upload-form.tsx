@@ -5,10 +5,10 @@ import { uploadDocumentAction } from '@/app/actions/player';
 import { Button, Input, Select } from '@ifpc/ui';
 
 const TYPE_OPTIONS = [
-  { value: 'passport', label: 'Pasaporte' },
-  { value: 'contract', label: 'Contrato' },
+  { value: 'passport', label: 'Passport' },
+  { value: 'contract', label: 'Contract' },
   { value: 'medical', label: 'Medical' },
-  { value: 'other', label: 'Otro' },
+  { value: 'other', label: 'Other' },
 ];
 
 export function DocumentUploadForm() {
@@ -22,10 +22,10 @@ export function DocumentUploadForm() {
         placeholder="E.g. Passport, medical certificate…"
         required
       />
-      <Select name="type" label="Tipo" options={TYPE_OPTIONS} defaultValue="other" />
+      <Select name="type" label="Type" options={TYPE_OPTIONS} defaultValue="other" />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="file" className="text-sm font-medium">
-          Archivo
+          File
         </label>
         <input
           id="file"

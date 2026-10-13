@@ -9,10 +9,10 @@ import { PageHeader } from '@/components/player/page-header';
 export const metadata: Metadata = { title: 'My documents' };
 
 const TYPE_LABELS: Record<string, string> = {
-  passport: 'Pasaporte',
-  contract: 'Contrato',
+  passport: 'Passport',
+  contract: 'Contract',
   medical: 'Medical',
-  other: 'Otro',
+  other: 'Other',
 };
 
 export default async function PlayerDocumentsPage() {
@@ -42,8 +42,8 @@ export default async function PlayerDocumentsPage() {
         <Card>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              No tienes documents subidos. Tus documents (pasaporte, contrato, certificado
-              medical…) will appear here.
+              You have no documents uploaded yet. Your documents (passport, contract, medical
+              certificate…) will appear here.
             </p>
           </CardContent>
         </Card>

@@ -9,11 +9,11 @@ export const metadata: Metadata = { title: 'Permissions · Settings' };
 
 const ROLE_PERMISSIONS: Record<string, string[]> = {
   PLAYER: ['Edit profile', 'Upload videos', 'Upload documents', 'Apply to opportunities', 'Save opportunities', 'See training content'],
-  PARENT: ['Ver hijos vinculados', 'Education for families', 'See your children’s opportunities', 'Historial de pagos'],
-  COACH: ['Gestionar players asignados', 'Crear evaluations', 'Crear goals', 'Asignar contenido'],
-  SCOUT: ['Explore players', 'Save players', 'Crear reports de scouting'],
+  PARENT: ['See linked children', 'Education for families', 'See your children’s opportunities', 'Payment history'],
+  COACH: ['Manage assigned players', 'Create evaluations', 'Create goals', 'Assign content'],
+  SCOUT: ['Explore players', 'Save players', 'Create scouting reports'],
   AGENT: ['Link players', 'Send players to clubs', 'Gestionar pruebas, negociaciones y contratos'],
-  CLUB: ['Post opportunities', 'Crear requirements', 'Revisar requests', 'Responder consultas', 'Gestionar staff'],
+  CLUB: ['Post opportunities', 'Create requirements', 'Review requests', 'Answer enquiries', 'Manage staff'],
   UNIVERSITY: ['View players', 'See opportunities and scholarships'],
   SCHOOL: [
     'See available participants',
@@ -21,7 +21,7 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     'Inscribir grupos en camps',
     'See opportunities for their students',
   ],
-  ADMIN: ['Acceso total', 'Verify players and clubs', 'Gestionar usuarios y roles', 'Post content', 'Ver analytics', 'System settings'],
+  ADMIN: ['Full access', 'Verify players and clubs', 'Manage users and roles', 'Post content', 'View analytics', 'System settings'],
 };
 
 export default async function AdminSettingsPermissionsPage() {
@@ -35,7 +35,7 @@ export default async function AdminSettingsPermissionsPage() {
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Permisos"
-        subtitle="Matriz de capacidades por rol"
+        subtitle="Capability matrix by role"
         icon="shield"
       />
 
@@ -45,7 +45,7 @@ export default async function AdminSettingsPermissionsPage() {
             <CardContent>
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h2 className="font-semibold">{role}</h2>
-                <Badge variant="outline">{(roleCounts.get(role) ?? 0) + ' cuentas'}</Badge>
+                <Badge variant="outline">{(roleCounts.get(role) ?? 0) + ' accounts'}</Badge>
               </div>
               <ul className="flex flex-col gap-1.5">
                 {(ROLE_PERMISSIONS[role] ?? []).map((permission) => (

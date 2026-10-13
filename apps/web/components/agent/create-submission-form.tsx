@@ -16,10 +16,10 @@ export function CreateSubmissionForm({
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <Select name="playerId" label="Player" options={players} placeholder="Select…" required />
-      <Select name="clubId" label="Club destino" options={clubs} placeholder="Select…" required />
+      <Select name="clubId" label="Destination club" options={clubs} placeholder="Select…" required />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="notes" className="text-sm font-medium">
-          Notas (opcional)
+          Notes (optional)
         </label>
         <textarea
           id="notes"
@@ -30,7 +30,7 @@ export function CreateSubmissionForm({
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       <Button type="submit" disabled={pending}>
-        {pending ? 'Enviando…' : 'Create submission'}
+        {pending ? 'Sending…' : 'Create submission'}
       </Button>
     </form>
   );

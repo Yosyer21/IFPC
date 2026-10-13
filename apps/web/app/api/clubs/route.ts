@@ -17,7 +17,7 @@ import {
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   if (session.user.role === 'CLUB') {
@@ -41,7 +41,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   if (session.user.role !== 'ADMIN') return forbidden();
 
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   const name = stringField(body, 'name');
   const email = stringField(body, 'email');
   const country = stringField(body, 'country');
-  if (!name || !email || !country) return badRequest('name, email y country son obligatorios');
+  if (!name || !email || !country) return badRequest('name, email and country are required');
 
   const club = await prisma.club.create({
     data: {

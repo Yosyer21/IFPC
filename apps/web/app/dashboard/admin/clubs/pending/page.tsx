@@ -28,7 +28,7 @@ export default async function AdminClubsPendingPage() {
         ← All clubs
       </Link>
       <PageHeader
-        title="Clubes pendientes"
+        title="Pending clubs"
         subtitle="Entities awaiting admin verification"
         icon="briefcase"
       />

@@ -52,7 +52,7 @@ export async function updateProfilePhotoAction(
     return { error: 'Only JPG, PNG or WebP images are allowed.' };
   }
   if (file.size > MAX_PHOTO_BYTES) {
-    return { error: 'La imagen debe pesar menos de 2 MB.' };
+    return { error: 'The image must be under 2 MB.' };
   }
 
   const backTo = dashboardPath(formData.get('redirectTo'));

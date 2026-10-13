@@ -69,7 +69,7 @@ export function FeedList({
             aria-live="polite"
             className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground disabled:opacity-50"
           >
-            {pending ? 'Cargando…' : 'Show more'}
+            {pending ? 'Loading…' : 'Show more'}
           </button>
         </div>
       ) : null}

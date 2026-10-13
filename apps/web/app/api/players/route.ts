@@ -17,7 +17,7 @@ import {
 export async function GET() {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
 
   if (session.user.role === 'PLAYER') {
@@ -44,13 +44,13 @@ export async function GET() {
 export async function POST(request: Request) {
   const session = await requireUser();
   if (!session) {
-    return NextResponse.json({ ok: false, error: 'No autorizado' }, { status: 401 });
+    return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
 
   const firstName = stringField(body, 'firstName');
-  if (!firstName) return badRequest('firstName es obligatorio');
+  if (!firstName) return badRequest('firstName is required');
 
   const data = {
     firstName,

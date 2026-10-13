@@ -113,7 +113,7 @@ export default async function ParentDashboardPage() {
     {
       href: '/dashboard/parent/children',
       icon: IconStar,
-      label: 'Pruebas programadas',
+      label: 'Scheduled trials',
       value: scheduledTrials.length,
     },
   ];
@@ -125,7 +125,7 @@ export default async function ParentDashboardPage() {
       href: '/dashboard/parent/children',
       icon: IconStar,
       text: `${upcomingTrials.length} upcoming trial${upcomingTrials.length === 1 ? '' : 's'} in the next 7 days`,
-      meta: 'Ver agenda',
+      meta: 'View schedule',
     });
   }
   if (openOpportunities > 0) {
@@ -160,8 +160,8 @@ export default async function ParentDashboardPage() {
             <p className="mt-1 text-sm text-muted-foreground">
               Family support
               {children.length > 0
-                ? ` · ${children.length} hijo${children.length === 1 ? '' : 's'} en la plataforma`
-                : ' · vincula a tu hijo para seguir su desarrollo'}
+                ? ` · ${children.length} ${children.length === 1 ? 'child' : 'children'} on the platform`
+                : ' · link your child to follow their development'}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -245,7 +245,7 @@ export default async function ParentDashboardPage() {
               <h2 className="font-semibold">Your child's level by category</h2>
               {evaluations.length > 0 ? (
                 <Link href="/dashboard/parent/children" className="text-sm text-primary hover:underline">
-                  Ver detalle →
+                  View details →
                 </Link>
               ) : null}
             </div>
@@ -278,7 +278,7 @@ export default async function ParentDashboardPage() {
                   sublabel={`out of 10 · ${evaluations.length} evaluations`}
                 />
                 <p className="text-center text-sm text-muted-foreground">
-                  Media de las evaluations registered por el coach.
+                  Average of the evaluations registered by the coach.
                 </p>
               </>
             ) : (
@@ -301,7 +301,7 @@ export default async function ParentDashboardPage() {
             </div>
             {children.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                Vincula a tu hijo para seguir su desarrollo, evaluations y opportunities.
+                Link your child to follow their development, evaluations and opportunities.
               </p>
             ) : (
               <div className="flex flex-col gap-3">
@@ -368,7 +368,7 @@ export default async function ParentDashboardPage() {
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">
-                        Prueba · {trial.player.firstName} en {trial.club.name}
+                        Trial · {trial.player.firstName} en {trial.club.name}
                       </div>
                       <div className="truncate text-xs text-muted-foreground">
                         {trial.startsAt.toLocaleDateString('en-GB')} · {trial.status}

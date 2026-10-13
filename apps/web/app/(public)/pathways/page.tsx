@@ -4,7 +4,7 @@ import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
 
 export const metadata: Metadata = {
-  title: 'Rutas de desarrollo — Future Baller',
+  title: 'Development pathways — Future Baller',
   description: 'The player\u2019s journey: from youth level to professional and collegiate.',
 };
 
@@ -23,13 +23,13 @@ const STAGES = [
   },
   {
     id: 'profesional',
-    title: 'Pre-profesional',
+    title: 'Pre-professional',
     age: '17–21 years',
     focus: 'Performance, university scholarships and first contracts.',
   },
   {
     id: 'universitario',
-    title: 'Universitario / Pro',
+    title: 'University / Pro',
     age: '18+ years',
     focus: 'Academic-sports scholarships or professional contracts.',
   },
@@ -46,9 +46,9 @@ export default function PathwaysPage() {
           </p>
           <h1 className="mt-2 text-4xl font-bold tracking-tight">The player journey</h1>
           <p className="mt-4 max-w-2xl text-muted-foreground">
-            Cada player avanza por etapas. Future Baller estructura ese recorrido con evaluations,
-            goals and opportunities: from the first football school to the university scholarship
-            o el contrato profesional.
+            Every player progresses through stages. Future Baller structures that journey with
+            evaluations, goals and opportunities: from the first football school to the university
+            scholarship or a professional contract.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function PathwaysPage() {
             href="/register"
             className="mt-6 inline-block rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-emerald-400"
           >
-            Crear cuenta
+            Create account
           </Link>
         </div>
       </main>

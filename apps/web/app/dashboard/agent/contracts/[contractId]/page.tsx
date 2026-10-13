@@ -5,7 +5,7 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 
-export const metadata: Metadata = { title: 'Contrato' };
+export const metadata: Metadata = { title: 'Contract' };
 
 export default async function AgentContractDetailPage({
   params,
@@ -33,7 +33,7 @@ export default async function AgentContractDetailPage({
       >
         ← Submissions
       </Link>
-      <h1 className="mb-4 text-2xl font-bold">Contrato</h1>
+      <h1 className="mb-4 text-2xl font-bold">Contract</h1>
 
       <Card>
         <CardContent>
@@ -49,7 +49,7 @@ export default async function AgentContractDetailPage({
                   ? `${contract.salary.toLocaleString('en')} ${contract.currency}/year`
                   : '—',
               ],
-              ['Firmado el', contract.signedAt ? contract.signedAt.toLocaleDateString('en-GB') : '—'],
+              ['Signed on', contract.signedAt ? contract.signedAt.toLocaleDateString('en-GB') : '—'],
             ].map(([label, value]) => (
               <div key={label} className="rounded-md border border-border p-3">
                 <dt className="text-xs text-muted-foreground">{label}</dt>

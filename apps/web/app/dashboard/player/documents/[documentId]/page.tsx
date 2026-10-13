@@ -8,10 +8,10 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 export const metadata: Metadata = { title: 'Document' };
 
 const TYPE_LABELS: Record<string, string> = {
-  passport: 'Pasaporte',
-  contract: 'Contrato',
+  passport: 'Passport',
+  contract: 'Contract',
   medical: 'Medical',
-  other: 'Otro',
+  other: 'Other',
 };
 
 export default async function PlayerDocumentDetailPage({
@@ -46,7 +46,7 @@ export default async function PlayerDocumentDetailPage({
           <div className="flex items-center gap-3">
             <Badge>{TYPE_LABELS[document.type] ?? document.type}</Badge>
             <span className="text-sm text-muted-foreground">
-              Subido el {document.createdAt.toLocaleDateString('en-GB')}
+              Uploaded on {document.createdAt.toLocaleDateString('en-GB')}
             </span>
           </div>
           <a

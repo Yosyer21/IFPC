@@ -9,10 +9,10 @@ import { PageHeader } from '@/components/player/page-header';
 export const metadata: Metadata = { title: 'Document' };
 
 const DOCUMENT_TYPE_LABELS: Record<string, string> = {
-  passport: 'Pasaporte',
-  contract: 'Contrato',
+  passport: 'Passport',
+  contract: 'Contract',
   medical: 'Medical',
-  other: 'Otro',
+  other: 'Other',
 };
 
 export default async function AdminDocumentDetailPage({
@@ -46,13 +46,13 @@ export default async function AdminDocumentDetailPage({
         <CardContent>
           <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="rounded-md border border-border p-3">
-              <dt className="text-xs text-muted-foreground">Tipo</dt>
+              <dt className="text-xs text-muted-foreground">Type</dt>
               <dd className="mt-1 font-medium">
                 {DOCUMENT_TYPE_LABELS[document.type] ?? document.type}
               </dd>
             </div>
             <div className="rounded-md border border-border p-3">
-              <dt className="text-xs text-muted-foreground">Subido el</dt>
+              <dt className="text-xs text-muted-foreground">Uploaded on</dt>
               <dd className="mt-1 font-medium">{document.createdAt.toLocaleDateString('en-GB')}</dd>
             </div>
             <div className="rounded-md border border-border p-3">

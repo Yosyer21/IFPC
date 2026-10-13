@@ -52,7 +52,7 @@ export default async function CoachPlayerEvaluationsPage({
       </Link>
       <PageHeader
         title="Evaluaciones"
-        subtitle={`Evaluaciones registered de ${player.firstName} ${player.lastName}`}
+        subtitle={`Assessments recorded for ${player.firstName} ${player.lastName}`}
         icon="whistle"
       />
 
@@ -83,7 +83,7 @@ export default async function CoachPlayerEvaluationsPage({
                     </h2>
                     {evaluation.evaluatedBy ? (
                       <span className="text-xs text-muted-foreground">
-                        por {evaluation.evaluatedBy}
+                        by {evaluation.evaluatedBy}
                       </span>
                     ) : null}
                   </div>

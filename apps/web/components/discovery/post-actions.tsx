@@ -68,7 +68,7 @@ export function PostActions({
           onClick={toggleLike}
           disabled={pending}
           aria-pressed={like.liked}
-          aria-label="Me gusta"
+          aria-label="Likes"
           className={`${actionClass} disabled:opacity-70 ${
             like.liked
               ? 'bg-emerald-500/15 text-emerald-400'
@@ -81,7 +81,7 @@ export function PostActions({
 
         <Link
           href={`/dashboard/discovery/${postId}`}
-          aria-label="Comentarios"
+          aria-label="Comments"
           className={`${actionClass} text-muted-foreground hover:bg-white/5 hover:text-foreground`}
         >
           <IconMessageCircle className="h-3.5 w-3.5" />
@@ -93,7 +93,7 @@ export function PostActions({
           onClick={share}
           className={`${actionClass} text-muted-foreground hover:bg-white/5 hover:text-foreground`}
         >
-          {copied ? 'Enlace copiado' : 'Share'}
+          {copied ? 'Link copied' : 'Share'}
         </button>
 
         {canReport ? (
@@ -102,7 +102,7 @@ export function PostActions({
             <input type="hidden" name="value" value={notInterested ? 'off' : 'on'} />
             <input type="hidden" name="from" value={redirectTo} />
             <ActionSubmit
-              label={notInterested ? 'Show again' : 'No me interesa'}
+              label={notInterested ? 'Show again' : 'Not interested'}
               variant="ghost"
             />
           </form>
@@ -113,9 +113,9 @@ export function PostActions({
             <input type="hidden" name="postId" value={postId} />
             <input type="hidden" name="redirectTo" value={redirectTo} />
             <ActionSubmit
-              label="Borrar"
+              label="Delete"
               variant="danger"
-              confirmText="¿Borrar la post?"
+              confirmText="Delete the post?"
             />
           </form>
         ) : null}
@@ -131,7 +131,7 @@ export function PostActions({
                 name="reason"
                 rows={2}
                 required
-                placeholder="Motivo de la report"
+                placeholder="Reason for the report"
                 className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-xs outline-none focus:border-primary/60"
               />
               {reportState.error ? (

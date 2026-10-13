@@ -17,7 +17,7 @@ import {
   IconUsers,
 } from '@/components/dashboard/icons';
 
-export const metadata: Metadata = { title: 'Portada universitaria' };
+export const metadata: Metadata = { title: 'University home' };
 
 export default async function UniversityDashboardPage() {
   const session = await auth();
@@ -82,7 +82,7 @@ export default async function UniversityDashboardPage() {
   const pipeline = [
     {
       href: '/dashboard/university/players',
-      label: 'Explorar',
+      label: 'Explore',
       sub: 'available players',
       value: availablePlayers.length,
       icon: IconSearch,
@@ -110,7 +110,7 @@ export default async function UniversityDashboardPage() {
       href: '/dashboard/university/opportunities',
       icon: IconBook,
       text: `${expiringScholarships.length} scholarship${expiringScholarships.length === 1 ? '' : 's'} close${expiringScholarships.length === 1 ? 's' : ''} in the next 7 days`,
-      meta: 'Ver plazos',
+      meta: 'View deadlines',
     });
   }
   if (scholarshipApplications > 0) {
@@ -118,7 +118,7 @@ export default async function UniversityDashboardPage() {
       href: '/dashboard/university/opportunities',
       icon: IconStar,
       text: `${scholarshipApplications} scholarship application${scholarshipApplications === 1 ? '' : 's'} submitted`,
-      meta: 'Revisar',
+      meta: 'Review',
     });
   }
 
@@ -166,7 +166,7 @@ export default async function UniversityDashboardPage() {
         {/* Quick actions */}
         <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
-            { href: '/dashboard/university/players', icon: IconSearch, label: 'Explorar talento' },
+            { href: '/dashboard/university/players', icon: IconSearch, label: 'Explore talent' },
             { href: '/dashboard/university/opportunities', icon: IconTarget, label: 'Opportunities' },
             { href: '/dashboard/university/opportunities', icon: IconBook, label: 'Scholarships' },
             { href: '/dashboard/university/profile', icon: IconShield, label: 'My university' },
