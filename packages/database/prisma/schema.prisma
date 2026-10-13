@@ -260,6 +260,8 @@ model Coach {
   liveSessions LiveSession[]
   /// Contenido del Football Center que publica el coach.
   trainingContent TrainingContent[]
+  /// Sesiones/planes del Football Center que publica el coach.
+  trainingSessions TrainingSession[]
 }
 
 model CoachPlayer {
@@ -333,6 +335,8 @@ model Club {
   liveSessions  LiveSession[]
   /// Contenido del Football Center que publica el club.
   trainingContent TrainingContent[]
+  /// Sesiones/planes del Football Center que publica el club.
+  trainingSessions TrainingSession[]
 
   @@index([country])
 }
@@ -581,12 +585,61 @@ model TrainingContent {
 
   quiz            Quiz?
   progress        TrainingProgress[]
+  /// Sesiones/planes en los que se usa este contenido.
+  sessionItems    TrainingSessionItem[]
 
   @@index([category])
   @@index([kind, ownerType])
   @@index([status, publishAt])
   @@index([coachId])
   @@index([clubId])
+}
+
+/// Sesión o plan del Football Center: agrupa ejercicios **ordenados**. Un coach
+/// la arma para sus jugadores y un club para los que tiene bajo contrato. Comparte
+/// con `TrainingContent` el origen, el estado (borrador/programado) y los avisos.
+model TrainingSession {
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  /// Día de la semana sugerido (0 = lunes … 6 = domingo).
+  weekday     Int?
+  /// Origen: general (plataforma), de un coach o de un club.
+  ownerType   TrainingOwnerType @default(GENERAL)
+  /// Borrador o publicado (los jugadores solo ven lo publicado).
+  status      TrainingStatus    @default(PUBLISHED)
+  /// Publicación programada: visible y avisada a partir de esta fecha.
+  publishAt   DateTime?
+  coachId     String?
+  coach       Coach?            @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  clubId      String?
+  club        Club?             @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  items TrainingSessionItem[]
+
+  @@index([ownerType, status])
+  @@index([status, publishAt])
+  @@index([coachId])
+  @@index([clubId])
+}
+
+/// Ejercicio dentro de una sesión, con su orden. La sesión no copia el contenido:
+/// lo referencia, así que editarlo se refleja en todas las sesiones que lo usan.
+model TrainingSessionItem {
+  id        String          @id @default(cuid())
+  sessionId String
+  session   TrainingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  contentId String
+  content   TrainingContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  /// Orden dentro de la sesión (0 = primero).
+  position  Int
+  /// Nota del coach para este ejercicio dentro de la sesión.
+  notes     String?
+
+  @@unique([sessionId, contentId])
+  @@index([sessionId, position])
 }
 
 /// Progreso de un jugador en un curso o ejercicio: la fila existe si lo empezó y

@@ -8,8 +8,12 @@ import { StatCard } from '@/components/player/stat-card';
 import { TrainingContentForm } from '@/components/training/content-form';
 import { TrainingContentGrid } from '@/components/training/content-grid';
 import { TrainingContentActions } from '@/components/training/content-actions';
+import { TrainingSessionActions } from '@/components/training/session-actions';
+import { TrainingSessionCard } from '@/components/training/session-card';
+import { TrainingSessionForm } from '@/components/training/session-form';
 import { IconBook, IconPlay, IconUsers } from '@/components/dashboard/icons';
 import { coachPlayerCount, listAuthoredTraining } from '@/lib/training';
+import { listAuthoredTrainingSessions } from '@/lib/training-sessions';
 
 export const metadata: Metadata = { title: 'Football Center' };
 
@@ -27,9 +31,10 @@ export default async function CoachFootballCenterPage() {
   });
   if (!coach) notFound();
 
-  const [items, players] = await Promise.all([
+  const [items, players, sessions] = await Promise.all([
     listAuthoredTraining({ coachId: coach.id }),
     coachPlayerCount(coach.id),
+    listAuthoredTrainingSessions({ coachId: coach.id }),
   ]);
 
   const courses = items.filter((item) => item.kind === 'COURSE');
@@ -63,11 +68,50 @@ export default async function CoachFootballCenterPage() {
     </div>
   );
 
+  const sessionsTab = (
+    <div className="flex flex-col gap-6">
+      <p className="text-sm text-muted-foreground">
+        {players === 0
+          ? 'You have no players linked yet: add them from My players to share these sessions.'
+          : `Visible for the ${players} player${players === 1 ? '' : 's'} linked to you.`}
+      </p>
+      <div className="flex flex-col gap-4">
+        {sessions.length === 0 ? (
+          <Card>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                No sessions yet: create the first one below and add your exercises to it.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          sessions.map((entry) => (
+            <TrainingSessionCard
+              key={entry.id}
+              session={entry}
+              contentBasePath="/dashboard/coach/training"
+              showPublishState
+              renderActions={(session) => (
+                <TrainingSessionActions session={session} basePath="/dashboard/coach/training" />
+              )}
+            />
+          ))
+        )}
+      </div>
+      <Card>
+        <CardContent>
+          <h2 className="mb-4 font-semibold">New session</h2>
+          <TrainingSessionForm />
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
         title="Football Center"
-        subtitle="Publish courses and exercises for your players"
+        subtitle="Publish courses, exercises and sessions for your players"
         icon="play"
       />
 
@@ -96,6 +140,7 @@ export default async function CoachFootballCenterPage() {
         tabs={[
           { value: 'courses', label: 'My courses', content: published(courses, 'COURSE') },
           { value: 'exercises', label: 'My exercises', content: published(exercises, 'EXERCISE') },
+          { value: 'sessions', label: 'Sessions', content: sessionsTab },
         ]}
         defaultValue="courses"
       />

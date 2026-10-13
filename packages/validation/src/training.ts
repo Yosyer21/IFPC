@@ -50,3 +50,17 @@ export const trainingContentSchema = z.object({
 });
 
 export type TrainingContentInput = z.infer<typeof trainingContentSchema>;
+
+/**
+ * Sesión o plan del Football Center: agrupa ejercicios ordenados. Como en el
+ * contenido, la visibilidad (`DRAFT` / `PUBLISHED` + `publishAt`) se resuelve en
+ * la acción con `resolveTrainingVisibility`.
+ */
+export const trainingSessionSchema = z.object({
+  title: z.string().trim().min(3).max(140),
+  description: z.string().trim().max(600).optional().nullable(),
+  /** Día sugerido de la semana (0 = lunes … 6 = domingo). */
+  weekday: z.number().int().min(0).max(6).optional().nullable(),
+});
+
+export type TrainingSessionInput = z.infer<typeof trainingSessionSchema>;

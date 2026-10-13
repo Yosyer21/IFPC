@@ -2,7 +2,10 @@
 // Uso:  pnpm scripts:publish-scheduled
 import { prisma } from '@ifpc/database';
 import { publishDuePosts } from '../../apps/web/lib/discovery-scheduler';
-import { publishDueTrainingContent } from '../../apps/web/lib/training-scheduler';
+import {
+  publishDueTrainingContent,
+  publishDueTrainingSessions,
+} from '../../apps/web/lib/training-scheduler';
 
 async function main() {
   const published = await publishDuePosts();
@@ -19,6 +22,13 @@ async function main() {
     training.length === 0
       ? 'No había contenido de formación programado pendiente.'
       : `Avisado el contenido de formación ${training.map((item) => item.id).join(', ')}`
+  );
+
+  const sessions = await publishDueTrainingSessions();
+  console.log(
+    sessions.length === 0
+      ? 'No había sesiones de formación programadas pendientes.'
+      : `Avisadas las sesiones de formación ${sessions.map((item) => item.id).join(', ')}`
   );
 
   await prisma.$disconnect();

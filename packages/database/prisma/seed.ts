@@ -1850,6 +1850,66 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
     },
   });
 
+  // ─── Football Center: sesiones (planes) de ejemplo ─────────────────────
+  if (coachProfile) {
+    const coachSession = await prisma.trainingSession.upsert({
+      where: { id: 'ts-coach-1' },
+      update: {},
+      create: {
+        id: 'ts-coach-1',
+        title: 'Session 3: possession and the third man',
+        description: 'Warm-up dribbling, possession game and finding the third man.',
+        weekday: 2,
+        ownerType: 'COACH',
+        coachId: coachProfile.id,
+      },
+    });
+
+    // Una sesión puede mezclar ejercicios propios y del catálogo general.
+    const coachSessionItems = [
+      { contentId: 'tc-gen-ex-1', position: 0 },
+      { contentId: 'tc-coach-ex-1', position: 1 },
+    ];
+    for (const item of coachSessionItems) {
+      await prisma.trainingSessionItem.upsert({
+        where: {
+          sessionId_contentId: { sessionId: coachSession.id, contentId: item.contentId },
+        },
+        update: { position: item.position },
+        create: {
+          sessionId: coachSession.id,
+          contentId: item.contentId,
+          position: item.position,
+        },
+      });
+    }
+  }
+
+  const clubSession = await prisma.trainingSession.upsert({
+    where: { id: 'ts-club-1' },
+    update: {},
+    create: {
+      id: 'ts-club-1',
+      title: 'Club session: build-up and rondo',
+      description: 'Rondo to warm up the first pass, then the club build-up model.',
+      weekday: 4,
+      ownerType: 'CLUB',
+      clubId: club.id,
+    },
+  });
+
+  const clubSessionItems = [
+    { contentId: 'tc-club-ex-1', position: 0 },
+    { contentId: 'tc-gen-ex-2', position: 1 },
+  ];
+  for (const item of clubSessionItems) {
+    await prisma.trainingSessionItem.upsert({
+      where: { sessionId_contentId: { sessionId: clubSession.id, contentId: item.contentId } },
+      update: { position: item.position },
+      create: { sessionId: clubSession.id, contentId: item.contentId, position: item.position },
+    });
+  }
+
   console.log('Seed completed:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- player: player@demo.com / player123`);

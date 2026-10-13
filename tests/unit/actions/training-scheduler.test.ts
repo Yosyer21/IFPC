@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   contentFindMany: vi.fn(),
   contentUpdate: vi.fn(),
+  sessionFindMany: vi.fn(),
+  sessionUpdate: vi.fn(),
   coachPlayerFindMany: vi.fn(),
   contractFindMany: vi.fn(),
   notificationCreate: vi.fn(),
@@ -11,13 +13,14 @@ const mocks = vi.hoisted(() => ({
 vi.mock('@ifpc/database', () => ({
   prisma: {
     trainingContent: { findMany: mocks.contentFindMany, update: mocks.contentUpdate },
+    trainingSession: { findMany: mocks.sessionFindMany, update: mocks.sessionUpdate },
     coachPlayer: { findMany: mocks.coachPlayerFindMany },
     contract: { findMany: mocks.contractFindMany },
     notification: { create: mocks.notificationCreate },
   },
 }));
 
-import { publishDueTrainingContent } from '@/lib/training-scheduler';
+import { publishDueTrainingContent, publishDueTrainingSessions } from '@/lib/training-scheduler';
 import {
   notifyTrainingAudience,
   trainingAudienceUserIds,
@@ -37,6 +40,7 @@ const clubContent = { ...coachContent, ownerType: 'CLUB', coachId: null, clubId:
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.contentUpdate.mockResolvedValue({ id: 'content-1' });
+  mocks.sessionUpdate.mockResolvedValue({ id: 'session-1' });
   mocks.notificationCreate.mockResolvedValue({ id: 'notification-1' });
   mocks.coachPlayerFindMany.mockResolvedValue([]);
   mocks.contractFindMany.mockResolvedValue([]);
@@ -147,5 +151,64 @@ describe('publishDueTrainingContent', () => {
     expect(await publishDueTrainingContent()).toEqual([]);
     expect(mocks.contentUpdate).not.toHaveBeenCalled();
     expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
+
+  describe('publishDueTrainingSessions', () => {
+    it('avisa de la sesión programada que ya tiene ejercicios', async () => {
+      mocks.sessionFindMany.mockResolvedValue([
+        {
+          id: 'session-1',
+          title: 'Session 3: possession',
+          ownerType: 'COACH',
+          coachId: 'coach-1',
+          clubId: null,
+          items: [{ id: 'item-1' }],
+        },
+      ]);
+      mocks.coachPlayerFindMany.mockResolvedValue([{ player: { userId: 'user-9' } }]);
+      const now = new Date('2026-01-01T12:00:00Z');
+
+      const published = await publishDueTrainingSessions(now);
+
+      expect(mocks.sessionFindMany.mock.calls[0][0].where).toEqual({
+        status: 'PUBLISHED',
+        publishAt: { not: null, lte: now },
+      });
+      expect(mocks.sessionUpdate.mock.calls[0][0]).toEqual({
+        where: { id: 'session-1' },
+        data: { publishAt: null },
+      });
+      expect(mocks.notificationCreate.mock.calls[0][0].data).toMatchObject({
+        userId: 'user-9',
+        title: 'New training session from your coach',
+        link: '/dashboard/player/training/sessions/session-1',
+      });
+      expect(published).toEqual([{ id: 'session-1' }]);
+    });
+
+    it('no avisa de una sesión vacía (pero le quita la fecha)', async () => {
+      mocks.sessionFindMany.mockResolvedValue([
+        {
+          id: 'session-2',
+          title: 'Empty',
+          ownerType: 'COACH',
+          coachId: 'coach-1',
+          clubId: null,
+          items: [],
+        },
+      ]);
+
+      await publishDueTrainingSessions();
+
+      expect(mocks.sessionUpdate).toHaveBeenCalledTimes(1);
+      expect(mocks.notificationCreate).not.toHaveBeenCalled();
+    });
+
+    it('no hace nada si no hay sesiones programadas', async () => {
+      mocks.sessionFindMany.mockResolvedValue([]);
+
+      expect(await publishDueTrainingSessions()).toEqual([]);
+      expect(mocks.sessionUpdate).not.toHaveBeenCalled();
+    });
   });
 });

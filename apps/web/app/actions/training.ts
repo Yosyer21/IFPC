@@ -11,7 +11,6 @@ import {
   isTrainingEquipment,
   isTrainingKind,
   type TrainingEquipment,
-  type TrainingStatus,
 } from '@ifpc/config';
 import { trainingContentSchema } from '@ifpc/validation';
 import type { ActionState } from './auth';
@@ -27,10 +26,10 @@ import {
 import {
   playerTrainingAudience,
   resolveTrainingVisibility,
-  shouldNotifyOnSave,
+  trainingAuthor,
   trainingVisibilityWhere,
 } from '@/lib/training';
-import { notifyTrainingAudience } from '@/lib/training-notify';
+import { notifyIfNewlyVisible } from '@/lib/training-notify';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -63,18 +62,6 @@ function equipmentFrom(formData: FormData): TrainingEquipment[] {
   return formData.getAll('equipment').filter(isTrainingEquipment).slice(0, 12);
 }
 
-/**
- * Autor del contenido de la sesión: un coach o un club. Los administradores
- * publican el contenido general desde el builder de admin, no aquí.
- */
-async function getAuthor(userId: string) {
-  const [coach, club] = await Promise.all([
-    prisma.coach.findUnique({ where: { userId }, select: { id: true } }),
-    prisma.club.findUnique({ where: { userId }, select: { id: true } }),
-  ]);
-  return { coachId: coach?.id ?? null, clubId: club?.id ?? null };
-}
-
 /** Página del Football Center del autor (coach o club). */
 function authorHome(author: { coachId: string | null; clubId: string | null }): string {
   return author.coachId ? '/dashboard/coach/training' : '/dashboard/club/training';
@@ -94,34 +81,6 @@ function authorPaths(
 }
 
 /**
- * Avisa a los jugadores cuando el contenido **pasa** a ser visible (borrador o
- * programado → publicado ya). El aviso es best-effort: si falla, el contenido ya
- * está guardado y publicado, así que no se tumba la acción por él.
- */
-async function notifyIfNewlyVisible(
-  before: { status: TrainingStatus; publishAt: Date | null } | null,
-  content: {
-    id: string;
-    title: string;
-    ownerType: string;
-    coachId: string | null;
-    clubId: string | null;
-    status: TrainingStatus;
-    publishAt: Date | null;
-  }
-): Promise<void> {
-  if (!shouldNotifyOnSave(before, { status: content.status, publishAt: content.publishAt })) {
-    return;
-  }
-
-  try {
-    await notifyTrainingAudience(content);
-  } catch {
-    // Sin aviso, pero el contenido queda publicado igualmente.
-  }
-}
-
-/**
  * Publica un curso o ejercicio en el Football Center. El coach solo puede crear
  * para sus jugadores y el club para los jugadores con contrato: el origen y el
  * autor se derivan de la sesión, nunca del formulario.
@@ -135,7 +94,7 @@ export async function createTrainingContentAction(
     return { error: 'Invalid session.' };
   }
 
-  const author = await getAuthor(session.user.id);
+  const author = await trainingAuthor(session.user.id);
   if (!author.coachId && !author.clubId) {
     return { error: 'Only coaches and clubs can publish training content.' };
   }
@@ -203,7 +162,7 @@ export async function deleteTrainingContentAction(formData: FormData): Promise<v
     return;
   }
 
-  const author = await getAuthor(session.user.id);
+  const author = await trainingAuthor(session.user.id);
   const content = await prisma.trainingContent.findUnique({
     where: { id: contentId },
     select: { coachId: true, clubId: true },
@@ -294,7 +253,7 @@ async function findOwnedContent(contentId: string) {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const author = await getAuthor(session.user.id);
+  const author = await trainingAuthor(session.user.id);
   if (!author.coachId && !author.clubId) return null;
 
   const content = await prisma.trainingContent.findUnique({ where: { id: contentId } });

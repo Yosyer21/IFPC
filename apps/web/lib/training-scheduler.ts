@@ -27,3 +27,41 @@ export async function publishDueTrainingContent(now: Date = new Date()): Promise
 
   return due.map((content) => ({ id: content.id }));
 }
+
+/**
+ * Lo mismo para las **sesiones** programadas: quita la fecha y avisa a la
+ * audiencia. Un plan sin ejercicios dentro no genera aviso (no dice nada).
+ */
+export async function publishDueTrainingSessions(
+  now: Date = new Date()
+): Promise<{ id: string }[]> {
+  const due = await prisma.trainingSession.findMany({
+    where: { status: 'PUBLISHED', publishAt: { not: null, lte: now } },
+    select: {
+      id: true,
+      title: true,
+      ownerType: true,
+      coachId: true,
+      clubId: true,
+      items: { select: { id: true }, take: 1 },
+    },
+    take: 200,
+  });
+  if (due.length === 0) return [];
+
+  for (const session of due) {
+    await prisma.trainingSession.update({ where: { id: session.id }, data: { publishAt: null } });
+    if (session.items.length === 0) continue;
+
+    await notifyTrainingAudience({
+      id: session.id,
+      title: session.title,
+      ownerType: session.ownerType,
+      coachId: session.coachId,
+      clubId: session.clubId,
+      notificationKind: 'session',
+    });
+  }
+
+  return due.map((session) => ({ id: session.id }));
+}

@@ -313,3 +313,107 @@ test('Football Center: el coach arma la ficha de un ejercicio', async ({ page, b
   ]);
   await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
 });
+
+/**
+ * Sesiones (plan semanal): el coach monta una sesión con ejercicios en orden y el
+ * jugador la ve en «Weekly plan», con su aviso y su progreso por ejercicio.
+ */
+test('Football Center: el coach monta una sesión y el jugador la ve', async ({ page, browser }) => {
+  await login(page, 'coach@demo.com', 'coach123');
+
+  // 1. Un ejercicio propio y publicado para poder planificarlo.
+  await openCoachCenter(page);
+  const drillTitle = `E2E session drill ${Date.now()}`;
+  await page.getByLabel('Title', { exact: true }).fill(drillTitle);
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Save content' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+
+  // 2. Crea la sesión (queda publicada y se abre para montarla).
+  await openCoachCenter(page, 'Sessions');
+  const title = `E2E session ${Date.now()}`;
+  await page.getByLabel('Session title').fill(title);
+  await page.getByLabel('Suggested day').selectOption('2');
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Create session' }).click(),
+  ]);
+  await page.waitForURL('**/edit', { timeout: 15_000 });
+  const editUrl = page.url();
+
+  // 3. Dos ejercicios dentro: uno del catálogo de su coach y el que acaba de crear.
+  await page.getByLabel('Add exercise').selectOption({ label: 'Third-man runs (4v4+2) · 20 min' });
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Add' }).click(),
+  ]);
+  await page.goto(editUrl);
+  await page.getByLabel('Add exercise').selectOption({ label: drillTitle });
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Add' }).click(),
+  ]);
+  await page.goto(editUrl);
+  await expect(page.getByText('1. Third-man runs (4v4+2)')).toBeVisible();
+  await expect(page.getByText(`2. ${drillTitle}`)).toBeVisible();
+
+  // 4. El orden se puede cambiar (el segundo pasa a ser el primero).
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: '↑' }).nth(1).click(),
+  ]);
+  await page.goto(editUrl);
+  await expect(page.locator('ol li').first()).toContainText(drillTitle);
+
+  // 5. El jugador la ve en su plan semanal con su progreso y su aviso.
+  const seen = await browser.newContext();
+  const seenPage = await seen.newPage();
+  await login(seenPage, 'player@demo.com', 'player123');
+  await seenPage.goto(`${BASE}/dashboard/player/training`);
+  await seenPage.getByRole('button', { name: 'Weekly plan' }).click();
+  await expect(seenPage.getByRole('heading', { name: 'From your coach' })).toBeVisible();
+  await expect(seenPage.getByText('0 of 2 completed').first()).toBeVisible();
+  await seenPage.getByRole('link', { name: title }).first().click();
+  await seenPage.waitForURL('**/dashboard/player/training/sessions/**');
+  await expect(seenPage.getByRole('link', { name: drillTitle }).first()).toBeVisible();
+
+  await seenPage.goto(`${BASE}/dashboard/player/notifications`);
+  await expect(seenPage.getByText('New training session from your coach').first()).toBeVisible();
+  await seenPage.getByRole('link', { name: title }).first().click();
+  await seenPage.waitForURL('**/dashboard/player/training/sessions/**');
+
+  // Marca un ejercicio de la sesión y el progreso del plan lo refleja.
+  await seenPage.getByRole('link', { name: drillTitle }).first().click();
+  await seenPage.waitForURL('**/dashboard/player/training/**');
+  if ((await seenPage.getByRole('button', { name: 'Mark as pending' }).count()) === 0) {
+    await seenPage.getByRole('button', { name: 'Mark as completed' }).click();
+  }
+  await seenPage.goto(`${BASE}/dashboard/player/training`);
+  await seenPage.getByRole('button', { name: 'Weekly plan' }).click();
+  await expect(seenPage.getByText('1 of 2 completed').first()).toBeVisible();
+  await seen.close();
+
+  // 6. Limpieza: el test borra la sesión y el ejercicio que ha creado.
+  await openCoachCenter(page, 'Sessions');
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page
+      .locator('.card-hover', { hasText: title })
+      .first()
+      .getByRole('button', { name: 'Delete' })
+      .click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+  await openCoachCenter(page);
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page
+      .locator('.card-hover', { hasText: drillTitle })
+      .first()
+      .getByRole('button', { name: 'Delete' })
+      .click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+});

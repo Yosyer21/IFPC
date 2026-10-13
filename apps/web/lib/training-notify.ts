@@ -1,5 +1,7 @@
 import { prisma } from '@ifpc/database';
+import type { TrainingStatus } from '@ifpc/config';
 import { notifyUser } from '@/lib/notifications/notify';
+import { shouldNotifyOnSave } from '@/lib/training';
 
 /** Estados de contrato que cuentan como «estar en el club» (igual que los live de club). */
 const ACTIVE_CONTRACT_STATUSES = ['SIGNED', 'ACTIVE'];
@@ -40,15 +42,28 @@ export async function trainingAudienceUserIds(
   return [];
 }
 
-/** Aviso que recibe cada jugador (queda en su bandeja con enlace al contenido). */
+/** Qué se acaba de publicar: cambia el texto y el destino del aviso. */
+export type TrainingNotificationKind = 'content' | 'session';
+
+/**
+ * Aviso que recibe cada jugador (queda en su bandeja con enlace al destino). El
+ * campo va aparte del `kind` del contenido (`COURSE`/`EXERCISE`) para no chocar.
+ */
 export function trainingNotification(
-  content: Pick<PublishedTrainingContent, 'id' | 'title' | 'ownerType'>
+  target: Pick<PublishedTrainingContent, 'id' | 'title' | 'ownerType'> & {
+    notificationKind?: TrainingNotificationKind;
+  }
 ): { title: string; message: string; link: string } {
-  const origin = content.ownerType === 'CLUB' ? 'your club' : 'your coach';
+  const kind = target.notificationKind ?? 'content';
+  const origin = target.ownerType === 'CLUB' ? 'your club' : 'your coach';
+
   return {
-    title: `New training from ${origin}`,
-    message: content.title,
-    link: `/dashboard/player/training/${content.id}`,
+    title: `New ${kind === 'session' ? 'training session' : 'training'} from ${origin}`,
+    message: target.title,
+    link:
+      kind === 'session'
+        ? `/dashboard/player/training/sessions/${target.id}`
+        : `/dashboard/player/training/${target.id}`,
   };
 }
 
@@ -56,7 +71,9 @@ export function trainingNotification(
  * Avisa a la audiencia de que hay contenido nuevo. Devuelve cuántos jugadores se
  * avisaron para poder informarlo en el script de publicación programada.
  */
-export async function notifyTrainingAudience(content: PublishedTrainingContent): Promise<number> {
+export async function notifyTrainingAudience(
+  content: PublishedTrainingContent & { notificationKind?: TrainingNotificationKind }
+): Promise<number> {
   const userIds = await trainingAudienceUserIds(content);
   if (userIds.length === 0) return 0;
 
@@ -65,4 +82,29 @@ export async function notifyTrainingAudience(content: PublishedTrainingContent):
     await notifyUser({ userId, type: 'training', title, message, link });
   }
   return userIds.length;
+}
+
+/**
+ * Avisa a la audiencia cuando algo **pasa** a ser visible (borrador o programado →
+ * publicado ya); nunca repite el aviso al editar algo que ya se veía. Es
+ * best-effort: si falla, lo publicado sigue publicado. Lo comparten el contenido y
+ * las sesiones para que la regla del aviso no pueda divergir.
+ */
+export async function notifyIfNewlyVisible(
+  before: { status: TrainingStatus; publishAt: Date | null } | null,
+  published: PublishedTrainingContent & {
+    notificationKind?: TrainingNotificationKind;
+    status: TrainingStatus;
+    publishAt: Date | null;
+  }
+): Promise<void> {
+  if (!shouldNotifyOnSave(before, { status: published.status, publishAt: published.publishAt })) {
+    return;
+  }
+
+  try {
+    await notifyTrainingAudience(published);
+  } catch {
+    // Sin aviso, pero queda publicado igualmente.
+  }
 }

@@ -207,6 +207,38 @@ export function trainingWorkloadLabel(input: {
 }
 
 // ---------------------------------------------------------------------------
+// Sesiones (plan semanal)
+// ---------------------------------------------------------------------------
+
+/** Días de la semana de una sesión: 0 = lunes … 6 = domingo. */
+export const TRAINING_WEEKDAYS = [0, 1, 2, 3, 4, 5, 6] as const;
+
+export const TRAINING_WEEKDAY_LABELS: Record<number, string> = {
+  0: 'Monday',
+  1: 'Tuesday',
+  2: 'Wednesday',
+  3: 'Thursday',
+  4: 'Friday',
+  5: 'Saturday',
+  6: 'Sunday',
+};
+
+/** Etiqueta del día; `null` si la sesión no tiene día asignado. */
+export function trainingWeekdayLabel(weekday: number | null | undefined): string | null {
+  if (weekday === null || weekday === undefined) return null;
+  return TRAINING_WEEKDAY_LABELS[weekday] ?? null;
+}
+
+/** Opciones del desplegable de día (mismo orden que `TRAINING_WEEKDAYS`). */
+export const TRAINING_WEEKDAY_OPTIONS: { value: string; label: string }[] = TRAINING_WEEKDAYS.map(
+  (day) => ({ value: String(day), label: trainingWeekdayLabel(day) ?? '' })
+);
+
+export function isTrainingWeekday(value: unknown): value is number {
+  return typeof value === 'number' && (TRAINING_WEEKDAYS as readonly number[]).includes(value);
+}
+
+// ---------------------------------------------------------------------------
 // Programación
 // ---------------------------------------------------------------------------
 

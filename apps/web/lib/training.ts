@@ -46,6 +46,25 @@ export interface PlayerTrainingAudience {
   clubIds: string[];
 }
 
+/** Autor del Football Center de la sesión actual: un coach o un club. */
+export interface TrainingAuthorRef {
+  coachId: string | null;
+  clubId: string | null;
+}
+
+/**
+ * Autor (coach o club) que publica contenido y sesiones desde la sesión actual.
+ * Nunca sale del formulario: el origen y la propiedad se derivan de aquí.
+ */
+export async function trainingAuthor(userId: string): Promise<TrainingAuthorRef> {
+  const [coach, club] = await Promise.all([
+    prisma.coach.findUnique({ where: { userId }, select: { id: true } }),
+    prisma.club.findUnique({ where: { userId }, select: { id: true } }),
+  ]);
+
+  return { coachId: coach?.id ?? null, clubId: club?.id ?? null };
+}
+
 /**
  * Audiencia de un jugador en el Football Center: los coaches a los que está
  * vinculado (`CoachPlayer`) y los clubes en los que tiene contrato firmado o
@@ -70,13 +89,17 @@ export async function playerTrainingAudience(userId: string): Promise<PlayerTrai
   };
 }
 
-/** Condiciones del contenido **visible**: publicado y sin fecha futura pendiente. */
-function publishedConditions(now: Date): Record<string, unknown>[] {
+/**
+ * Condiciones de lo **visible** para una audiencia (contenido y sesiones): ya
+ * publicado y sin fecha futura pendiente. Las comparten `trainingVisibilityWhere`
+ * y `sessionVisibilityWhere` para que no puedan divergir.
+ */
+export function publishedConditions(now: Date): Record<string, unknown>[] {
   return [{ status: 'PUBLISHED' }, { OR: [{ publishAt: null }, { publishAt: { lte: now } }] }];
 }
 
 /** Orígenes de los que ve contenido una audiencia: general, sus coaches y clubes. */
-function ownerTypeConditions(audience: PlayerTrainingAudience): Record<string, unknown>[] {
+export function ownerTypeConditions(audience: PlayerTrainingAudience): Record<string, unknown>[] {
   const visible: Record<string, unknown>[] = [{ ownerType: 'GENERAL' }];
   if (audience.coachIds.length > 0) {
     visible.push({ ownerType: 'COACH', coachId: { in: audience.coachIds } });
@@ -97,8 +120,8 @@ export function trainingVisibilityWhere(audience: PlayerTrainingAudience, now: D
   };
 }
 
-/** Nombre del autor que se pinta en las tarjetas. */
-function authorOf(content: {
+/** Nombre del autor que se pinta en las tarjetas de contenido y en las sesiones. */
+export function authorOf(content: {
   ownerType: string;
   coach: { id: string; clubName: string | null; user: { name: string | null } } | null;
   club: { id: string; name: string } | null;
