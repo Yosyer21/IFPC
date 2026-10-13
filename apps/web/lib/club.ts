@@ -20,8 +20,6 @@ type ClubChecklistFields = Pick<
 export interface ClubChecklistExtras {
   /** Nº de oportunidades publicadas por el club. */
   opportunityCount?: number;
-  /** Nº de personas del cuerpo técnico (`ClubStaff`). */
-  staffCount?: number;
 }
 
 /** Ubicación del club lista para pintar («Valencia, Spain»), o `null`. */
@@ -52,7 +50,6 @@ export function clubProfileChecklist(
       banner: Boolean(club.bannerUrl),
       tags: (club.tags?.length ?? 0) > 0,
       opportunity: (club.opportunityCount ?? 0) > 0,
-      staff: (club.staffCount ?? 0) > 0,
     },
     CLUB_PROFILE_CHECKLIST
   );

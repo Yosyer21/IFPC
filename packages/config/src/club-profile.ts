@@ -73,7 +73,6 @@ export const CLUB_PROFILE_CHECKLIST_KEYS = [
   'banner',
   'tags',
   'opportunity',
-  'staff',
 ] as const;
 export type ClubProfileChecklistKey = (typeof CLUB_PROFILE_CHECKLIST_KEYS)[number];
 
@@ -118,7 +117,7 @@ export const CLUB_PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
     key: 'description',
     label: 'About the club',
     hint: 'Explain the project, the methodology and what you offer.',
-    weight: 12,
+    weight: 16,
     href: '/dashboard/club/profile/edit',
   },
   {
@@ -132,7 +131,7 @@ export const CLUB_PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
     key: 'logo',
     label: 'Club crest',
     hint: 'Profiles with a crest get far more views.',
-    weight: 10,
+    weight: 12,
     href: '/dashboard/club/profile/edit',
   },
   {
@@ -153,15 +152,8 @@ export const CLUB_PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
     key: 'opportunity',
     label: 'Publish an opportunity',
     hint: 'It is the main way players reach you.',
-    weight: 8,
+    weight: 12,
     href: '/dashboard/club/opportunities',
-  },
-  {
-    key: 'staff',
-    label: 'Invite your staff',
-    hint: 'The whole team can work on the same account.',
-    weight: 10,
-    href: '/dashboard/club/staff',
   },
 ];
 

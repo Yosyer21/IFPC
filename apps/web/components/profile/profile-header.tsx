@@ -25,6 +25,8 @@ export interface ProfileHeaderProps {
   openTo?: string[];
   /** Chips ya traducidos. El club los pinta con `clubProfileTagLabels`. */
   chips?: string[];
+  /** Forma del marco del avatar: circular (jugador) o cuadrada (escudo del club). */
+  avatarShape?: 'circle' | 'square';
   /** Badges de estado (se pintan bajo la cabecera). */
   badges?: ReactNode;
   /** Botones de la derecha (estado, editar…). */
@@ -55,6 +57,7 @@ export function ProfileHeader({
   subtitle,
   openTo = [],
   chips,
+  avatarShape = 'circle',
   badges,
   actions,
   coverEditor,
@@ -64,6 +67,9 @@ export function ProfileHeader({
   const chipLabels = chips ?? profileOpenToLabels(openTo);
   const displayName =
     title?.trim() || [firstName, lastName].filter(Boolean).join(' ').trim() || '—';
+  // El marco del avatar copia la forma del contenido: circular para la foto del
+  // jugador y cuadrada (redondeada) para el escudo del club.
+  const frameShape = avatarShape === 'square' ? 'rounded-2xl' : 'rounded-full';
 
   return (
     <div className="animate-fade-up overflow-hidden rounded-2xl border border-border/60 bg-card">
@@ -90,7 +96,7 @@ export function ProfileHeader({
       <div className="flex flex-wrap items-end justify-between gap-4 px-5 pb-5">
         <div className="flex min-w-0 flex-wrap items-end gap-4">
           <div
-            className="-mt-10 rounded-full p-1"
+            className={`-mt-10 ${frameShape} p-1`}
             style={{ backgroundColor: accent.hex, boxShadow: `0 0 32px -10px ${accent.hex}` }}
           >
             {avatar ?? (

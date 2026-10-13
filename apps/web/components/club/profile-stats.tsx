@@ -21,8 +21,6 @@ export interface ClubProfileStatsProps {
   requirements: number;
   /** Consultas recibidas. */
   inquiries: number;
-  /** Personas en el cuerpo técnico. */
-  staff: number;
   /** Publicaciones del club en Discovery. */
   posts: number;
   /** Directos creados por el club. */
@@ -41,7 +39,6 @@ export function ClubProfileStats({
   pendingApplications,
   requirements,
   inquiries,
-  staff,
   posts,
   liveSessions,
   className,
@@ -82,7 +79,6 @@ export function ClubProfileStats({
       label: 'Enquiries',
       value: inquiries,
     },
-    { href: '/dashboard/club/staff', icon: IconUsers, label: 'Staff', value: staff },
     { href: '/dashboard/club/live-sessions', icon: IconLive, label: 'Live sessions', value: liveSessions },
     {
       href: '/dashboard/club/profile#publicaciones',

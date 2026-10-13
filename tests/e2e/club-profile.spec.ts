@@ -44,7 +44,13 @@ test('Club: perfil editable con headline, descripción, chips y acento', async (
   await expect(page.getByText('Founded 1998').first()).toBeVisible();
   await expect(page.getByText('About the club').first()).toBeVisible();
 
-  // 4. La checklist reconoce lo que falta por completar (escudo y portada).
-  await expect(page.getByText('Club crest').first()).toBeVisible();
-  await expect(page.getByText('Cover photo').first()).toBeVisible();
+  // 4. Tras guardar, la tarjeta de progreso del perfil sigue presente (su
+  //    puntuación depende de los datos, así que la lógica se cubre en unit tests).
+  await expect(page.getByText('Profile strength').first()).toBeVisible();
+
+  // 5. El perfil no muestra el staff: ni el enlace de gestión, ni el KPI de
+  //    actividad, ni el punto de la checklist (el sidebar sí lo mantiene).
+  await expect(page.getByText('Staff and permissions')).toHaveCount(0);
+  await expect(page.getByText('Invite your staff')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: /^Staff \d+$/ })).toHaveCount(0);
 });

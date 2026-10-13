@@ -20,7 +20,6 @@ import {
   IconLive,
   IconMessageCircle,
   IconTarget,
-  IconUsers,
 } from '@/components/dashboard/icons';
 import { clubLocation, clubProfileChecklist } from '@/lib/club';
 import { listPostsByAuthor } from '@/lib/discovery';
@@ -40,7 +39,7 @@ export default async function ClubProfilePage() {
   if (!club) notFound();
 
   // Todo lo que alimenta las cifras del perfil y la checklist.
-  const [opportunities, applications, openRequirements, inquiries, staff, liveSessions, posts] =
+  const [opportunities, applications, openRequirements, inquiries, liveSessions, posts] =
     await Promise.all([
       prisma.opportunity.findMany({ where: { clubId: club.id }, select: { status: true } }),
       prisma.application.findMany({
@@ -49,7 +48,6 @@ export default async function ClubProfilePage() {
       }),
       prisma.requirement.count({ where: { clubId: club.id, status: 'OPEN' } }),
       prisma.inquiry.count({ where: { clubId: club.id } }),
-      prisma.clubStaff.count({ where: { clubId: club.id } }),
       prisma.liveSession.count({ where: { clubId: club.id } }),
       prisma.post.count({ where: { authorId: session.user.id } }),
     ]);
@@ -65,7 +63,6 @@ export default async function ClubProfilePage() {
   const checklist = clubProfileChecklist({
     ...club,
     opportunityCount: opportunities.length,
-    staffCount: staff,
   });
   // Lo que el club ya ha publicado en Discovery: su muro, como en el perfil del jugador.
   const myPosts = await listPostsByAuthor(session.user.id, 5, session.user.id);
@@ -83,7 +80,6 @@ export default async function ClubProfilePage() {
 
   const subLinks = [
     { href: '/dashboard/club/profile/edit', label: 'Edit club profile', icon: IconFile },
-    { href: '/dashboard/club/staff', label: 'Staff and permissions', icon: IconUsers },
     { href: '/dashboard/club/opportunities', label: 'Opportunities', icon: IconTarget },
     { href: '/dashboard/club/live-sessions', label: 'Live sessions', icon: IconLive },
     {
@@ -101,6 +97,7 @@ export default async function ClubProfilePage() {
         <ProfileHeader
           title={club.name}
           avatar={<ClubLogo name={club.name} logoUrl={club.logoUrl} size="lg" />}
+          avatarShape="square"
           bannerUrl={club.bannerUrl}
           accentColor={club.accentColor}
           headline={club.headline}
@@ -137,7 +134,6 @@ export default async function ClubProfilePage() {
             pendingApplications={pendingApplications}
             requirements={openRequirements}
             inquiries={inquiries}
-            staff={staff}
             posts={posts}
             liveSessions={liveSessions}
           />

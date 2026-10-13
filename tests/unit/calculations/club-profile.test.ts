@@ -67,7 +67,6 @@ describe('clubProfileChecklist', () => {
     bannerUrl: '/uploads/club-banners/a.png',
     tags: ['TRIALS'],
     opportunityCount: 2,
-    staffCount: 1,
   };
 
   it('con los datos completos llega al 100%', () => {
@@ -81,13 +80,17 @@ describe('clubProfileChecklist', () => {
     const state = clubProfileChecklist({ ...base, logoUrl: null, bannerUrl: null });
     expect(state.items.find((item) => item.key === 'logo')?.done).toBe(false);
     expect(state.items.find((item) => item.key === 'banner')?.done).toBe(false);
-    expect(state.points).toBe(84);
+    // Escudo (12) + portada (6) son los puntos que faltan.
+    expect(state.points).toBe(82);
   });
 
-  it('cuenta las oportunidades publicadas y el cuerpo técnico', () => {
-    const empty = clubProfileChecklist({ ...base, opportunityCount: 0, staffCount: 0 });
-    expect(empty.items.find((item) => item.key === 'opportunity')?.done).toBe(false);
-    expect(empty.items.find((item) => item.key === 'staff')?.done).toBe(false);
+  it('cuenta las oportunidades publicadas', () => {
+    const state = clubProfileChecklist({ ...base, opportunityCount: 0 });
+    expect(state.items.find((item) => item.key === 'opportunity')?.done).toBe(false);
+  });
+
+  it('no mide el cuerpo técnico (el perfil no lo muestra)', () => {
+    expect(CLUB_PROFILE_CHECKLIST.some((item) => item.key === 'staff')).toBe(false);
   });
 
   it('el siguiente paso es el pendiente de más peso', () => {
