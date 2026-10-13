@@ -43,12 +43,8 @@ export const CATEGORY_LABELS: Record<string, string> = {
 };
 
 /** Content categories (`TrainingContent.category`). */
-export const TRAINING_CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Technique',
-  'strength-conditioning': 'Strength & conditioning',
-  psychology: 'Psychology',
-  'parent-education': 'For families',
-};
+/** Categorías de contenido del Football Center (única fuente: `@ifpc/config`). */
+export { TRAINING_CATEGORY_LABELS } from '@ifpc/config';
 
 /** Player goal status (`PlayerGoal.status`). */
 export const GOAL_STATUS_LABELS: Record<string, string> = {

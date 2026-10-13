@@ -12,4 +12,5 @@ export * from './recruitment-status';
 export * from './progress';
 export * from './profile';
 export * from './club-profile';
+export * from './training';
 export * from './discovery';

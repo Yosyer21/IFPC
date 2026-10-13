@@ -183,6 +183,7 @@ model Player {
   career        CareerEntry[]
   profileViews  ProfileView[]
   quizAttempts  QuizAttempt[]
+  trainingProgress TrainingProgress[]
 
   @@index([status])
   @@index([position])
@@ -257,6 +258,8 @@ model Coach {
   players CoachPlayer[]
   camps   Camp[]
   liveSessions LiveSession[]
+  /// Contenido del Football Center que publica el coach.
+  trainingContent TrainingContent[]
 }
 
 model CoachPlayer {
@@ -328,6 +331,8 @@ model Club {
   staff         ClubStaff[]
   camps         Camp[]
   liveSessions  LiveSession[]
+  /// Contenido del Football Center que publica el club.
+  trainingContent TrainingContent[]
 
   @@index([country])
 }
@@ -513,10 +518,33 @@ model EmailVerificationToken {
   @@index([userId])
 }
 
+/// Tipo de contenido del Football Center.
+enum TrainingKind {
+  COURSE
+  EXERCISE
+}
+
+/// Quién publica el contenido: la plataforma, un coach o un club.
+enum TrainingOwnerType {
+  GENERAL
+  COACH
+  CLUB
+}
+
 model TrainingContent {
   id              String   @id @default(cuid())
   title           String
   category        String // technical | strength-conditioning | psychology | parent-education
+  /// Curso o ejercicio (ver `packages/config/src/training.ts`).
+  kind            TrainingKind      @default(COURSE)
+  /// Origen del contenido: general, de un coach o de un club.
+  ownerType       TrainingOwnerType @default(GENERAL)
+  /// Coach autor (cuando `ownerType = COACH`).
+  coachId         String?
+  coach           Coach?   @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  /// Club autor (cuando `ownerType = CLUB`).
+  clubId          String?
+  club            Club?    @relation(fields: [clubId], references: [id], onDelete: Cascade)
   description     String?
   /// Cuerpo del curso (markdown simple: secciones, listas, tablas).
   content         String?
@@ -530,8 +558,28 @@ model TrainingContent {
   updatedAt       DateTime @updatedAt
 
   quiz            Quiz?
+  progress        TrainingProgress[]
 
   @@index([category])
+  @@index([kind, ownerType])
+  @@index([coachId])
+  @@index([clubId])
+}
+
+/// Progreso de un jugador en un curso o ejercicio: la fila existe si lo empezó y
+/// `completedAt` se rellena cuando lo completa.
+model TrainingProgress {
+  id          String           @id @default(cuid())
+  playerId    String
+  player      Player           @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  contentId   String
+  content     TrainingContent  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  completedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([playerId, contentId])
+  @@index([playerId, completedAt])
 }
 
 /// Quiz de un curso: preguntas de opción múltiple con nota de corte.

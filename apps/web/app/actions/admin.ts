@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { isRole } from '@ifpc/auth';
+import { isTrainingKind } from '@ifpc/config';
 import type { PlayerStatus, Role } from '@ifpc/types';
 import { announceLiveInDiscovery } from '@/lib/live-sessions';
 
@@ -90,6 +91,10 @@ export async function createTrainingContentAction(formData: FormData): Promise<v
   const title = str(formData, 'title');
   if (!category || !title) return;
 
+  // El contenido del admin es el catálogo general; puede ser curso o ejercicio.
+  const kindRaw = str(formData, 'kind');
+  const kind = isTrainingKind(kindRaw) ? kindRaw : 'COURSE';
+
   const durationRaw = str(formData, 'durationMinutes');
   const difficultyRaw = str(formData, 'difficulty');
   const durationMinutes = durationRaw ? parseInt(durationRaw, 10) : null;
@@ -99,6 +104,8 @@ export async function createTrainingContentAction(formData: FormData): Promise<v
     data: {
       title,
       category,
+      kind,
+      ownerType: 'GENERAL',
       description: str(formData, 'description'),
       videoUrl: str(formData, 'videoUrl'),
       thumbnailUrl: str(formData, 'thumbnailUrl'),

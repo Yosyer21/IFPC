@@ -229,6 +229,8 @@ export async function main() {
     difficulty: number;
     outcomes?: string[];
     content?: string;
+    /** Curso o ejercicio (por defecto, curso del catálogo general). */
+    kind?: 'COURSE' | 'EXERCISE';
   }[] = [
     {
       id: 'tc-tech-1',
@@ -510,6 +512,8 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
     const data = {
       title: content.title,
       category: content.category,
+      kind: content.kind ?? 'COURSE',
+      ownerType: 'GENERAL' as const,
       description: content.description,
       durationMinutes: content.durationMinutes,
       difficulty: content.difficulty,
@@ -1355,6 +1359,156 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
   await prisma.post.updateMany({
     where: { id: 'seed-post-1' },
     data: { pinnedAt: daysAgoPost(0, 2) },
+  });
+
+  // ─── Football Center: ejercicios generales ─────────────────────────────
+  const generalExercises = [
+    {
+      id: 'tc-gen-ex-1',
+      title: 'Cone dribbling circuit',
+      category: 'technical',
+      description: 'Close-control dribbling through a slalom of cones with both feet.',
+      durationMinutes: 15,
+      difficulty: 2,
+      content:
+        'Place 6 cones 1.5 m apart. Dribble through with the inside, outside and sole of the foot.\n4 series per foot with 60 s rest between series.',
+      outcomes: ['Keep the ball under control at speed', 'Use both feet and the sole'],
+    },
+    {
+      id: 'tc-gen-ex-2',
+      title: 'Wall passing: first touch and return',
+      category: 'technical',
+      description: 'Two-touch wall work to sharpen the first touch and body orientation.',
+      durationMinutes: 12,
+      difficulty: 1,
+      content:
+        '2 minutes per foot against a wall, 5 m away.\nFirst touch away from the wall, second touch back. Alternate inside and outside of the foot.',
+      outcomes: ['Control away from pressure', 'Receive side-on'],
+    },
+    {
+      id: 'tc-gen-ex-3',
+      title: 'Core stability series',
+      category: 'strength-conditioning',
+      description: 'Plank, side plank and dead bug circuit to build trunk stability.',
+      durationMinutes: 18,
+      difficulty: 2,
+      content:
+        'Circuit: front plank 40 s, side plank 30 s per side, dead bug 10 per side.\n3 rounds with 60 s rest between rounds.',
+      outcomes: ['Hold a neutral spine', 'Transfer force from the trunk'],
+    },
+  ];
+
+  for (const exercise of generalExercises) {
+    await prisma.trainingContent.upsert({
+      where: { id: exercise.id },
+      update: {},
+      create: {
+        id: exercise.id,
+        title: exercise.title,
+        category: exercise.category,
+        kind: 'EXERCISE',
+        ownerType: 'GENERAL',
+        description: exercise.description,
+        durationMinutes: exercise.durationMinutes,
+        difficulty: exercise.difficulty,
+        content: exercise.content,
+        outcomes: exercise.outcomes,
+      },
+    });
+  }
+
+  // ─── Football Center: contenido de un coach y de un club ───────────────
+  if (coachProfile) {
+    await prisma.trainingContent.upsert({
+      where: { id: 'tc-coach-1' },
+      update: {},
+      create: {
+        id: 'tc-coach-1',
+        title: 'Scanning before receiving',
+        category: 'technical',
+        kind: 'COURSE',
+        ownerType: 'COACH',
+        coachId: coachProfile.id,
+        description: 'Body shape and scanning to play forward on the first touch.',
+        durationMinutes: 30,
+        difficulty: 3,
+        content:
+          '1. Why scanning matters: two checks before the ball arrives.\n2. Body shape: half-turned, eyes over the shoulder.\n3. Progressive practice: rondo, then 4v4+2.',
+        outcomes: ['Check both shoulders before receiving', 'Receive side-on facing up'],
+      },
+    });
+
+    await prisma.trainingContent.upsert({
+      where: { id: 'tc-coach-ex-1' },
+      update: {},
+      create: {
+        id: 'tc-coach-ex-1',
+        title: 'Third-man runs (4v4+2)',
+        category: 'technical',
+        kind: 'EXERCISE',
+        ownerType: 'COACH',
+        coachId: coachProfile.id,
+        description: 'Possession game with two neutral players to find the third man.',
+        durationMinutes: 20,
+        difficulty: 3,
+        content: '4 series of 4 minutes with 90 s rest. Two touches maximum per player.',
+        outcomes: ['Play around the press', 'Time the third-man run'],
+      },
+    });
+  }
+
+  if (playerProfile) {
+    // El jugador demo pertenece al club: ve su contenido y sus live privados.
+    await prisma.contract.upsert({
+      where: { id: 'contract-demo-1' },
+      update: {},
+      create: {
+        id: 'contract-demo-1',
+        clubId: club.id,
+        playerId: playerProfile.id,
+        startsAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000),
+        endsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        status: 'SIGNED',
+        signedAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
+  await prisma.trainingContent.upsert({
+    where: { id: 'tc-club-1' },
+    update: {},
+    create: {
+      id: 'tc-club-1',
+      title: 'Club playing model: build-up from the back',
+      category: 'technical',
+      kind: 'COURSE',
+      ownerType: 'CLUB',
+      clubId: club.id,
+      description: 'How the club wants to build up, with the roles of each line.',
+      durationMinutes: 35,
+      difficulty: 3,
+      content:
+        '1. Principles: width, depth and a free man.\n2. Goalkeeper and centre-backs: first pass options.\n3. Midfield rotation and the third man.',
+      outcomes: ['Recognise the build-up structure', 'Find the free man'],
+    },
+  });
+
+  await prisma.trainingContent.upsert({
+    where: { id: 'tc-club-ex-1' },
+    update: {},
+    create: {
+      id: 'tc-club-ex-1',
+      title: 'Rondo 6v2 with transition',
+      category: 'technical',
+      kind: 'EXERCISE',
+      ownerType: 'CLUB',
+      clubId: club.id,
+      description: 'Club rondo to train the first pass and the reaction after losing the ball.',
+      durationMinutes: 18,
+      difficulty: 2,
+      content: '6v2 in a 12x12 grid. When the defenders win the ball, 5-second counter.',
+      outcomes: ['Play away from pressure', 'React immediately after loss'],
+    },
   });
 
   console.log('Seed completed:');

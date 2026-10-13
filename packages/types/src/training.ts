@@ -1,9 +1,25 @@
-export type TrainingCategory = 'technical' | 'strength-conditioning' | 'psychology' | 'parent-education';
+export type TrainingCategory =
+  | 'technical'
+  | 'strength-conditioning'
+  | 'psychology'
+  | 'parent-education';
+
+/** Curso (lectura + quiz) o ejercicio (para hacer). */
+export type TrainingKind = 'COURSE' | 'EXERCISE';
+
+/** Quién publica el contenido: la plataforma, un coach o un club. */
+export type TrainingOrigin = 'GENERAL' | 'COACH' | 'CLUB';
 
 export interface TrainingContent {
   id: string;
   title: string;
   category: string;
+  kind: TrainingKind;
+  ownerType: TrainingOrigin;
+  /** Coach autor (cuando `ownerType` es `COACH`). */
+  coachId?: string | null;
+  /** Club autor (cuando `ownerType` es `CLUB`). */
+  clubId?: string | null;
   description?: string | null;
   /** Cuerpo del curso (texto plano con saltos de línea). */
   content?: string | null;
@@ -14,6 +30,15 @@ export interface TrainingContent {
   difficulty?: number | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+/** Progreso de un jugador sobre un curso o ejercicio. */
+export interface TrainingProgress {
+  id: string;
+  playerId: string;
+  contentId: string;
+  /** `null` mientras no lo haya completado. */
+  completedAt?: Date | null;
 }
 
 export interface QuizOption {

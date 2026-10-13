@@ -1,102 +1,97 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
-import { Badge, Card, CardContent } from '@ifpc/ui';
+import { Card, CardContent, Tabs } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { StatCard } from '@/components/player/stat-card';
-import { IconBook, IconPlay, IconStar, IconWhistle } from '@/components/dashboard/icons';
+import { CreateTrainingContentForm } from '@/components/training/create-content-form';
+import { TrainingContentGrid } from '@/components/training/content-grid';
+import { DeleteTrainingContentButton } from '@/components/training/content-actions';
+import { IconBook, IconPlay, IconUsers } from '@/components/dashboard/icons';
+import { coachPlayerCount, listAuthoredTraining } from '@/lib/training';
 
-export const metadata: Metadata = { title: 'Training' };
+export const metadata: Metadata = { title: 'Football Center' };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Technique',
-  'strength-conditioning': 'Strength and conditioning',
-  psychology: 'Psychology',
-};
-
-export default async function CoachTrainingPage() {
+/**
+ * Football Center del coach: publica cursos y ejercicios que verán **sus**
+ * jugadores (los vinculados por `CoachPlayer`) y gestiona lo ya publicado.
+ */
+export default async function CoachFootballCenterPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const [content, coachWithPlayers] = await Promise.all([
-    prisma.trainingContent.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 100,
-    }),
-    prisma.coach.findUnique({
-      where: { userId: session.user.id },
-      include: { players: { include: { player: true } } },
-    }),
+  const coach = await prisma.coach.findUnique({
+    where: { userId: session.user.id },
+    select: { id: true },
+  });
+  if (!coach) notFound();
+
+  const [items, players] = await Promise.all([
+    listAuthoredTraining({ coachId: coach.id }),
+    coachPlayerCount(coach.id),
   ]);
 
-  const categories = new Set(content.map((item) => item.category));
-  const totalPlayers = coachWithPlayers?.players.length ?? 0;
+  const courses = items.filter((item) => item.kind === 'COURSE');
+  const exercises = items.filter((item) => item.kind === 'EXERCISE');
+
+  const published = (list: typeof items, kind: 'COURSE' | 'EXERCISE') => (
+    <div className="flex flex-col gap-6">
+      <p className="text-sm text-muted-foreground">
+        {players === 0
+          ? 'You have no players linked yet: add them from My players to share this content.'
+          : `Visible for the ${players} player${players === 1 ? '' : 's'} linked to you.`}
+      </p>
+      <TrainingContentGrid
+        items={list}
+        basePath="/dashboard/coach/training"
+        renderActions={(item) => <DeleteTrainingContentButton contentId={item.id} />}
+      />
+      <Card>
+        <CardContent>
+          <h2 className="mb-4 font-semibold">New {kind === 'COURSE' ? 'course' : 'exercise'}</h2>
+          <CreateTrainingContentForm defaultKind={kind} />
+        </CardContent>
+      </Card>
+    </div>
+  );
 
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Training"
-        subtitle="Exercise catalog to plan your players' development"
+        title="Football Center"
+        subtitle="Publish courses and exercises for your players"
         icon="play"
       />
 
-      <div className="mb-6 grid grid-cols-3 gap-4">
-        <StatCard href="/dashboard/coach/training" icon={IconPlay} label="Ejercicios" value={content.length} />
-        <StatCard href="/dashboard/coach/training" icon={IconBook} label="Categories" value={categories.size} />
-        <StatCard href="/dashboard/coach/players" icon={IconWhistle} label="My players" value={totalPlayers} />
+      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
+        <StatCard
+          href="/dashboard/coach/training"
+          icon={IconBook}
+          label="My courses"
+          value={courses.length}
+        />
+        <StatCard
+          href="/dashboard/coach/training"
+          icon={IconPlay}
+          label="My exercises"
+          value={exercises.length}
+        />
+        <StatCard
+          href="/dashboard/coach/players"
+          icon={IconUsers}
+          label="My players"
+          value={players}
+        />
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
-        {Object.entries(CATEGORY_LABELS).map(([key, label]) => {
-          const count = content.filter((item) => item.category === key).length;
-          return (
-            <Badge key={key} variant="outline">
-              {label}: {count}
-            </Badge>
-          );
-        })}
-      </div>
-
-      {content.length === 0 ? (
-        <Card>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              No training content published yet.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {content.map((item) => (
-            <Link key={item.id} href="/dashboard/player/training">
-              <Card className="card-hover h-full">
-                <CardContent>
-                  <div className="flex items-start justify-between gap-2">
-                    <Badge variant="outline">
-                      {CATEGORY_LABELS[item.category] ?? item.category}
-                    </Badge>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <IconStar className="h-3.5 w-3.5" />
-                      <span>{item.difficulty ?? '—'}/5</span>
-                    </div>
-                  </div>
-                  <h3 className="mt-3 font-semibold">{item.title}</h3>
-                  <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">
-                    {item.description}
-                  </p>
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    {item.durationMinutes ? `${item.durationMinutes} min` : 'No duration'}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      )}
+      <Tabs
+        tabs={[
+          { value: 'courses', label: 'My courses', content: published(courses, 'COURSE') },
+          { value: 'exercises', label: 'My exercises', content: published(exercises, 'EXERCISE') },
+        ]}
+        defaultValue="courses"
+      />
     </div>
   );
 }
-
-
-

@@ -2,6 +2,7 @@ export * from './user';
 export * from './player';
 export * from './career';
 export * from './club';
+export * from './training';
 export * from './opportunity';
 export * from './recruitment';
 export * from './onboarding';

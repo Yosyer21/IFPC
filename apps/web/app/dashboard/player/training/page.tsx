@@ -1,55 +1,77 @@
 import type { Metadata } from 'next';
 import { auth } from '@ifpc/auth';
-import { prisma } from '@ifpc/database';
 import { Tabs } from '@ifpc/ui';
-import { TrainingGrid } from '@/components/player/training-grid';
 import { PageHeader } from '@/components/player/page-header';
+import { TrainingSection } from '@/components/training/content-section';
+import { TrainingProgressPanel } from '@/components/training/progress-panel';
+import { listPlayerTraining, playerTrainingSummary, splitTraining } from '@/lib/training';
+import type { TrainingKind } from '@ifpc/config';
 
-export const metadata: Metadata = { title: 'Training' };
+export const metadata: Metadata = { title: 'Football Center' };
 
-const CATEGORIES = [
-  { value: 'all', label: 'All' },
-  { value: 'technical', label: 'Technique' },
-  { value: 'strength-conditioning', label: 'Strength & conditioning' },
-] as const;
-
-export default async function PlayerTrainingPage() {
+/**
+ * Football Center del jugador: tres pestañas (cursos, ejercicios y su progreso) y,
+ * dentro de cada una, el contenido dividido por origen — general (la plataforma),
+ * de su coach y de su club —.
+ */
+export default async function PlayerFootballCenterPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const contents = await prisma.trainingContent.findMany({
-    where: { category: { in: ['technical', 'strength-conditioning'] } },
-    orderBy: { createdAt: 'asc' },
-    include: { quiz: { select: { _count: { select: { questions: true } } } } },
-  });
+  const { audience, items } = await listPlayerTraining(session.user.id);
+  const summary = await playerTrainingSummary(items, audience.playerId);
 
-  const quizzesByContentId = Object.fromEntries(
-    contents
-      .filter((content) => content.quiz)
-      .map((content) => [content.id, content.quiz?._count.questions ?? 0])
-  );
+  const grouped = (kind: TrainingKind) => {
+    const groups = splitTraining(items, kind);
+    const total = groups.general.length + groups.coach.length + groups.club.length;
+    if (total === 0) {
+      return (
+        <p className="text-sm text-muted-foreground">
+          No {kind === 'COURSE' ? 'courses' : 'exercises'} available yet. Content from your coach
+          and your club will show up here too.
+        </p>
+      );
+    }
 
-  const tabs = CATEGORIES.map((category) => ({
-    value: category.value,
-    label: category.label,
-    content: (
-      <TrainingGrid
-        contents={contents.filter(
-          (content) => category.value === 'all' || content.category === category.value
-        )}
-        quizzesByContentId={quizzesByContentId}
-      />
-    ),
-  }));
+    return (
+      <div className="flex flex-col gap-6">
+        <TrainingSection
+          title="General"
+          subtitle="Basics from Future Baller"
+          items={groups.general}
+        />
+        <TrainingSection
+          title="From your coach"
+          subtitle="Published by the coaches you are linked to"
+          items={groups.coach}
+        />
+        <TrainingSection
+          title="From your club"
+          subtitle="Published by the clubs you play for"
+          items={groups.club}
+        />
+      </div>
+    );
+  };
+
+  const tabs = [
+    { value: 'courses', label: 'Courses', content: grouped('COURSE') },
+    { value: 'exercises', label: 'Exercises', content: grouped('EXERCISE') },
+    {
+      value: 'progress',
+      label: 'My progress',
+      content: <TrainingProgressPanel summary={summary} />,
+    },
+  ];
 
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Training"
-        subtitle="Content to improve your technique, strength and mindset"
+        title="Football Center"
+        subtitle="Courses, exercises and your progress: general, from your coach and from your club"
         icon="play"
       />
-      <Tabs tabs={tabs} defaultValue="all" />
+      <Tabs tabs={tabs} defaultValue="courses" />
     </div>
   );
 }

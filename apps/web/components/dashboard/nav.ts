@@ -31,7 +31,7 @@ export const NAV: Record<string, NavSection[]> = {
     {
       label: 'Content',
       items: [
-        { href: '/dashboard/player/training', label: 'Training', icon: 'play' },
+        { href: '/dashboard/player/training', label: 'Football Center', icon: 'play' },
         { href: '/dashboard/player/documents', label: 'My documents', icon: 'file' },
         { href: '/dashboard/player/live-sessions', label: 'Live sessions', icon: 'live' },
       ],
@@ -51,6 +51,7 @@ export const NAV: Record<string, NavSection[]> = {
         { href: '/dashboard/club', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/club/profile', label: 'Club profile', icon: 'briefcase' },
+        { href: '/dashboard/club/training', label: 'Football Center', icon: 'play' },
         { href: '/dashboard/club/staff', label: 'Staff', icon: 'users' },
         { href: '/dashboard/club/live-sessions', label: 'Live sessions', icon: 'live' },
       ],
@@ -128,7 +129,7 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/coach/players', label: 'My players', icon: 'users' },
         { href: '/dashboard/coach/evaluations', label: 'Evaluations', icon: 'check' },
-        { href: '/dashboard/coach/training', label: 'Training', icon: 'play' },
+        { href: '/dashboard/coach/training', label: 'Football Center', icon: 'play' },
         { href: '/dashboard/coach/live-sessions', label: 'Live sessions', icon: 'live' },
       ],
     },
