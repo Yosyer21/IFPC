@@ -1455,6 +1455,26 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
         outcomes: ['Play around the press', 'Time the third-man run'],
       },
     });
+
+    // Borrador de ejemplo: solo lo ve el coach, y así se ve el estado en la lista.
+    await prisma.trainingContent.upsert({
+      where: { id: 'tc-coach-ex-draft' },
+      update: {},
+      create: {
+        id: 'tc-coach-ex-draft',
+        title: 'Warm-up mobility (draft)',
+        category: 'strength-conditioning',
+        kind: 'EXERCISE',
+        ownerType: 'COACH',
+        coachId: coachProfile.id,
+        status: 'DRAFT',
+        description: 'Draft: joint mobility routine to open the session.',
+        durationMinutes: 12,
+        difficulty: 1,
+        content: 'Ankle, hip and shoulder mobility. 2 rounds of 6 exercises.',
+        outcomes: ['Prepare joints before training'],
+      },
+    });
   }
 
   if (playerProfile) {

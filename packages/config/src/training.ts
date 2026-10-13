@@ -87,6 +87,35 @@ export const TRAINING_AUTHOR_CATEGORIES: readonly TrainingCategory[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Visibilidad (borrador, programado y publicado)
+// ---------------------------------------------------------------------------
+
+/** `DRAFT` solo lo ve el autor; `PUBLISHED` lo ve su audiencia. */
+export const TRAINING_STATUSES = ['DRAFT', 'PUBLISHED'] as const;
+export type TrainingStatus = (typeof TRAINING_STATUSES)[number];
+
+export const TRAINING_STATUS_LABELS: Record<TrainingStatus, string> = {
+  DRAFT: 'Draft',
+  PUBLISHED: 'Published',
+};
+
+export function isTrainingStatus(value: unknown): value is TrainingStatus {
+  return typeof value === 'string' && (TRAINING_STATUSES as readonly string[]).includes(value);
+}
+
+/**
+ * Estado efectivo del contenido para mostrarlo en una tarjeta: un `PUBLISHED`
+ * con fecha futura está **programado** (aún no lo ve nadie).
+ */
+export type TrainingPublishState = 'DRAFT' | 'SCHEDULED' | 'PUBLISHED';
+
+export const TRAINING_PUBLISH_STATE_LABELS: Record<TrainingPublishState, string> = {
+  DRAFT: 'Draft',
+  SCHEDULED: 'Scheduled',
+  PUBLISHED: 'Published',
+};
+
+// ---------------------------------------------------------------------------
 // Medios (portada y vídeo del contenido)
 // ---------------------------------------------------------------------------
 
@@ -95,3 +124,10 @@ export const TRAINING_IMAGE_MAX_BYTES = POST_IMAGE_MAX_BYTES;
 export const TRAINING_VIDEO_MAX_BYTES = POST_VIDEO_MAX_BYTES;
 export const TRAINING_IMAGE_MIME_EXT = POST_IMAGE_MIME_EXT;
 export const TRAINING_VIDEO_MIME_EXT = POST_VIDEO_MIME_EXT;
+
+// ---------------------------------------------------------------------------
+// Programación
+// ---------------------------------------------------------------------------
+
+/** Margen mínimo para programar: evita fechas que ya pasaron por la latencia. */
+export const TRAINING_SCHEDULE_MIN_LEAD_MINUTES = 5;

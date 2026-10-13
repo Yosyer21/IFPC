@@ -1,5 +1,13 @@
 import { prisma } from '@ifpc/database';
-import type { TrainingKind, TrainingOrigin } from '@ifpc/config';
+import {
+  TRAINING_PUBLISH_STATE_LABELS,
+  TRAINING_SCHEDULE_MIN_LEAD_MINUTES,
+  isTrainingStatus,
+  type TrainingKind,
+  type TrainingOrigin,
+  type TrainingPublishState,
+  type TrainingStatus,
+} from '@ifpc/config';
 
 /** Estados de contrato que cuentan como «estar en el club» (igual que los live de club). */
 const ACTIVE_CONTRACT_STATUSES = ['SIGNED', 'ACTIVE'];
@@ -22,6 +30,10 @@ export interface TrainingItem {
   difficulty: number | null;
   /** Nº de preguntas del quiz (0 si no tiene). */
   quizQuestions: number;
+  /** Borrador o publicado (solo lo ve el autor hasta que publica). */
+  status: TrainingStatus;
+  /** Fecha de publicación programada (`null` = publicar ya). */
+  publishAt: Date | null;
   /** Cuándo lo completó el jugador (`null` si sigue pendiente). */
   completedAt: Date | null;
   author: TrainingAuthor;
@@ -58,8 +70,13 @@ export async function playerTrainingAudience(userId: string): Promise<PlayerTrai
   };
 }
 
-/** Condición Prisma del contenido visible para esa audiencia. */
-export function trainingVisibilityWhere(audience: PlayerTrainingAudience) {
+/** Condiciones del contenido **visible**: publicado y sin fecha futura pendiente. */
+function publishedConditions(now: Date): Record<string, unknown>[] {
+  return [{ status: 'PUBLISHED' }, { OR: [{ publishAt: null }, { publishAt: { lte: now } }] }];
+}
+
+/** Orígenes de los que ve contenido una audiencia: general, sus coaches y clubes. */
+function ownerTypeConditions(audience: PlayerTrainingAudience): Record<string, unknown>[] {
   const visible: Record<string, unknown>[] = [{ ownerType: 'GENERAL' }];
   if (audience.coachIds.length > 0) {
     visible.push({ ownerType: 'COACH', coachId: { in: audience.coachIds } });
@@ -67,7 +84,17 @@ export function trainingVisibilityWhere(audience: PlayerTrainingAudience) {
   if (audience.clubIds.length > 0) {
     visible.push({ ownerType: 'CLUB', clubId: { in: audience.clubIds } });
   }
-  return { OR: visible };
+  return visible;
+}
+
+/**
+ * Condición Prisma del contenido visible para esa audiencia: lo que le toca por
+ * origen **y** ya está publicado (los borradores y lo programado no se filtran).
+ */
+export function trainingVisibilityWhere(audience: PlayerTrainingAudience, now: Date = new Date()) {
+  return {
+    AND: [...publishedConditions(now), { OR: ownerTypeConditions(audience) }],
+  };
 }
 
 /** Nombre del autor que se pinta en las tarjetas. */
@@ -99,6 +126,8 @@ interface TrainingContentRow {
   durationMinutes: number | null;
   difficulty: number | null;
   quiz: { _count: { questions: number } } | null;
+  status: string;
+  publishAt: Date | null;
   coach: { id: string; clubName: string | null; user: { name: string | null } } | null;
   club: { id: string; name: string } | null;
 }
@@ -122,9 +151,87 @@ function mapContentRow(row: TrainingContentRow, completedAt: Date | null = null)
     durationMinutes: row.durationMinutes,
     difficulty: row.difficulty,
     quizQuestions: row.quiz?._count.questions ?? 0,
+    status: row.status as TrainingStatus,
+    publishAt: row.publishAt,
     completedAt,
     author: authorOf(row),
   };
+}
+
+/**
+ * Estado con el que se muestra el contenido a su autor: un `PUBLISHED` con fecha
+ * futura está **programado** (todavía no lo ve nadie).
+ */
+export function trainingPublishState(
+  content: { status: TrainingStatus; publishAt: Date | null },
+  now: Date = new Date()
+): TrainingPublishState {
+  if (content.status === 'DRAFT') return 'DRAFT';
+  if (content.publishAt && content.publishAt.getTime() > now.getTime()) return 'SCHEDULED';
+  return 'PUBLISHED';
+}
+
+/** Etiqueta del estado («Draft», «Scheduled», «Published»). */
+export function trainingPublishStateLabel(
+  content: { status: TrainingStatus; publishAt: Date | null },
+  now: Date = new Date()
+): string {
+  return TRAINING_PUBLISH_STATE_LABELS[trainingPublishState(content, now)];
+}
+
+/**
+ * ¿Lo ve ya su audiencia? Es la misma regla que aplica `trainingVisibilityWhere`,
+ * así que acciones, avisos y programador comparten criterio.
+ */
+export function isTrainingVisibleNow(
+  content: { status: TrainingStatus; publishAt: Date | null },
+  now: Date = new Date()
+): boolean {
+  if (content.status !== 'PUBLISHED') return false;
+  return !content.publishAt || content.publishAt.getTime() <= now.getTime();
+}
+
+/**
+ * ¿Hay que avisar a los jugadores al guardar? Solo cuando el contenido **pasa** a
+ * ser visible (borrador o programado → publicado ya), nunca de nuevo al editarlo.
+ */
+export function shouldNotifyOnSave(
+  before: { status: TrainingStatus; publishAt: Date | null } | null,
+  after: { status: TrainingStatus; publishAt: Date | null },
+  now: Date = new Date()
+): boolean {
+  if (before && isTrainingVisibleNow(before, now)) return false;
+  return isTrainingVisibleNow(after, now);
+}
+
+/**
+ * Traduce la visibilidad que llega del formulario: `DRAFT` (borrador),
+ * `SCHEDULED` (publicado con fecha futura) o `PUBLISHED` (visible ya). `publishAt`
+ * es una fecha local del navegador (`datetime-local`); si no se puede leer o no
+ * deja margen suficiente se devuelve un error legible en vez de programar algo
+ * que nacería caducado.
+ */
+export function resolveTrainingVisibility(
+  input: { mode?: string | null; publishAt?: string | null },
+  now: Date = new Date()
+): { status: TrainingStatus; publishAt: Date | null } | { error: string } {
+  const mode = input.mode && isTrainingStatus(input.mode) ? input.mode : 'PUBLISHED';
+  if (mode === 'DRAFT') return { status: 'DRAFT', publishAt: null };
+  if (!input.publishAt) return { status: 'PUBLISHED', publishAt: null };
+
+  const scheduledAt = new Date(input.publishAt);
+  if (Number.isNaN(scheduledAt.getTime())) {
+    return { error: 'Pick a valid date and time to schedule the publication.' };
+  }
+
+  const minLead = now.getTime() + TRAINING_SCHEDULE_MIN_LEAD_MINUTES * 60_000;
+  if (scheduledAt.getTime() < minLead) {
+    return {
+      error: `To schedule, pick a date at least ${TRAINING_SCHEDULE_MIN_LEAD_MINUTES} minutes from now.`,
+    };
+  }
+
+  return { status: 'PUBLISHED', publishAt: scheduledAt };
 }
 
 /**
@@ -183,7 +290,6 @@ export function splitTraining(
     club: ofKind.filter((item) => item.ownerType === 'CLUB'),
   };
 }
-
 
 /** Actividad reciente del jugador en el Football Center. */
 export interface TrainingActivity {
@@ -296,20 +402,21 @@ export async function clubPlayerCount(clubId: string): Promise<number> {
 
 /**
  * Condición de visibilidad del contenido para cualquier usuario: lo general, lo
- * de sus coaches y clubes y, si publica contenido, también lo suyo. La usa la API
- * para no exponer el contenido privado de un club o un coach.
+ * de sus coaches y clubes y, si publica contenido, **todo lo suyo** (incluidos
+ * borradores y programados). La usa la API para no exponer el contenido privado
+ * de un club o un coach.
  */
-export async function visibleTrainingWhere(userId: string) {
+export async function visibleTrainingWhere(userId: string, now: Date = new Date()) {
   const audience = await playerTrainingAudience(userId);
   const [coach, club] = await Promise.all([
     prisma.coach.findUnique({ where: { userId }, select: { id: true } }),
     prisma.club.findUnique({ where: { userId }, select: { id: true } }),
   ]);
 
-  const visible: Record<string, unknown>[] = [...trainingVisibilityWhere(audience).OR];
-  if (coach) visible.push({ ownerType: 'COACH', coachId: coach.id });
-  if (club) visible.push({ ownerType: 'CLUB', clubId: club.id });
+  const owned: Record<string, unknown>[] = [];
+  if (coach) owned.push({ ownerType: 'COACH', coachId: coach.id });
+  if (club) owned.push({ ownerType: 'CLUB', clubId: club.id });
 
-  return { OR: visible };
+  const published = trainingVisibilityWhere(audience, now);
+  return owned.length > 0 ? { OR: [published, ...owned] } : published;
 }
-

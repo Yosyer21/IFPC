@@ -45,8 +45,13 @@ export default async function ClubFootballCenterPage() {
       <TrainingContentGrid
         items={list}
         basePath="/dashboard/club/training"
+        showPublishState
         renderActions={(item) => (
-          <TrainingContentActions contentId={item.id} basePath="/dashboard/club/training" />
+          <TrainingContentActions
+            contentId={item.id}
+            basePath="/dashboard/club/training"
+            content={item}
+          />
         )}
       />
       <Card>

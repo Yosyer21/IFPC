@@ -8,11 +8,19 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;
 }
 
-export function Select({ label, options, placeholder, className = '', ...props }: SelectProps) {
+export function Select({ label, options, placeholder, className = '', id, ...props }: SelectProps) {
+  // Igual que `Input`: el `label` apunta al `select` por `name`, para que sea
+  // accesible (clic en la etiqueta) y localizable desde los tests.
+  const selectId = id ?? props.name;
   return (
     <div className="flex flex-col gap-1.5">
-      {label ? <label className="text-sm font-medium">{label}</label> : null}
+      {label ? (
+        <label htmlFor={selectId} className="text-sm font-medium">
+          {label}
+        </label>
+      ) : null}
       <select
+        id={selectId}
         className={`h-10 w-full rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40 ${className}`}
         {...props}
       >

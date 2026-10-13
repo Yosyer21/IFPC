@@ -9,14 +9,26 @@ import {
   TRAINING_VIDEO_MAX_BYTES,
   TRAINING_VIDEO_MIME_EXT,
   isTrainingKind,
+  type TrainingStatus,
 } from '@ifpc/config';
 import { trainingContentSchema } from '@ifpc/validation';
 import type { ActionState } from './auth';
 import { dashboardPath } from '@/lib/safe-redirect';
 import { revalidatePaths } from '@/lib/revalidate';
 import { resolveStorage } from '@/lib/storage';
-import { parsePassScore, parseQuizQuestions, quizDelete, replaceContentQuiz } from '@/lib/training-quiz';
-import { playerTrainingAudience, trainingVisibilityWhere } from '@/lib/training';
+import {
+  parsePassScore,
+  parseQuizQuestions,
+  quizDelete,
+  replaceContentQuiz,
+} from '@/lib/training-quiz';
+import {
+  playerTrainingAudience,
+  resolveTrainingVisibility,
+  shouldNotifyOnSave,
+  trainingVisibilityWhere,
+} from '@/lib/training';
+import { notifyTrainingAudience } from '@/lib/training-notify';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -72,6 +84,34 @@ function authorPaths(
 }
 
 /**
+ * Avisa a los jugadores cuando el contenido **pasa** a ser visible (borrador o
+ * programado → publicado ya). El aviso es best-effort: si falla, el contenido ya
+ * está guardado y publicado, así que no se tumba la acción por él.
+ */
+async function notifyIfNewlyVisible(
+  before: { status: TrainingStatus; publishAt: Date | null } | null,
+  content: {
+    id: string;
+    title: string;
+    ownerType: string;
+    coachId: string | null;
+    clubId: string | null;
+    status: TrainingStatus;
+    publishAt: Date | null;
+  }
+): Promise<void> {
+  if (!shouldNotifyOnSave(before, { status: content.status, publishAt: content.publishAt })) {
+    return;
+  }
+
+  try {
+    await notifyTrainingAudience(content);
+  } catch {
+    // Sin aviso, pero el contenido queda publicado igualmente.
+  }
+}
+
+/**
  * Publica un curso o ejercicio en el Football Center. El coach solo puede crear
  * para sus jugadores y el club para los jugadores con contrato: el origen y el
  * autor se derivan de la sesión, nunca del formulario.
@@ -106,10 +146,21 @@ export async function createTrainingContentAction(
     return { error: 'Please review the content fields.' };
   }
 
+  const visibility = resolveTrainingVisibility({
+    mode: str(formData, 'visibility'),
+    publishAt: str(formData, 'publishAt'),
+  });
+  if ('error' in visibility) {
+    return { error: visibility.error };
+  }
+
+  let created;
   try {
-    await prisma.trainingContent.create({
+    created = await prisma.trainingContent.create({
       data: {
         ...parsed.data,
+        status: visibility.status,
+        publishAt: visibility.publishAt,
         ownerType: author.coachId ? 'COACH' : 'CLUB',
         coachId: author.coachId,
         clubId: author.clubId,
@@ -119,6 +170,7 @@ export async function createTrainingContentAction(
     return { error: 'The content could not be published.' };
   }
 
+  await notifyIfNewlyVisible(null, created);
   revalidatePaths(...authorPaths(author));
   redirect(authorHome(author));
 }
@@ -268,14 +320,61 @@ export async function updateTrainingContentAction(
     return { error: 'Please review the content fields.' };
   }
 
+  const visibility = resolveTrainingVisibility({
+    mode: str(formData, 'visibility'),
+    publishAt: str(formData, 'publishAt'),
+  });
+  if ('error' in visibility) {
+    return { error: visibility.error };
+  }
+
+  let updated;
   try {
-    await prisma.trainingContent.update({
+    updated = await prisma.trainingContent.update({
       where: { id: owned.content.id },
-      data: parsed.data,
+      data: { ...parsed.data, status: visibility.status, publishAt: visibility.publishAt },
     });
   } catch {
     return { error: 'The content could not be saved.' };
   }
+
+  // De borrador o programado a visible: es el momento de avisar a los jugadores.
+  await notifyIfNewlyVisible(owned.content, updated);
+  revalidatePaths(...authorPaths(owned.author, owned.content.id));
+  redirect(authorHome(owned.author));
+}
+
+/**
+ * Publica ya un contenido propio (borrador o programado) y avisa a la audiencia.
+ * Es el atajo de la tarjeta cuando el autor no quiere esperar a la fecha.
+ */
+export async function publishTrainingContentAction(formData: FormData): Promise<void> {
+  const owned = await findOwnedContent(str(formData, 'contentId') ?? '');
+  if (!owned) {
+    return;
+  }
+
+  const updated = await prisma.trainingContent.update({
+    where: { id: owned.content.id },
+    data: { status: 'PUBLISHED', publishAt: null },
+  });
+
+  await notifyIfNewlyVisible(owned.content, updated);
+  revalidatePaths(...authorPaths(owned.author, owned.content.id));
+  redirect(authorHome(owned.author));
+}
+
+/** Devuelve el contenido propio a borrador: deja de llegar a los jugadores. */
+export async function unpublishTrainingContentAction(formData: FormData): Promise<void> {
+  const owned = await findOwnedContent(str(formData, 'contentId') ?? '');
+  if (!owned) {
+    return;
+  }
+
+  await prisma.trainingContent.update({
+    where: { id: owned.content.id },
+    data: { status: 'DRAFT', publishAt: null },
+  });
 
   revalidatePaths(...authorPaths(owned.author, owned.content.id));
   redirect(authorHome(owned.author));
@@ -468,4 +567,3 @@ export async function removeTrainingVideoAction(formData: FormData): Promise<voi
   revalidatePaths(...authorPaths(owned.author, owned.content.id));
   redirect(trainingEditPath(owned.author, owned.content.id));
 }
-

@@ -85,6 +85,8 @@ export default async function CoachTrainingEditPage({
               videoUrl: content.videoUrl,
               durationMinutes: content.durationMinutes,
               difficulty: content.difficulty,
+              status: content.status,
+              publishAt: content.publishAt,
             }}
           />
         </CardContent>

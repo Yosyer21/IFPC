@@ -24,11 +24,7 @@ const FILE_INPUT =
  * pegar URLs. La portada es manual a propósito: la miniatura automática del vídeo
  * usa `ffmpeg`, que no está en la imagen de producción.
  */
-export function TrainingMediaManager({
-  contentId,
-  coverUrl,
-  videoUrl,
-}: TrainingMediaManagerProps) {
+export function TrainingMediaManager({ contentId, coverUrl, videoUrl }: TrainingMediaManagerProps) {
   const [coverState, coverAction, coverPending] = useActionState(uploadTrainingCoverAction, {});
   const [videoState, videoAction, videoPending] = useActionState(uploadTrainingVideoAction, {});
 
@@ -62,12 +58,7 @@ export function TrainingMediaManager({
             className={FILE_INPUT}
           />
           {coverState.error ? <p className="text-xs text-destructive">{coverState.error}</p> : null}
-          <Button
-            type="submit"
-            variant="outline"
-            disabled={coverPending}
-            className="self-start"
-          >
+          <Button type="submit" variant="outline" disabled={coverPending} className="self-start">
             {coverPending ? 'Uploading…' : 'Save cover'}
           </Button>
         </form>
@@ -106,12 +97,7 @@ export function TrainingMediaManager({
             className={FILE_INPUT}
           />
           {videoState.error ? <p className="text-xs text-destructive">{videoState.error}</p> : null}
-          <Button
-            type="submit"
-            variant="outline"
-            disabled={videoPending}
-            className="self-start"
-          >
+          <Button type="submit" variant="outline" disabled={videoPending} className="self-start">
             {videoPending ? 'Uploading…' : 'Save video'}
           </Button>
         </form>

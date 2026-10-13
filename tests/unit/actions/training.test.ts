@@ -21,6 +21,7 @@ const mocks = vi.hoisted(() => ({
   playerFindUnique: vi.fn(),
   coachPlayerFindMany: vi.fn(),
   contractFindMany: vi.fn(),
+  notificationCreate: vi.fn(),
 }));
 
 vi.mock('@ifpc/auth', () => ({ auth: mocks.auth }));
@@ -48,6 +49,7 @@ vi.mock('@ifpc/database', () => ({
     player: { findUnique: mocks.playerFindUnique },
     coachPlayer: { findMany: mocks.coachPlayerFindMany },
     contract: { findMany: mocks.contractFindMany },
+    notification: { create: mocks.notificationCreate },
   },
 }));
 
@@ -55,8 +57,10 @@ import {
   createTrainingContentAction,
   deleteTrainingContentAction,
   deleteContentQuizAction,
+  publishTrainingContentAction,
   saveContentQuizAction,
   toggleTrainingProgressAction,
+  unpublishTrainingContentAction,
   updateTrainingContentAction,
   uploadTrainingCoverAction,
 } from '@/app/actions/training';
@@ -81,8 +85,19 @@ beforeEach(() => {
   mocks.auth.mockResolvedValue({ user: { id: 'user-1' } });
   mocks.coachFindUnique.mockResolvedValue(null);
   mocks.clubFindUnique.mockResolvedValue(null);
-  mocks.contentCreate.mockResolvedValue({ id: 'content-1' });
+  mocks.contentCreate.mockResolvedValue({
+    id: 'content-1',
+    title: 'Cone dribbling circuit',
+    status: 'PUBLISHED',
+    publishAt: null,
+    ownerType: 'COACH',
+    coachId: 'coach-1',
+    clubId: null,
+  });
   mocks.contentUpdate.mockResolvedValue({ id: 'content-1' });
+  mocks.coachPlayerFindMany.mockResolvedValue([]);
+  mocks.contractFindMany.mockResolvedValue([]);
+  mocks.notificationCreate.mockResolvedValue({ id: 'notification-1' });
   mocks.quizDeleteMany.mockResolvedValue({ count: 0 });
   mocks.quizCreate.mockResolvedValue({ id: 'quiz-1' });
   mocks.storageSave.mockResolvedValue({ url: '/uploads/training/covers/a.png' });
@@ -138,6 +153,72 @@ describe('createTrainingContentAction', () => {
     const state = await createTrainingContentAction(
       {},
       form({ ...baseFields, title: 'X', category: 'tactics' })
+    );
+
+    expect(state.error).toBeTruthy();
+    expect(mocks.contentCreate).not.toHaveBeenCalled();
+  });
+
+  it('avisa a sus jugadores cuando publica contenido visible', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.coachPlayerFindMany.mockResolvedValue([{ player: { userId: 'user-9' } }]);
+
+    await captureRedirect(() => createTrainingContentAction({}, form(baseFields)));
+
+    expect(mocks.contentCreate.mock.calls[0][0].data).toMatchObject({
+      status: 'PUBLISHED',
+      publishAt: null,
+    });
+    expect(mocks.notificationCreate.mock.calls[0][0].data).toMatchObject({
+      userId: 'user-9',
+      type: 'training',
+      link: '/dashboard/player/training/content-1',
+    });
+  });
+
+  it('guarda un borrador sin avisar a nadie', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentCreate.mockResolvedValue({
+      id: 'content-1',
+      title: 'Cone dribbling circuit',
+      status: 'DRAFT',
+      publishAt: null,
+      ownerType: 'COACH',
+      coachId: 'coach-1',
+      clubId: null,
+    });
+
+    await captureRedirect(() =>
+      createTrainingContentAction({}, form({ ...baseFields, visibility: 'DRAFT' }))
+    );
+
+    expect(mocks.contentCreate.mock.calls[0][0].data).toMatchObject({
+      status: 'DRAFT',
+      publishAt: null,
+    });
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
+
+  it('programa la publicación y espera a avisar', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    const publishAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    await captureRedirect(() =>
+      createTrainingContentAction({}, form({ ...baseFields, visibility: 'SCHEDULED', publishAt }))
+    );
+
+    const data = mocks.contentCreate.mock.calls[0][0].data;
+    expect(data.status).toBe('PUBLISHED');
+    expect(data.publishAt).toBeInstanceOf(Date);
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
+
+  it('exige una fecha futura para programar', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+
+    const state = await createTrainingContentAction(
+      {},
+      form({ ...baseFields, visibility: 'SCHEDULED', publishAt: 'ayer' })
     );
 
     expect(state.error).toBeTruthy();
@@ -216,10 +297,13 @@ const ownedContent = {
   id: 'content-1',
   coachId: 'coach-1',
   clubId: null,
+  ownerType: 'COACH',
   kind: 'EXERCISE',
   title: 'Old title',
   thumbnailUrl: null,
   videoUrl: null,
+  status: 'PUBLISHED',
+  publishAt: null,
 };
 
 describe('updateTrainingContentAction', () => {
@@ -259,6 +343,104 @@ describe('updateTrainingContentAction', () => {
 
     expect(state.error).toBe('Content not found.');
     expect(mocks.contentUpdate).not.toHaveBeenCalled();
+  });
+
+  it('avisa a sus jugadores cuando el borrador pasa a publicado', async () => {
+    mocks.contentFindUnique.mockResolvedValue({ ...ownedContent, status: 'DRAFT' });
+    mocks.contentUpdate.mockResolvedValue({
+      ...ownedContent,
+      status: 'PUBLISHED',
+      publishAt: null,
+    });
+    mocks.coachPlayerFindMany.mockResolvedValue([{ player: { userId: 'user-9' } }]);
+
+    await captureRedirect(() =>
+      updateTrainingContentAction({}, form({ ...baseFields, contentId: 'content-1' }))
+    );
+
+    expect(mocks.notificationCreate).toHaveBeenCalledTimes(1);
+  });
+
+  it('no vuelve a avisar al editar algo que ya se veía', async () => {
+    mocks.contentUpdate.mockResolvedValue({ ...ownedContent });
+
+    await captureRedirect(() =>
+      updateTrainingContentAction({}, form({ ...baseFields, contentId: 'content-1' }))
+    );
+
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
+
+  it('guarda como borrador sin avisar', async () => {
+    mocks.contentUpdate.mockResolvedValue({ ...ownedContent, status: 'DRAFT' });
+
+    await captureRedirect(() =>
+      updateTrainingContentAction(
+        {},
+        form({ ...baseFields, contentId: 'content-1', visibility: 'DRAFT' })
+      )
+    );
+
+    expect(mocks.contentUpdate.mock.calls[0][0].data).toMatchObject({
+      status: 'DRAFT',
+      publishAt: null,
+    });
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('publishTrainingContentAction', () => {
+  beforeEach(() => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue({ ...ownedContent, status: 'DRAFT' });
+  });
+
+  it('publica ya el contenido propio y avisa a sus jugadores', async () => {
+    mocks.contentUpdate.mockResolvedValue({
+      ...ownedContent,
+      status: 'PUBLISHED',
+      publishAt: null,
+    });
+    mocks.coachPlayerFindMany.mockResolvedValue([{ player: { userId: 'user-9' } }]);
+
+    const redirectTo = await captureRedirect(() =>
+      publishTrainingContentAction(form({ contentId: 'content-1' }))
+    );
+
+    expect(mocks.contentUpdate.mock.calls[0][0]).toEqual({
+      where: { id: 'content-1' },
+      data: { status: 'PUBLISHED', publishAt: null },
+    });
+    expect(mocks.notificationCreate).toHaveBeenCalledTimes(1);
+    expect(redirectTo).toBe('/dashboard/coach/training');
+  });
+
+  it('no toca el contenido de otro autor', async () => {
+    mocks.contentFindUnique.mockResolvedValue({ ...ownedContent, coachId: 'coach-2' });
+
+    await captureRedirect(() => publishTrainingContentAction(form({ contentId: 'content-1' })));
+
+    expect(mocks.contentUpdate).not.toHaveBeenCalled();
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('unpublishTrainingContentAction', () => {
+  it('devuelve el contenido a borrador sin avisar a nadie', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue(ownedContent);
+    mocks.contentUpdate.mockResolvedValue({ ...ownedContent, status: 'DRAFT' });
+
+    const redirectTo = await captureRedirect(() =>
+      unpublishTrainingContentAction(form({ contentId: 'content-1' }))
+    );
+
+    expect(mocks.contentUpdate.mock.calls[0][0]).toEqual({
+      where: { id: 'content-1' },
+      data: { status: 'DRAFT', publishAt: null },
+    });
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+    expect(redirectTo).toBe('/dashboard/coach/training');
   });
 });
 

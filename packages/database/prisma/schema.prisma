@@ -524,6 +524,12 @@ enum TrainingKind {
   EXERCISE
 }
 
+/// Visibilidad del contenido: borrador (solo el autor) o publicado.
+enum TrainingStatus {
+  DRAFT
+  PUBLISHED
+}
+
 /// Quién publica el contenido: la plataforma, un coach o un club.
 enum TrainingOwnerType {
   GENERAL
@@ -539,6 +545,10 @@ model TrainingContent {
   kind            TrainingKind      @default(COURSE)
   /// Origen del contenido: general, de un coach o de un club.
   ownerType       TrainingOwnerType @default(GENERAL)
+  /// Borrador o publicado (los jugadores solo ven lo publicado).
+  status          TrainingStatus    @default(PUBLISHED)
+  /// Publicación programada: visible y avisada a partir de esta fecha.
+  publishAt       DateTime?
   /// Coach autor (cuando `ownerType = COACH`).
   coachId         String?
   coach           Coach?   @relation(fields: [coachId], references: [id], onDelete: Cascade)
@@ -562,6 +572,7 @@ model TrainingContent {
 
   @@index([category])
   @@index([kind, ownerType])
+  @@index([status, publishAt])
   @@index([coachId])
   @@index([clubId])
 }

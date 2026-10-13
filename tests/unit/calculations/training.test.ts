@@ -6,23 +6,28 @@ import {
   TRAINING_KIND_LABELS,
   TRAINING_ORIGINS,
   TRAINING_ORIGIN_LABELS,
+  TRAINING_SCHEDULE_MIN_LEAD_MINUTES,
+  TRAINING_STATUSES,
+  TRAINING_STATUS_LABELS,
   isTrainingCategory,
   isTrainingKind,
   isTrainingOrigin,
+  isTrainingStatus,
   trainingCategoryLabel,
 } from '@ifpc/config';
 import { trainingContentSchema } from '@ifpc/validation';
 import {
+  isTrainingVisibleNow,
+  resolveTrainingVisibility,
+  shouldNotifyOnSave,
   splitTraining,
+  trainingPublishState,
+  trainingPublishStateLabel,
   trainingVisibilityWhere,
   type PlayerTrainingAudience,
   type TrainingItem,
 } from '@/lib/training';
-import {
-  parsePassScore,
-  parseQuizQuestions,
-  quizQuestionsToText,
-} from '@/lib/training-quiz';
+import { parsePassScore, parseQuizQuestions, quizQuestionsToText } from '@/lib/training-quiz';
 
 function item(overrides: Partial<TrainingItem>): TrainingItem {
   return {
@@ -35,6 +40,8 @@ function item(overrides: Partial<TrainingItem>): TrainingItem {
     durationMinutes: null,
     difficulty: null,
     quizQuestions: 0,
+    status: 'PUBLISHED',
+    publishAt: null,
     completedAt: null,
     author: { id: null, name: 'Future Baller' },
     ...overrides,
@@ -54,6 +61,12 @@ describe('catálogo de tipos y orígenes', () => {
     expect(isTrainingOrigin('PLATFORM')).toBe(false);
     expect(isTrainingCategory('technical')).toBe(true);
     expect(isTrainingCategory('tactics')).toBe(false);
+  });
+
+  it('expone etiquetas para cada estado de publicación', () => {
+    for (const status of TRAINING_STATUSES) expect(TRAINING_STATUS_LABELS[status]).toBeTruthy();
+    expect(isTrainingStatus('DRAFT')).toBe(true);
+    expect(isTrainingStatus('HIDDEN')).toBe(false);
   });
 
   it('las categorías de autor son un subconjunto de las del catálogo', () => {
@@ -131,40 +144,162 @@ describe('trainingVisibilityWhere', () => {
     coachIds: ['coach-1'],
     clubIds: ['club-1'],
   };
+  const now = new Date('2026-01-01T12:00:00Z');
 
-  it('incluye lo general, sus coaches y sus clubes', () => {
-    expect(trainingVisibilityWhere(audience)).toEqual({
-      OR: [
-        { ownerType: 'GENERAL' },
-        { ownerType: 'COACH', coachId: { in: ['coach-1'] } },
-        { ownerType: 'CLUB', clubId: { in: ['club-1'] } },
+  it('incluye lo general, sus coaches y sus clubes, solo si está publicado', () => {
+    expect(trainingVisibilityWhere(audience, now)).toEqual({
+      AND: [
+        { status: 'PUBLISHED' },
+        { OR: [{ publishAt: null }, { publishAt: { lte: now } }] },
+        {
+          OR: [
+            { ownerType: 'GENERAL' },
+            { ownerType: 'COACH', coachId: { in: ['coach-1'] } },
+            { ownerType: 'CLUB', clubId: { in: ['club-1'] } },
+          ],
+        },
       ],
     });
   });
 
   it('sin coaches ni clubes solo deja el contenido general', () => {
-    expect(trainingVisibilityWhere({ playerId: 'p', coachIds: [], clubIds: [] })).toEqual({
-      OR: [{ ownerType: 'GENERAL' }],
+    expect(trainingVisibilityWhere({ playerId: 'p', coachIds: [], clubIds: [] }, now)).toEqual({
+      AND: [
+        { status: 'PUBLISHED' },
+        { OR: [{ publishAt: null }, { publishAt: { lte: now } }] },
+        { OR: [{ ownerType: 'GENERAL' }] },
+      ],
     });
+  });
+});
+
+describe('estado de publicación', () => {
+  const now = new Date('2026-01-01T12:00:00Z');
+
+  it('un borrador se marca como borrador y no se ve', () => {
+    const draft = { status: 'DRAFT' as const, publishAt: null };
+    expect(trainingPublishState(draft, now)).toBe('DRAFT');
+    expect(trainingPublishStateLabel(draft, now)).toBe('Draft');
+    expect(isTrainingVisibleNow(draft, now)).toBe(false);
+  });
+
+  it('un publicado con fecha futura está programado y aún no se ve', () => {
+    const scheduled = { status: 'PUBLISHED' as const, publishAt: new Date('2026-01-02T08:00:00Z') };
+    expect(trainingPublishState(scheduled, now)).toBe('SCHEDULED');
+    expect(trainingPublishStateLabel(scheduled, now)).toBe('Scheduled');
+    expect(isTrainingVisibleNow(scheduled, now)).toBe(false);
+  });
+
+  it('al llegar la fecha pasa a publicado sin tocar la base de datos', () => {
+    const scheduled = { status: 'PUBLISHED' as const, publishAt: new Date('2026-01-01T11:00:00Z') };
+    const later = new Date('2026-01-01T12:00:00Z');
+    expect(trainingPublishState(scheduled, later)).toBe('PUBLISHED');
+    expect(isTrainingVisibleNow(scheduled, later)).toBe(true);
+  });
+
+  it('publicado sin fecha se ve ya', () => {
+    const published = { status: 'PUBLISHED' as const, publishAt: null };
+    expect(trainingPublishState(published, now)).toBe('PUBLISHED');
+    expect(isTrainingVisibleNow(published, now)).toBe(true);
+  });
+});
+
+describe('shouldNotifyOnSave', () => {
+  const now = new Date('2026-01-01T12:00:00Z');
+  const visible = { status: 'PUBLISHED' as const, publishAt: null };
+  const draft = { status: 'DRAFT' as const, publishAt: null };
+  const scheduled = { status: 'PUBLISHED' as const, publishAt: new Date('2026-02-01T10:00:00Z') };
+
+  it('avisa al crear algo visible desde el principio', () => {
+    expect(shouldNotifyOnSave(null, visible, now)).toBe(true);
+    expect(shouldNotifyOnSave(null, draft, now)).toBe(false);
+    expect(shouldNotifyOnSave(null, scheduled, now)).toBe(false);
+  });
+
+  it('avisa al pasar de borrador o programado a visible', () => {
+    expect(shouldNotifyOnSave(draft, visible, now)).toBe(true);
+    expect(shouldNotifyOnSave(scheduled, visible, now)).toBe(true);
+  });
+
+  it('no repite el aviso al editar algo que ya se veía', () => {
+    expect(shouldNotifyOnSave(visible, visible, now)).toBe(false);
+  });
+
+  it('no avisa al volver a borrador', () => {
+    expect(shouldNotifyOnSave(visible, draft, now)).toBe(false);
+  });
+});
+
+describe('resolveTrainingVisibility', () => {
+  const now = new Date('2026-01-01T12:00:00Z');
+
+  it('sin visibilidad explícita publica ya', () => {
+    expect(resolveTrainingVisibility({}, now)).toEqual({ status: 'PUBLISHED', publishAt: null });
+    expect(resolveTrainingVisibility({ mode: 'PUBLISHED' }, now)).toEqual({
+      status: 'PUBLISHED',
+      publishAt: null,
+    });
+  });
+
+  it('un valor raro no impide publicar', () => {
+    expect(resolveTrainingVisibility({ mode: 'HIDDEN' }, now)).toEqual({
+      status: 'PUBLISHED',
+      publishAt: null,
+    });
+  });
+
+  it('guarda como borrador', () => {
+    expect(
+      resolveTrainingVisibility({ mode: 'DRAFT', publishAt: '2026-05-05T10:00' }, now)
+    ).toEqual({
+      status: 'DRAFT',
+      publishAt: null,
+    });
+  });
+
+  it('programa una fecha futura', () => {
+    const result = resolveTrainingVisibility(
+      { mode: 'SCHEDULED', publishAt: '2026-05-05T10:00' },
+      now
+    );
+    expect(result).toEqual({ status: 'PUBLISHED', publishAt: new Date('2026-05-05T10:00') });
+  });
+
+  it('rechaza una fecha ilegible o demasiado próxima', () => {
+    expect(
+      resolveTrainingVisibility({ mode: 'SCHEDULED', publishAt: 'mañana' }, now)
+    ).toHaveProperty('error');
+    expect(
+      resolveTrainingVisibility({ mode: 'SCHEDULED', publishAt: now.toISOString() }, now)
+    ).toHaveProperty('error');
+    // El margen mínimo se aplica: un minuto menos de lo exigido no vale.
+    const justBelow = new Date(now.getTime() + (TRAINING_SCHEDULE_MIN_LEAD_MINUTES - 1) * 60_000);
+    expect(
+      resolveTrainingVisibility({ mode: 'SCHEDULED', publishAt: justBelow.toISOString() }, now)
+    ).toHaveProperty('error');
   });
 });
 
 describe('parseQuizQuestions', () => {
   it('lee una pregunta por línea con la primera opción como correcta', () => {
-    expect(parseQuizQuestions('What should the first touch have? | A purpose | Maximum power')).toEqual(
-      [
-        {
-          prompt: 'What should the first touch have?',
-          options: ['A purpose', 'Maximum power'],
-        },
-      ]
-    );
+    expect(
+      parseQuizQuestions('What should the first touch have? | A purpose | Maximum power')
+    ).toEqual([
+      {
+        prompt: 'What should the first touch have?',
+        options: ['A purpose', 'Maximum power'],
+      },
+    ]);
   });
 
   it('ignora líneas vacías, comentarios y preguntas sin opciones suficientes', () => {
-    const raw = ['# comentario', '', 'Only prompt', 'Prompt | una sola opción', 'Good? | A | B'].join(
-      '\n'
-    );
+    const raw = [
+      '# comentario',
+      '',
+      'Only prompt',
+      'Prompt | una sola opción',
+      'Good? | A | B',
+    ].join('\n');
     expect(parseQuizQuestions(raw)).toHaveLength(1);
     expect(parseQuizQuestions(null)).toEqual([]);
     expect(parseQuizQuestions(undefined)).toEqual([]);

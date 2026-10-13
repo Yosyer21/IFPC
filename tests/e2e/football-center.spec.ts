@@ -2,11 +2,7 @@ import { test, expect } from '@playwright/test';
 
 const BASE = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
 
-async function login(
-  page: import('@playwright/test').Page,
-  email: string,
-  password: string
-) {
+async function login(page: import('@playwright/test').Page, email: string, password: string) {
   await page.goto(`${BASE}/login`);
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(password);
@@ -19,10 +15,7 @@ async function login(
  * después de una server action, el router de dev puede servir la versión cacheada
  * de la lista (en producción `revalidatePath` la invalida).
  */
-async function openCoachCenter(
-  page: import('@playwright/test').Page,
-  tab = 'My exercises'
-) {
+async function openCoachCenter(page: import('@playwright/test').Page, tab = 'My exercises') {
   await page.goto(`${BASE}/dashboard/coach/training`);
   await page.getByRole('button', { name: tab }).click();
 }
@@ -82,7 +75,7 @@ test('Football Center: el coach publica y borra un ejercicio', async ({ page }) 
   await page.getByLabel('Short description').fill('Exercise published by the e2e test.');
   await Promise.all([
     page.waitForResponse((response) => response.request().method() === 'POST'),
-    page.getByRole('button', { name: 'Publish' }).click(),
+    page.getByRole('button', { name: 'Save content' }).click(),
   ]);
   await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
 
@@ -117,7 +110,7 @@ test('Football Center: el coach edita, pone quiz y sube portada', async ({ page 
   await page.getByLabel('Title', { exact: true }).fill(title);
   await Promise.all([
     page.waitForResponse((response) => response.request().method() === 'POST'),
-    page.getByRole('button', { name: 'Publish' }).click(),
+    page.getByRole('button', { name: 'Save content' }).click(),
   ]);
   await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
 
@@ -179,4 +172,72 @@ test('Football Center: el coach edita, pone quiz y sube portada', async ({ page 
   await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
   await openCoachCenter(page);
   await expect(page.getByText(newTitle)).toHaveCount(0);
+});
+
+/**
+ * Borradores y publicación: lo que está en borrador **no** le llega al jugador, y
+ * al publicarlo aparece en su Football Center con su aviso en la bandeja.
+ */
+test('Football Center: el borrador no llega al jugador hasta publicarlo', async ({
+  page,
+  browser,
+}) => {
+  await login(page, 'coach@demo.com', 'coach123');
+  await openCoachCenter(page);
+
+  // 1. El coach guarda un ejercicio como borrador.
+  const title = `E2E draft ${Date.now()}`;
+  await page.getByLabel('Title', { exact: true }).fill(title);
+  await page.getByLabel('Who can see it').selectOption('DRAFT');
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Save content' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+
+  // 2. La tarjeta se marca como borrador.
+  await openCoachCenter(page);
+  const card = page.locator('.card-hover', { hasText: title }).first();
+  await expect(card).toBeVisible();
+  await expect(card.getByText('Draft', { exact: true })).toBeVisible();
+
+  // 3. El jugador todavía no lo ve.
+  const hidden = await browser.newContext();
+  const hiddenPage = await hidden.newPage();
+  await login(hiddenPage, 'player@demo.com', 'player123');
+  await hiddenPage.goto(`${BASE}/dashboard/player/training`);
+  await hiddenPage.getByRole('button', { name: 'Exercises' }).click();
+  await expect(hiddenPage.getByText(title)).toHaveCount(0);
+  await hidden.close();
+
+  // 4. El coach lo publica desde la tarjeta.
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    card.getByRole('button', { name: 'Publish now' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+
+  // 5. Ahora el jugador lo ve y le ha llegado el aviso.
+  const seen = await browser.newContext();
+  const seenPage = await seen.newPage();
+  await login(seenPage, 'player@demo.com', 'player123');
+  await seenPage.goto(`${BASE}/dashboard/player/training`);
+  await seenPage.getByRole('button', { name: 'Exercises' }).click();
+  await expect(seenPage.getByText(title).first()).toBeVisible();
+  await seenPage.goto(`${BASE}/dashboard/player/notifications`);
+  await expect(seenPage.getByText('New training from your coach').first()).toBeVisible();
+  await expect(seenPage.getByText(title).first()).toBeVisible();
+  await seen.close();
+
+  // 6. Limpieza: el test borra lo que ha creado.
+  await openCoachCenter(page);
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page
+      .locator('.card-hover', { hasText: title })
+      .first()
+      .getByRole('button', { name: 'Delete' })
+      .click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
 });

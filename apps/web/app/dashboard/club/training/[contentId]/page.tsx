@@ -5,6 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { TrainingContentDetail } from '@/components/training/content-detail';
 import { TrainingContentActions } from '@/components/training/content-actions';
+import { trainingPublishState, trainingPublishStateLabel } from '@/lib/training';
 
 export const metadata: Metadata = { title: 'Football Center' };
 
@@ -51,12 +52,18 @@ export default async function ClubTrainingDetailPage({
         <Card>
           <CardContent className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="font-semibold">Published content</h2>
+              <h2 className="font-semibold">{trainingPublishStateLabel(content)}</h2>
               <p className="text-xs text-muted-foreground">
-                The players under contract with the club see it in their Football Center.
+                {trainingPublishState(content) === 'PUBLISHED'
+                  ? 'The players under contract with the club see it in their Football Center.'
+                  : 'The players under contract with the club will see it when it goes live.'}
               </p>
             </div>
-            <TrainingContentActions contentId={content.id} basePath="/dashboard/club/training" />
+            <TrainingContentActions
+              contentId={content.id}
+              basePath="/dashboard/club/training"
+              content={content}
+            />
           </CardContent>
         </Card>
       }
