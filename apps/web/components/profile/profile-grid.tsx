@@ -1,6 +1,6 @@
 /**
- * Definition list shared by the player profile sub-pages
- * (football, physical, scouting).
+ * Definition list de dos columnas que comparten los perfiles (jugador: sub-páginas
+ * de fútbol, físico y scouting; club: información del club).
  */
 export function ProfileGrid({ rows }: { rows: [string, string][] }) {
   return (

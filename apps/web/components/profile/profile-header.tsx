@@ -4,20 +4,27 @@ import { profileAccentColors, profileOpenToLabels } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 
 export interface ProfileHeaderProps {
-  firstName: string;
-  lastName: string;
-  /** `User.image`. */
+  /** Nombre a mostrar. Jugador: `firstName lastName`; club: `club.name`. */
+  title?: string;
+  /** Jugador: parte del nombre (también da las iniciales del avatar). */
+  firstName?: string;
+  lastName?: string;
+  /** Avatar a pintar. Por defecto, `PlayerAvatar` con nombre, apellidos y foto. */
+  avatar?: ReactNode;
+  /** `User.image` del player. */
   imageUrl?: string | null;
-  /** `Player.bannerUrl`: portada subida por el player. */
+  /** Portada subida por el jugador o el club (`*.bannerUrl`). */
   bannerUrl?: string | null;
-  /** `Player.accentColor`: tiñe anillo, chips y headline. */
+  /** Acento (`*.accentColor`): tiñe anillo, chips y headline. */
   accentColor?: string | null;
   headline?: string | null;
   location?: string | null;
   /** Línea bajo el nombre (position · level, en el perfil; solo position en público). */
   subtitle?: string | null;
-  /** `Player.openTo`: señales de disponibilidad. */
+  /** Chips de disponibilidad del player (`Player.openTo`). */
   openTo?: string[];
+  /** Chips ya traducidos. El club los pinta con `clubProfileTagLabels`. */
+  chips?: string[];
   /** Badges de estado (se pintan bajo la cabecera). */
   badges?: ReactNode;
   /** Botones de la derecha (estado, editar…). */
@@ -29,14 +36,17 @@ export interface ProfileHeaderProps {
 }
 
 /**
- * Cabecera personalizable del perfil: portada (o degradado del acento),
- * avatar con anillo del acento, headline, ubicación y chips de «abierto a»,
- * con hueco para cambiar la portada y la foto sin salir de la página.
- * La comparten el perfil propio, el muro de Discovery y el público.
+ * Cabecera personalizable de perfil: portada (o degradado del acento),
+ * avatar con anillo del acento, headline, ubicación y chips, con hueco para
+ * cambiar la portada y la foto sin salir de la página.
+ * La comparten el perfil del jugador, su muro de Discovery, el perfil público y
+ * el perfil del club (que pasa `title`, `avatar` y `chips`).
  */
 export function ProfileHeader({
+  title,
   firstName,
   lastName,
+  avatar,
   imageUrl,
   bannerUrl,
   accentColor,
@@ -44,13 +54,16 @@ export function ProfileHeader({
   location,
   subtitle,
   openTo = [],
+  chips,
   badges,
   actions,
   coverEditor,
   photoEditor,
 }: ProfileHeaderProps) {
   const accent = profileAccentColors(accentColor);
-  const chips = profileOpenToLabels(openTo);
+  const chipLabels = chips ?? profileOpenToLabels(openTo);
+  const displayName =
+    title?.trim() || [firstName, lastName].filter(Boolean).join(' ').trim() || '—';
 
   return (
     <div className="animate-fade-up overflow-hidden rounded-2xl border border-border/60 bg-card">
@@ -80,12 +93,12 @@ export function ProfileHeader({
             className="-mt-10 rounded-full p-1"
             style={{ backgroundColor: accent.hex, boxShadow: `0 0 32px -10px ${accent.hex}` }}
           >
-            <PlayerAvatar firstName={firstName} lastName={lastName} imageUrl={imageUrl} size="lg" />
+            {avatar ?? (
+              <PlayerAvatar firstName={firstName} lastName={lastName} imageUrl={imageUrl} size="lg" />
+            )}
           </div>
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold tracking-tight">
-              {firstName} {lastName}
-            </h1>
+            <h1 className="text-2xl font-bold tracking-tight">{displayName}</h1>
             {headline ? (
               <p className="mt-0.5 text-sm font-medium" style={{ color: accent.hex }}>
                 {headline}
@@ -93,9 +106,9 @@ export function ProfileHeader({
             ) : null}
             {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
             {location ? <p className="text-xs text-muted-foreground">{location}</p> : null}
-            {chips.length > 0 ? (
+            {chipLabels.length > 0 ? (
               <ul className="mt-2 flex flex-wrap gap-1.5">
-                {chips.map((label) => (
+                {chipLabels.map((label) => (
                   <li
                     key={label}
                     className="rounded-full border px-2.5 py-0.5 text-xs font-medium"

@@ -14,7 +14,7 @@ import {
   toggleMuteAction,
 } from '@/app/actions/discovery';
 import { CoverPhotoEditor } from '@/components/player/cover-photo-editor';
-import { ProfileHeader } from '@/components/player/profile-header';
+import { ProfileHeader } from '@/components/profile/profile-header';
 import { ProfilePhotoEditor } from '@/components/player/profile-photo-editor';
 import { ProfileStatsCard } from '@/components/player/profile-stats';
 import { getFollowStats, listPostsByAuthor } from '@/lib/discovery';

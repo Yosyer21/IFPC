@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS, COMPETITION_LEVEL_LABELS, FOOT_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
-import { ProfileGrid } from '@/components/player/profile-grid';
+import { ProfileGrid } from '@/components/profile/profile-grid';
 
 export const metadata: Metadata = { title: 'My scouting profile' };
 

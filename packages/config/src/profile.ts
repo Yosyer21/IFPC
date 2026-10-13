@@ -129,7 +129,12 @@ export const PROFILE_CHECKLIST_KEYS = [
 export type ProfileChecklistKey = (typeof PROFILE_CHECKLIST_KEYS)[number];
 
 export interface ProfileChecklistItem {
-  key: ProfileChecklistKey;
+  /**
+   * Clave del ítem. El player usa `PROFILE_CHECKLIST_KEYS`; los clubes, las de
+   * `CLUB_PROFILE_CHECKLIST_KEYS` (ver `./club-profile`). El scorer trata igual
+   * cualquier checklist, así que aquí la clave es un string.
+   */
+  key: string;
   label: string;
   /** Por qué importa: se muestra como ayuda del ítem pendiente. */
   hint: string;
@@ -253,20 +258,24 @@ export interface ProfileChecklistState {
   /** Ítems completados (para el «8/14» de la UI). */
   completed: number;
   total: number;
-  /** Puntos conseguidos sobre `PROFILE_CHECKLIST_POINTS`. */
+  /** Puntos conseguidos sobre el total de la checklist usada. */
   points: number;
   /** El ítem pendiente que más suma: el «siguiente mejor paso». */
   next: ProfileChecklistItem | null;
 }
 
 /**
- * Puntúa la checklist: porcentaje ponderado, ítems completados y el siguiente
+ * Puntúa una checklist: porcentaje ponderado, ítems completados y el siguiente
  * mejor paso (el pendiente de mayor peso; a igualdad, el primero declarado).
+ * Sirve tanto para la checklist del player (por defecto) como para la del club
+ * (`CLUB_PROFILE_CHECKLIST`), que se pasa como segundo argumento.
  */
 export function profileChecklistScore(
-  done: Partial<Record<ProfileChecklistKey, boolean>> = {}
+  done: Partial<Record<string, boolean>> = {},
+  checklist: readonly ProfileChecklistItem[] = PROFILE_CHECKLIST
 ): ProfileChecklistState {
-  const items = PROFILE_CHECKLIST.map((item) => ({ ...item, done: done[item.key] === true }));
+  const pointsTotal = checklist.reduce((total, item) => total + item.weight, 0);
+  const items = checklist.map((item) => ({ ...item, done: done[item.key] === true }));
   const points = items.reduce((total, item) => total + (item.done ? item.weight : 0), 0);
   const completed = items.filter((item) => item.done).length;
   const next = items
@@ -278,8 +287,7 @@ export function profileChecklistScore(
 
   return {
     items,
-    percent:
-      PROFILE_CHECKLIST_POINTS === 0 ? 0 : Math.round((points / PROFILE_CHECKLIST_POINTS) * 100),
+    percent: pointsTotal === 0 ? 0 : Math.round((points / pointsTotal) * 100),
     completed,
     total: items.length,
     points,

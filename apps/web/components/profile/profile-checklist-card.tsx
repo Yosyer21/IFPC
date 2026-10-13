@@ -3,11 +3,21 @@ import { Card, CardContent } from '@ifpc/ui';
 import type { ProfileChecklistState } from '@ifpc/config';
 import { DonutChart } from '@/components/player/charts';
 
+export interface ProfileChecklistCardProps {
+  state: ProfileChecklistState;
+  /** Qué se dice al llegar al 100% (cambia según el perfil). */
+  completeText?: string;
+}
+
 /**
  * Profile strength: donut ponderado + lo que falta por completar, cada punto
  * con su link. Al 100% la lista desaparece: solo queda la confirmación.
+ * La comparten el perfil del jugador y el del club (`CLUB_PROFILE_CHECKLIST`).
  */
-export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }) {
+export function ProfileChecklistCard({
+  state,
+  completeText = 'Complete profile: clubs and scouts see everything they look for.',
+}: ProfileChecklistCardProps) {
   const { percent, completed, total, next, items } = state;
   const missing = items.filter((item) => !item.done);
 
@@ -34,9 +44,7 @@ export function ProfileChecklistCard({ state }: { state: ProfileChecklistState }
             <span className="mt-0.5 block text-xs text-muted-foreground">{next.hint}</span>
           </Link>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            Complete profile: clubs and scouts see everything they look for.
-          </p>
+          <p className="text-sm text-muted-foreground">{completeText}</p>
         )}
 
         {missing.length > 0 ? (

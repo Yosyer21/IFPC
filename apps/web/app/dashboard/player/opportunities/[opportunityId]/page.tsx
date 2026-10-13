@@ -6,7 +6,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { ApplyForm } from '@/components/player/apply-form';
-import { ProfileGrid } from '@/components/player/profile-grid';
+import { ProfileGrid } from '@/components/profile/profile-grid';
 import { MatchBreakdown, MatchScoreBadge } from '@/components/player/match-score';
 import { matchOpportunity } from '@/lib/matching';
 import { saveOpportunityAction, unsaveOpportunityAction } from '@/app/actions/player';

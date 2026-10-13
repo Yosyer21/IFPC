@@ -7,7 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PostCard } from '@/components/discovery/post-card';
 import { Footer } from '@/components/landing/footer';
 import { Navbar } from '@/components/landing/navbar';
-import { ProfileHeader } from '@/components/player/profile-header';
+import { ProfileHeader } from '@/components/profile/profile-header';
 import { ProfileStatsCard } from '@/components/player/profile-stats';
 import { getFollowStats, listPostsByAuthor } from '@/lib/discovery';
 import { getPlayerStats } from '@/lib/player-stats';

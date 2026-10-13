@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
-import { ProfileGrid } from '@/components/player/profile-grid';
+import { ProfileGrid } from '@/components/profile/profile-grid';
 
 export const metadata: Metadata = { title: 'Physical data' };
 

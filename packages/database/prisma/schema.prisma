@@ -309,6 +309,12 @@ model Club {
   logoUrl     String?
   verified    Boolean  @default(false)
   description String?
+  /// Personalización del perfil del club (ver `packages/config/src/club-profile.ts`).
+  headline    String?
+  foundedYear Int?
+  tags        String[] @default([])
+  accentColor String?
+  bannerUrl   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

@@ -142,6 +142,14 @@ export async function main() {
       name: 'Demo Club',
       country: 'Spain',
       city: 'Madrid',
+      league: 'LaLiga',
+      // Perfil público de demo (ver `packages/config/src/club-profile.ts`).
+      headline: 'Youth development club · Madrid',
+      description:
+        'Development club with teams from U12 to U19 and a residential programme for international players.',
+      foundedYear: 1998,
+      tags: ['RECRUITING', 'YOUTH'],
+      accentColor: 'cyan',
     },
   });
 

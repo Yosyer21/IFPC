@@ -13,9 +13,9 @@ import {
   ROLE_LABELS,
   profileAccentColors,
 } from '@ifpc/config';
-import { ProfileChecklistCard } from '@/components/player/profile-checklist-card';
-import { ProfileGrid } from '@/components/player/profile-grid';
-import { ProfileHeader } from '@/components/player/profile-header';
+import { ProfileChecklistCard } from '@/components/profile/profile-checklist-card';
+import { ProfileGrid } from '@/components/profile/profile-grid';
+import { ProfileHeader } from '@/components/profile/profile-header';
 import { ProfileStatsCard } from '@/components/player/profile-stats';
 import { CoverPhotoEditor } from '@/components/player/cover-photo-editor';
 import { ProfilePhotoEditor } from '@/components/player/profile-photo-editor';
