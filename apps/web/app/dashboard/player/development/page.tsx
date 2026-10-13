@@ -19,19 +19,17 @@ export default async function PlayerDevelopmentPage() {
 
   const { percent } = playerProfileCompletion(player);
 
-  const [pendingGoals, evaluationCount, videoCount] = await Promise.all([
+  const [pendingGoals, evaluationCount] = await Promise.all([
     prisma.playerGoal.count({
       where: { playerId: player.id, status: { in: ['pending', 'in_progress'] } },
     }),
     prisma.evaluation.count({ where: { playerId: player.id } }),
-    prisma.video.count({ where: { playerId: player.id } }),
   ]);
 
   const summary = [
     { href: '/dashboard/player/development/goals', label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/player/development/evaluations', label: 'Evaluaciones', value: evaluationCount },
-    { href: '/dashboard/player/development/progress', label: 'My progress', value: `${Math.round(((pendingGoals > 0 ? 1 : 0) + (evaluationCount > 0 ? 1 : 0) + (videoCount > 0 ? 1 : 0)) * 100 / 3)}%` },
-    { href: '/dashboard/player/videos', label: 'Uploaded videos', value: videoCount },
+    { href: '/dashboard/player/development/progress', label: 'My progress', value: `${Math.round(((pendingGoals > 0 ? 1 : 0) + (evaluationCount > 0 ? 1 : 0)) * 100 / 2)}%` },
   ];
 
   return (

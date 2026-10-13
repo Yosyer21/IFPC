@@ -24,7 +24,6 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'My career',
       items: [
         { href: '/dashboard/player/opportunities', label: 'Opportunities', icon: 'target' },
-        { href: '/dashboard/player/scouting', label: 'Scouting profile', icon: 'search' },
         { href: '/dashboard/player/career', label: 'Career history', icon: 'trophy' },
         { href: '/dashboard/player/membership', label: 'Membership', icon: 'star' },
       ],
@@ -33,7 +32,6 @@ export const NAV: Record<string, NavSection[]> = {
       label: 'Content',
       items: [
         { href: '/dashboard/player/training', label: 'Training', icon: 'play' },
-        { href: '/dashboard/player/videos', label: 'My videos', icon: 'video' },
         { href: '/dashboard/player/documents', label: 'My documents', icon: 'file' },
         { href: '/dashboard/player/live-sessions', label: 'Live sessions', icon: 'live' },
       ],

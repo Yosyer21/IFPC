@@ -16,11 +16,11 @@ import { CATEGORY_LABELS, GOAL_STATUS_LABELS } from '@/lib/labels';
 import { playerProfileCompletion } from '@/lib/player';
 import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from '@/lib/matching';
 import {
+  IconMessageCircle,
   IconPlay,
   IconRoute,
   IconTarget,
   IconTrendingUp,
-  IconVideo,
   IconWhistle,
 } from '@/components/dashboard/icons';
 
@@ -44,7 +44,6 @@ export default async function PlayerDashboardPage() {
   if (!player) notFound();
 
   const [
-    videos,
     pendingGoals,
     openOpportunities,
     unreadNotifications,
@@ -54,7 +53,6 @@ export default async function PlayerDashboardPage() {
     recentEvaluations,
     recentGoals,
   ] = await Promise.all([
-    prisma.video.count({ where: { playerId: player.id } }),
     prisma.playerGoal.count({
       where: { playerId: player.id, status: { in: ['pending', 'in_progress'] } },
     }),
@@ -111,7 +109,6 @@ export default async function PlayerDashboardPage() {
   );
 
   const stats = [
-    { href: '/dashboard/player/videos', icon: IconVideo, label: 'Videos', value: videos },
     { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
     { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluationCount },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Opportunities for you', value: matchedOpportunities },
@@ -119,7 +116,7 @@ export default async function PlayerDashboardPage() {
 
   const quickActions = [
     { href: '/dashboard/player/training', icon: IconPlay, label: 'Entrenar' },
-    { href: '/dashboard/player/videos/upload', icon: IconVideo, label: 'Upload video' },
+    { href: '/dashboard/discovery', icon: IconMessageCircle, label: 'Share on Discovery' },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Find opportunities' },
     { href: '/dashboard/player/pathway', icon: IconRoute, label: 'Mi ruta' },
   ];
@@ -184,7 +181,7 @@ export default async function PlayerDashboardPage() {
               Edit profile
             </Link>
             <Link
-              href="/dashboard/player/scouting"
+              href={`/players/${player.id}`}
               className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
             >
               View public profile

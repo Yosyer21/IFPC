@@ -58,8 +58,6 @@ export function playerProfileCompletion(player: PlayerCompletionFields): {
 export interface PlayerChecklistExtras {
   /** `User.image`: la foto de perfil. */
   image?: string | null;
-  /** Nº de vídeos subidos por el player. */
-  videoCount?: number;
   /** Nº de seasons de la trayectoria (`CareerEntry`). */
   careerCount?: number;
 }
@@ -90,7 +88,6 @@ export function playerProfileChecklist(
     photo: Boolean(player.image),
     banner: Boolean(player.bannerUrl),
     headline: Boolean(player.headline),
-    video: (player.videoCount ?? 0) > 0,
     career: (player.careerCount ?? 0) > 0,
   });
 }

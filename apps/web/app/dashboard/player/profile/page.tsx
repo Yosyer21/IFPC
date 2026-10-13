@@ -43,8 +43,8 @@ export default async function PlayerProfilePage() {
     where: { userId: session.user.id },
     include: {
       user: true,
-      // Contadores que completan la checklist (vídeos y trayectoria).
-      _count: { select: { videos: true, career: true } },
+      // Contador que completa la checklist (temporadas de trayectoria).
+      _count: { select: { career: true } },
     },
   });
   if (!player) notFound();
@@ -66,7 +66,6 @@ export default async function PlayerProfilePage() {
   const checklist = playerProfileChecklist({
     ...player,
     image: player.user.image,
-    videoCount: player._count.videos,
     careerCount: player._count.career,
   });
   const viewStats = await getProfileViewStats(player.id);

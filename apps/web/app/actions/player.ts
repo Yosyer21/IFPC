@@ -196,51 +196,6 @@ export async function updateAccountAction(
   redirect('/dashboard/player/settings/account');
 }
 
-export async function uploadVideoAction(
-  _prev: ActionState,
-  formData: FormData
-): Promise<ActionState> {
-  const session = await auth();
-  if (!session?.user?.id) {
-    return { error: 'Invalid session.' };
-  }
-
-  const file = formData.get('file');
-  const title = str(formData, 'title');
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: 'Select a video file.' };
-  }
-  if (!title) {
-    return { error: 'Title is required.' };
-  }
-
-  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
-  if (!player) {
-    return { error: 'Player profile not found.' };
-  }
-
-  const ext = file.name.split('.').pop() ?? 'mp4';
-  const filename = `${crypto.randomUUID()}.${ext}`;
-  const dir = path.join(process.cwd(), 'public', 'uploads');
-  try {
-    await mkdir(dir, { recursive: true });
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(dir, filename), buffer);
-    await prisma.video.create({
-      data: {
-        playerId: player.id,
-        title,
-        url: `/uploads/${filename}`,
-        status: 'ready',
-      },
-    });
-  } catch {
-    return { error: 'Could not upload the video.' };
-  }
-
-  redirect('/dashboard/player/videos');
-}
-
 export async function uploadDocumentAction(
   _prev: ActionState,
   formData: FormData

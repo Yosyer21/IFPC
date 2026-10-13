@@ -123,7 +123,6 @@ export const PROFILE_CHECKLIST_KEYS = [
   'photo',
   'banner',
   'headline',
-  'video',
   'career',
 ] as const;
 export type ProfileChecklistKey = (typeof PROFILE_CHECKLIST_KEYS)[number];
@@ -212,29 +211,22 @@ export const PROFILE_CHECKLIST: readonly ProfileChecklistItem[] = [
     key: 'photo',
     label: 'Profile photo',
     hint: 'Profiles with a photo get far more views.',
-    weight: 8,
+    weight: 10,
     href: '/dashboard/player/profile',
   },
   {
     key: 'banner',
     label: 'Cover photo',
     hint: 'Customise your profile header.',
-    weight: 6,
+    weight: 8,
     href: '/dashboard/player/profile/edit#personalizacion',
   },
   {
     key: 'headline',
     label: 'Headline',
     hint: 'A short line that sums up your game.',
-    weight: 6,
+    weight: 8,
     href: '/dashboard/player/profile/edit#personalizacion',
-  },
-  {
-    key: 'video',
-    label: 'At least one video',
-    hint: 'A highlight reel is worth a thousand words.',
-    weight: 6,
-    href: '/dashboard/player/videos',
   },
   {
     key: 'career',

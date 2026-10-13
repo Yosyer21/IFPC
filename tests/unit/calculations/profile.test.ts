@@ -46,8 +46,8 @@ describe('profileChecklistScore', () => {
     expect(state.points).toBe(20);
     expect(state.percent).toBe(20);
     expect(state.completed).toBe(2);
-    // Lo pendiente de más peso es `name` (8), el primero de los 8 puntos.
-    expect(state.next?.key).toBe('name');
+    // Lo pendiente de más peso es la foto (10), el primero de los 10 puntos.
+    expect(state.next?.key).toBe('photo');
   });
 
   it('solo cuenta lo estrictamente verdadero', () => {
@@ -119,7 +119,6 @@ describe('playerProfileChecklist', () => {
     headline: 'Left-footed central midfielder who arrives in the box',
     bannerUrl: '/uploads/banners/a.jpg',
     image: '/uploads/photos/a.jpg',
-    videoCount: 1,
     careerCount: 2,
   };
 
@@ -138,13 +137,13 @@ describe('playerProfileChecklist', () => {
     expect(complete.items.find((item) => item.key === 'physicalData')?.done).toBe(true);
   });
 
-  it('resta lo que falta: foto, vídeo y trayectoria', () => {
-    const state = playerProfileChecklist({ ...base, image: null, videoCount: 0, careerCount: 0 });
-    expect(state.points).toBe(80);
-    expect(state.percent).toBe(80);
+  it('resta lo que falta: foto y trayectoria', () => {
+    const state = playerProfileChecklist({ ...base, image: null, careerCount: 0 });
+    // Foto (10) + trayectoria (6) son los puntos que faltan.
+    expect(state.points).toBe(84);
+    expect(state.percent).toBe(84);
     expect(state.items.filter((item) => !item.done).map((item) => item.key)).toEqual([
       'photo',
-      'video',
       'career',
     ]);
   });
