@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@ifpc/ui';
+import { endTrainingRoomAction } from '@/app/actions/training-rooms';
 import {
   MEDIA_KIND,
   ROOM_HEARTBEAT_MS,
@@ -15,7 +16,9 @@ import {
   AudioSender,
   VideoPlayer,
   VideoSender,
+  canShareScreen,
   startLocalMedia,
+  startScreenShare,
   stopStream,
 } from './room-media';
 
@@ -65,6 +68,13 @@ export function RoomClient({
   const [muted, setMuted] = useState(false);
   const [cameraOff, setCameraOff] = useState(false);
   const [handRaised, setHandRaised] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  /** Compartir pantalla no existe en todos los navegadores (móviles, sobre todo). */
+  const [canShare, setCanShare] = useState(false);
+
+  useEffect(() => {
+    setCanShare(canShareScreen());
+  }, []);
   const [chat, setChat] = useState<ChatLine[]>([]);
   const [draft, setDraft] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -81,21 +91,33 @@ export function RoomClient({
   const heartbeat = useRef<number | null>(null);
   /** Salida voluntaria: no queremos pintar un error en ese caso. */
   const leaving = useRef(false);
+  /** Pista de cámara guardada mientras se comparte pantalla. */
+  const cameraTrack = useRef<MediaStreamTrack | null>(null);
   const counters = useRef({ sent: 0, received: 0, audioIn: 0, videoIn: 0 });
+  /**
+   * Última fase conocida. Vive en un ref porque `publishStats` también se llama
+   * desde el manejador del socket (cada fotograma recibido), que se creó con el
+   * estado de aquel momento: si leyera `phase` directo, publicaría una fase vieja.
+   */
+  const livePhase = useRef<Phase>('idle');
+  const liveSelfIndex = useRef<number | null>(null);
 
   /** Contadores visibles para el panel de depuración y para los tests. */
   const publishStats = useCallback(() => {
     if (typeof window === 'undefined') return;
     (window as unknown as { __roomStats?: unknown }).__roomStats = {
-      phase,
+      phase: livePhase.current,
+      selfIndex: liveSelfIndex.current,
       peers: peers.current.size,
       ...counters.current,
     };
-  }, [phase]);
+  }, []);
 
   useEffect(() => {
+    livePhase.current = phase;
+    liveSelfIndex.current = selfIndex;
     publishStats();
-  }, [publishStats, participants.length, phase]);
+  }, [publishStats, participants.length, phase, selfIndex]);
 
   /** Crea (o recupera) los reproductores de un participante remoto. */
   const peerFor = useCallback((index: number): Peer => {
@@ -258,8 +280,12 @@ export function RoomClient({
     ws.onclose = (event) => {
       // Salida voluntaria: no es un error, solo volvemos a la pantalla previa.
       if (leaving.current) return;
+      // Si el servidor ya explicó el motivo (expulsión, sala cerrada…), ese
+      // mensaje se conserva: el cierre del socket no lo pisa.
       setError(
-        event.code === 4004 ? 'This room is full.' : 'Connection closed. Reload to rejoin.'
+        (current) =>
+          current ??
+          (event.code === 4004 ? 'This room is full.' : 'Connection closed. Reload to rejoin.')
       );
       setPhase('error');
     };
@@ -339,6 +365,75 @@ export function RoomClient({
     send({ t: 'state', handRaised: next });
   }, [handRaised, send]);
 
+  /** Deja de compartir y devuelve la cámara al stream local. */
+  const stopScreenShare = useCallback(() => {
+    const local = stream.current;
+    const camera = cameraTrack.current;
+
+    if (local) {
+      for (const track of local.getVideoTracks()) {
+        if (track === camera) continue;
+        local.removeTrack(track);
+        track.stop();
+      }
+      if (camera) local.addTrack(camera);
+    }
+    cameraTrack.current = null;
+
+    if (localVideo.current) {
+      localVideo.current.srcObject = local;
+    }
+    setSharing(false);
+    send({ t: 'state', sharingScreen: false });
+  }, [send]);
+
+  /**
+   * Compartir pantalla: cambiamos la pista de vídeo del stream local, así el
+   * mismo camino (canvas → codificador → relay) manda la pantalla sin duplicar nada.
+   */
+  const startShareScreen = useCallback(async () => {
+    const local = stream.current;
+    if (!local) return;
+
+    try {
+      const display = await startScreenShare();
+      const track = display.getVideoTracks()[0];
+      if (!track) return;
+
+      cameraTrack.current = local.getVideoTracks()[0] ?? null;
+      if (cameraTrack.current) local.removeTrack(cameraTrack.current);
+      local.addTrack(track);
+      // El botón «Detener» del propio navegador también devuelve la cámara.
+      track.onended = () => stopScreenShare();
+
+      if (localVideo.current) localVideo.current.srcObject = local;
+      setSharing(true);
+      send({ t: 'state', sharingScreen: true });
+    } catch {
+      setError('Your browser did not allow sharing the screen.');
+    }
+  }, [send, stopScreenShare]);
+
+  /** El host echa a alguien de la sala. */
+  const removeParticipant = useCallback(
+    (userId: string) => {
+      send({ t: 'kick', userId });
+    },
+    [send]
+  );
+
+  /**
+   * Cierre del host: se avisa al servicio (expulsa a todos al instante) y se
+   * cierra la sala también en la base de datos, para que la lista quede coherente.
+   */
+  const endRoom = useCallback(() => {
+    send({ t: 'end' });
+    leave();
+    const form = new FormData();
+    form.set('roomId', room.id);
+    void endTrainingRoomAction(form);
+  }, [leave, room.id, send]);
+
   const sendChat = useCallback(() => {
     const text = draft.trim();
     if (!text) return;
@@ -384,8 +479,17 @@ export function RoomClient({
             <button type="button" onClick={toggleHand} className={controlClass}>
               {handRaised ? 'Lower hand' : 'Raise hand'}
             </button>
+            {canShare ? (
+              <button
+                type="button"
+                onClick={() => (sharing ? stopScreenShare() : void startShareScreen())}
+                className={controlClass}
+              >
+                {sharing ? 'Stop sharing' : 'Share screen'}
+              </button>
+            ) : null}
             {viewer.role === 'HOST' ? (
-              <button type="button" onClick={() => send({ t: 'end' })} className={controlClass}>
+              <button type="button" onClick={endRoom} className={controlClass}>
                 End room
               </button>
             ) : null}
@@ -463,9 +567,20 @@ export function RoomClient({
                       {isSelf ? ' (you)' : ''}
                     </span>
                     <span className="flex items-center gap-1">
+                      {participant.sharingScreen ? <span title="Sharing screen">🖥️</span> : null}
                       {participant.handRaised ? <span title="Hand raised">✋</span> : null}
                       {participant.muted ? <span title="Muted">🔇</span> : null}
                       {participant.cameraOff ? <span title="Camera off">📷</span> : null}
+                      {viewer.role === 'HOST' && !isSelf ? (
+                        <button
+                          type="button"
+                          onClick={() => removeParticipant(participant.userId)}
+                          className="rounded-md bg-black/50 px-1.5 py-0.5 text-[10px] text-white/80 hover:text-white"
+                          data-testid={`remove-${slot}`}
+                        >
+                          Remove
+                        </button>
+                      ) : null}
                     </span>
                   </div>
                 ) : null}

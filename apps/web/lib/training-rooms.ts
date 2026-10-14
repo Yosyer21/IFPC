@@ -259,7 +259,14 @@ export async function findRoomForUser(
 > {
   const row = await prisma.trainingRoom.findUnique({
     where: { joinCode },
-    include: { ...ROOM_INCLUDE, targets: { select: { playerId: true } } },
+    // Se piden los mismos campos que la lista (nombre del invitado incluido): la
+    // vista y `mapRoomRow` esperan la misma forma.
+    include: {
+      ...ROOM_INCLUDE,
+      targets: {
+        select: { player: { select: { id: true, firstName: true, lastName: true } } },
+      },
+    },
   });
   if (!row) return null;
 
@@ -274,7 +281,9 @@ export async function findRoomForUser(
     (user.club?.id != null && row.clubId === user.club.id);
 
   const player = await prisma.player.findUnique({ where: { userId }, select: { id: true } });
-  const invited = player ? row.targets.some((target) => target.playerId === player.id) : false;
+  const invited = player
+    ? row.targets.some((target) => target.player.id === player.id)
+    : false;
 
   // Sala abierta a toda la audiencia: basta con pertenecer a ella.
   let inAudience = false;

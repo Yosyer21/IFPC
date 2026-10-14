@@ -32,6 +32,9 @@ describe('canAccessDashboard', () => {
       expect(canAccessDashboard(role, '/dashboard/discovery/abc123')).toBe(true);
       expect(canAccessDashboard(role, '/dashboard/live-sessions')).toBe(true);
       expect(canAccessDashboard(role, '/dashboard/live-sessions/abc123')).toBe(true);
+      // Salas de vídeo: el coach abre la sala y el jugador entra por el enlace.
+      expect(canAccessDashboard(role, '/dashboard/rooms')).toBe(true);
+      expect(canAccessDashboard(role, '/dashboard/rooms/abcd2345')).toBe(true);
     }
   });
 
@@ -39,6 +42,7 @@ describe('canAccessDashboard', () => {
     // `/dashboard/discovery-x` NO es la sección compartida `/dashboard/discovery`.
     for (const role of ROLES) {
       expect(canAccessDashboard(role, '/dashboard/discovery-evil')).toBe(false);
+      expect(canAccessDashboard(role, '/dashboard/rooms-evil')).toBe(false);
     }
     // Y una ruta bajo el área de otro rol sigue cerrada.
     expect(canAccessDashboard('CLUB', '/dashboard/player/discovery')).toBe(false);

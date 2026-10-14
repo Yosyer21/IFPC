@@ -107,7 +107,25 @@ export async function createTrainingRoomAction(
   redirect(`/dashboard/rooms/${created.joinCode}`);
 }
 
-/** Termina la sala propia: deja de poder entrarse y se cierra la presencia. */
+/** Borra la sala propia cuando ya no sirve (solo si no está en directo). */
+export async function deleteTrainingRoomAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+
+  const roomId = str(formData, 'roomId');
+  if (!roomId) return;
+
+  const author = await trainingAuthor(session.user.id);
+  const room = await ownedRoom(roomId, author);
+  if (!room) return;
+  // Una sala en directo primero se termina: borrarla dejaría a la gente dentro.
+  if (room.status !== 'ENDED' && room.status !== 'CANCELLED') return;
+
+  await prisma.trainingRoom.delete({ where: { id: room.id } });
+  revalidatePaths('/dashboard/rooms');
+  redirect('/dashboard/rooms');
+}
+
 export async function endTrainingRoomAction(formData: FormData): Promise<void> {
   const session = await auth();
   if (!session?.user?.id) return;

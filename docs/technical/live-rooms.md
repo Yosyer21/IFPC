@@ -31,10 +31,14 @@ navegador ── HTTPS ──▶ apps/web      (Next.js: permisos, ventana, toke
 | Pieza | Responsabilidad |
 |---|---|
 | `apps/web/lib/training-rooms.ts` | Permisos (autor, invitado o audiencia), ventana horaria, código de sala y emisión del token. |
-| `apps/web/components/room/room-media.ts` | Captura, códec y reproducción en el navegador. |
-| `apps/web/components/room/room-client.tsx` | WebSocket, rejilla 2×2, controles (micro, cámara, mano, salir), chat y presencia. |
+| `apps/web/components/room/room-media.ts` | Captura, códec, pantalla compartida y reproducción en el navegador. |
+| `apps/web/components/room/room-client.tsx` | WebSocket, rejilla 2×2, controles (micro, cámara, mano, compartir pantalla, expulsar, cerrar, salir), chat y presencia. |
 | `apps/rtc/src/room.ts` | Estado vivo de la sala: cupo, roster, relay, moderación y barrido. |
 | `apps/rtc/src/persistence.ts` | Presencia y estado en Postgres (best-effort: si falla, la llamada sigue). |
+
+El área **`/dashboard/rooms` es compartida por cualquier perfil** (está en
+`SHARED_DASHBOARD_PREFIXES`, `packages/auth`): el coach abre la sala y el jugador
+entra por el enlace al que le invitan. El resto del dashboard sigue cerrado por rol.
 
 ## Despliegue en Railway
 
@@ -90,16 +94,28 @@ servicio de verdad:
 pnpm exec vitest run apps/rtc packages/rtc-protocol tests/integration/rtc-room.test.ts
 ```
 
+Y un **e2e de navegador con cámara y micro falsos** (`tests/e2e/rooms.spec.ts`):
+dos personas entran a la misma sala y el test espera a que lleguen fotogramas de
+vídeo de verdad (`window.__roomStats.videoIn > 0`), además de comprobar chat,
+micro, compartir pantalla, expulsión y cierre. Arranca el servicio de salas solo
+(si ya hay uno en `:4001`, lo reutiliza) y usa el mismo secreto que la web:
+
+```bash
+pnpm dev            # web en :3000 (necesaria para el e2e)
+pnpm e2e tests/e2e/rooms.spec.ts
+```
+
 ## Límites y siguientes pasos
 
 - **Cupo 4**: es malla/SFU pequeño; con 4 personas cada cliente manda 1 flujo y
   recibe 3. Subir el cupo multiplica el egress de nuestro servicio.
 - **Egress**: los medios pasan por Railway (≈1,2 GB/hora con 4 personas y las
   calidades por defecto). No se transcodifica, así que la CPU es baja.
-- **Grabación**: al pasar los medios por nuestro servicio, grabar es escribir los
-  frames en `resolveStorage()`; pendiente (F4) con aviso y consentimiento.
+- **Grabación (F4)**: al pasar los medios por nuestro servicio, grabar es escribir
+  los frames en `resolveStorage()`; pendiente, con aviso y consentimiento.
 - **WebRTC P2P (F5)**: cuando la red lo permita, la pareja puede saltar a
   `RTCPeerConnection` (mejor latencia y 0 coste) manteniendo este transporte como
   red de seguridad.
-- **Compartir pantalla, expulsar y lobby**: el protocolo ya tiene `kick` y
-  `sharingScreen`; falta la UI (F3).
+- **Moderación**: el host expulsa desde la propia baldosa del participante; a quien
+  sale se le explica el motivo ("The host removed you."). Cerrar la sala desde
+  dentro expulsa a todos y marca la sala como terminada en la base de datos.

@@ -15,12 +15,14 @@ export const ROLE_DASHBOARD_PREFIXES: Record<Role, string> = {
 
 /**
  * Secciones del dashboard compartidas por **cualquier perfil autenticado**, sin
- * prefijo de rol. Es la única forma de exponer un área común (p. ej. Discovery)
- * sin abrir el resto de áreas privadas.
+ * prefijo de rol. Es la única forma de exponer un área común (p. ej. Discovery o
+ * las salas de vídeo, donde un jugador entra a lo que le invita su coach) sin
+ * abrir el resto de áreas privadas.
  */
 export const SHARED_DASHBOARD_PREFIXES: readonly string[] = [
   '/dashboard/discovery',
   '/dashboard/live-sessions',
+  '/dashboard/rooms',
 ];
 
 /** `true` si `pathname` es exactamente `prefix` o una ruta por debajo de él. */

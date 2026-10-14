@@ -50,6 +50,19 @@ export function stopStream(stream: MediaStream | null): void {
   for (const track of stream?.getTracks() ?? []) track.stop();
 }
 
+/**
+ * Pantalla compartida. El navegador pide al usuario qué ventana o pestaña
+ * compartir; el vídeo pasa por el mismo camino que la cámara.
+ */
+export async function startScreenShare(): Promise<MediaStream> {
+  return navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+}
+
+/** ¿Este navegador puede compartir pantalla? (móviles suelen no poder). */
+export function canShareScreen(): boolean {
+  return typeof navigator.mediaDevices?.getDisplayMedia === 'function';
+}
+
 type FrameSink = (kind: MediaKind, payload: Uint8Array) => void;
 
 const now = () => performance.now();

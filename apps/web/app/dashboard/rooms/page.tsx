@@ -4,7 +4,7 @@ import { auth } from '@ifpc/auth';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { TrainingRoomForm } from '@/components/room/room-form';
-import { endTrainingRoomAction } from '@/app/actions/training-rooms';
+import { endTrainingRoomAction, deleteTrainingRoomAction } from '@/app/actions/training-rooms';
 import { playerTrainingAudience, trainingAuthor } from '@/lib/training';
 import { authorPlayers } from '@/lib/training-assignments';
 import { listAuthoredRooms, listPlayerRooms, roomWindow } from '@/lib/training-rooms';
@@ -121,15 +121,27 @@ export default async function RoomsPage() {
                       </span>
                     )}
                     {isAuthor ? (
-                      <form action={endTrainingRoomAction}>
-                        <input type="hidden" name="roomId" value={room.id} />
-                        <button
-                          type="submit"
-                          className="text-xs text-muted-foreground hover:underline"
-                        >
-                          End room
-                        </button>
-                      </form>
+                      room.status === 'ENDED' || room.status === 'CANCELLED' ? (
+                        <form action={deleteTrainingRoomAction}>
+                          <input type="hidden" name="roomId" value={room.id} />
+                          <button
+                            type="submit"
+                            className="text-xs text-muted-foreground hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </form>
+                      ) : (
+                        <form action={endTrainingRoomAction}>
+                          <input type="hidden" name="roomId" value={room.id} />
+                          <button
+                            type="submit"
+                            className="text-xs text-muted-foreground hover:underline"
+                          >
+                            End room
+                          </button>
+                        </form>
+                      )
                     ) : null}
                   </div>
                 </CardContent>
