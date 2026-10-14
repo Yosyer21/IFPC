@@ -18,8 +18,14 @@ export default async function PlayerLiveSessionsPage() {
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) notFound();
 
-  // El jugador ve: sus sesiones 1:1, las públicas y las de sus clubes.
+  // El jugador ve: sus sesiones 1:1, las públicas, las de sus clubes y las que
+  // organiza un coach suyo (aunque no tengan club asignado).
   const myClubIds = await userClubIds(session.user.id);
+  const myCoaches = await prisma.coachPlayer.findMany({
+    where: { playerId: player.id },
+    select: { coachId: true },
+  });
+  const coachIds = myCoaches.map((row) => row.coachId);
 
   const sessions = await prisma.liveSession.findMany({
     where: {
@@ -28,6 +34,9 @@ export default async function PlayerLiveSessionsPage() {
         { playerId: null, visibility: 'PUBLIC' },
         ...(myClubIds.length
           ? [{ playerId: null, visibility: 'CLUB' as const, clubId: { in: myClubIds } }]
+          : []),
+        ...(coachIds.length
+          ? [{ playerId: null, visibility: 'CLUB' as const, coachId: { in: coachIds } }]
           : []),
       ],
     },

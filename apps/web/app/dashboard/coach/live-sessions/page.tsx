@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
@@ -129,11 +130,19 @@ export default async function CoachLiveSessionsPage() {
                     : ''}
                 </div>
               </div>
-              {liveSession.meetingUrl ? (
-                <Badge variant="outline">Link ready</Badge>
-              ) : (
-                <Badge variant="outline">No link</Badge>
-              )}
+              <div className="flex items-center gap-3">
+                <Link
+                  href={`/dashboard/live-sessions/${liveSession.id}`}
+                  className="text-sm font-medium text-primary hover:underline"
+                >
+                  Open
+                </Link>
+                {liveSession.meetingUrl ? (
+                  <Badge variant="outline">Link ready</Badge>
+                ) : (
+                  <Badge variant="outline">No link</Badge>
+                )}
+              </div>
             </div>
           ))}
         </div>
