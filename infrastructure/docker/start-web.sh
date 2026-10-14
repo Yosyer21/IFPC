@@ -1,14 +1,18 @@
 #!/bin/sh
-# Arranque del servicio web en producción (Railway).
+# Arranque del servicio en Railway. Hay **un** Dockerfile para los dos servicios
+# del proyecto, así que aquí se decide a quién arranca cada uno:
 #
-#  1) Aplica el esquema Prisma (`prisma db push`) para que la base de datos quede
-#     siempre alineada con packages/database/prisma/schema.prisma.
-#  2) Si SEED_DEMO_DATA=true, carga los datos de demo (usuarios de prueba,
-#     contenido, quizzes…). El seed es idempotente (usa upserts).
-#  3) Arranca el servidor Next.js (output standalone).
+#   SERVICE_KIND=rtc  → servicio de salas de vídeo (WebSocket, apps/rtc)
+#   (cualquier otro)  → web Next.js (esquema Prisma, seed opcional y servidor)
 #
-# Variables relevantes: DATABASE_URL, SEED_DEMO_DATA.
+# Variables relevantes: DATABASE_URL, SERVICE_KIND, ROOM_TOKEN_SECRET,
+# SEED_DEMO_DATA, PORT.
 set -e
+
+if [ "$SERVICE_KIND" = 'rtc' ]; then
+  echo '[start] arrancando servicio de salas (rtc)…'
+  exec node rtc.mjs
+fi
 
 echo '[start] aplicando esquema Prisma…'
 prisma db push --schema packages/database/prisma/schema.prisma --skip-generate

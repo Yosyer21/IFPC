@@ -8,7 +8,7 @@ COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json ./
 COPY packages ./packages
 COPY apps ./apps
 COPY infrastructure ./infrastructure
-RUN pnpm install --frozen-lockfile --filter @ifpc/web... --filter @ifpc/database
+RUN pnpm install --frozen-lockfile --filter @ifpc/web... --filter @ifpc/rtc... --filter @ifpc/database
 
 FROM base AS builder
 ENV STANDALONE=true
@@ -35,6 +35,18 @@ RUN ESBUILD="$(ls -d node_modules/.pnpm/esbuild@*/node_modules/esbuild/bin/esbui
       --alias:@electric-sql/pglite=./infrastructure/docker/pglite-shim.js \
       --alias:pglite-prisma-adapter=./infrastructure/docker/pglite-shim.js
 
+# Servicio de salas de vídeo (rtc) empaquetado igual: sale de esta misma imagen y
+# se arranca con SERVICE_KIND=rtc (ver start-web.sh), así los dos servicios del
+# proyecto comparten Dockerfile sin necesidad de configurarlo por servicio.
+RUN ESBUILD="$(ls -d node_modules/.pnpm/esbuild@*/node_modules/esbuild/bin/esbuild 2>/dev/null | head -1)" ; \
+    if [ -z "$ESBUILD" ]; then echo 'ERROR: esbuild no está disponible en el builder'; exit 1; fi ; \
+    "$ESBUILD" apps/rtc/src/index.ts \
+      --bundle --platform=node --target=node22 --format=esm \
+      --banner:js="import { createRequire as __createRequire } from 'node:module'; import { fileURLToPath as __fileURLToPath } from 'node:url'; import { dirname as __pathDirname } from 'node:path'; const require = __createRequire(import.meta.url); const __filename = __fileURLToPath(import.meta.url); const __dirname = __pathDirname(__filename);" \
+      --outfile=/app/rtc.mjs \
+      --alias:@electric-sql/pglite=./infrastructure/docker/pglite-shim.js \
+      --alias:pglite-prisma-adapter=./infrastructure/docker/pglite-shim.js
+
 FROM base AS runner
 ENV NODE_ENV=production
 # libc6-compat (Next standalone) + openssl (Prisma) para Alpine.
@@ -54,6 +66,7 @@ RUN npm i -g prisma@6.19.3
 COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
 # Seed de demo (ESM) y script de arranque.
 COPY --from=builder /app/seed.mjs ./seed.mjs
+COPY --from=builder /app/rtc.mjs ./rtc.mjs
 COPY --from=builder /app/infrastructure/docker/start-web.sh ./start-web.sh
 USER nextjs
 EXPOSE 3000
