@@ -62,7 +62,7 @@ export default async function ParentChildTrainingPage({
           href={`/dashboard/parent/children/${playerId}`}
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Mi hijo
+          ← My child
         </Link>
       </PageHeader>
 
@@ -122,7 +122,7 @@ export default async function ParentChildTrainingPage({
                     href={`/dashboard/parent/children/${playerId}/training`}
                     className="text-sm text-primary hover:underline"
                   >
-                    Ver →
+                    View →
                   </Link>
                 </div>
               ))}

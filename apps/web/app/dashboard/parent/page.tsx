@@ -101,13 +101,13 @@ export default async function ParentDashboardPage() {
     {
       href: '/dashboard/parent/children',
       icon: IconWhistle,
-      label: 'Evaluaciones',
+      label: 'Assessments',
       value: evaluations.length,
     },
     {
       href: '/dashboard/parent/children',
       icon: IconTarget,
-      label: 'Goals activos',
+      label: 'Active goals',
       value: activeGoals,
     },
     {
@@ -139,7 +139,7 @@ export default async function ParentDashboardPage() {
 
   const recentEvals = evaluations.slice(0, 3);
   const recentTrials = trials.slice(0, 2);
-  const [parentFirstName = 'Familiar', parentLastName = ''] = parent.user.name.split(' ');
+  const [parentFirstName = 'Family', parentLastName = ''] = parent.user.name.split(' ');
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -154,7 +154,7 @@ export default async function ParentDashboardPage() {
               </h1>
               <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
                 <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
-                Familiar
+                Family
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -211,7 +211,11 @@ export default async function ParentDashboardPage() {
             <IconBell className="h-4 w-4" />
           </span>
           <p className="flex-1 text-sm text-amber-100">
-            You have <strong>{pendingActions.length} new item{pendingActions.length === 1 ? '' : 's'}</strong> to review in the family hub.
+            You have{' '}
+            <strong>
+              {pendingActions.length} new item{pendingActions.length === 1 ? '' : 's'}
+            </strong>{' '}
+            to review in the family hub.
           </p>
           <Link
             href={pendingActions[0]!.href}
@@ -244,7 +248,10 @@ export default async function ParentDashboardPage() {
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Your child's level by category</h2>
               {evaluations.length > 0 ? (
-                <Link href="/dashboard/parent/children" className="text-sm text-primary hover:underline">
+                <Link
+                  href="/dashboard/parent/children"
+                  className="text-sm text-primary hover:underline"
+                >
                   View details →
                 </Link>
               ) : null}
@@ -267,7 +274,10 @@ export default async function ParentDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="animate-fade-up flex flex-col items-center" style={{ animationDelay: '400ms' }}>
+        <Card
+          className="animate-fade-up flex flex-col items-center"
+          style={{ animationDelay: '400ms' }}
+        >
           <CardContent className="flex w-full flex-col items-center gap-4">
             <h2 className="self-start font-semibold">Your child's average rating</h2>
             {overall !== null ? (
@@ -282,9 +292,7 @@ export default async function ParentDashboardPage() {
                 </p>
               </>
             ) : (
-              <p className="py-8 text-center text-sm text-muted-foreground">
-                No assessments yet.
-              </p>
+              <p className="py-8 text-center text-sm text-muted-foreground">No assessments yet.</p>
             )}
           </CardContent>
         </Card>
@@ -295,7 +303,10 @@ export default async function ParentDashboardPage() {
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">My children</h2>
-              <Link href="/dashboard/parent/children" className="text-sm text-primary hover:underline">
+              <Link
+                href="/dashboard/parent/children"
+                className="text-sm text-primary hover:underline"
+              >
                 See all →
               </Link>
             </div>
@@ -316,12 +327,18 @@ export default async function ParentDashboardPage() {
                       href={`/dashboard/parent/children/${player.id}`}
                       className="flex items-center gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary/50"
                     >
-                      <PlayerAvatar firstName={player.firstName} lastName={player.lastName} size="md" />
+                      <PlayerAvatar
+                        firstName={player.firstName}
+                        lastName={player.lastName}
+                        size="md"
+                      />
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-medium">
                           {player.firstName} {player.lastName}
                         </div>
-                        <div className="truncate text-xs text-muted-foreground">{positionLabel}</div>
+                        <div className="truncate text-xs text-muted-foreground">
+                          {positionLabel}
+                        </div>
                       </div>
                       <Badge variant={player.status === 'AVAILABLE' ? 'success' : 'default'}>
                         {player.status}
@@ -386,8 +403,11 @@ export default async function ParentDashboardPage() {
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold">Your payments</h2>
-            <Link href="/dashboard/parent/payments" className="text-sm text-primary hover:underline">
-              Ver historial →
+            <Link
+              href="/dashboard/parent/payments"
+              className="text-sm text-primary hover:underline"
+            >
+              View history →
             </Link>
           </div>
           {payments.length === 0 ? (
@@ -429,8 +449,3 @@ export default async function ParentDashboardPage() {
     </div>
   );
 }
-
-
-
-
-

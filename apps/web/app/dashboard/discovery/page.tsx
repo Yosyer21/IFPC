@@ -72,7 +72,7 @@ export default async function DiscoveryPage({
           href="/dashboard/discovery/analytics"
           className="text-sm text-muted-foreground hover:underline"
         >
-          Mi rendimiento →
+          My performance →
         </Link>
         <Link
           href="/dashboard/discovery/following"

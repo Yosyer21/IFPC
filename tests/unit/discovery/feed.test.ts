@@ -135,7 +135,9 @@ describe('parseFeedFilters', () => {
   });
 
   it('normaliza la búsqueda y descarta textos demasiado cortos o largos', () => {
-    expect(parseFeedFilters({ q: '  Scholarships   deportivas  ' }).q).toBe('Scholarships deportivas');
+    expect(parseFeedFilters({ q: '  Scholarships   deportivas  ' }).q).toBe(
+      'Scholarships deportivas'
+    );
     expect(parseFeedFilters({ q: 'a' }).q).toBeNull();
     expect(parseFeedFilters({}).q).toBeNull();
     expect(parseFeedFilters({ q: 'x'.repeat(200) }).q).toHaveLength(60);
@@ -144,7 +146,10 @@ describe('parseFeedFilters', () => {
 
 describe('extractTags', () => {
   it('saca los hashtags del texto, sin repetir y en minúsculas', () => {
-    expect(extractTags('Signing #Sub17 and more #sub17 #Goalkeeper')).toEqual(['sub17', 'goalkeeper']);
+    expect(extractTags('Signing #Sub17 and more #sub17 #Goalkeeper')).toEqual([
+      'sub17',
+      'goalkeeper',
+    ]);
   });
 
   it('une los hashtags del texto con las tags declaradas', () => {
@@ -221,9 +226,9 @@ describe('engagement y ranking', () => {
 describe('formatRelativeTime', () => {
   it('usa minutos, horas, days o fecha según la antigüedad', () => {
     expect(formatRelativeTime(NOW, NOW)).toBe('now');
-    expect(formatRelativeTime(new Date(NOW.getTime() - 5 * 60_000), NOW)).toBe('hace 5 min');
-    expect(formatRelativeTime(new Date(NOW.getTime() - 3 * 3_600_000), NOW)).toBe('hace 3 h');
-    expect(formatRelativeTime(new Date(NOW.getTime() - 2 * 86_400_000), NOW)).toBe('hace 2 d');
+    expect(formatRelativeTime(new Date(NOW.getTime() - 5 * 60_000), NOW)).toBe('5 min ago');
+    expect(formatRelativeTime(new Date(NOW.getTime() - 3 * 3_600_000), NOW)).toBe('3 h ago');
+    expect(formatRelativeTime(new Date(NOW.getTime() - 2 * 86_400_000), NOW)).toBe('2 d ago');
     expect(formatRelativeTime(new Date('2026-01-05T10:00:00.000Z'), NOW)).toMatch(/5/);
   });
 });

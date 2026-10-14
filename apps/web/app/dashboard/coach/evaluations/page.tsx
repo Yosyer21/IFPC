@@ -36,7 +36,7 @@ export default async function CoachEvaluationsPage() {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title="Evaluaciones realizadas"
+        title="Assessments delivered"
         subtitle="All the assessments you have recorded for your players"
         icon="whistle"
       />

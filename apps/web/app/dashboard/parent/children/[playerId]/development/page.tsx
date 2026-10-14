@@ -78,7 +78,7 @@ export default async function ParentChildDevelopmentPage({
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title={`Desarrollo · ${player.firstName}`}
+        title={`Development · ${player.firstName}`}
         subtitle="Sports development, assessments and goals"
         icon="trending"
       >
@@ -86,7 +86,7 @@ export default async function ParentChildDevelopmentPage({
           href={`/dashboard/parent/children/${player.id}`}
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Mi hijo
+          ← My child
         </Link>
       </PageHeader>
 

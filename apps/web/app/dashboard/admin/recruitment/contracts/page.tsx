@@ -36,7 +36,7 @@ export default async function AdminRecruitmentContractsPage() {
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge variant="outline">{active} activos</Badge>
+        <Badge variant="outline">{active} active</Badge>
         <Badge variant="outline">{signed} firmados</Badge>
       </div>
 

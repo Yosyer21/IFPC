@@ -58,7 +58,7 @@ export default async function ParentChildOpportunitiesPage({
           href={`/dashboard/parent/children/${playerId}`}
           className="text-sm text-muted-foreground hover:underline"
         >
-          ← Mi hijo
+          ← My child
         </Link>
       </PageHeader>
 

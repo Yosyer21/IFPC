@@ -30,7 +30,7 @@ export default async function PlayerPathwayDetailPage({
         href="/dashboard/player/pathway"
         className="mb-4 inline-block text-sm text-muted-foreground hover:underline"
       >
-        ← Mi ruta
+        ← My pathway
       </Link>
       <h1 className="mb-4 text-2xl font-bold">{pathway.title}</h1>
 

@@ -44,7 +44,7 @@ export default async function AdminPlayersEvaluationsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="Evaluaciones"
+        title="Assessments"
         subtitle="Player ratings recorded by coaches"
         icon="whistle"
       />
@@ -53,7 +53,7 @@ export default async function AdminPlayersEvaluationsPage() {
         <StatCard
           href="/dashboard/admin/players"
           icon={IconWhistle}
-          label="Evaluaciones totals"
+          label="Total assessments"
           value={total}
         />
         <StatCard

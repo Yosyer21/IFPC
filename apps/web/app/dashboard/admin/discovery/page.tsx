@@ -66,7 +66,7 @@ export default async function AdminDiscoveryPage() {
                     {entry.reports.length} {entry.reports.length === 1 ? 'report' : 'reports'}
                   </Badge>
                   <Badge variant="outline">{POST_TYPE_LABELS[entry.type] ?? entry.type}</Badge>
-                  {entry.pinned ? <Badge variant="success">Fijado</Badge> : null}
+                  {entry.pinned ? <Badge variant="success">Pinned</Badge> : null}
                   {entry.status === 'HIDDEN' ? <Badge variant="warning">Hidden</Badge> : null}
                   <span className="text-xs text-muted-foreground">
                     {entry.author.name} · {ROLE_LABELS[entry.author.role] ?? entry.author.role} ·{' '}
@@ -151,7 +151,7 @@ export default async function AdminDiscoveryPage() {
             </div>
             <div>
               <div className="text-lg font-bold tabular-nums">{health.activeAuthors}</div>
-              <div className="text-xs text-muted-foreground">Autores activos (30 d)</div>
+              <div className="text-xs text-muted-foreground">Active authors (30 d)</div>
             </div>
             <div>
               <div className="text-lg font-bold tabular-nums">

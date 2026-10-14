@@ -38,7 +38,7 @@ export default async function AgentPlayerDetailPage({
   const sections = [
     { href: `/dashboard/agent/players/${playerId}/profile`, label: 'Profile' },
     { href: `/dashboard/agent/players/${playerId}/videos`, label: 'Videos' },
-    { href: `/dashboard/agent/players/${playerId}/evaluations`, label: 'Evaluaciones' },
+    { href: `/dashboard/agent/players/${playerId}/evaluations`, label: 'Assessments' },
     { href: `/dashboard/agent/players/${playerId}/documents`, label: 'Documents' },
   ];
 

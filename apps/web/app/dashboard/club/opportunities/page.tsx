@@ -70,7 +70,7 @@ export default async function ClubOpportunitiesPage() {
                   href={`/dashboard/club/players`}
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver candidates →
+                  View candidates →
                 </Link>
               </CardContent>
             </Card>

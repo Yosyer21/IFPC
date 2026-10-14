@@ -43,7 +43,7 @@ export default async function AgentPlayerEvaluationsPage({
       >
         ← Player
       </Link>
-      <h1 className="mb-6 text-2xl font-bold">Evaluaciones</h1>
+      <h1 className="mb-6 text-2xl font-bold">Assessments</h1>
 
       {evaluations.length === 0 ? (
         <Card>
@@ -65,7 +65,8 @@ export default async function AgentPlayerEvaluationsPage({
                   ) : null}
                   {evaluation.evaluatedBy ? (
                     <p className="mt-1 text-xs text-muted-foreground">
-                      by {evaluation.evaluatedBy} · {evaluation.createdAt.toLocaleDateString('en-GB')}
+                      by {evaluation.evaluatedBy} ·{' '}
+                      {evaluation.createdAt.toLocaleDateString('en-GB')}
                     </p>
                   ) : null}
                 </div>

@@ -17,11 +17,16 @@ export function CreateEvaluationForm({ playerId }: { playerId: string }) {
   return (
     <form action={formAction} className="flex max-w-xl flex-col gap-4">
       <input type="hidden" name="playerId" value={playerId} />
-      <Select name="category" label="Category" options={CATEGORY_OPTIONS} defaultValue="technical" />
+      <Select
+        name="category"
+        label="Category"
+        options={CATEGORY_OPTIONS}
+        defaultValue="technical"
+      />
       <Input name="score" type="number" label="Score (1-10)" min={1} max={10} required />
       <div className="flex flex-col gap-1.5">
         <label htmlFor="notes" className="text-sm font-medium">
-          Notas
+          Notes
         </label>
         <textarea
           id="notes"

@@ -85,7 +85,7 @@ export default async function ClubDashboardPage() {
     {
       href: '/dashboard/club/opportunities',
       label: 'Opportunities',
-      sub: 'activas publicadas',
+      sub: 'open and published',
       value: openOpportunities.length,
       icon: IconTarget,
     },
@@ -345,7 +345,7 @@ export default async function ClubDashboardPage() {
                           : ''}
                       </div>
                     </div>
-                    <span className="text-xs text-muted-foreground">Ver →</span>
+                    <span className="text-xs text-muted-foreground">View →</span>
                   </Link>
                 ))}
               </div>

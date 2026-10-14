@@ -51,7 +51,7 @@ export default async function CoachPlayerEvaluationsPage({
         ← {player.firstName} {player.lastName}
       </Link>
       <PageHeader
-        title="Evaluaciones"
+        title="Assessments"
         subtitle={`Assessments recorded for ${player.firstName} ${player.lastName}`}
         icon="whistle"
       />

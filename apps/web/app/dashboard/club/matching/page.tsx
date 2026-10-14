@@ -30,28 +30,29 @@ export default async function ClubMatchingPage() {
   // Motor de matching real: mejor score de cada player contra los requirements del club.
   const matches = players
     .map((player) => {
-      const best = requirements
-        .map((requirement) => ({
-          requirementId: requirement.id,
-          requirementTitle: requirement.title,
-          ...matchScore(
-            {
-              position: player.position,
-              dateOfBirth: player.dateOfBirth,
-              nationality: player.nationality,
-              competitionLevel: player.competitionLevel,
-              status: player.status,
-            },
-            {
-              position: requirement.position,
-              ageMin: requirement.ageMin,
-              ageMax: requirement.ageMax,
-              level: requirement.level,
-              country: requirement.country,
-            }
-          ),
-        }))
-        .sort((a, b) => b.total - a.total)[0] ?? null;
+      const best =
+        requirements
+          .map((requirement) => ({
+            requirementId: requirement.id,
+            requirementTitle: requirement.title,
+            ...matchScore(
+              {
+                position: player.position,
+                dateOfBirth: player.dateOfBirth,
+                nationality: player.nationality,
+                competitionLevel: player.competitionLevel,
+                status: player.status,
+              },
+              {
+                position: requirement.position,
+                ageMin: requirement.ageMin,
+                ageMax: requirement.ageMax,
+                level: requirement.level,
+                country: requirement.country,
+              }
+            ),
+          }))
+          .sort((a, b) => b.total - a.total)[0] ?? null;
       return { player, best };
     })
     .filter((entry) => entry.best !== null)
@@ -70,7 +71,10 @@ export default async function ClubMatchingPage() {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               Create requirements to receive player suggestions.{' '}
-              <Link href="/dashboard/club/requirements/new" className="text-primary hover:underline">
+              <Link
+                href="/dashboard/club/requirements/new"
+                className="text-primary hover:underline"
+              >
                 Create requirement
               </Link>
             </p>
@@ -114,8 +118,11 @@ export default async function ClubMatchingPage() {
                   <span className="text-muted-foreground">
                     {best?.summary} · Best match: <strong>{best?.requirementTitle}</strong>
                   </span>
-                  <Link href={`/dashboard/club/players/${player.id}`} className="text-primary hover:underline">
-                    Ver ficha →
+                  <Link
+                    href={`/dashboard/club/players/${player.id}`}
+                    className="text-primary hover:underline"
+                  >
+                    View profile →
                   </Link>
                 </div>
                 {best ? (

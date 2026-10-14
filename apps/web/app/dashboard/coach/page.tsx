@@ -97,10 +97,30 @@ export default async function CoachDashboardPage() {
       : null;
 
   const stats = [
-    { href: '/dashboard/coach/players', icon: IconUsers, label: 'Assigned players', value: players.length },
-    { href: '/dashboard/coach/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluations.length },
-    { href: '/dashboard/coach/players', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
-    { href: '/dashboard/coach/players', icon: IconVideo, label: 'My players\u2019 videos', value: videosCount },
+    {
+      href: '/dashboard/coach/players',
+      icon: IconUsers,
+      label: 'Assigned players',
+      value: players.length,
+    },
+    {
+      href: '/dashboard/coach/evaluations',
+      icon: IconWhistle,
+      label: 'Assessments',
+      value: evaluations.length,
+    },
+    {
+      href: '/dashboard/coach/players',
+      icon: IconTrendingUp,
+      label: 'Active goals',
+      value: pendingGoals,
+    },
+    {
+      href: '/dashboard/coach/players',
+      icon: IconVideo,
+      label: 'My players\u2019 videos',
+      value: videosCount,
+    },
   ];
 
   const registerHref =
@@ -111,7 +131,7 @@ export default async function CoachDashboardPage() {
   const quickActions = [
     { href: '/dashboard/coach/players', icon: IconUsers, label: 'My players' },
     { href: registerHref, icon: IconWhistle, label: 'Register assessment' },
-    { href: '/dashboard/coach/evaluations', icon: IconTrendingUp, label: 'Evaluaciones' },
+    { href: '/dashboard/coach/evaluations', icon: IconTrendingUp, label: 'Assessments' },
     { href: '/dashboard/coach/training', icon: IconPlay, label: 'Training' },
   ];
 
@@ -212,7 +232,7 @@ export default async function CoachDashboardPage() {
                   href="/dashboard/coach/evaluations"
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver evaluations →
+                  View assessments →
                 </Link>
               ) : null}
             </div>
@@ -226,8 +246,8 @@ export default async function CoachDashboardPage() {
                   <IconWhistle className="h-7 w-7" />
                 </span>
                 <p className="max-w-xs text-sm text-muted-foreground">
-                  When you register assessments of your players, you will see here the average level of the
-                  group in technique, physical, tactics and psychology.
+                  When you register assessments of your players, you will see here the average level
+                  of the group in technique, physical, tactics and psychology.
                 </p>
               </div>
             )}
@@ -269,7 +289,7 @@ export default async function CoachDashboardPage() {
               href="/dashboard/coach/evaluations"
               className="text-sm text-primary hover:underline"
             >
-              Ver evaluations →
+              View assessments →
             </Link>
           </div>
           {activity.length === 0 ? (
@@ -313,8 +333,8 @@ export default async function CoachDashboardPage() {
           <Card className="animate-fade-up">
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                You have no assigned players yet. When the platform links players to you, they
-                will appear here so you can assess them and assign goals.
+                You have no assigned players yet. When the platform links players to you, they will
+                appear here so you can assess them and assign goals.
               </p>
             </CardContent>
           </Card>
@@ -329,7 +349,11 @@ export default async function CoachDashboardPage() {
               >
                 <Card className="card-hover h-full">
                   <CardContent className="flex items-center gap-3">
-                    <PlayerAvatar firstName={player.firstName} lastName={player.lastName} size="md" />
+                    <PlayerAvatar
+                      firstName={player.firstName}
+                      lastName={player.lastName}
+                      size="md"
+                    />
                     <div className="min-w-0 flex-1">
                       <div className="truncate font-semibold">
                         {player.firstName} {player.lastName}
@@ -352,6 +376,3 @@ export default async function CoachDashboardPage() {
     </div>
   );
 }
-
-
-

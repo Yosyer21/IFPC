@@ -14,7 +14,7 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
     prefix: '/dashboard/player',
   },
   PARENT: {
-    label: 'Familiar',
+    label: 'Family',
     description: 'Support for young athletes, education, payments and pathways.',
     prefix: '/dashboard/parent',
   },
