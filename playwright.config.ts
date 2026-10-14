@@ -20,6 +20,9 @@ export default defineConfig({
         '--autoplay-policy=no-user-gesture-required',
         // Para que `getDisplayMedia` elija algo sin diálogo.
         '--auto-select-desktop-capture-source=Entire screen',
+        // Los candidatos ICE van con la IP real: la vía directa (WebRTC) conecta
+        // entre los dos navegadores del test sin depender de resolución mDNS.
+        '--disable-features=WebRtcHideLocalIpsWithMdns',
       ],
     },
   },

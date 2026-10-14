@@ -98,6 +98,28 @@ async function expectRemoteVideo(page: Page) {
   });
 }
 
+/** Foto de los contadores de la sala (para que los fallos se entiendan). */
+async function statsOf(page: Page): Promise<unknown> {
+  return page.evaluate(() => (window as unknown as { __roomStats?: unknown }).__roomStats ?? null);
+}
+
+/**
+ * Espera a que la vía directa (WebRTC) esté funcionando: el enlace conectado y
+ * frames de verdad llegando por ahí. Si no, el error dice en qué punto se quedó.
+ */
+async function expectDirect(page: Page, label: string) {
+  try {
+    await page.waitForFunction('window.__roomStats && window.__roomStats.p2p >= 1', null, {
+      timeout: 45_000,
+    });
+    await page.waitForFunction('window.__roomStats && window.__roomStats.p2pIn > 0', null, {
+      timeout: 30_000,
+    });
+  } catch {
+    throw new Error(`Sin vía directa (${label}): ${JSON.stringify(await statsOf(page))}`);
+  }
+}
+
 async function newRoomPage(browser: Browser, email: string, password: string): Promise<Page> {
   // Los contextos propios no heredan `use` del proyecto: los permisos se piden aquí.
   const context = await browser.newContext({ permissions: ['camera', 'microphone'] });
@@ -107,6 +129,8 @@ async function newRoomPage(browser: Browser, email: string, password: string): P
 }
 
 test('Salas: dos personas entran, se ven, hablan y el host modera', async ({ page, browser }) => {
+  // Negociar la vía directa además de todo lo demás: el test va holgado.
+  test.setTimeout(120_000);
   await login(page, 'coach@demo.com', 'coach123');
 
   // 1. El coach abre una sala e invita a un jugador (la primera casilla).
@@ -144,6 +168,12 @@ test('Salas: dos personas entran, se ven, hablan y el host modera', async ({ pag
 
   await expectRemoteVideo(page);
   await expectRemoteVideo(playerPage);
+
+  // 3b. Vía directa: los dos navegadores se encuentran por WebRTC y los medios
+  // pasan a ir directos (los contadores y la insignia de la baldosa lo dicen).
+  await expectDirect(page, 'coach');
+  await expectDirect(playerPage, 'player');
+  await expect(page.getByTestId('transport-1')).toHaveText('P2P', { timeout: 10_000 });
 
   // 4. Chat en la sala.
   await page.getByLabel('Message').fill('hola equipo');
@@ -216,4 +246,59 @@ test('Salas: quien no está invitado no entra', async ({ page, browser }) => {
   await page.waitForURL('**/dashboard/rooms', { timeout: 20_000 });
 
   await outsider.context().close();
+});
+
+test('Salas: con la vía directa apagada los medios siguen por el servicio', async ({
+  page,
+  browser,
+}) => {
+  test.setTimeout(120_000);
+  await login(page, 'coach@demo.com', 'coach123');
+
+  // Sala nueva con el jugador de demo invitado.
+  await page.goto(`${BASE}/dashboard/rooms`);
+  const title = `E2E relay ${Date.now()}`;
+  await page.getByLabel('Room title').fill(title);
+  await page.getByLabel('Recipients').selectOption('SELECTED');
+  await page
+    .locator('fieldset')
+    .filter({ hasText: 'Who is it for' })
+    .getByRole('checkbox', { name: /demo/i })
+    .check();
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Open room' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/rooms/**', { timeout: 20_000 });
+
+  // `?p2p=off` en los dos lados: el relay de siempre, sin intentar nada directo.
+  const roomUrl = `${page.url()}?p2p=off`;
+  await joinRoom(page, roomUrl, 1);
+  const playerPage = await newRoomPage(browser, 'player@demo.com', 'player123');
+  await joinRoom(playerPage, roomUrl, 2);
+
+  await expectRemoteVideo(page);
+  await expectRemoteVideo(playerPage);
+  await page.waitForFunction('window.__roomStats && window.__roomStats.videoIn > 5', null, {
+    timeout: 30_000,
+  });
+
+  // Nadie va directo: la insignia lo dice y no hay ni un frame por esa vía.
+  await expect(page.getByTestId('transport-1')).toHaveText('Relay', { timeout: 10_000 });
+  const stats = await page.evaluate(() => {
+    const scope = window as unknown as { __roomStats?: { p2p?: number; p2pIn?: number } };
+    return { p2p: scope.__roomStats?.p2p ?? -1, p2pIn: scope.__roomStats?.p2pIn ?? -1 };
+  });
+  expect(stats.p2p).toBe(0);
+  expect(stats.p2pIn).toBe(0);
+
+  // Limpieza: se termina y se borra la sala del test.
+  await page.getByRole('button', { name: 'End room' }).click();
+  await page.waitForURL('**/dashboard/rooms', { timeout: 20_000 });
+  const card = page.locator('.glass-card').filter({ hasText: title }).first();
+  await expect(card).toContainText('Ended', { timeout: 10_000 });
+  await card.getByRole('button', { name: 'Delete' }).click();
+  await page.waitForURL('**/dashboard/rooms', { timeout: 20_000 });
+
+  await playerPage.context().close();
 });
