@@ -25,6 +25,13 @@ navegador ── HTTPS ──▶ apps/web      (Next.js: permisos, ventana, toke
   5 fps. Misma rejilla, menos calidad.
 - **Presencia**: latido cada 5 s; si alguien desaparece de golpe, el barrido lo
   saca a los 20 s y avisa al resto.
+- **Vía directa (WebRTC, opcional)**: cuando las dos redes se ven, los medios
+  saltan a un enlace de navegador a navegador por *data channels* (`room-p2p.ts`)
+  y dejan de pasar por nuestro servicio. La **señalización viaja por el mismo
+  WebSocket** de la sala, así que seguimos sin STUN ni TURN (nada externo) y sin
+  abrir puertos: si el enlace no conecta en unos segundos, todo se queda como
+  estaba, por el relay. Solo se retira el par del relay cuando los **dos** lados
+  dicen que van directos, así una caída nunca deja a nadie sin medios.
 
 ## Qué hace cada cosa
 
@@ -33,6 +40,7 @@ navegador ── HTTPS ──▶ apps/web      (Next.js: permisos, ventana, toke
 | `apps/web/lib/training-rooms.ts` | Permisos (autor, invitado o audiencia), ventana horaria, código de sala y emisión del token. |
 | `apps/web/components/room/room-media.ts` | Captura, códec, pantalla compartida y reproducción en el navegador. |
 | `apps/web/components/room/room-client.tsx` | WebSocket, rejilla 2×2, controles (micro, cámara, mano, compartir pantalla, expulsar, cerrar, salir), chat y presencia. |
+| `apps/web/components/room/room-p2p.ts` | Enlace directo con cada participante: señalización, *perfect negotiation*, canales de audio/vídeo y vuelta al relay si falla. |
 | `apps/rtc/src/room.ts` | Estado vivo de la sala: cupo, roster, relay, moderación y barrido. |
 | `apps/rtc/src/persistence.ts` | Presencia y estado en Postgres (best-effort: si falla, la llamada sigue). |
 
@@ -97,8 +105,17 @@ pnpm exec vitest run apps/rtc packages/rtc-protocol tests/integration/rtc-room.t
 Y un **e2e de navegador con cámara y micro falsos** (`tests/e2e/rooms.spec.ts`):
 dos personas entran a la misma sala y el test espera a que lleguen fotogramas de
 vídeo de verdad (`window.__roomStats.videoIn > 0`), además de comprobar chat,
-micro, compartir pantalla, expulsión y cierre. Arranca el servicio de salas solo
-(si ya hay uno en `:4001`, lo reutiliza) y usa el mismo secreto que la web:
+micro, compartir pantalla, expulsión, cierre y las dos formas de transporte:
+
+- por defecto, la **vía directa** tiene que conectar (`__roomStats.p2p >= 1`) y
+  llegar frames por ahí (`__roomStats.p2pIn > 0`); la baldosa lo enseña (`P2P`);
+- con **`?p2p=off`** en la URL (los dos lados) nada intenta la vía directa: los
+  medios siguen por el relay y la baldosa dice `Relay`.
+
+`__roomStats.mesh` publica el estado de cada enlace (`state`, `connection`, `ice`,
+`signal`), que es lo que permite saber por dónde se quedó si algo no conecta.
+Arranca el servicio de salas solo (si ya hay uno en `:4001`, lo reutiliza) y usa el
+mismo secreto que la web:
 
 ```bash
 pnpm dev            # web en :3000 (necesaria para el e2e)
@@ -122,11 +139,14 @@ La sala que crea se cierra y se borra al final del propio test.
   recibe 3. Subir el cupo multiplica el egress de nuestro servicio.
 - **Egress**: los medios pasan por Railway (≈1,2 GB/hora con 4 personas y las
   calidades por defecto). No se transcodifica, así que la CPU es baja.
+- **Vía directa (F5)**: hecha y opcional. Los medios van de navegador a navegador
+  cuando la red lo permite (mismo edificio, misma WiFi) y el resto del tiempo
+  siguen por el relay; el ahorro es el egress de nuestro servicio (con 4 personas
+  y todas directas, el servicio no reenvía nada). **Sin STUN ni TURN**, así que no
+  atraviesa NAT simétricos: por eso el relay sigue siendo el camino por defecto.
+  Se apaga con `?p2p=off` y cada baldosa dice por dónde va cada uno.
 - **Grabación (F4)**: al pasar los medios por nuestro servicio, grabar es escribir
   los frames en `resolveStorage()`; pendiente, con aviso y consentimiento.
-- **WebRTC P2P (F5)**: cuando la red lo permita, la pareja puede saltar a
-  `RTCPeerConnection` (mejor latencia y 0 coste) manteniendo este transporte como
-  red de seguridad.
 - **Moderación**: el host expulsa desde la propia baldosa del participante; a quien
   sale se le explica el motivo ("The host removed you."). Cerrar la sala desde
   dentro expulsa a todos y marca la sala como terminada en la base de datos.
