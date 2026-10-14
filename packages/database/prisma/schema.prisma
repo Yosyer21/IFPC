@@ -133,6 +133,8 @@ model User {
   notInterested     PostNotInterested[]
   authorPreferences AuthorPreference[] @relation("AuthorPreferenceOwner")
   preferenceAbout   AuthorPreference[] @relation("AuthorPreferenceAuthor")
+  /// Presencias en salas de vídeo (coach, club y jugadores).
+  roomParticipations TrainingRoomParticipant[]
 
   @@index([role])
 }
@@ -187,6 +189,8 @@ model Player {
   /// Contenido y sesiones dirigidos a este jugador (`scope = SELECTED`).
   trainingContentTargets TrainingContentTarget[]
   trainingSessionTargets TrainingSessionTarget[]
+  /// Salas de vídeo a las que está invitado.
+  trainingRoomTargets   TrainingRoomTarget[]
 
   @@index([status])
   @@index([position])
@@ -265,6 +269,8 @@ model Coach {
   trainingContent TrainingContent[]
   /// Sesiones/planes del Football Center que publica el coach.
   trainingSessions TrainingSession[]
+  /// Salas de vídeo que abre el coach.
+  trainingRooms TrainingRoom[]
 }
 
 model CoachPlayer {
@@ -340,6 +346,8 @@ model Club {
   trainingContent TrainingContent[]
   /// Sesiones/planes del Football Center que publica el club.
   trainingSessions TrainingSession[]
+  /// Salas de vídeo que abre el club.
+  trainingRooms TrainingRoom[]
 
   @@index([country])
 }
@@ -543,6 +551,20 @@ enum TrainingScope {
   SELECTED
 }
 
+/// Estado de una sala de vídeo del Football Center.
+enum TrainingRoomStatus {
+  SCHEDULED
+  LIVE
+  ENDED
+  CANCELLED
+}
+
+/// Papel de un participante dentro de la sala.
+enum TrainingRoomRole {
+  HOST
+  GUEST
+}
+
 /// Quién publica el contenido: la plataforma, un coach o un club.
 enum TrainingOwnerType {
   GENERAL
@@ -684,6 +706,77 @@ model TrainingSessionTarget {
 
   @@unique([sessionId, playerId])
   @@index([playerId])
+}
+
+/// Sala de vídeo propia (máx. 4 personas) de un coach o un club para sus
+/// jugadores. Los medios viajan por nuestro servicio `apps/rtc` (WebSocket).
+model TrainingRoom {
+  id          String             @id @default(cuid())
+  title       String
+  description String?
+  /// Quién la abre: un coach o un club.
+  ownerType   TrainingOwnerType  @default(COACH)
+  coachId     String?
+  coach       Coach?             @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  clubId      String?
+  club        Club?              @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  status      TrainingRoomStatus @default(SCHEDULED)
+  /// A toda la audiencia o solo a los invitados (`TrainingRoomTarget`).
+  scope       TrainingScope      @default(SELECTED)
+  /// Cupo duro de la sala (la sala es una malla/SFU pequeño, 4 es el techo sano).
+  maxParticipants Int            @default(4)
+  /// Desde cuándo se puede entrar (normalmente unos minutos antes de `startsAt`).
+  opensAt     DateTime
+  startsAt    DateTime
+  endsAt      DateTime?
+  /// Código corto del enlace de la sala: `/dashboard/rooms/<joinCode>`.
+  joinCode    String             @unique
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  targets      TrainingRoomTarget[]
+  participants TrainingRoomParticipant[]
+
+  @@index([status])
+  @@index([startsAt])
+  @@index([coachId])
+  @@index([clubId])
+}
+
+/// Invitado a una sala (jugador).
+model TrainingRoomTarget {
+  id        String        @id @default(cuid())
+  roomId    String
+  room      TrainingRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player        @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+
+  @@unique([roomId, playerId])
+  @@index([playerId])
+}
+
+/// Presencia de una persona dentro de la sala: quién entró, cuándo y en qué
+/// estado. `lastSeenAt` lo refresca el servicio `rtc` con cada latido.
+model TrainingRoomParticipant {
+  id            String           @id @default(cuid())
+  roomId        String
+  room          TrainingRoom     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          TrainingRoomRole @default(GUEST)
+  joinedAt      DateTime?
+  leftAt        DateTime?
+  lastSeenAt    DateTime         @default(now())
+  /// Transporte en uso (`relay` = nuestro SFU; `p2p` cuando llegue WebRTC).
+  transport     String?
+  muted         Boolean          @default(false)
+  cameraOff     Boolean          @default(false)
+  handRaised    Boolean          @default(false)
+  sharingScreen Boolean          @default(false)
+
+  @@unique([roomId, userId])
+  @@index([roomId])
 }
 
 /// Progreso de un jugador en un curso o ejercicio: la fila existe si lo empezó y

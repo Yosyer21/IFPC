@@ -14,6 +14,7 @@
     "@ifpc/config": "workspace:*",
     "@ifpc/database": "workspace:*",
     "@ifpc/matching": "workspace:*",
+    "@ifpc/rtc-protocol": "workspace:*",
     "@ifpc/types": "workspace:*",
     "@ifpc/ui": "workspace:*",
     "@ifpc/validation": "workspace:*",

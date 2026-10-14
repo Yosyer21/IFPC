@@ -2,7 +2,7 @@
   "name": "ifpc-platform",
   "version": "0.1.0",
   "private": true,
-  "description": "Plataforma global de fútbol: desarrollo de jugadores y reclutamiento profesional",
+  "description": "Plataforma global de f\u00fatbol: desarrollo de jugadores y reclutamiento profesional",
   "packageManager": "pnpm@11.20.0",
   "engines": {
     "node": ">=22.13.0",
@@ -41,12 +41,15 @@
     "@electric-sql/pglite": "^0.5.5",
     "@ifpc/auth": "workspace:*",
     "@ifpc/database": "workspace:*",
+    "@ifpc/rtc-protocol": "workspace:*",
     "@playwright/test": "^1.49.1",
+    "@types/ws": "^8.5.13",
     "bcryptjs": "^2.4.3",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "ws": "^8.18.0"
   }
 }

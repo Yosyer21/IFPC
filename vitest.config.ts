@@ -1,13 +1,29 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
-const packages = ['auth', 'config', 'database', 'matching', 'types', 'validation', 'ui'];
+const packages = [
+  'auth',
+  'config',
+  'database',
+  'matching',
+  'rtc-protocol',
+  'types',
+  'validation',
+  'ui',
+];
 // Alias `@/*` de la app web (tsconfig paths), para poder testear sus server actions.
 const webRoot = fileURLToPath(new URL('./apps/web/', import.meta.url));
 
 export default defineConfig({
   resolve: {
     alias: [
+      // Subpath antes que el paquete: `@ifpc/rtc-protocol/token` vive en su fichero.
+      {
+        find: '@ifpc/rtc-protocol/token',
+        replacement: fileURLToPath(
+          new URL('./packages/rtc-protocol/src/token.ts', import.meta.url)
+        ),
+      },
       ...packages.map((name) => ({
         find: `@ifpc/${name}`,
         replacement: fileURLToPath(new URL(`./packages/${name}/src/index.ts`, import.meta.url)),
