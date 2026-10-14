@@ -38,16 +38,30 @@ navegador ── HTTPS ──▶ apps/web      (Next.js: permisos, ventana, toke
 
 ## Despliegue en Railway
 
-1. **Servicio `rtc`** (nuevo): mismo repositorio, `Dockerfile` =
-   `infrastructure/docker/Dockerfile.rtc`, con dominio público (el WebSocket viaja
-   por HTTPS: no hace falta TCP proxy).
-   - Variables: `DATABASE_URL` (la misma), `ROOM_TOKEN_SECRET` (el mismo secreto
-     que la web) y `PORT` (Railway lo inyecta).
-   - Healthcheck: `/healthz`.
+Los dos servicios salen de **la misma imagen** (`Dockerfile.web`), porque Railway
+aplica el `railway.json` del repo a todos los servicios y no hay config por
+servicio sin tocar el panel:
+
+1. **Servicio `rtc`**: mismo repositorio y rama, con la variable
+   **`SERVICE_KIND=rtc`**. `start-web.sh` mira esa variable y arranca `rtc.mjs`
+   (el servicio de salas empaquetado con esbuild en el build, sin dependencias en
+   runtime) en lugar del servidor Next.
+   - Variables: `SERVICE_KIND=rtc`, `DATABASE_URL` (la misma), `ROOM_TOKEN_SECRET`
+     (el mismo secreto que la web) y `PORT` (Railway lo inyecta).
+   - Dominio público (el WebSocket viaja por HTTPS: **no** hace falta TCP proxy).
+   - Healthcheck: `/` y `/healthz` responden `{"ok":true,"service":"rtc"}`.
 2. **Servicio web**: añadir `NEXT_PUBLIC_RTC_URL=wss://<dominio-del-servicio-rtc>`
-   (el navegador necesita la URL pública; en local `ws://localhost:4001`).
-   - `ROOM_TOKEN_SECRET` con el mismo valor que en `rtc`.
-3. Redepliega el servicio web cuando cambie la URL pública.
+   (en local `ws://localhost:4001`) y redesplegar: al ser `NEXT_PUBLIC_*` se
+   incrusta en el bundle del navegador.
+3. `ROOM_TOKEN_SECRET`: si no se define, ambos servicios caen en `AUTH_SECRET`, así
+   que basta con no definirlo en ninguno de los dos (o ponerlo igual en los dos).
+
+En local, dos procesos:
+
+```bash
+pnpm --filter @ifpc/rtc dev     # servicio de salas en :4001
+pnpm dev                        # web en :3000 (usa ws://localhost:4001)
+```
 
 ## Variables
 
@@ -60,16 +74,20 @@ navegador ── HTTPS ──▶ apps/web      (Next.js: permisos, ventana, toke
 ## Comprobación rápida
 
 ```bash
-# Servicio en marcha
+# Servicio en marcha (local)
 pnpm --filter @ifpc/rtc dev
-curl -s localhost:4001/healthz   # {"ok":true,"rooms":0}
+curl -s localhost:4001/healthz   # {"ok":true,"service":"rtc","rooms":0}
+
+# Dos clientes de verdad contra el servicio (local o producción)
+ROOM_TOKEN_SECRET=<secreto> node --import=tsx scripts/development/room-smoke.ts wss://rtc-production-0d92.up.railway.app
 ```
 
-Los tests unitarios cubren el protocolo, el token y toda la lógica de sala
-(cupo, reconexión, relay, barrido, moderación):
+Los tests cubren el protocolo, el token y toda la lógica de sala (cupo,
+reconexión, relay, barrido, moderación) más una integración que arranca el
+servicio de verdad:
 
 ```bash
-pnpm exec vitest run apps/rtc packages/rtc-protocol
+pnpm exec vitest run apps/rtc packages/rtc-protocol tests/integration/rtc-room.test.ts
 ```
 
 ## Límites y siguientes pasos
