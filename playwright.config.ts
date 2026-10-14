@@ -10,6 +10,18 @@ export default defineConfig({
   use: {
     baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:3000',
     trace: 'on-first-retry',
+    // Cámara y micro **falsos** de Chromium: permiten que el test de salas de
+    // vídeo compruebe que los medios llegan de verdad, sin dispositivos reales.
+    permissions: ['camera', 'microphone'],
+    launchOptions: {
+      args: [
+        '--use-fake-ui-for-media-stream',
+        '--use-fake-device-for-media-stream',
+        '--autoplay-policy=no-user-gesture-required',
+        // Para que `getDisplayMedia` elija algo sin diálogo.
+        '--auto-select-desktop-capture-source=Entire screen',
+      ],
+    },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 });

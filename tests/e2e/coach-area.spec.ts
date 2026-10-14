@@ -55,6 +55,6 @@ test('Coach: assigns assessment and goal to the player, and the player sees them
   await expect(playerContext.getByText(goalTitle)).toBeVisible();
   await playerContext.goto(`${BASE}/dashboard/player/development/evaluations`);
   await expect(playerContext.getByText(evalNotes)).toBeVisible();
-  await expect(playerContext.getByText('por Demo Coach').first()).toBeVisible();
+  await expect(playerContext.getByText('by Demo Coach').first()).toBeVisible();
   await playerContext.close();
 });

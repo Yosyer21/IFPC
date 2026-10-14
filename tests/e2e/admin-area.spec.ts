@@ -15,7 +15,7 @@ test('Admin: control center and management pages', async ({ page }) => {
 
   // 1. Control center
   await page.goto(`${BASE}/dashboard/admin`);
-  await expect(page.getByText('Control center').first()).toBeVisible();
+  await expect(page.getByText('Platform control centre').first()).toBeVisible();
   await expect(page.getByText('Users by role').first()).toBeVisible();
   await expect(page.getByText('Pending actions').first()).toBeVisible();
   await expect(page.getByText('Recent activity').first()).toBeVisible();

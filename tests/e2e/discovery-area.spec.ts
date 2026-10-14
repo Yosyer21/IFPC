@@ -282,15 +282,21 @@ test('borradores: guardar, publicar desde la tarjeta y borrar', async ({ page })
 
   const form = composer(page);
   await form.getByLabel('What do you want to share?').fill(body);
-  await form.getByRole('button', { name: 'Borrador' }).click();
+  await form.getByRole('button', { name: 'Draft' }).click();
 
   // El borrador solo lo ve su autor y no aparece en el feed.
-  const drafts = page.locator('section').filter({ hasText: 'Tus borradores' }).first();
+  const drafts = page.locator('section').filter({ hasText: 'Your drafts' }).first();
   await expect(drafts.getByText(body)).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('.animate-fade-up').filter({ hasText: body })).toHaveCount(0);
 
-  // Publish desde la tarjeta lo saca al feed.
-  await drafts.getByRole('button', { name: 'Publish', exact: true }).click();
+  // Publish desde la tarjeta lo saca al feed. Se busca su propia fila: puede
+  // haber borradores de ejecuciones anteriores y el botón no sería único.
+  await drafts
+    .locator('li')
+    .filter({ hasText: body })
+    .first()
+    .getByRole('button', { name: 'Publish', exact: true })
+    .click();
   await expect(postCard(page, body)).toBeVisible({ timeout: 30_000 });
 
   await deleteOwnPost(page, body);
