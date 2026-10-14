@@ -17,6 +17,7 @@ import { ProfileChecklistCard } from '@/components/profile/profile-checklist-car
 import { ProfileGrid } from '@/components/profile/profile-grid';
 import { ProfileHeader } from '@/components/profile/profile-header';
 import { ProfileStatsCard } from '@/components/player/profile-stats';
+import { PositionPitch } from '@/components/player/position-pitch';
 import { CoverPhotoEditor } from '@/components/player/cover-photo-editor';
 import { ProfilePhotoEditor } from '@/components/player/profile-photo-editor';
 import { StatusToggle } from '@/components/player/status-toggle';
@@ -122,7 +123,7 @@ export default async function PlayerProfilePage() {
               <StatusToggle status={player.status} />
               <Link
                 href="/dashboard/player/profile/edit"
-                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:brightness-105"
               >
                 Edit profile
               </Link>
@@ -147,6 +148,13 @@ export default async function PlayerProfilePage() {
         <div className="flex flex-col gap-4 lg:col-span-2">
           <ProfileStatsCard stats={stats} />
 
+          {/* Posición del jugador sobre la cancha (gráfico del perfil). */}
+          <PositionPitch
+            position={player.position}
+            footLabel={footLabel}
+            competitionLabel={competitionLabel}
+          />
+
           <Card className="animate-fade-up" style={{ animationDelay: '120ms' }}>
             <CardContent>
               <ProfileGrid rows={rows} />
@@ -169,8 +177,8 @@ export default async function PlayerProfilePage() {
               <h2 className="font-semibold">Interest in your profile</h2>
               {viewStats.viewers === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  Nobody has viewed your profile yet. Share it and keep your details and videos up to
-                  date so clubs and scouts can find you.
+                  Nobody has viewed your profile yet. Share it and keep your details and videos up
+                  to date so clubs and scouts can find you.
                 </p>
               ) : (
                 <>

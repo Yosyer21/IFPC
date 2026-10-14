@@ -16,6 +16,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { ActionState } from './auth';
 import { notifyUser } from '@/lib/notifications/notify';
+import { isGoalStatus } from '@/lib/player-development';
+import { revalidatePaths } from '@/lib/revalidate';
 import { dashboardPath } from '@/lib/safe-redirect';
 import { resolveStorage } from '@/lib/storage';
 
@@ -486,4 +488,97 @@ export async function registerForCampAction(formData: FormData): Promise<void> {
   });
 
   redirect(`/camps/${campId}`);
+}
+
+// ---------------------------------------------------------------------------
+// Metas de desarrollo (el jugador gestiona las suyas)
+// ---------------------------------------------------------------------------
+
+/** Rutas que muestran metas y puntuación: se revalidan al mover una meta. */
+const GOAL_PATHS = [
+  '/dashboard/player/development',
+  '/dashboard/player/development/goals',
+  '/dashboard/player',
+] as const;
+
+/** Longitud máxima del título de una meta propia. */
+const GOAL_TITLE_MAX = 120;
+/** Longitud máxima de la descripción de una meta propia. */
+const GOAL_DESCRIPTION_MAX = 500;
+
+/**
+ * Mueve una meta del jugador autenticado entre `pending` / `in_progress` /
+ * `completed`. Comprueba la propiedad por `playerId` para que nadie toque metas
+ * ajenas aunque conozca el id.
+ */
+export async function updateGoalStatusAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+
+  const goalId = str(formData, 'goalId');
+  const status = str(formData, 'status');
+  if (!goalId || !isGoalStatus(status)) return;
+
+  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
+  if (!player) return;
+
+  const goal = await prisma.playerGoal.findUnique({
+    where: { id: goalId },
+    select: { playerId: true },
+  });
+  if (!goal || goal.playerId !== player.id) return;
+
+  await prisma.playerGoal.update({ where: { id: goalId }, data: { status } });
+  revalidatePaths(...GOAL_PATHS);
+}
+
+/**
+ * Crea una meta **del propio jugador** (las de un entrenador llegan por su vía).
+ * Devuelve `ActionState` para el formulario con estado.
+ */
+export async function createOwnGoalAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
+  if (!player) {
+    return { error: 'Player profile not found.' };
+  }
+
+  const title = str(formData, 'title');
+  if (!title) {
+    return { error: 'Give your goal a title.' };
+  }
+  if (title.length > GOAL_TITLE_MAX) {
+    return { error: `The title cannot be longer than ${GOAL_TITLE_MAX} characters.` };
+  }
+
+  const description = str(formData, 'description');
+  if (description && description.length > GOAL_DESCRIPTION_MAX) {
+    return { error: `The description cannot be longer than ${GOAL_DESCRIPTION_MAX} characters.` };
+  }
+
+  const dueDate = str(formData, 'dueDate');
+
+  try {
+    await prisma.playerGoal.create({
+      data: {
+        playerId: player.id,
+        title,
+        description,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        status: 'pending',
+      },
+    });
+  } catch {
+    return { error: 'The goal could not be created.' };
+  }
+
+  revalidatePaths(...GOAL_PATHS);
+  return { success: 'Goal added. Move it forward as you work on it.' };
 }

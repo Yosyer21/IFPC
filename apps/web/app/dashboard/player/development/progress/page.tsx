@@ -5,15 +5,9 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
 import { CategoryBars, DonutChart, LineChart, RadarChart } from '@/components/player/charts';
+import { evaluationSummary } from '@/lib/player-development';
 
 export const metadata: Metadata = { title: 'My progress' };
-
-const CATEGORY_LABELS: Record<string, string> = {
-  technical: 'Technique',
-  physical: 'Physical',
-  tactical: 'Tactics',
-  psychological: 'Psychological',
-};
 
 export default async function PlayerProgressPage() {
   const session = await auth();
@@ -27,39 +21,15 @@ export default async function PlayerProgressPage() {
 
   const evaluations = player.evaluations;
 
-  // Overall average
-  const overall =
-    evaluations.length > 0
-      ? Math.round(
-          (evaluations.reduce((sum, evaluation) => sum + evaluation.score, 0) /
-            evaluations.length) *
-            10
-        ) / 10
-      : null;
+  // Media global, medias por área y las áreas extremas: misma lógica que el hub.
+  const summary = evaluationSummary(evaluations);
+  const overall = summary.overall;
+  const radarCategories = summary.byCategory.map((area) => area.label);
+  const radarValues = summary.byCategory.map((area) => area.value);
+  const bars = summary.byCategory.map((area) => ({ label: area.label, value: area.value }));
 
-  // Average by category
-  const byCategory = new Map<string, number[]>();
-  for (const evaluation of evaluations) {
-    const list = byCategory.get(evaluation.category) ?? [];
-    list.push(evaluation.score);
-    byCategory.set(evaluation.category, list);
-  }
-  const radarCategories: string[] = [];
-  const radarValues: number[] = [];
-  for (const [category, scores] of byCategory) {
-    radarCategories.push(CATEGORY_LABELS[category] ?? category);
-    radarValues.push(Math.round((scores.reduce((s, n) => s + n, 0) / scores.length) * 10) / 10);
-  }
-
-  const bars = Array.from(byCategory.entries())
-    .map(([category, scores]) => ({
-      label: CATEGORY_LABELS[category] ?? category,
-      value: Math.round((scores.reduce((s, n) => s + n, 0) / scores.length) * 10) / 10,
-    }))
-    .sort((a, b) => b.value - a.value);
-
-  const linePoints = evaluations.map((evaluation, i) => ({
-    label: `${i + 1}`,
+  const linePoints = evaluations.map((evaluation, index) => ({
+    label: `${index + 1}`,
     value: evaluation.score,
   }));
 
@@ -90,8 +60,8 @@ export default async function PlayerProgressPage() {
               </svg>
             </span>
             <p className="max-w-sm text-sm text-muted-foreground">
-              No assessment data yet to show your progress. When your coach
-              assesses you, you will see here your overall average, the evolution and the breakdown by category.
+              No assessment data yet to show your progress. When your coach assesses you, you will
+              see here your overall average, the evolution and the breakdown by category.
             </p>
           </CardContent>
         </Card>
@@ -138,7 +108,7 @@ export default async function PlayerProgressPage() {
             <Card className="animate-fade-up" style={{ animationDelay: '240ms' }}>
               <CardContent>
                 <h2 className="mb-2 font-semibold">Level by category</h2>
-                <div className="animate-scale-in mx-auto max-w-xs">
+                <div className="animate-scale-in mx-auto max-w-md">
                   <RadarChart categories={radarCategories} values={radarValues} />
                 </div>
               </CardContent>
