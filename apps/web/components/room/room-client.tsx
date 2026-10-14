@@ -8,6 +8,8 @@ import {
   ROOM_HEARTBEAT_MS,
   decodeServerFrame,
   encodeClientFrame,
+  type MediaKind,
+  type RtcClientMessage,
   type RtcParticipant,
   type RtcServerMessage,
 } from '@ifpc/rtc-protocol';
@@ -21,6 +23,7 @@ import {
   startScreenShare,
   stopStream,
 } from './room-media';
+import { P2PMesh, type PeerTransport } from './room-p2p';
 
 export interface RoomClientProps {
   /** URL del servicio de salas (`ws://` en local, `wss://` en producción). */
@@ -71,6 +74,8 @@ export function RoomClient({
   const [sharing, setSharing] = useState(false);
   /** Compartir pantalla no existe en todos los navegadores (móviles, sobre todo). */
   const [canShare, setCanShare] = useState(false);
+  /** Con quién vamos por la vía directa (lo pinta la insignia de cada tile). */
+  const [transports, setTransports] = useState<Record<string, PeerTransport>>({});
 
   useEffect(() => {
     setCanShare(canShareScreen());
@@ -88,12 +93,20 @@ export function RoomClient({
   const tiles = useRef(new Map<number, HTMLCanvasElement | null>());
   /** Índice de roster de cada usuario, para saber a quién cerrar cuando se va. */
   const indexByUser = useRef(new Map<string, number>());
+  /** Y al revés: quién ocupa cada slot, para saber de quién es cada frame. */
+  const userByIndex = useRef(new Map<number, string>());
   const heartbeat = useRef<number | null>(null);
   /** Salida voluntaria: no queremos pintar un error en ese caso. */
   const leaving = useRef(false);
   /** Pista de cámara guardada mientras se comparte pantalla. */
   const cameraTrack = useRef<MediaStreamTrack | null>(null);
-  const counters = useRef({ sent: 0, received: 0, audioIn: 0, videoIn: 0 });
+  /** Vía directa (WebRTC) con el resto: `null` si no se intenta. */
+  const mesh = useRef<P2PMesh | null>(null);
+  /** ¿Este navegador y esta sala permiten la vía directa? (`?p2p=off` la apaga). */
+  const p2pEnabled = useRef(false);
+  /** Usuarios con enlace directo: sus frames ya no hacen falta por el relay. */
+  const directIds = useRef(new Set<string>());
+  const counters = useRef({ sent: 0, received: 0, audioIn: 0, videoIn: 0, p2pOut: 0 });
   /**
    * Última fase conocida. Vive en un ref porque `publishStats` también se llama
    * desde el manejador del socket (cada fotograma recibido), que se creó con el
@@ -109,6 +122,9 @@ export function RoomClient({
       phase: livePhase.current,
       selfIndex: liveSelfIndex.current,
       peers: peers.current.size,
+      p2p: mesh.current?.directCount ?? 0,
+      p2pIn: mesh.current?.received ?? 0,
+      mesh: mesh.current?.debug() ?? {},
       ...counters.current,
     };
   }, []);
@@ -118,6 +134,15 @@ export function RoomClient({
     liveSelfIndex.current = selfIndex;
     publishStats();
   }, [publishStats, participants.length, phase, selfIndex]);
+
+  /**
+   * La vía directa se puede apagar con `?p2p=off` (queda el relay de siempre) y no
+   * se intenta en navegadores sin WebRTC.
+   */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    p2pEnabled.current = P2PMesh.supported() && params.get('p2p') !== 'off';
+  }, []);
 
   /** Crea (o recupera) los reproductores de un participante remoto. */
   const peerFor = useCallback((index: number): Peer => {
@@ -141,7 +166,7 @@ export function RoomClient({
     [peerFor]
   );
 
-  const send = useCallback((message: Record<string, unknown>) => {
+  const send = useCallback((message: RtcClientMessage) => {
     const socketRef = socket.current;
     if (socketRef?.readyState === WebSocket.OPEN) socketRef.send(JSON.stringify(message));
   }, []);
@@ -149,9 +174,39 @@ export function RoomClient({
   /** Guarda el índice de cada participante y cierra a quien se va. */
   const remember = useCallback((rows: RtcParticipant[], selfId: string) => {
     for (const row of rows) {
-      if (row.userId !== selfId) indexByUser.current.set(row.userId, row.index);
+      if (row.userId === selfId) continue;
+      indexByUser.current.set(row.userId, row.index);
+      userByIndex.current.set(row.index, row.userId);
     }
   }, []);
+
+  /**
+   * Un frame de alguien acaba en su reproductor, venga del relay o de la vía
+   * directa: el resto del cliente no distingue de dónde viene.
+   */
+  const deliverFrame = useCallback(
+    (index: number, kind: number, payload: Uint8Array) => {
+      const peer = peerFor(index);
+      if (kind === MEDIA_KIND.audio) {
+        counters.current.audioIn += 1;
+        peer.audio.push(payload);
+      } else {
+        counters.current.videoIn += 1;
+        peer.video.push(payload);
+      }
+      publishStats();
+    },
+    [peerFor, publishStats]
+  );
+
+  /** Igual, pero para los frames que llegan por la vía directa (vienen por usuario). */
+  const deliverFromUser = useCallback(
+    (userId: string, kind: number, payload: Uint8Array) => {
+      const index = indexByUser.current.get(userId);
+      if (index !== undefined) deliverFrame(index, kind, payload);
+    },
+    [deliverFrame]
+  );
 
   const handleServerMessage = useCallback(
     (message: RtcServerMessage) => {
@@ -173,10 +228,15 @@ export function RoomClient({
             message.participant,
           ]);
           remember([message.participant], viewer.userId);
+          // Con quien acaba de entrar también probamos la vía directa.
+          mesh.current?.add(message.participant.userId);
           videoSender.current?.requestKeyframe();
           break;
         case 'left': {
           setParticipants((current) => current.filter((row) => row.userId !== message.userId));
+          mesh.current?.remove(message.userId);
+          directIds.current.delete(message.userId);
+          setTransports(mesh.current?.transports() ?? {});
           const index = indexByUser.current.get(message.userId);
           if (index !== undefined) {
             const peer = peers.current.get(index);
@@ -184,6 +244,7 @@ export function RoomClient({
             peer?.video.close();
             peers.current.delete(index);
             indexByUser.current.delete(message.userId);
+            userByIndex.current.delete(index);
           }
           break;
         }
@@ -197,6 +258,12 @@ export function RoomClient({
             ...current.slice(-40),
             { userId: message.userId, name: message.name, text: message.text, at: message.at },
           ]);
+          break;
+        // Señalización de la vía directa: la aplica el propio enlace.
+        case 'p2p-offer':
+        case 'p2p-answer':
+        case 'p2p-ice':
+          void mesh.current?.handle(message);
           break;
         case 'error':
           setError(message.message);
@@ -241,35 +308,54 @@ export function RoomClient({
         const frame = decodeServerFrame(new Uint8Array(event.data as ArrayBuffer));
         if (!frame) return;
         counters.current.received += 1;
-        const peer = peerFor(frame.index);
 
-        if (frame.kind === MEDIA_KIND.audio) {
-          counters.current.audioIn += 1;
-          peer.audio.push(frame.payload);
-        } else {
-          counters.current.videoIn += 1;
-          peer.video.push(frame.payload);
-        }
-        publishStats();
+        // Si con quien lo manda vamos directos, sus frames llegan por el otro
+        // camino: el del relay es el mismo dato repetido y sobra.
+        const sender = userByIndex.current.get(frame.index);
+        if (sender && directIds.current.has(sender)) return;
+
+        deliverFrame(frame.index, frame.kind, frame.payload);
         return;
       }
 
       const message = JSON.parse(event.data) as RtcServerMessage;
       // A partir del `welcome` arrancamos el envío: ya hay sala a la que mandar.
       if (message.t === 'welcome' && stream.current) {
+        // Vía directa con cada uno de los que ya estaban dentro.
+        mesh.current =
+          P2PMesh.supported() && p2pEnabled.current
+            ? new P2PMesh({
+                selfId: viewer.userId,
+                enabled: true,
+                signal: send,
+                onFrame: deliverFromUser,
+                onState: (userId, transport) => {
+                  if (transport === 'direct') directIds.current.add(userId);
+                  else directIds.current.delete(userId);
+                  setTransports(mesh.current?.transports() ?? {});
+                  publishStats();
+                },
+              })
+            : null;
+
         const sink = (kind: number, payload: Uint8Array) => {
           const socketRef = socket.current;
           if (socketRef?.readyState !== WebSocket.OPEN) return;
           counters.current.sent += 1;
           const seq = kind === MEDIA_KIND.audio ? audioSender.current?.nextSeq() ?? 0 : 0;
-          socketRef.send(encodeClientFrame({ kind: kind as 1 | 2, seq, payload }));
+          socketRef.send(encodeClientFrame({ kind: kind as MediaKind, seq, payload }));
+          // Y a la vez por la vía directa: el servicio deja de reenviarlo a los
+          // pares que van directos, que es donde está el ahorro.
+          counters.current.p2pOut += mesh.current?.send(kind as MediaKind, payload) ?? 0;
         };
 
         audioSender.current = new AudioSender(stream.current, sink);
         videoSender.current = new VideoSender(sink);
         if (localVideo.current) videoSender.current.start(localVideo.current);
         for (const participant of message.participants) {
-          if (participant.userId !== viewer.userId) peerFor(participant.index).audio.resume();
+          if (participant.userId === viewer.userId) continue;
+          peerFor(participant.index).audio.resume();
+          mesh.current?.add(participant.userId);
         }
         setPhase('joined');
       }
@@ -295,7 +381,7 @@ export function RoomClient({
       setError('We could not reach the room service.');
       setPhase('error');
     };
-  }, [handleServerMessage, peerFor, publishStats, rtcUrl, token, viewer.userId]);
+  }, [deliverFrame, deliverFromUser, handleServerMessage, peerFor, publishStats, rtcUrl, send, token, viewer.userId]);
 
   /** Latido: el servidor da por caído a quien deja de avisar. */
   useEffect(() => {
@@ -324,6 +410,12 @@ export function RoomClient({
     }
     peers.current.clear();
     indexByUser.current.clear();
+    userByIndex.current.clear();
+    // La vía directa muere con la llamada: el otro lado se entera por el socket.
+    mesh.current?.close();
+    mesh.current = null;
+    directIds.current.clear();
+    setTransports({});
     stopStream(stream.current);
     stream.current = null;
     setParticipants([]);
@@ -456,6 +548,8 @@ export function RoomClient({
 
   const controlClass =
     'rounded-xl border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/5';
+  /** Cuántos van por la vía directa: el resto pasa por nuestro servicio. */
+  const directCount = Object.values(transports).filter((row) => row === 'direct').length;
 
   return (
     <div className="flex flex-col gap-4">
@@ -466,6 +560,9 @@ export function RoomClient({
             {participants.length}/{room.maxParticipants} in the room
             {phase === 'joined' && selfIndex !== null ? ` · you are in slot ${selfIndex + 1}` : ''}
             {viewer.role === 'HOST' ? ' · you are the host' : ''}
+            {phase === 'joined' && directCount > 0
+              ? ` · ${directCount} direct (media does not touch our servers)`
+              : ''}
           </p>
         </div>
         {phase === 'joined' ? (
@@ -571,6 +668,19 @@ export function RoomClient({
                       {participant.handRaised ? <span title="Hand raised">✋</span> : null}
                       {participant.muted ? <span title="Muted">🔇</span> : null}
                       {participant.cameraOff ? <span title="Camera off">📷</span> : null}
+                      {!isSelf ? (
+                        <span
+                          data-testid={`transport-${slot}`}
+                          title={
+                            transports[participant.userId] === 'direct'
+                              ? 'Direct between browsers'
+                              : 'Through the room service'
+                          }
+                          className="rounded bg-black/40 px-1 text-[10px] uppercase tracking-wide text-white/70"
+                        >
+                          {transports[participant.userId] === 'direct' ? 'P2P' : 'Relay'}
+                        </span>
+                      ) : null}
                       {viewer.role === 'HOST' && !isSelf ? (
                         <button
                           type="button"
