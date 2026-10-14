@@ -105,6 +105,17 @@ pnpm dev            # web en :3000 (necesaria para el e2e)
 pnpm e2e tests/e2e/rooms.spec.ts
 ```
 
+El mismo test vale contra producción (sin arrancar nada en local: reutiliza el
+servicio de Railway y los tokens los firma la web desplegada):
+
+```bash
+E2E_BASE_URL=https://ifpc.up.railway.app \
+E2E_RTC_URL=https://rtc-production-0d92.up.railway.app \
+pnpm e2e tests/e2e/rooms.spec.ts
+```
+
+La sala que crea se cierra y se borra al final del propio test.
+
 ## Límites y siguientes pasos
 
 - **Cupo 4**: es malla/SFU pequeño; con 4 personas cada cliente manda 1 flujo y

@@ -85,7 +85,8 @@ with `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`.
 
 ## Applied state (2026-08)
 
-- **Web**: `Future Baller` service, online, domain `https://ifpc-production-0c78.up.railway.app`.
+- **Web**: `IFPC` service, online, domain `https://ifpc.up.railway.app` (el antiguo
+  `ifpc-production-0c78.up.railway.app` ya no resuelve).
 - **PostgreSQL**: `Postgres` plugin (postgres-ssl:18), `postgres-volume` volume,
   `DATABASE_URL` injected into the web service.
 - **Web variables**: `USE_PGLITE=false`, `DATABASE_URL`, `AUTH_SECRET`,
