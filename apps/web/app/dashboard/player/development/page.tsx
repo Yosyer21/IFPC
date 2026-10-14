@@ -9,7 +9,6 @@ import { DonutChart, RadarChart } from '@/components/player/charts';
 import { PageHeader } from '@/components/player/page-header';
 import {
   IconCheckCircle,
-  IconRoute,
   IconTarget,
   IconTrendingUp,
   IconTrophy,

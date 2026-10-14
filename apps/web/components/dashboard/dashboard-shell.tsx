@@ -99,7 +99,7 @@ export function DashboardShell({
           onOpenMenu={() => setMobileOpen(true)}
           onOpenSearch={() => setSearchOpen(true)}
         />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </div>
 
       <CommandPalette open={searchOpen} onClose={() => setSearchOpen(false)} sections={sections} />

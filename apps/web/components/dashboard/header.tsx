@@ -85,7 +85,7 @@ export function DashboardHeader({
       >
         <IconSearch className="nav-icon nav-icon-pop h-4 w-4" />
         Search pages…
-        <kbd className="ml-3 px-1.5 py-0.5 text-[10px] text-muted-foreground/70">⌘K</kbd>
+        <kbd className="ml-3 px-1.5 py-0.5 text-[11px] text-muted-foreground/70">⌘K</kbd>
       </button>
 
       <div className="flex-1" />

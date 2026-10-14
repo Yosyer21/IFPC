@@ -150,14 +150,14 @@ function PitchBoard({ spot }: { spot: PitchSpot | null }) {
           </>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="pitch-empty rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-brand/80">
+            <span className="pitch-empty rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-brand/80">
               No position
             </span>
           </div>
         )}
       </div>
 
-      <span className="absolute bottom-2 right-2 rounded-full bg-ink/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+      <span className="absolute bottom-2 right-2 rounded-full bg-ink/80 px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
         Attacking ↑
       </span>
     </div>

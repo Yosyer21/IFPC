@@ -20,8 +20,9 @@ export function RadarChart({
   size?: number;
 }) {
   const height = size;
-  // Lienzo más ancho que alto: da sitio a las etiquetas de los lados.
-  const width = Math.round(size * 1.3);
+  // Lienzo algo más ancho que alto (1.12×): da sitio a las etiquetas de los lados
+  // sin encoger demasiado los textos en pantallas estrechas.
+  const width = Math.round(size * 1.12);
   const center = width / 2;
   const middle = height / 2;
   // El rombo ocupa casi todo el alto (los textos van fuera) → se ve grande.
@@ -49,7 +50,11 @@ export function RadarChart({
   const glowId = 'fb-radar-glow';
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full">
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      className="h-auto w-full overflow-visible"
+      aria-label={categories.map((label, i) => `${label}: ${values[i]}/10`).join(', ')}
+    >
       <defs>
         <radialGradient id={gradientId} cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.42" />
@@ -108,11 +113,11 @@ export function RadarChart({
         const [x, y] = point(i, value);
         return (
           <g key={`dot-${categories[i]}`}>
-            <circle cx={x} cy={y} r={4.5} fill="hsl(var(--primary))" fillOpacity="0.35" />
+            <circle cx={x} cy={y} r={5} fill="hsl(var(--primary))" fillOpacity="0.35" />
             <circle
               cx={x}
               cy={y}
-              r={3}
+              r={3.5}
               fill="hsl(var(--panel))"
               stroke="hsl(var(--primary))"
               strokeWidth="2"
@@ -132,12 +137,12 @@ export function RadarChart({
             y={y}
             textAnchor={anchor}
             dominantBaseline="middle"
-            fontSize="11.5"
+            fontSize="13"
             fontWeight="600"
             fill="hsl(var(--foreground))"
           >
             {label}
-            <tspan dx="5" fontSize="11" fontWeight="700" fill="hsl(var(--primary))">
+            <tspan dx="5" fontSize="12.5" fontWeight="700" fill="hsl(var(--primary))">
               {values[i]}
             </tspan>
           </text>
@@ -200,7 +205,7 @@ export function DonutChart({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-bold tabular-nums">{label}</span>
-        {sublabel ? <span className="text-[10px] text-muted-foreground">{sublabel}</span> : null}
+        {sublabel ? <span className="text-[11px] text-muted-foreground">{sublabel}</span> : null}
       </div>
     </div>
   );
@@ -233,7 +238,7 @@ export function LineChart({
   const area = `${padX},${height - padY} ${pts} ${x(points.length - 1)},${height - padY}`;
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full">
+    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full">
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.25" />
@@ -265,12 +270,12 @@ export function LineChart({
       />
       {points.map((p, i) => (
         <g key={`${p.label}-${i}`}>
-          <circle cx={x(i)} cy={y(p.value)} r="3.5" fill="hsl(var(--primary))" />
+          <circle cx={x(i)} cy={y(p.value)} r="4" fill="hsl(var(--primary))" />
           <text
             x={x(i)}
-            y={height - 4}
+            y={height - 5}
             textAnchor="middle"
-            fontSize="9"
+            fontSize="12"
             fill="hsl(var(--muted-foreground))"
           >
             {p.label}

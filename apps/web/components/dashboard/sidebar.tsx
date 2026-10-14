@@ -211,7 +211,7 @@ function NavItems({
                       )}
                       <span className="nav-label flex-1 truncate">{item.label}</span>
                       {item.href.includes('/notifications') && unreadCount ? (
-                        <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                        <span className="rounded-full bg-primary px-1.5 py-0.5 text-[11px] font-semibold text-primary-foreground">
                           {unreadCount}
                         </span>
                       ) : null}
@@ -325,7 +325,7 @@ export function DashboardSidebar({
           {collapsed ? null : (
             <>
               <span className="flex-1 truncate text-left">Search…</span>
-              <kbd className="px-1.5 py-0.5 text-[10px] text-muted-foreground/70">⌘K</kbd>
+              <kbd className="px-1.5 py-0.5 text-[11px] text-muted-foreground/70">⌘K</kbd>
             </>
           )}
         </button>

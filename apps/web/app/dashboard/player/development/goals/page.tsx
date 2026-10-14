@@ -157,7 +157,7 @@ export default async function PlayerGoalsPage() {
                           type="submit"
                           disabled={status === option}
                           aria-pressed={status === option}
-                          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                          className={`rounded-full px-3.5 py-2 text-xs font-medium transition-colors ${
                             status === option
                               ? 'bg-brand text-ink'
                               : 'text-muted-foreground hover:text-brand'

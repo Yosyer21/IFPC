@@ -96,7 +96,7 @@ export default async function PlayerProgressPage() {
                 <p className="mb-4 text-sm text-muted-foreground">
                   Each point is a registered assessment, in chronological order.
                 </p>
-                <div className="animate-scale-in">
+                <div className="animate-scale-in mx-auto max-w-[480px]">
                   <LineChart points={linePoints} gradientId="fb-progress-gradient" />
                 </div>
               </CardContent>

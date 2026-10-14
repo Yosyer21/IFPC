@@ -13,7 +13,7 @@ import { Button } from '@ifpc/ui';
 import { ActionSubmit } from './action-submit';
 
 const actionClass =
-  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors';
+  'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors';
 
 /** Barra de interacción de una post: me gusta, comentar, compartir, borrar y denunciar. */
 export function PostActions({
