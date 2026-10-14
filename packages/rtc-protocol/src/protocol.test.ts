@@ -7,6 +7,9 @@ import {
   encodeClientFrame,
   encodeServerFrame,
   freeSlot,
+  isPolitePeer,
+  pairKey,
+  readPeerSignal,
 } from './index';
 
 describe('frames de medios', () => {
@@ -48,5 +51,53 @@ describe('slots del roster', () => {
     expect(freeSlot([0, 2])).toBe(1);
     expect(freeSlot([0, 1, 2, 3])).toBeNull();
     expect(ROOM_MAX_PARTICIPANTS).toBe(4);
+  });
+});
+
+describe('vía directa (WebRTC)', () => {
+  it('identifica un par igual sin importar el orden', () => {
+    expect(pairKey('ana', 'luis')).toBe('ana|luis');
+    expect(pairKey('luis', 'ana')).toBe('ana|luis');
+    expect(pairKey('luis', 'ana')).toBe(pairKey('ana', 'luis'));
+  });
+
+  it('el id menor manda y cada lado ve lo contrario en un choque de ofertas', () => {
+    expect(isPolitePeer('ana', 'luis')).toBe(true);
+    expect(isPolitePeer('luis', 'ana')).toBe(false);
+    // Nunca los dos ceden ni los dos empujan: el acuerdo es el mismo en ambos.
+    expect(isPolitePeer('ana', 'luis')).toBe(!isPolitePeer('luis', 'ana'));
+  });
+
+  it('valida la señalización que entra por el socket', () => {
+    expect(readPeerSignal({ t: 'p2p-offer', to: 'luis', sdp: 'v=0' })).toEqual({
+      t: 'p2p-offer',
+      to: 'luis',
+      sdp: 'v=0',
+    });
+    expect(
+      readPeerSignal({
+        t: 'p2p-ice',
+        to: 'luis',
+        candidate: { candidate: 'candidate:1', sdpMid: null, sdpMLineIndex: 2 },
+      })
+    ).toEqual({
+      t: 'p2p-ice',
+      to: 'luis',
+      candidate: { candidate: 'candidate:1', sdpMid: null, sdpMLineIndex: 2, usernameFragment: null },
+    });
+
+    // Fin de candidatos y campos que sobran.
+    expect(readPeerSignal({ t: 'p2p-ice', to: 'luis' })).toEqual({
+      t: 'p2p-ice',
+      to: 'luis',
+      candidate: null,
+    });
+    expect(readPeerSignal({ t: 'p2p-direct', userId: 'luis', direct: true })).toBeNull();
+    expect(readPeerSignal({ t: 'p2p-offer', to: '', sdp: 'v=0' })).toBeNull();
+    expect(readPeerSignal({ t: 'p2p-offer', to: 'luis', sdp: '' })).toBeNull();
+    expect(readPeerSignal({ t: 'p2p-offer', to: 'luis', sdp: 'x'.repeat(20_000) })).toBeNull();
+    expect(readPeerSignal({ t: 'p2p-ice', to: 'luis', candidate: 'candidate:1' })).toBeNull();
+    expect(readPeerSignal(null)).toBeNull();
+    expect(readPeerSignal('hola')).toBeNull();
   });
 });

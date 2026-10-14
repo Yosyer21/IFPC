@@ -164,6 +164,108 @@ describe('medios y estado', () => {
   });
 });
 
+describe('vía directa (WebRTC)', () => {
+  it('reenvía la señalización al destinatario y solo dentro de la sala', () => {
+    joinRoom(registry, host, { userId: 'host', role: 'HOST' });
+    joinRoom(registry, guest, { userId: 'guest' });
+
+    expect(registry.signal('room-1', 'guest', { t: 'p2p-offer', to: 'host', sdp: 'v=0' })).toBe(
+      true
+    );
+    expect(host.messages.at(-1)).toEqual({ t: 'p2p-offer', from: 'guest', sdp: 'v=0' });
+
+    expect(
+      registry.signal('room-1', 'host', {
+        t: 'p2p-ice',
+        to: 'guest',
+        candidate: { candidate: 'candidate:1', sdpMid: '0', sdpMLineIndex: 0 },
+      })
+    ).toBe(true);
+    expect(guest.messages.at(-1)).toEqual({
+      t: 'p2p-ice',
+      from: 'host',
+      candidate: { candidate: 'candidate:1', sdpMid: '0', sdpMLineIndex: 0 },
+    });
+
+    // Ni a uno mismo, ni a quien no está, ni desde fuera de la sala.
+    expect(registry.signal('room-1', 'host', { t: 'p2p-offer', to: 'host', sdp: 'v=0' })).toBe(
+      false
+    );
+    expect(
+      registry.signal('room-1', 'host', { t: 'p2p-offer', to: 'fantasma', sdp: 'v=0' })
+    ).toBe(false);
+    expect(
+      registry.signal('room-1', 'fantasma', { t: 'p2p-offer', to: 'host', sdp: 'v=0' })
+    ).toBe(false);
+  });
+
+  it('solo deja de reenviar cuando los dos lados dicen que van directos', () => {
+    joinRoom(registry, host, { userId: 'host', role: 'HOST' });
+    joinRoom(registry, guest, { userId: 'guest' });
+    const frame = { kind: MEDIA_KIND.audio, seq: 1, payload: new Uint8Array([1]) };
+
+    // Con que lo diga uno ya no basta: el relay sigue mandando.
+    expect(registry.setDirect('room-1', 'guest', 'host', true)).toEqual({
+      direct: false,
+      changed: false,
+    });
+    expect(registry.relay('room-1', 'guest', frame)).toBe(1);
+    expect(registry.directPeers('room-1', 'guest')).toEqual([]);
+
+    // Lo dicen los dos: el par sale del relay.
+    expect(registry.setDirect('room-1', 'host', 'guest', true)).toEqual({
+      direct: true,
+      changed: true,
+    });
+    expect(registry.directPeers('room-1', 'guest')).toEqual(['host']);
+    expect(registry.relay('room-1', 'guest', frame)).toBe(0);
+
+    // Si uno vuelve atrás (se cayó la vía directa), el relay vuelve solo.
+    expect(registry.setDirect('room-1', 'guest', 'host', false)).toEqual({
+      direct: false,
+      changed: true,
+    });
+    expect(registry.relay('room-1', 'guest', frame)).toBe(1);
+  });
+
+  it('el que no va directo sigue recibiendo por el relay', () => {
+    joinRoom(registry, host, { userId: 'host', role: 'HOST' });
+    joinRoom(registry, guest, { userId: 'guest' });
+    const third = fakeSocket();
+    joinRoom(registry, third, { userId: 'third' });
+
+    registry.setDirect('room-1', 'host', 'guest', true);
+    registry.setDirect('room-1', 'guest', 'host', true);
+
+    const delivered = registry.relay('room-1', 'host', {
+      kind: MEDIA_KIND.video,
+      seq: 2,
+      payload: new Uint8Array([2]),
+    });
+
+    expect(delivered).toBe(1);
+    expect(third.frames).toHaveLength(1);
+    expect(guest.frames).toHaveLength(0);
+  });
+
+  it('ignora lo que le digan de alguien que no está y limpia al que se va', () => {
+    joinRoom(registry, host, { userId: 'host', role: 'HOST' });
+    joinRoom(registry, guest, { userId: 'guest' });
+
+    expect(registry.setDirect('room-1', 'host', 'fantasma', true)).toEqual({
+      direct: false,
+      changed: false,
+    });
+
+    registry.setDirect('room-1', 'host', 'guest', true);
+    registry.setDirect('room-1', 'guest', 'host', true);
+    registry.leave('room-1', 'guest');
+
+    expect(registry.directPeers('room-1', 'host')).toEqual([]);
+    expect(registry.get('room-1')?.claims.size).toBe(0);
+  });
+});
+
 describe('moderación y caídas', () => {
   it('solo el host echa o cierra la sala', () => {
     joinRoom(registry, host, { userId: 'host', role: 'HOST' });

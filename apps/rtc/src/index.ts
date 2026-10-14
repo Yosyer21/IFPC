@@ -1,6 +1,12 @@
 import { createServer } from 'node:http';
 import { WebSocketServer, type WebSocket } from 'ws';
-import { ROOM_HEARTBEAT_MS, decodeClientFrame, type RtcClientMessage } from '@ifpc/rtc-protocol';
+import {
+  ROOM_HEARTBEAT_MS,
+  decodeClientFrame,
+  pairKey,
+  readPeerSignal,
+  type RtcClientMessage,
+} from '@ifpc/rtc-protocol';
 import { roomTokenSecret, verifyRoomToken, type RoomTokenPayload } from '@ifpc/rtc-protocol/token';
 import { markEnded, markJoined, markLeft, markState } from './persistence';
 import { RoomRegistry, type MemberSocket } from './room';
@@ -17,6 +23,8 @@ import { RoomRegistry, type MemberSocket } from './room';
  */
 const PORT = Number(process.env.PORT ?? 4001);
 const HELLO_TIMEOUT_MS = 10_000;
+/** Señalización permitida por conexión cada 10 s (una negociación gasta decenas). */
+const SIGNAL_BUDGET_PER_WINDOW = 240;
 const secret = roomTokenSecret();
 
 const registry = new RoomRegistry();
@@ -146,6 +154,29 @@ wss.on('connection', (socket) => {
   // El cierre limpia; aquí solo evitamos que un socket roto tumbe el proceso.
   socket.on('error', () => undefined);
 
+  /**
+   * Presupuesto de señalización por conexión: una negociación WebRTC gasta unas
+   * pocas decenas de mensajes, así que este margen no molesta a nadie y corta el
+   * abuso desde el primer momento.
+   */
+  let signalWindowAt = 0;
+  let signalWindowCount = 0;
+  function withinSignalBudget(): boolean {
+    const stamp = Date.now();
+    if (stamp - signalWindowAt > 10_000) {
+      signalWindowAt = stamp;
+      signalWindowCount = 0;
+    }
+    signalWindowCount += 1;
+    if (signalWindowCount > SIGNAL_BUDGET_PER_WINDOW) {
+      if (signalWindowCount === SIGNAL_BUDGET_PER_WINDOW + 1) {
+        console.log(`[rtc] demasiada señalización de ${payload?.userId ?? 'desconocido'}`);
+      }
+      return false;
+    }
+    return true;
+  }
+
   function handleControl(current: RoomTokenPayload, raw: string): void {
     let message: RtcClientMessage;
     try {
@@ -175,6 +206,34 @@ wss.on('connection', (socket) => {
       case 'kick':
         registry.kick(current.roomId, current.userId, message.userId);
         break;
+      // Señalización WebRTC: el servicio solo la reenvía a quien va dirigida.
+      case 'p2p-offer':
+      case 'p2p-answer':
+      case 'p2p-ice': {
+        if (!withinSignalBudget()) break;
+        const signal = readPeerSignal(message);
+        if (signal) registry.signal(current.roomId, current.userId, signal);
+        break;
+      }
+      // «Con este voy directo»: hasta que los dos lo digan, seguimos reenviando.
+      case 'p2p-direct': {
+        const peerUserId = message.userId;
+        if (!peerUserId || typeof message.direct !== 'boolean') break;
+        const result = registry.setDirect(
+          current.roomId,
+          current.userId,
+          peerUserId,
+          message.direct
+        );
+        if (result.changed) {
+          console.log(
+            `[rtc] ${pairKey(current.userId, peerUserId)} ${
+              result.direct ? 'va por la vía directa' : 'vuelve al relay'
+            } en ${current.roomId}`
+          );
+        }
+        break;
+      }
       case 'end':
         if (registry.end(current.roomId, current.userId)) {
           void markEnded(current.roomId);

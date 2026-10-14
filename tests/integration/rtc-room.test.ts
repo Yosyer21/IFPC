@@ -23,10 +23,15 @@ const ROOM = { id: 'room-integration', title: 'Session 3', maxParticipants: 4 };
 
 let service: ChildProcessWithoutNullStreams;
 
-function tokenFor(userId: string, role: 'HOST' | 'GUEST', name = userId): string {
+function tokenFor(
+  userId: string,
+  role: 'HOST' | 'GUEST',
+  name = userId,
+  roomId: string = ROOM.id
+): string {
   return signRoomToken(
     {
-      roomId: ROOM.id,
+      roomId,
       title: ROOM.title,
       maxParticipants: ROOM.maxParticipants,
       userId,
@@ -193,5 +198,75 @@ describe('servicio de salas (WebSocket real)', () => {
     await expect(guest.waitFor('ended')).resolves.toEqual({ t: 'ended' });
 
     for (const client3 of [host, guest, overflow, ...extra]) client3.close();
+  }, 20_000);
+
+  it('cruza la señalización WebRTC y retira del relay a los pares directos', async () => {
+    const room = 'room-p2p';
+    const [ana, bea, carla] = [client(), client(), client()];
+
+    await ana.opened;
+    ana.hello(tokenFor('p2p-ana', 'HOST', 'Ana', room));
+    await ana.waitFor('welcome');
+
+    await bea.opened;
+    bea.hello(tokenFor('p2p-bea', 'GUEST', 'Bea', room));
+    await bea.waitFor('welcome');
+
+    await carla.opened;
+    carla.hello(tokenFor('p2p-carla', 'GUEST', 'Carla', room));
+    await carla.waitFor('welcome');
+
+    // 1. La oferta llega a quien va dirigida (con `from`) y a nadie más.
+    ana.control({ t: 'p2p-offer', to: 'p2p-bea', sdp: 'v=0-oferta' });
+    await expect(bea.waitFor('p2p-offer')).resolves.toMatchObject({
+      from: 'p2p-ana',
+      sdp: 'v=0-oferta',
+    });
+    await delay(100);
+    expect(carla.inbox.filter((row) => row.t === 'p2p-offer')).toHaveLength(0);
+
+    // 2. La respuesta y los candidatos vuelven por el mismo camino.
+    bea.control({ t: 'p2p-answer', to: 'p2p-ana', sdp: 'v=0-respuesta' });
+    await expect(ana.waitFor('p2p-answer')).resolves.toMatchObject({ from: 'p2p-bea' });
+
+    bea.control({
+      t: 'p2p-ice',
+      to: 'p2p-ana',
+      candidate: { candidate: 'candidate:1', sdpMid: '0', sdpMLineIndex: 0 },
+    });
+    await expect(ana.waitFor('p2p-ice')).resolves.toMatchObject({
+      from: 'p2p-bea',
+      candidate: { candidate: 'candidate:1' },
+    });
+
+    // 3. Un destinatario que no existe se ignora en silencio (no es un error).
+    ana.control({ t: 'p2p-offer', to: 'fantasma', sdp: 'v=0' });
+    await delay(100);
+    expect(ana.inbox.filter((row) => row.t === 'error')).toHaveLength(0);
+
+    // 4. Con que lo diga uno solo, los medios siguen pasando por el servicio.
+    ana.control({ t: 'p2p-direct', userId: 'p2p-bea', direct: true });
+    await delay(100);
+    ana.send(encodeClientFrame({ kind: MEDIA_KIND.video, seq: 1, payload: new Uint8Array([1]) }));
+    await delay(150);
+    expect(bea.frames).toHaveLength(1);
+    expect(carla.frames).toHaveLength(1);
+
+    // 5. Cuando lo dicen los dos, el par sale del relay: a Bea ya no le llega.
+    bea.control({ t: 'p2p-direct', userId: 'p2p-ana', direct: true });
+    await delay(100);
+    ana.send(encodeClientFrame({ kind: MEDIA_KIND.video, seq: 2, payload: new Uint8Array([2]) }));
+    await delay(150);
+    expect(bea.frames).toHaveLength(1);
+    expect(carla.frames).toHaveLength(2);
+
+    // 6. Y si uno vuelve atrás (se cae la vía directa), el relay vuelve solo.
+    bea.control({ t: 'p2p-direct', userId: 'p2p-ana', direct: false });
+    await delay(100);
+    ana.send(encodeClientFrame({ kind: MEDIA_KIND.video, seq: 3, payload: new Uint8Array([3]) }));
+    await delay(150);
+    expect(bea.frames).toHaveLength(2);
+
+    for (const peer of [ana, bea, carla]) peer.close();
   }, 20_000);
 });

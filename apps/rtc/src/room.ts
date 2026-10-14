@@ -7,6 +7,7 @@ import {
   type MediaFrameHeader,
   type RtcErrorCode,
   type RtcParticipant,
+  type RtcPeerSignal,
   type RtcRole,
   type RtcServerMessage,
 } from '@ifpc/rtc-protocol';
@@ -44,6 +45,12 @@ export interface RoomState {
   maxParticipants: number;
   members: Map<string, RoomMember>;
   createdAt: number;
+  /**
+   * Pares que van por la vía directa: `claims.get(a)?.has(b)` significa «a dice
+   * que con b va directo». Solo cuando lo dicen **los dos** se deja de reenviar
+   * por el relay, así una caída de la vía directa nunca deja a nadie sin medios.
+   */
+  claims: Map<string, Set<string>>;
 }
 
 export interface JoinInput {
@@ -110,6 +117,7 @@ export class RoomRegistry {
         maxParticipants: max,
         members: new Map(),
         createdAt: now,
+        claims: new Map(),
       };
       this.rooms.set(input.roomId, room);
     }
@@ -155,9 +163,69 @@ export class RoomRegistry {
     if (!room?.members.has(userId)) return false;
 
     room.members.delete(userId);
+    this.forgetClaims(room, userId);
     this.broadcast(room, { t: 'left', userId }, userId);
     if (room.members.size === 0) this.rooms.delete(roomId);
     return true;
+  }
+
+  /**
+   * Reenvía señalización WebRTC a otro miembro de la misma sala. Fuera de la sala
+   * no se reenvía nada: el servicio no es un bus entre salas.
+   */
+  signal(roomId: string, fromUserId: string, signal: RtcPeerSignal): boolean {
+    const room = this.rooms.get(roomId);
+    const sender = room?.members.get(fromUserId);
+    if (!room || !sender || signal.to === fromUserId) return false;
+
+    const target = room.members.get(signal.to);
+    if (!target) return false;
+
+    sender.lastSeenAt = Date.now();
+    if (signal.t === 'p2p-ice') {
+      target.socket.send({ t: 'p2p-ice', from: fromUserId, candidate: signal.candidate });
+      return true;
+    }
+
+    target.socket.send({ t: signal.t, from: fromUserId, sdp: signal.sdp });
+    return true;
+  }
+
+  /**
+   * Anota si alguien va directo con otro. Devuelve si el par quedó **de verdad**
+   * en directo (los dos lados lo dicen) y si eso acaba de cambiar, para poder
+   * loguearlo una sola vez.
+   */
+  setDirect(
+    roomId: string,
+    userId: string,
+    peerUserId: string,
+    direct: boolean
+  ): { direct: boolean; changed: boolean } {
+    const room = this.rooms.get(roomId);
+    if (!room || !room.members.has(userId) || !room.members.has(peerUserId)) {
+      return { direct: false, changed: false };
+    }
+
+    const before = this.isDirectPair(room, userId, peerUserId);
+    const own = room.claims.get(userId) ?? new Set<string>();
+    if (direct) own.add(peerUserId);
+    else own.delete(peerUserId);
+    if (own.size === 0) room.claims.delete(userId);
+    else room.claims.set(userId, own);
+
+    const after = this.isDirectPair(room, userId, peerUserId);
+    return { direct: after, changed: after !== before };
+  }
+
+  /** Con quién va directo alguien ahora mismo (para logs y pruebas). */
+  directPeers(roomId: string, userId: string): string[] {
+    const room = this.rooms.get(roomId);
+    if (!room) return [];
+
+    return [...room.members.keys()].filter(
+      (peer) => peer !== userId && this.isDirectPair(room, userId, peer)
+    );
   }
 
 
@@ -213,6 +281,8 @@ export class RoomRegistry {
     let delivered = 0;
     for (const member of room.members.values()) {
       if (member.userId === userId) continue;
+      // Los pares que van directos ya se hablan entre ellos: no gastamos egress.
+      if (this.isDirectPair(room, userId, member.userId)) continue;
       this.deliver(member, encoded);
       delivered += 1;
     }
@@ -291,6 +361,21 @@ export class RoomRegistry {
     for (const member of room.members.values()) {
       if (member.userId === exceptUserId) continue;
       member.socket.send(message);
+    }
+  }
+
+  /** ¿Los dos lados dicen que este par va directo? */
+  private isDirectPair(room: RoomState, a: string, b: string): boolean {
+    return Boolean(room.claims.get(a)?.has(b)) && Boolean(room.claims.get(b)?.has(a));
+  }
+
+  /** Alguien se va: sus promesas y las que otros le hicieron dejan de valer. */
+  private forgetClaims(room: RoomState, userId: string): void {
+    room.claims.delete(userId);
+    for (const [owner, peers] of [...room.claims]) {
+      peers.delete(userId);
+      // Sin promesas no hay entrada: el estado de la sala queda limpio.
+      if (peers.size === 0) room.claims.delete(owner);
     }
   }
 
