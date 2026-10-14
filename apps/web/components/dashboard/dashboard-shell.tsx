@@ -75,7 +75,7 @@ export function DashboardShell({
   return (
     <div className="relative flex min-h-screen flex-col md:flex-row">
       <div
-        className="app-ambient pointer-events-none fixed inset-0 -z-10 bg-[#070b09]"
+        className="app-ambient pointer-events-none fixed inset-0 -z-10 bg-ink"
         aria-hidden="true"
       />
 
@@ -102,11 +102,7 @@ export function DashboardShell({
         <main className="flex-1 p-6">{children}</main>
       </div>
 
-      <CommandPalette
-        open={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        sections={sections}
-      />
+      <CommandPalette open={searchOpen} onClose={() => setSearchOpen(false)} sections={sections} />
     </div>
   );
 }

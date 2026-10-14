@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#070b09] text-white selection:bg-emerald-500/30">
+    <div className="min-h-screen overflow-x-hidden bg-mist text-ink selection:bg-brand/50">
       <Intro />
       <Navbar />
       <main>
@@ -53,4 +53,3 @@ export default function HomePage() {
     </div>
   );
 }
-

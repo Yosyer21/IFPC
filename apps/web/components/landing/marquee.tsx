@@ -9,12 +9,12 @@ const WORDS = [
   'Train · Grow · Believe',
 ];
 
-const COLORS = ['text-emerald-400/70', 'text-cyan-400/70', 'text-violet-400/70', 'text-lime-400/70'];
+const COLORS = ['text-brand/80', 'text-brand/55', 'text-brand/40', 'text-brand/70'];
 
 export function Marquee() {
   const items = [...WORDS, ...WORDS];
   return (
-    <section className="border-y border-white/10 bg-[#0c110e] py-5">
+    <section className="border-y border-white/10 bg-ink py-5">
       <div className="flex overflow-hidden">
         <div className="animate-marquee flex w-max shrink-0 items-center">
           {items.map((word, index) => (

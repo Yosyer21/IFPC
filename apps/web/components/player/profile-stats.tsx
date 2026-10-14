@@ -14,18 +14,14 @@ export interface ProfileStatsCardProps {
  * level por category. Lo comparten el perfil propio, el muro de Discovery y el
  * perfil público.
  */
-export function ProfileStatsCard({
-  stats,
-  title = 'Stats',
-  className,
-}: ProfileStatsCardProps) {
+export function ProfileStatsCard({ stats, title = 'Stats', className }: ProfileStatsCardProps) {
   const kpis = [
     { label: 'Matches', value: stats.career.appearances },
     { label: 'Goals', value: stats.career.goals },
     { label: 'Assists', value: stats.career.assists },
     { label: 'Seasons', value: stats.career.seasons },
     { label: 'Videos', value: stats.videos },
-    { label: 'Evaluaciones', value: stats.evaluations },
+    { label: 'Assessments', value: stats.evaluations },
   ];
   const hasData =
     stats.overall !== null || stats.career.entries > 0 || stats.videos > 0 || stats.evaluations > 0;

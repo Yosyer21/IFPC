@@ -27,7 +27,7 @@ export function PlayerAvatar({
 
   return (
     <div
-      className={`${box} flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-emerald-500 to-emerald-800 font-bold text-primary-foreground shadow-lg shadow-primary/25 ring-2 ring-primary/20`}
+      className={`${box} flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-panel to-ink font-bold text-brand shadow-lg shadow-brand/25 ring-2 ring-brand/40`}
       aria-hidden="true"
     >
       {photo ? (

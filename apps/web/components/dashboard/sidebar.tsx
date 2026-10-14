@@ -9,8 +9,51 @@ import type { NavSection } from './nav';
 
 const STORAGE_KEY = 'fb.nav.sections';
 
+/** Áreas de rol: la portada `/dashboard/<rol>` es prefijo de todas sus subpáginas. */
+const ROLE_AREAS = new Set([
+  'player',
+  'parent',
+  'coach',
+  'scout',
+  'agent',
+  'club',
+  'university',
+  'school',
+  'admin',
+]);
+
 function isActiveHref(pathname: string, href: string) {
+  // La portada del rol (p. ej. `/dashboard/player`) se marca activa **solo** en
+  // ella misma: al ser prefijo de todas sus subpáginas, si no quedaría
+  // seleccionada siempre y el menú mostraría dos items activos a la vez.
+  const areaRoot = /^\/dashboard\/([^/]+)$/.exec(href)?.[1];
+  if (areaRoot && ROLE_AREAS.has(areaRoot)) return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/**
+ * Carácter propio de cada icono de navegación (clases en `globals.css`): al pasar
+ * el puntero el icono se mueve y se enciende en lima, y el del item activo
+ * "respira". Cada familia de icono tiene su gesto para que la barra esté viva.
+ */
+const ICON_MOTION: Record<string, string> = {
+  live: 'nav-icon-spin',
+  compass: 'nav-icon-turn',
+  settings: 'nav-icon-turn',
+  bell: 'nav-icon-swing',
+  sparkles: 'nav-icon-float',
+  search: 'nav-icon-pop',
+  star: 'nav-icon-pop',
+  trophy: 'nav-icon-pop',
+  target: 'nav-icon-pop',
+  chart: 'nav-icon-pop',
+  whistle: 'nav-icon-pop',
+  check: 'nav-icon-pop',
+  play: 'nav-icon-pop',
+};
+
+function motionFor(icon?: string): string {
+  return icon ? (ICON_MOTION[icon] ?? '') : '';
 }
 
 /**
@@ -89,13 +132,24 @@ function NavItems({
                       href={item.href}
                       aria-label={item.label}
                       aria-current={active ? 'page' : undefined}
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                      data-active={active ? 'true' : undefined}
+                      className={`nav-item relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
                         active
-                          ? 'chip-gradient'
-                          : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                          ? 'text-brand'
+                          : 'text-muted-foreground hover:bg-brand/10 hover:text-brand'
                       }`}
                     >
-                      {Icon ? <Icon className="h-5 w-5" /> : <span className="h-5 w-5" />}
+                      {active ? (
+                        <span
+                          aria-hidden="true"
+                          className="nav-bar absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-brand"
+                        />
+                      ) : null}
+                      {Icon ? (
+                        <Icon className={`nav-icon h-5 w-5 ${motionFor(item.icon)}`} />
+                      ) : (
+                        <span className="h-5 w-5" />
+                      )}
                     </Link>
                   </Tooltip>
                 );
@@ -119,9 +173,7 @@ function NavItems({
               onClick={() => toggleSection(section.label)}
               aria-expanded={open}
               className={`flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
-                active
-                  ? 'text-emerald-300'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                active ? 'text-brand' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
               {section.label}
@@ -139,24 +191,25 @@ function NavItems({
                       key={item.href}
                       href={item.href}
                       aria-current={itemActive ? 'page' : undefined}
-                      className={`relative flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                      data-active={itemActive ? 'true' : undefined}
+                      className={`nav-item relative flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
                         itemActive
-                          ? 'chip-gradient font-medium'
-                          : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                          ? 'font-medium text-brand'
+                          : 'text-muted-foreground hover:bg-brand/10 hover:text-brand'
                       }`}
                     >
                       {itemActive ? (
                         <span
                           aria-hidden="true"
-                          className="absolute inset-y-1 left-0 w-0.5 rounded-full bg-emerald-400"
+                          className="nav-bar absolute inset-y-1 left-0 w-[3px] rounded-full bg-brand"
                         />
                       ) : null}
                       {Icon ? (
-                        <Icon className="h-4 w-4 shrink-0" />
+                        <Icon className={`nav-icon h-4 w-4 shrink-0 ${motionFor(item.icon)}`} />
                       ) : (
                         <span className="h-4 w-4 shrink-0" />
                       )}
-                      <span className="flex-1 truncate">{item.label}</span>
+                      <span className="nav-label flex-1 truncate">{item.label}</span>
                       {item.href.includes('/notifications') && unreadCount ? (
                         <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
                           {unreadCount}
@@ -206,12 +259,16 @@ export function DashboardSidebar({
       {/* Drawer móvil (controlado desde el shell/header). */}
       {mobileOpen ? (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={onCloseMobile} aria-hidden="true" />
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
           <aside
             role="dialog"
             aria-modal="true"
             aria-label="Navigation"
-            className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-border bg-[#0b0f0d] p-4"
+            className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-border bg-ink p-4"
           >
             <div className="mb-4 flex items-center justify-between">
               <Link href="/" className="text-gradient-brand text-lg font-black tracking-tight">
@@ -221,7 +278,7 @@ export function DashboardSidebar({
                 type="button"
                 onClick={onCloseMobile}
                 aria-label="Close menu"
-                className="rounded-lg border border-white/10 p-2 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+                className="rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand"
               >
                 <IconX className="h-5 w-5" />
               </button>
@@ -233,7 +290,7 @@ export function DashboardSidebar({
 
       {/* Sidebar de escritorio: rail colapsable con estado persistente. */}
       <aside
-        className={`hidden shrink-0 flex-col border-r border-border bg-[#0a0e0c] p-3 md:sticky md:top-0 md:flex md:h-screen ${
+        className={`hidden shrink-0 flex-col border-r border-border bg-ink p-3 md:sticky md:top-0 md:flex md:h-screen ${
           collapsed ? 'w-[68px]' : 'w-64'
         }`}
       >
@@ -250,7 +307,7 @@ export function DashboardSidebar({
             onClick={onToggleCollapsed}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-pressed={collapsed}
-            className="rounded-lg border border-white/10 p-1.5 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+            className="rounded-lg border border-border p-1.5 text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand"
           >
             <IconPanelLeft className="h-4 w-4" />
           </button>
@@ -260,15 +317,15 @@ export function DashboardSidebar({
           type="button"
           onClick={onOpenSearch}
           aria-label="Search pages"
-          className={`mb-3 flex items-center rounded-lg border border-white/10 bg-white/5 text-sm text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground ${
+          className={`nav-item mb-3 flex items-center rounded-lg text-sm text-muted-foreground transition-colors hover:text-brand ${
             collapsed ? 'h-10 w-10 justify-center' : 'gap-2 px-3 py-2'
           }`}
         >
-          <IconSearch className="h-4 w-4 shrink-0" />
+          <IconSearch className="nav-icon nav-icon-pop h-4 w-4 shrink-0" />
           {collapsed ? null : (
             <>
               <span className="flex-1 truncate text-left">Search…</span>
-              <kbd className="rounded border border-white/10 px-1.5 py-0.5 text-[10px]">⌘K</kbd>
+              <kbd className="px-1.5 py-0.5 text-[10px] text-muted-foreground/70">⌘K</kbd>
             </>
           )}
         </button>

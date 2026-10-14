@@ -21,12 +21,12 @@ export function Hero() {
           sizes="100vw"
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#070b09]/85 via-[#070b09]/70 to-[#070b09]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#070b09] via-[#070b09]/55 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-panel/85 via-panel/70 to-panel" />
+        <div className="absolute inset-0 bg-gradient-to-r from-panel via-panel/55 to-transparent" />
         {/* Colourful drifting blobs */}
-        <div className="animate-drift absolute -left-20 top-24 h-96 w-96 rounded-full bg-emerald-500/25 blur-[130px]" />
-        <div className="animate-drift-slow absolute right-0 top-6 h-80 w-80 rounded-full bg-cyan-500/20 blur-[130px]" />
-        <div className="animate-drift absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-violet-500/20 blur-[130px]" />
+        <div className="animate-drift absolute -left-20 top-24 h-96 w-96 rounded-full bg-brand/20 blur-[130px]" />
+        <div className="animate-drift-slow absolute right-0 top-6 h-80 w-80 rounded-full bg-white/10 blur-[130px]" />
+        <div className="animate-drift absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-brand/10 blur-[130px]" />
       </div>
 
       <IconBall
@@ -36,7 +36,7 @@ export function Hero() {
 
       <div className="mx-auto flex min-h-[94vh] max-w-7xl flex-col justify-center px-4 pb-16 pt-32 sm:px-6">
         <div className="max-w-3xl">
-          <span className="animate-fade-up glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-300">
+          <span className="animate-fade-up glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-brand">
             <IconBall className="h-4 w-4 animate-spin-slow" /> Empowering girls aged 10–18
           </span>
 
@@ -63,7 +63,7 @@ export function Hero() {
           >
             <Link
               href="/activities"
-              className="glow inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-emerald-400 to-lime-400 px-7 py-4 text-base font-bold text-emerald-950 transition-transform hover:scale-[1.03]"
+              className="glow inline-flex items-center justify-center gap-2 rounded-full bg-brand px-7 py-4 text-base font-bold text-ink transition-transform hover:scale-[1.03]"
             >
               Explore activities <IconArrowRight className="h-4 w-4" />
             </Link>
@@ -71,7 +71,7 @@ export function Hero() {
               href="/events"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-7 py-4 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10"
             >
-              <IconStar className="h-4 w-4 text-cyan-300" /> Train with a Matilda
+              <IconStar className="h-4 w-4 text-brand" /> Train with a Matilda
             </Link>
           </div>
 

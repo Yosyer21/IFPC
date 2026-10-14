@@ -19,7 +19,11 @@ export function StatCard({
   delay?: number;
 }) {
   return (
-    <Link href={href} className="animate-fade-up group block" style={{ animationDelay: `${delay}ms` }}>
+    <Link
+      href={href}
+      className="animate-fade-up group block"
+      style={{ animationDelay: `${delay}ms` }}
+    >
       <Card className="card-hover h-full">
         <CardContent className="flex items-center gap-3">
           <span className="chip-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105">

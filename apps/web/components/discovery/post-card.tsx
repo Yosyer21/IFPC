@@ -49,12 +49,12 @@ export function PostCard({
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 href={`${base}/u/${post.author.id}`}
-                className="truncate font-semibold hover:text-emerald-400"
+                className="truncate font-semibold transition-colors hover:text-brand"
               >
                 {post.author.name}
               </Link>
               <Badge variant="outline">{POST_TYPE_LABELS[post.type] ?? post.type}</Badge>
-              {post.pinned ? <Badge variant="success">Fijado</Badge> : null}
+              {post.pinned ? <Badge variant="success">Pinned</Badge> : null}
               {post.relevance !== null &&
               post.relevance !== undefined &&
               post.relevance >= PLAYER_MATCH_THRESHOLD ? (
@@ -88,7 +88,7 @@ export function PostCard({
                     width={512}
                     height={512}
                     unoptimized
-                    className="h-40 w-full rounded-xl border border-white/10 object-cover"
+                    className="h-40 w-full rounded-xl border border-border object-cover"
                   />
                 ))}
               </div>
@@ -101,7 +101,7 @@ export function PostCard({
                 width={1024}
                 height={576}
                 unoptimized
-                className="mt-3 h-auto w-full rounded-xl border border-white/10"
+                className="mt-3 h-auto w-full rounded-xl border border-border"
               />
             ) : null}
 
@@ -111,7 +111,7 @@ export function PostCard({
                 poster={post.posterUrl ?? undefined}
                 controls
                 preload="metadata"
-                className="mt-3 aspect-video w-full rounded-xl border border-white/10 bg-black"
+                className="mt-3 aspect-video w-full rounded-xl border border-border bg-black"
               />
             ) : null}
 
@@ -122,7 +122,7 @@ export function PostCard({
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="strict-origin-when-cross-origin"
-                className="mt-3 aspect-video w-full rounded-xl border border-white/10"
+                className="mt-3 aspect-video w-full rounded-xl border border-border"
               />
             ) : null}
 
@@ -138,7 +138,11 @@ export function PostCard({
                     const voted = post.myPollVote === index;
                     const row = (
                       <>
-                        <span aria-hidden className="absolute inset-y-0 left-0 rounded-lg bg-emerald-500/15" style={{ width: `${percent}%` }} />
+                        <span
+                          aria-hidden
+                          className="absolute inset-y-0 left-0 rounded-lg bg-brand/15"
+                          style={{ width: `${percent}%` }}
+                        />
                         <span className="relative flex-1 text-left text-sm">
                           {voted ? '✓ ' : ''}
                           {option}
@@ -150,7 +154,10 @@ export function PostCard({
                     );
 
                     return (
-                      <li key={`${option}-${index}`} className="overflow-hidden rounded-lg border border-border/60">
+                      <li
+                        key={`${option}-${index}`}
+                        className="overflow-hidden rounded-lg border border-border/60"
+                      >
                         {readOnly ? (
                           <span className="relative flex items-center justify-between gap-2 px-3 py-2">
                             {row}
@@ -187,7 +194,7 @@ export function PostCard({
             {post.opportunity ? (
               <Link
                 href={`/opportunities/${post.opportunity.id}`}
-                className="mt-3 inline-flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300 transition-colors hover:border-emerald-500/60"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-brand transition-colors hover:underline"
               >
                 Opportunity compartida: {post.opportunity.title}
               </Link>
@@ -198,7 +205,7 @@ export function PostCard({
                 href={post.linkUrl}
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                className="mt-3 block truncate text-sm text-emerald-400 hover:underline"
+                className="mt-3 block truncate text-sm text-brand transition-colors hover:underline"
               >
                 {post.linkUrl}
               </a>
@@ -210,7 +217,7 @@ export function PostCard({
                   <Link
                     key={tag}
                     href={`${base}/tag/${tag}`}
-                    className="text-xs text-emerald-400/80 hover:text-emerald-300"
+                    className="text-xs text-brand/80 transition-colors hover:text-brand"
                   >
                     #{tag}
                   </Link>
@@ -220,7 +227,8 @@ export function PostCard({
 
             {isAuthor && post.counts.views > 0 ? (
               <p className="mt-2 text-xs text-muted-foreground">
-                {post.counts.views} {post.counts.views === 1 ? 'person viewed it' : 'people viewed it'}
+                {post.counts.views}{' '}
+                {post.counts.views === 1 ? 'person viewed it' : 'people viewed it'}
               </p>
             ) : null}
           </div>

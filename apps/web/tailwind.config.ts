@@ -30,6 +30,18 @@ const config: Config = {
           foreground: 'hsl(var(--destructive-foreground))',
         },
         ring: 'hsl(var(--ring))',
+        // Paleta de marca Future Baller (ver globals.css):
+        // brand = verde lima #C4F747 · ink = negro azulado #11151A ·
+        // panel = negro carbón #12161B · mist = gris muy claro #F4F5F2 ·
+        // subtle = gris azulado #68717E (textos secundarios).
+        brand: {
+          DEFAULT: 'hsl(var(--brand))',
+          foreground: 'hsl(var(--brand-foreground))',
+        },
+        ink: 'hsl(var(--ink))',
+        panel: 'hsl(var(--panel))',
+        mist: 'hsl(var(--mist))',
+        subtle: 'hsl(var(--subtle))',
       },
       borderRadius: {
         lg: 'var(--radius)',

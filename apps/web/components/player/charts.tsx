@@ -13,84 +13,133 @@ export interface ChartDatum {
 export function RadarChart({
   categories,
   values,
-  size = 300,
+  size = 320,
 }: {
   categories: string[];
   values: number[];
   size?: number;
 }) {
-  const center = size / 2;
-  const radius = size / 2 - 34;
+  const height = size;
+  // Lienzo más ancho que alto: da sitio a las etiquetas de los lados.
+  const width = Math.round(size * 1.3);
+  const center = width / 2;
+  const middle = height / 2;
+  // El rombo ocupa casi todo el alto (los textos van fuera) → se ve grande.
+  const radius = height / 2 - 28;
   const n = categories.length;
-  const angle = (i: number) => (Math.PI * 2 * i) / n - Math.PI / 2;
+  // Medio sector de giro: con 4 áreas los ejes caen en las esquinas, donde la
+  // etiqueta queda fuera del rombo en lugar de montarse encima.
+  const start = -Math.PI / 2 - Math.PI / n;
+  const angle = (i: number) => start + (Math.PI * 2 * i) / n;
   const point = (i: number, value: number) => {
     const r = (Math.max(0, Math.min(10, value)) / 10) * radius;
-    return [center + r * Math.cos(angle(i)), center + r * Math.sin(angle(i))] as const;
+    return [center + r * Math.cos(angle(i)), middle + r * Math.sin(angle(i))] as const;
+  };
+  /** Punto de la etiqueta: sobre el eje y siempre **fuera** del anillo. */
+  const labelPoint = (i: number) => {
+    const r = radius + 20;
+    return [center + r * Math.cos(angle(i)), middle + r * Math.sin(angle(i))] as const;
   };
 
   const gridPolygons = [2.5, 5, 7.5, 10].map((level) =>
     categories.map((_, i) => point(i, level).join(',')).join(' ')
   );
-  const dataPoints = values.map((v, i) => point(i, v).join(',')).join(' ');
+  const dataPoints = values.map((value, i) => point(i, value).join(',')).join(' ');
+  const gradientId = 'fb-radar-fill';
+  const glowId = 'fb-radar-glow';
 
   return (
-    <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full">
-      {/* grid */}
+    <svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full">
+      <defs>
+        <radialGradient id={gradientId} cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.42" />
+          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.08" />
+        </radialGradient>
+        <filter id={glowId} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* Rejilla: anillos suaves y el de fuera algo más marcado. */}
       {gridPolygons.map((points, i) => (
         <polygon
           key={i}
           points={points}
           fill="none"
           stroke="hsl(var(--border))"
-          strokeWidth="1"
-          opacity={0.7}
+          strokeWidth={i === gridPolygons.length - 1 ? 1.4 : 1}
+          opacity={i === gridPolygons.length - 1 ? 0.95 : 0.55}
         />
       ))}
-      {/* radios */}
       {categories.map((_, i) => {
         const [x, y] = point(i, 10);
         return (
           <line
             key={i}
             x1={center}
-            y1={center}
+            y1={middle}
             x2={x}
             y2={y}
             stroke="hsl(var(--border))"
             strokeWidth="1"
+            opacity="0.7"
           />
         );
       })}
-      {/* datos */}
+
+      {/* El rombo: relleno en degradado lima, trazo con glow y entrada animada. */}
       <polygon
         points={dataPoints}
-        fill="hsl(var(--primary))"
-        fillOpacity={0.16}
+        fill={`url(#${gradientId})`}
         stroke="hsl(var(--primary))"
-        strokeWidth={2}
+        strokeWidth={2.5}
         strokeLinejoin="round"
         pathLength={100}
+        filter={`url(#${glowId})`}
         className="fb-poly animate-scale-in"
       />
-      {values.map((v, i) => {
-        const [x, y] = point(i, v);
-        return <circle key={i} cx={x} cy={y} r={3} fill="hsl(var(--primary))" />;
+
+      {/* Puntos con el lenguaje del marcador: anillo lima + centro en tinta. */}
+      {values.map((value, i) => {
+        const [x, y] = point(i, value);
+        return (
+          <g key={`dot-${categories[i]}`}>
+            <circle cx={x} cy={y} r={4.5} fill="hsl(var(--primary))" fillOpacity="0.35" />
+            <circle
+              cx={x}
+              cy={y}
+              r={3}
+              fill="hsl(var(--panel))"
+              stroke="hsl(var(--primary))"
+              strokeWidth="2"
+            />
+          </g>
+        );
       })}
-      {/* tags */}
+
+      {/* Etiquetas **fuera** del anillo (nombre + valor en la misma línea). */}
       {categories.map((label, i) => {
-        const [x, y] = point(i, 11.2);
+        const [x, y] = labelPoint(i);
+        const anchor = x > center + 8 ? 'start' : x < center - 8 ? 'end' : 'middle';
         return (
           <text
             key={label}
             x={x}
             y={y}
-            textAnchor="middle"
+            textAnchor={anchor}
             dominantBaseline="middle"
-            fontSize="11"
-            fontWeight="500"
-            fill="hsl(var(--muted-foreground))"
+            fontSize="11.5"
+            fontWeight="600"
+            fill="hsl(var(--foreground))"
           >
             {label}
+            <tspan dx="5" fontSize="11" fontWeight="700" fill="hsl(var(--primary))">
+              {values[i]}
+            </tspan>
           </text>
         );
       })}
@@ -151,9 +200,7 @@ export function DonutChart({
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-bold tabular-nums">{label}</span>
-        {sublabel ? (
-          <span className="text-[10px] text-muted-foreground">{sublabel}</span>
-        ) : null}
+        {sublabel ? <span className="text-[10px] text-muted-foreground">{sublabel}</span> : null}
       </div>
     </div>
   );
@@ -179,8 +226,7 @@ export function LineChart({
   const padY = 22;
   const max = 10;
   const min = 0;
-  const x = (i: number) =>
-    padX + (i * (width - padX * 2)) / Math.max(1, points.length - 1);
+  const x = (i: number) => padX + (i * (width - padX * 2)) / Math.max(1, points.length - 1);
   const y = (v: number) =>
     height - padY - ((Math.max(min, Math.min(max, v)) - min) / (max - min)) * (height - padY * 2);
   const pts = points.map((p, i) => `${x(i)},${y(p.value)}`).join(' ');
@@ -249,7 +295,7 @@ export function CategoryBars({ items }: { items: ChartDatum[] }) {
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
             <div
-              className="fb-bar h-full rounded-full bg-gradient-to-r from-emerald-700 to-primary"
+              className="fb-bar h-full rounded-full bg-gradient-to-r from-brand/35 to-brand"
               style={{ '--bar-target': `${item.value * 10}%` } as CSSProperties}
             />
           </div>
@@ -274,7 +320,7 @@ export function CountsBars({ items }: { items: ChartDatum[] }) {
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
             <div
-              className="fb-bar h-full rounded-full bg-gradient-to-r from-emerald-700 to-primary"
+              className="fb-bar h-full rounded-full bg-gradient-to-r from-brand/35 to-brand"
               style={{ '--bar-target': `${(item.value / max) * 100}%` } as CSSProperties}
             />
           </div>

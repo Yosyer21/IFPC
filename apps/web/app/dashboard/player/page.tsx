@@ -4,15 +4,12 @@ import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
-import {
-  COMPETITION_LEVEL_LABELS,
-  PLAYER_STATUS_LABELS,
-  POSITION_LABELS,
-} from '@ifpc/config';
+import { COMPETITION_LEVEL_LABELS, PLAYER_STATUS_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
 import { StatCard } from '@/components/player/stat-card';
-import { CATEGORY_LABELS, GOAL_STATUS_LABELS } from '@/lib/labels';
+import { GOAL_STATUS_LABELS } from '@/lib/labels';
+import { canonicalEvaluationCategory, evaluationCategoryLabel } from '@/lib/player-development';
 import { playerProfileCompletion } from '@/lib/player';
 import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from '@/lib/matching';
 import {
@@ -69,6 +66,7 @@ export default async function PlayerDashboardPage() {
       by: ['category'],
       where: { playerId: player.id },
       _avg: { score: true },
+      _count: { _all: true },
     }),
     prisma.evaluation.findMany({
       where: { playerId: player.id },
@@ -92,33 +90,63 @@ export default async function PlayerDashboardPage() {
       player.competitionLevel)
     : null;
 
-  const { percent, completed: completedFields, total: totalFields } =
-    playerProfileCompletion(player);
+  const {
+    percent,
+    completed: completedFields,
+    total: totalFields,
+  } = playerProfileCompletion(player);
 
   // Open opportunities whose match score is good enough to apply to.
   const matchedOpportunities = openOpportunities.filter(
     (opportunity) => matchOpportunity(player, opportunity).total >= PLAYER_MATCH_THRESHOLD
   ).length;
 
-  // Average per category for the radar (aggregated in the DB via groupBy).
-  const radarCategories = evaluationStats.map(
-    (stat) => CATEGORY_LABELS[stat.category] ?? stat.category
-  );
-  const radarValues = evaluationStats.map(
-    (stat) => Math.round((stat._avg.score ?? 0) * 10) / 10
-  );
+  // Media por área para el radar. Se agrupa por categoría **canónica**: los datos
+  // heredados en español caen en la misma área y no abren un eje de más.
+  const radarAgg = new Map<string, { sum: number; count: number }>();
+  for (const stat of evaluationStats) {
+    const key = canonicalEvaluationCategory(stat.category) ?? stat.category;
+    const count = stat._count._all;
+    const current = radarAgg.get(key) ?? { sum: 0, count: 0 };
+    current.sum += (stat._avg.score ?? 0) * count;
+    current.count += count;
+    radarAgg.set(key, current);
+  }
+  const radarEntries = [...radarAgg.entries()]
+    .map(([key, agg]) => ({
+      label: evaluationCategoryLabel(key),
+      value: Math.round((agg.sum / Math.max(1, agg.count)) * 10) / 10,
+    }))
+    .sort((a, b) => b.value - a.value);
+  const radarCategories = radarEntries.map((entry) => entry.label);
+  const radarValues = radarEntries.map((entry) => entry.value);
 
   const stats = [
-    { href: '/dashboard/player/development/goals', icon: IconTrendingUp, label: 'Goals activos', value: pendingGoals },
-    { href: '/dashboard/player/development/evaluations', icon: IconWhistle, label: 'Evaluaciones', value: evaluationCount },
-    { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Opportunities for you', value: matchedOpportunities },
+    {
+      href: '/dashboard/player/development/goals',
+      icon: IconTrendingUp,
+      label: 'Active goals',
+      value: pendingGoals,
+    },
+    {
+      href: '/dashboard/player/development/evaluations',
+      icon: IconWhistle,
+      label: 'Assessments',
+      value: evaluationCount,
+    },
+    {
+      href: '/dashboard/player/opportunities',
+      icon: IconTarget,
+      label: 'Opportunities for you',
+      value: matchedOpportunities,
+    },
   ];
 
   const quickActions = [
     { href: '/dashboard/player/training', icon: IconPlay, label: 'Entrenar' },
     { href: '/dashboard/discovery', icon: IconMessageCircle, label: 'Share on Discovery' },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Find opportunities' },
-    { href: '/dashboard/player/pathway', icon: IconRoute, label: 'Mi ruta' },
+    { href: '/dashboard/player/pathway', icon: IconRoute, label: 'My pathway' },
   ];
 
   const activity = [
@@ -132,7 +160,7 @@ export default async function PlayerDashboardPage() {
     ...recentEvaluations.map((evaluation) => ({
       key: evaluation.id,
       icon: IconWhistle,
-      title: CATEGORY_LABELS[evaluation.category] ?? evaluation.category,
+      title: evaluationCategoryLabel(evaluation.category),
       meta: `Assessment · ${evaluation.score}/10${
         evaluation.evaluatedBy ? ` · ${evaluation.evaluatedBy}` : ''
       }`,
@@ -225,12 +253,12 @@ export default async function PlayerDashboardPage() {
                   href="/dashboard/player/development/evaluations"
                   className="text-sm text-primary hover:underline"
                 >
-                  Ver evaluations →
+                  View assessments →
                 </Link>
               ) : null}
             </div>
             {radarValues.length >= 3 ? (
-              <div className="animate-scale-in mx-auto max-w-sm">
+              <div className="animate-scale-in mx-auto max-w-md">
                 <RadarChart categories={radarCategories} values={radarValues} />
               </div>
             ) : (
@@ -325,5 +353,3 @@ export default async function PlayerDashboardPage() {
     </div>
   );
 }
-
-

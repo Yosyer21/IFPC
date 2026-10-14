@@ -34,7 +34,7 @@ const SETTINGS_PATHS: Record<string, string> = {
 };
 
 const itemClass =
-  'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground';
+  'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand';
 
 /**
  * Barra superior del área privada: menú móvil, búsqueda global (⌘K), avisos y
@@ -64,12 +64,12 @@ export function DashboardHeader({
   const settingsHref = SETTINGS_PATHS[role];
 
   return (
-    <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-border bg-[#0b0f0d] px-4 py-3">
+    <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-brand/25 bg-muted px-4 py-3">
       <button
         type="button"
         onClick={onOpenMenu}
         aria-label="Open menu"
-        className="rounded-lg border border-white/10 p-2 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground md:hidden"
+        className="rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand md:hidden"
       >
         <IconMenu className="h-5 w-5" />
       </button>
@@ -81,11 +81,11 @@ export function DashboardHeader({
       <button
         type="button"
         onClick={onOpenSearch}
-        className="hidden items-center gap-2 rounded-full border border-border bg-white/5 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground md:inline-flex"
+        className="nav-item hidden items-center gap-2 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-brand md:inline-flex"
       >
-        <IconSearch className="h-4 w-4" />
+        <IconSearch className="nav-icon nav-icon-pop h-4 w-4" />
         Search pages…
-        <kbd className="ml-3 rounded border border-white/10 px-1.5 py-0.5 text-[10px]">⌘K</kbd>
+        <kbd className="ml-3 px-1.5 py-0.5 text-[10px] text-muted-foreground/70">⌘K</kbd>
       </button>
 
       <div className="flex-1" />
@@ -95,10 +95,17 @@ export function DashboardHeader({
       <Dropdown
         align="right"
         trigger={
-          <span className="flex items-center gap-2 rounded-full border border-border bg-white/5 py-1 pl-1 pr-2 transition-colors hover:bg-white/10">
-            <PlayerAvatar firstName={firstName} lastName={lastName} imageUrl={userImage} size="sm" />
-            <span className="hidden max-w-32 truncate text-sm font-medium sm:block">{userName}</span>
-            <IconChevronDown className="h-4 w-4 text-muted-foreground" />
+          <span className="flex items-center gap-2 py-1 pl-1 pr-2 text-muted-foreground transition-colors hover:text-brand">
+            <PlayerAvatar
+              firstName={firstName}
+              lastName={lastName}
+              imageUrl={userImage}
+              size="sm"
+            />
+            <span className="hidden max-w-32 truncate text-sm font-medium sm:block">
+              {userName}
+            </span>
+            <IconChevronDown className="h-4 w-4 text-brand" />
           </span>
         }
       >
@@ -106,7 +113,7 @@ export function DashboardHeader({
           <p className="max-w-56 truncate text-sm font-medium text-foreground">{userName}</p>
           <p className="text-xs text-muted-foreground">{roleLabel}</p>
         </div>
-        <div className="my-1 h-px bg-white/10" />
+        <div className="my-1 h-px bg-border" />
         <Link href={`/dashboard/${role}`} className={itemClass}>
           Overview
         </Link>
@@ -120,7 +127,7 @@ export function DashboardHeader({
             Settings
           </Link>
         ) : null}
-        <div className="my-1 h-px bg-white/10" />
+        <div className="my-1 h-px bg-border" />
         <form action={signOutAction}>
           <button type="submit" className={itemClass}>
             <IconLogout className="h-4 w-4" />

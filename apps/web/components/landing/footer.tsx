@@ -31,7 +31,7 @@ const COLUMNS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/[0.06] bg-[#080b0a]">
+    <footer className="border-t border-white/[0.06] bg-ink">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
@@ -43,14 +43,14 @@ export function Footer() {
             <div className="mt-6 flex items-center gap-3 text-white/40">
               <a
                 href="mailto:hello@futureballer.com"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 transition-colors hover:border-emerald-500/40 hover:text-emerald-400"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 transition-colors hover:border-brand/40 hover:text-brand"
                 aria-label="Email"
               >
                 <IconMail className="h-4 w-4" />
               </a>
               <a
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 transition-colors hover:border-emerald-500/40 hover:text-emerald-400"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 transition-colors hover:border-brand/40 hover:text-brand"
                 aria-label="Website"
               >
                 <IconGlobe className="h-4 w-4" />
@@ -68,7 +68,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-white/45 transition-colors hover:text-emerald-400"
+                      className="text-sm text-white/45 transition-colors hover:text-brand"
                     >
                       {link.label}
                     </Link>

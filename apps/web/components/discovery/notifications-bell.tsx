@@ -40,14 +40,14 @@ export function NotificationsBell({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label={pendingCount > 0 ? `Alerts, ${pendingCount} unread` : 'Alerts'}
-        className={`inline-flex items-center gap-2 rounded-full border border-border bg-white/5 text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground ${
+        className={`nav-item inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-brand ${
           compact ? 'w-full justify-start px-2.5 py-1.5 text-xs' : 'px-3 py-2 text-sm'
         }`}
       >
-        <IconBell className="h-4 w-4" />
+        <IconBell className="nav-icon nav-icon-swing h-4 w-4 text-brand" />
         Alerts
         {pendingCount > 0 ? (
-          <span className="rounded-full bg-emerald-500/20 px-1.5 text-xs font-semibold text-emerald-300">
+          <span className="rounded-full bg-brand px-1.5 text-xs font-semibold text-ink">
             {pendingCount}
           </span>
         ) : null}
@@ -55,7 +55,7 @@ export function NotificationsBell({
 
       {open ? (
         <div
-          className={`absolute top-full z-50 mt-2 max-w-[85vw] rounded-2xl border border-border bg-[#0b0f0d] p-3 shadow-xl ${
+          className={`absolute top-full z-50 mt-2 max-w-[85vw] rounded-2xl border border-border bg-panel p-3 shadow-xl ${
             compact ? 'left-0 w-72' : 'right-0 w-80'
           }`}
         >
@@ -65,7 +65,7 @@ export function NotificationsBell({
               type="button"
               onClick={markRead}
               disabled={pending || pendingCount === 0}
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50"
+              className="text-xs text-muted-foreground transition-colors hover:text-brand disabled:opacity-50"
             >
               {pending ? 'Marking…' : 'Mark as read'}
             </button>
@@ -80,7 +80,7 @@ export function NotificationsBell({
                   <Link
                     href={notification.link ?? '/dashboard/discovery'}
                     onClick={() => setOpen(false)}
-                    className="block rounded-xl px-2 py-1.5 transition-colors hover:bg-white/5"
+                    className="block rounded-xl px-2 py-1.5 transition-colors hover:bg-brand/10"
                   >
                     <span className="text-xs font-semibold">
                       {notification.title}

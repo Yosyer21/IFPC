@@ -2,7 +2,12 @@
 
 import { useActionState, useOptimistic, useState, useTransition } from 'react';
 import Link from 'next/link';
-import { deletePostAction, notInterestedAction, reportPostAction, toggleLikeAction } from '@/app/actions/discovery';
+import {
+  deletePostAction,
+  notInterestedAction,
+  reportPostAction,
+  toggleLikeAction,
+} from '@/app/actions/discovery';
 import { IconMessageCircle, IconStar } from '@/components/dashboard/icons';
 import { Button } from '@ifpc/ui';
 import { ActionSubmit } from './action-submit';
@@ -61,7 +66,7 @@ export function PostActions({
   };
 
   return (
-    <div className="mt-3 border-t border-white/10 pt-3">
+    <div className="mt-3 border-t border-border pt-3">
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -70,9 +75,7 @@ export function PostActions({
           aria-pressed={like.liked}
           aria-label="Likes"
           className={`${actionClass} disabled:opacity-70 ${
-            like.liked
-              ? 'bg-emerald-500/15 text-emerald-400'
-              : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+            like.liked ? 'text-brand' : 'text-muted-foreground hover:text-brand'
           }`}
         >
           <IconStar className="h-3.5 w-3.5" />
@@ -82,7 +85,7 @@ export function PostActions({
         <Link
           href={`/dashboard/discovery/${postId}`}
           aria-label="Comments"
-          className={`${actionClass} text-muted-foreground hover:bg-white/5 hover:text-foreground`}
+          className={`${actionClass} text-muted-foreground hover:text-brand`}
         >
           <IconMessageCircle className="h-3.5 w-3.5" />
           {comments}
@@ -91,7 +94,7 @@ export function PostActions({
         <button
           type="button"
           onClick={share}
-          className={`${actionClass} text-muted-foreground hover:bg-white/5 hover:text-foreground`}
+          className={`${actionClass} text-muted-foreground hover:text-brand`}
         >
           {copied ? 'Link copied' : 'Share'}
         </button>
@@ -101,10 +104,7 @@ export function PostActions({
             <input type="hidden" name="postId" value={postId} />
             <input type="hidden" name="value" value={notInterested ? 'off' : 'on'} />
             <input type="hidden" name="from" value={redirectTo} />
-            <ActionSubmit
-              label={notInterested ? 'Show again' : 'Not interested'}
-              variant="ghost"
-            />
+            <ActionSubmit label={notInterested ? 'Show again' : 'Not interested'} variant="ghost" />
           </form>
         ) : null}
 
@@ -112,17 +112,13 @@ export function PostActions({
           <form action={deletePostAction} className="ml-auto">
             <input type="hidden" name="postId" value={postId} />
             <input type="hidden" name="redirectTo" value={redirectTo} />
-            <ActionSubmit
-              label="Delete"
-              variant="danger"
-              confirmText="Delete the post?"
-            />
+            <ActionSubmit label="Delete" variant="danger" confirmText="Delete the post?" />
           </form>
         ) : null}
 
         {canReport ? (
           <details className={canDelete ? '' : 'ml-auto'}>
-            <summary className="cursor-pointer list-none text-xs text-muted-foreground hover:text-foreground">
+            <summary className="cursor-pointer list-none text-xs text-muted-foreground transition-colors hover:text-brand">
               Report
             </summary>
             <form action={reportAction} className="mt-2 flex w-64 max-w-full flex-col gap-2">
@@ -138,9 +134,14 @@ export function PostActions({
                 <p className="text-xs text-destructive">{reportState.error}</p>
               ) : null}
               {reportState.success ? (
-                <p className="text-xs text-emerald-400">{reportState.success}</p>
+                <p className="text-xs text-brand">{reportState.success}</p>
               ) : null}
-              <Button type="submit" variant="outline" disabled={reporting} className="self-start text-xs">
+              <Button
+                type="submit"
+                variant="outline"
+                disabled={reporting}
+                className="self-start text-xs"
+              >
                 Send
               </Button>
             </form>
