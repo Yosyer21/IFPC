@@ -430,7 +430,10 @@ test('Football Center: el coach dirige un ejercicio a un jugador', async ({ page
   const title = `E2E assigned ${Date.now()}`;
   await page.getByLabel('Title', { exact: true }).fill(title);
   await page.getByLabel('Recipients').selectOption('SELECTED');
-  await page.getByLabel('Demo Player', { exact: true }).check();
+  // Los nombres de los jugadores de demo cambian entre entornos: se marca el
+  // primero de la lista.
+  const audience = page.locator('fieldset').filter({ hasText: 'Who is it for' });
+  await audience.getByRole('checkbox').first().check();
   await Promise.all([
     page.waitForResponse((response) => response.request().method() === 'POST'),
     page.getByRole('button', { name: 'Save content' }).click(),
@@ -445,7 +448,7 @@ test('Football Center: el coach dirige un ejercicio a un jugador', async ({ page
   await page.waitForURL('**/edit', { timeout: 15_000 });
   await expect(page.getByRole('heading', { name: 'Who has done it' })).toBeVisible();
   await expect(page.getByText('1 player receives it · 1 pending')).toBeVisible();
-  await expect(page.getByText('Demo Player', { exact: true })).toBeVisible();
+  await expect(page.getByText('Picked').first()).toBeVisible();
 
   // 3. El jugador elegido lo ve (marcado «For you») y el otro no.
   const targeted = await browser.newContext();
