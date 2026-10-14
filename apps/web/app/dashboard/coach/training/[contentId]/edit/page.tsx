@@ -7,7 +7,9 @@ import { Card, CardContent } from '@ifpc/ui';
 import { TrainingContentForm } from '@/components/training/content-form';
 import { TrainingMediaManager } from '@/components/training/content-media-manager';
 import { TrainingQuizForm } from '@/components/training/content-quiz-form';
+import { TrainingRecipientsPanel } from '@/components/training/recipients-panel';
 import { quizQuestionsToText } from '@/lib/training-quiz';
+import { authorPlayers, contentRecipients } from '@/lib/training-assignments';
 
 export const metadata: Metadata = { title: 'Edit content' };
 
@@ -35,6 +37,7 @@ export default async function CoachTrainingEditPage({
   const content = await prisma.trainingContent.findFirst({
     where: { id: contentId, coachId: coach.id },
     include: {
+      targets: { select: { playerId: true } },
       quiz: {
         include: {
           questions: {
@@ -46,6 +49,14 @@ export default async function CoachTrainingEditPage({
     },
   });
   if (!content) notFound();
+
+  const [audiencePlayers, recipients] = await Promise.all([
+    authorPlayers({ coachId: coach.id, clubId: null }),
+    contentRecipients({
+      ...content,
+      targetPlayerIds: content.targets.map((target) => target.playerId),
+    }),
+  ]);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -70,10 +81,19 @@ export default async function CoachTrainingEditPage({
         </CardContent>
       </Card>
 
+      <div className="mb-6">
+        <TrainingRecipientsPanel
+          recipients={recipients}
+          target={{ kind: 'content', id: content.id }}
+          draft={content.status === 'DRAFT'}
+        />
+      </div>
+
       <Card className="mb-6">
         <CardContent>
           <h2 className="mb-4 font-semibold">Details</h2>
           <TrainingContentForm
+            players={audiencePlayers}
             content={{
               id: content.id,
               kind: content.kind,
@@ -87,6 +107,8 @@ export default async function CoachTrainingEditPage({
               difficulty: content.difficulty,
               status: content.status,
               publishAt: content.publishAt,
+              scope: content.scope,
+              targetPlayerIds: content.targets.map((target) => target.playerId),
               series: content.series,
               reps: content.reps,
               restSeconds: content.restSeconds,

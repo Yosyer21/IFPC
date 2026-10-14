@@ -86,6 +86,8 @@ const ownedSession = {
   ownerType: 'COACH',
   status: 'PUBLISHED',
   publishAt: null,
+  scope: 'AUDIENCE',
+  targets: [],
 };
 
 const ownedItem = { id: 'item-a', position: 0, sessionId: 'session-1' };

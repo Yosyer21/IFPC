@@ -6,7 +6,9 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { TrainingSessionForm } from '@/components/training/session-form';
 import { TrainingSessionItemsManager } from '@/components/training/session-items-manager';
+import { TrainingRecipientsPanel } from '@/components/training/recipients-panel';
 import { listAuthoredTraining, trainingPublishStateLabel } from '@/lib/training';
+import { authorPlayers, sessionRecipients } from '@/lib/training-assignments';
 import { findAuthoredTrainingSession } from '@/lib/training-sessions';
 
 export const metadata: Metadata = { title: 'Edit session' };
@@ -32,11 +34,14 @@ export default async function CoachTrainingSessionEditPage({
   });
   if (!coach) notFound();
 
-  const [trainingSession, content] = await Promise.all([
+  const [trainingSession, content, audiencePlayers] = await Promise.all([
     findAuthoredTrainingSession({ coachId: coach.id }, sessionId),
     listAuthoredTraining({ coachId: coach.id }),
+    authorPlayers({ coachId: coach.id, clubId: null }),
   ]);
   if (!trainingSession) notFound();
+
+  const recipients = await sessionRecipients(trainingSession);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -52,6 +57,14 @@ export default async function CoachTrainingSessionEditPage({
         </Link>
       </div>
 
+      <div className="mb-6">
+        <TrainingRecipientsPanel
+          recipients={recipients}
+          target={{ kind: 'session', id: trainingSession.id }}
+          draft={trainingSession.status === 'DRAFT'}
+        />
+      </div>
+
       <Card className="mb-6">
         <CardContent className="flex flex-col gap-4">
           <h2 className="font-semibold">Exercises in this session</h2>
@@ -63,6 +76,7 @@ export default async function CoachTrainingSessionEditPage({
         <CardContent>
           <h2 className="mb-4 font-semibold">Details</h2>
           <TrainingSessionForm
+            players={audiencePlayers}
             session={{
               id: trainingSession.id,
               title: trainingSession.title,
@@ -70,6 +84,8 @@ export default async function CoachTrainingSessionEditPage({
               weekday: trainingSession.weekday,
               status: trainingSession.status,
               publishAt: trainingSession.publishAt,
+              scope: trainingSession.scope,
+              targetPlayerIds: trainingSession.targetPlayerIds,
             }}
           />
         </CardContent>

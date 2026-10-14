@@ -41,6 +41,16 @@ export function TrainingSessionCard({
         <div className="flex flex-wrap items-center gap-2">
           {state === 'DRAFT' ? <Badge variant="warning">Draft</Badge> : null}
           {state === 'SCHEDULED' ? <Badge variant="outline">Scheduled</Badge> : null}
+          {session.scope === 'SELECTED' ? (
+            showPublishState ? (
+              <Badge variant="outline">
+                Only {session.targetPlayerIds.length} player
+                {session.targetPlayerIds.length === 1 ? '' : 's'}
+              </Badge>
+            ) : (
+              <Badge>For you</Badge>
+            )
+          ) : null}
           {weekday ? <Badge variant="default">{weekday}</Badge> : null}
           <Badge variant="outline">
             {total} {total === 1 ? 'exercise' : 'exercises'}

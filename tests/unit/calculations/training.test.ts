@@ -228,6 +228,12 @@ describe('trainingVisibilityWhere', () => {
             { ownerType: 'CLUB', clubId: { in: ['club-1'] } },
           ],
         },
+        {
+          OR: [
+            { scope: 'AUDIENCE' },
+            { scope: 'SELECTED', targets: { some: { playerId: 'player-1' } } },
+          ],
+        },
       ],
     });
   });
@@ -238,6 +244,9 @@ describe('trainingVisibilityWhere', () => {
         { status: 'PUBLISHED' },
         { OR: [{ publishAt: null }, { publishAt: { lte: now } }] },
         { OR: [{ ownerType: 'GENERAL' }] },
+        {
+          OR: [{ scope: 'AUDIENCE' }, { scope: 'SELECTED', targets: { some: { playerId: 'p' } } }],
+        },
       ],
     });
   });

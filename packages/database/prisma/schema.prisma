@@ -184,6 +184,9 @@ model Player {
   profileViews  ProfileView[]
   quizAttempts  QuizAttempt[]
   trainingProgress TrainingProgress[]
+  /// Contenido y sesiones dirigidos a este jugador (`scope = SELECTED`).
+  trainingContentTargets TrainingContentTarget[]
+  trainingSessionTargets TrainingSessionTarget[]
 
   @@index([status])
   @@index([position])
@@ -534,6 +537,12 @@ enum TrainingStatus {
   PUBLISHED
 }
 
+/// A quién va dirigido: a toda la audiencia del autor o solo a los elegidos.
+enum TrainingScope {
+  AUDIENCE
+  SELECTED
+}
+
 /// Quién publica el contenido: la plataforma, un coach o un club.
 enum TrainingOwnerType {
   GENERAL
@@ -551,6 +560,8 @@ model TrainingContent {
   ownerType       TrainingOwnerType @default(GENERAL)
   /// Borrador o publicado (los jugadores solo ven lo publicado).
   status          TrainingStatus    @default(PUBLISHED)
+  /// A toda la audiencia o solo a los jugadores elegidos.
+  scope           TrainingScope     @default(AUDIENCE)
   /// Publicación programada: visible y avisada a partir de esta fecha.
   publishAt       DateTime?
   /// Coach autor (cuando `ownerType = COACH`).
@@ -587,6 +598,8 @@ model TrainingContent {
   progress        TrainingProgress[]
   /// Sesiones/planes en los que se usa este contenido.
   sessionItems    TrainingSessionItem[]
+  /// Jugadores a los que se dirige el contenido (`scope = SELECTED`).
+  targets         TrainingContentTarget[]
 
   @@index([category])
   @@index([kind, ownerType])
@@ -608,6 +621,8 @@ model TrainingSession {
   ownerType   TrainingOwnerType @default(GENERAL)
   /// Borrador o publicado (los jugadores solo ven lo publicado).
   status      TrainingStatus    @default(PUBLISHED)
+  /// A toda la audiencia o solo a los jugadores elegidos.
+  scope       TrainingScope     @default(AUDIENCE)
   /// Publicación programada: visible y avisada a partir de esta fecha.
   publishAt   DateTime?
   coachId     String?
@@ -618,6 +633,9 @@ model TrainingSession {
   updatedAt   DateTime          @updatedAt
 
   items TrainingSessionItem[]
+
+  /// Jugadores a los que se dirige la sesión (`scope = SELECTED`).
+  targets TrainingSessionTarget[]
 
   @@index([ownerType, status])
   @@index([status, publishAt])
@@ -640,6 +658,32 @@ model TrainingSessionItem {
 
   @@unique([sessionId, contentId])
   @@index([sessionId, position])
+}
+
+/// Jugador al que se dirige un contenido (cuando `scope = SELECTED`).
+model TrainingContentTarget {
+  id        String           @id @default(cuid())
+  contentId String
+  content   TrainingContent  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player           @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+
+  @@unique([contentId, playerId])
+  @@index([playerId])
+}
+
+/// Jugador al que se dirige una sesión (cuando `scope = SELECTED`).
+model TrainingSessionTarget {
+  id        String          @id @default(cuid())
+  sessionId String
+  session   TrainingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player          @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt DateTime        @default(now())
+
+  @@unique([sessionId, playerId])
+  @@index([playerId])
 }
 
 /// Progreso de un jugador en un curso o ejercicio: la fila existe si lo empezó y

@@ -33,6 +33,8 @@ const coachContent = {
   ownerType: 'COACH',
   coachId: 'coach-1',
   clubId: null,
+  scope: 'AUDIENCE',
+  targets: [],
 };
 
 const clubContent = { ...coachContent, ownerType: 'CLUB', coachId: null, clubId: 'club-1' };
@@ -162,6 +164,8 @@ describe('publishDueTrainingContent', () => {
           ownerType: 'COACH',
           coachId: 'coach-1',
           clubId: null,
+          scope: 'AUDIENCE',
+          targets: [],
           items: [{ id: 'item-1' }],
         },
       ]);
@@ -194,6 +198,8 @@ describe('publishDueTrainingContent', () => {
           ownerType: 'COACH',
           coachId: 'coach-1',
           clubId: null,
+          scope: 'AUDIENCE',
+          targets: [],
           items: [],
         },
       ]);

@@ -6,11 +6,12 @@ import {
   type TrainingKind,
   type TrainingOrigin,
   type TrainingPublishState,
+  type TrainingScope,
   type TrainingStatus,
 } from '@ifpc/config';
 
 /** Estados de contrato que cuentan como «estar en el club» (igual que los live de club). */
-const ACTIVE_CONTRACT_STATUSES = ['SIGNED', 'ACTIVE'];
+export const ACTIVE_CONTRACT_STATUSES = ['SIGNED', 'ACTIVE'];
 
 /** Autor del contenido: se muestra en la tarjeta y en el detalle. */
 export interface TrainingAuthor {
@@ -32,6 +33,10 @@ export interface TrainingItem {
   quizQuestions: number;
   /** Borrador o publicado (solo lo ve el autor hasta que publica). */
   status: TrainingStatus;
+  /** A toda la audiencia o solo a los jugadores elegidos. */
+  scope: TrainingScope;
+  /** Nº de jugadores elegidos cuando `scope = SELECTED`. */
+  targetCount: number;
   /** Fecha de publicación programada (`null` = publicar ya). */
   publishAt: Date | null;
   /** Cuándo lo completó el jugador (`null` si sigue pendiente). */
@@ -114,9 +119,27 @@ export function ownerTypeConditions(audience: PlayerTrainingAudience): Record<st
  * Condición Prisma del contenido visible para esa audiencia: lo que le toca por
  * origen **y** ya está publicado (los borradores y lo programado no se filtran).
  */
+/** Condiciones por destinatario: lo de toda la audiencia o lo dirigido a este jugador. */
+export function scopeConditions(audience: PlayerTrainingAudience): Record<string, unknown>[] {
+  if (!audience.playerId) return [{ scope: 'AUDIENCE' }];
+
+  return [
+    { scope: 'AUDIENCE' },
+    { scope: 'SELECTED', targets: { some: { playerId: audience.playerId } } },
+  ];
+}
+
+/**
+ * Condición Prisma del contenido visible para esa audiencia: lo que le toca por
+ * origen, ya publicado y dirigido a ella (a todos o a él en concreto).
+ */
 export function trainingVisibilityWhere(audience: PlayerTrainingAudience, now: Date = new Date()) {
   return {
-    AND: [...publishedConditions(now), { OR: ownerTypeConditions(audience) }],
+    AND: [
+      ...publishedConditions(now),
+      { OR: ownerTypeConditions(audience) },
+      { OR: scopeConditions(audience) },
+    ],
   };
 }
 
@@ -149,7 +172,9 @@ interface TrainingContentRow {
   durationMinutes: number | null;
   difficulty: number | null;
   quiz: { _count: { questions: number } } | null;
+  _count: { targets: number };
   status: string;
+  scope: string;
   publishAt: Date | null;
   coach: { id: string; clubName: string | null; user: { name: string | null } } | null;
   club: { id: string; name: string } | null;
@@ -158,6 +183,7 @@ interface TrainingContentRow {
 /** `include` compartido por las consultas de contenido del Football Center. */
 const CONTENT_INCLUDE = {
   quiz: { select: { _count: { select: { questions: true } } } },
+  _count: { select: { targets: true } },
   coach: { select: { id: true, clubName: true, user: { select: { name: true } } } },
   club: { select: { id: true, name: true } },
 } as const;
@@ -175,6 +201,8 @@ function mapContentRow(row: TrainingContentRow, completedAt: Date | null = null)
     difficulty: row.difficulty,
     quizQuestions: row.quiz?._count.questions ?? 0,
     status: row.status as TrainingStatus,
+    scope: row.scope as TrainingScope,
+    targetCount: row._count.targets,
     publishAt: row.publishAt,
     completedAt,
     author: authorOf(row),

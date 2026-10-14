@@ -1,10 +1,7 @@
 import { prisma } from '@ifpc/database';
 import type { TrainingStatus } from '@ifpc/config';
 import { notifyUser } from '@/lib/notifications/notify';
-import { shouldNotifyOnSave } from '@/lib/training';
-
-/** Estados de contrato que cuentan como «estar en el club» (igual que los live de club). */
-const ACTIVE_CONTRACT_STATUSES = ['SIGNED', 'ACTIVE'];
+import { ACTIVE_CONTRACT_STATUSES, shouldNotifyOnSave } from '@/lib/training';
 
 /** Contenido recién publicado, con lo mínimo para saber a quién avisar. */
 export interface PublishedTrainingContent {
@@ -13,16 +10,35 @@ export interface PublishedTrainingContent {
   ownerType: string;
   coachId: string | null;
   clubId: string | null;
+  /** `AUDIENCE` (todos) o `SELECTED` (solo los elegidos). */
+  scope?: string;
+  /** Jugadores elegidos cuando `scope = SELECTED`. */
+  targetPlayerIds?: string[];
 }
 
 /**
- * IDs de usuario de los jugadores que verán este contenido: los vinculados al
- * coach (`CoachPlayer`) o con contrato firmado/activo en el club. El contenido
- * general no avisa a nadie: es abierto y no tiene audiencia concreta.
+ * IDs de usuario de los jugadores que verán esto: si va dirigido a jugadores
+ * concretos, solo ellos; si no, los vinculados al coach (`CoachPlayer`) o con
+ * contrato firmado/activo en el club. El contenido general no avisa a nadie: es
+ * abierto y no tiene audiencia concreta.
  */
 export async function trainingAudienceUserIds(
-  content: Pick<PublishedTrainingContent, 'ownerType' | 'coachId' | 'clubId'>
+  content: Pick<PublishedTrainingContent, 'ownerType' | 'coachId' | 'clubId'> & {
+    scope?: string;
+    targetPlayerIds?: string[];
+  }
 ): Promise<string[]> {
+  if (content.scope === 'SELECTED') {
+    const playerIds = content.targetPlayerIds ?? [];
+    if (playerIds.length === 0) return [];
+
+    const players = await prisma.player.findMany({
+      where: { id: { in: playerIds } },
+      select: { userId: true },
+    });
+    return [...new Set(players.map((player) => player.userId))];
+  }
+
   if (content.ownerType === 'COACH' && content.coachId) {
     const links = await prisma.coachPlayer.findMany({
       where: { coachId: content.coachId },
@@ -45,8 +61,7 @@ export async function trainingAudienceUserIds(
 /** Qué se acaba de publicar: cambia el texto y el destino del aviso. */
 export type TrainingNotificationKind = 'content' | 'session';
 
-/**
- * Aviso que recibe cada jugador (queda en su bandeja con enlace al destino). El
+/** Aviso que recibe cada jugador (queda en su bandeja con enlace al destino). El
  * campo va aparte del `kind` del contenido (`COURSE`/`EXERCISE`) para no chocar.
  */
 export function trainingNotification(

@@ -8,6 +8,7 @@ import {
 import { Button, Input, Select } from '@ifpc/ui';
 import { TRAINING_WEEKDAY_OPTIONS } from '@ifpc/config';
 import { VisibilityFields, defaultVisibility } from '@/components/training/visibility-fields';
+import { AudienceFields } from '@/components/training/audience-fields';
 
 /** Valor del desplegable de día para «sin día fijo». */
 export const NO_WEEKDAY = 'none';
@@ -20,18 +21,24 @@ export interface TrainingSessionFormValues {
   weekday: number | null;
   status: string;
   publishAt: Date | null;
+  /** Destinatarios: `AUDIENCE` o `SELECTED`. */
+  scope: string;
+  /** Jugadores elegidos cuando `scope = SELECTED`. */
+  targetPlayerIds: string[];
 }
 
 export interface TrainingSessionFormProps {
   /** Si viene, edita esa sesión en vez de crear una nueva. */
   session?: TrainingSessionFormValues;
+  /** Jugadores del autor, para poder dirigir la sesión a algunos. */
+  players?: { playerId: string; name: string }[];
 }
 
 /**
  * Formulario de una sesión (plan): sirve para **crear** y para **editar**. El
  * autor y el origen los fija el servidor desde la sesión, nunca el formulario.
  */
-export function TrainingSessionForm({ session }: TrainingSessionFormProps) {
+export function TrainingSessionForm({ session, players = [] }: TrainingSessionFormProps) {
   const editing = Boolean(session);
   const [state, formAction, pending] = useActionState(
     editing ? updateTrainingSessionAction : createTrainingSessionAction,
@@ -65,6 +72,11 @@ export function TrainingSessionForm({ session }: TrainingSessionFormProps) {
         label="Suggested day"
         options={weekdayOptions}
         defaultValue={weekdayDefault}
+      />
+      <AudienceFields
+        players={players}
+        defaultScope={session?.scope ?? 'AUDIENCE'}
+        selectedPlayerIds={session?.targetPlayerIds ?? []}
       />
       <VisibilityFields
         defaultValue={defaultVisibility(session)}

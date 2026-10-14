@@ -6,6 +6,7 @@ import { prisma } from '@ifpc/database';
 import { isTrainingWeekday } from '@ifpc/config';
 import { trainingSessionSchema } from '@ifpc/validation';
 import type { ActionState } from './auth';
+import { notifyUser } from '@/lib/notifications/notify';
 import { revalidatePaths } from '@/lib/revalidate';
 import {
   resolveTrainingVisibility,
@@ -13,6 +14,14 @@ import {
   type TrainingAuthorRef,
   isTrainingVisibleNow,
 } from '@/lib/training';
+import {
+  pendingRecipients,
+  playerUserIds,
+  resolveTrainingAssignment,
+  sessionRecipients,
+  targetCreateInput,
+  targetUpdateInput,
+} from '@/lib/training-assignments';
 import { notifyIfNewlyVisible } from '@/lib/training-notify';
 
 /**
@@ -59,7 +68,10 @@ async function findOwnedSession(sessionId: string) {
   const author = await trainingAuthor(session.user.id);
   if (!author.coachId && !author.clubId) return null;
 
-  const row = await prisma.trainingSession.findUnique({ where: { id: sessionId } });
+  const row = await prisma.trainingSession.findUnique({
+    where: { id: sessionId },
+    include: { targets: { select: { playerId: true } } },
+  });
   if (!row) return null;
 
   const owns =
@@ -103,6 +115,11 @@ export async function createTrainingSessionAction(
     return { error: visibility.error };
   }
 
+  const assignment = await resolveTrainingAssignment(formData, author);
+  if ('error' in assignment) {
+    return { error: assignment.error };
+  }
+
   let created;
   try {
     created = await prisma.trainingSession.create({
@@ -113,6 +130,7 @@ export async function createTrainingSessionAction(
         ownerType: author.coachId ? 'COACH' : 'CLUB',
         coachId: author.coachId,
         clubId: author.clubId,
+        ...targetCreateInput(assignment),
       },
     });
   } catch {
@@ -150,11 +168,21 @@ export async function updateTrainingSessionAction(
     return { error: visibility.error };
   }
 
+  const assignment = await resolveTrainingAssignment(formData, owned.author);
+  if ('error' in assignment) {
+    return { error: assignment.error };
+  }
+
   let updated;
   try {
     updated = await prisma.trainingSession.update({
       where: { id: owned.row.id },
-      data: { ...parsed.data, status: visibility.status, publishAt: visibility.publishAt },
+      data: {
+        ...parsed.data,
+        status: visibility.status,
+        publishAt: visibility.publishAt,
+        ...targetUpdateInput(assignment),
+      },
       include: { items: { select: { id: true } } },
     });
   } catch {
@@ -163,11 +191,57 @@ export async function updateTrainingSessionAction(
 
   // Solo interesa avisar si la sesión ya tiene ejercicios dentro.
   if (updated.items.length > 0) {
-    await notifyIfNewlyVisible(owned.row, { ...updated, notificationKind: 'session' });
+    await notifyIfNewlyVisible(owned.row, {
+      ...updated,
+      notificationKind: 'session',
+      targetPlayerIds: assignment.playerIds,
+    });
   }
 
   revalidatePaths(...sessionPaths(owned.author, owned.row.id));
   redirect(authorHome(owned.author));
+}
+
+/**
+ * Recuerda a los jugadores que todavía no han hecho los ejercicios de la sesión.
+ * Como en el contenido, solo avisa a quien le falta.
+ */
+export async function nudgeTrainingSessionAction(formData: FormData): Promise<void> {
+  const owned = await findOwnedSession(str(formData, 'sessionId') ?? '');
+  if (!owned) {
+    return;
+  }
+
+  const session = await prisma.trainingSession.findUnique({
+    where: { id: owned.row.id },
+    include: {
+      items: { select: { contentId: true } },
+      targets: { select: { playerId: true } },
+    },
+  });
+  if (!session) {
+    return;
+  }
+
+  const recipients = pendingRecipients(
+    await sessionRecipients({
+      ...session,
+      targetPlayerIds: session.targets.map((target) => target.playerId),
+    })
+  );
+  const userIds = await playerUserIds(recipients.map((recipient) => recipient.playerId));
+  for (const userId of userIds) {
+    await notifyUser({
+      userId,
+      type: 'training',
+      title: 'Training reminder',
+      message: `${session.title} is still pending`,
+      link: `/dashboard/player/training/sessions/${session.id}`,
+    });
+  }
+
+  revalidatePaths(...sessionPaths(owned.author, owned.row.id));
+  redirect(`${authorHome(owned.author)}/sessions/${owned.row.id}/edit`);
 }
 
 /** Borra una sesión propia (sus items caen en cascada, no el contenido). */
@@ -213,7 +287,11 @@ export async function publishTrainingSessionAction(formData: FormData): Promise<
   });
 
   if (updated.items.length > 0) {
-    await notifyIfNewlyVisible(owned.row, { ...updated, notificationKind: 'session' });
+    await notifyIfNewlyVisible(owned.row, {
+      ...updated,
+      notificationKind: 'session',
+      targetPlayerIds: owned.row.targets.map((target) => target.playerId),
+    });
   }
 
   revalidatePaths(...sessionPaths(owned.author, owned.row.id));
@@ -280,7 +358,11 @@ export async function addTrainingSessionItemAction(formData: FormData): Promise<
   // Un plan vacío no dice nada: el aviso sale al estrenar el primer ejercicio (si
   // la sesión ya estaba publicada) o al publicarla desde la tarjeta.
   if (last === null && isTrainingVisibleNow(owned.row)) {
-    await notifyIfNewlyVisible(null, { ...owned.row, notificationKind: 'session' });
+    await notifyIfNewlyVisible(null, {
+      ...owned.row,
+      notificationKind: 'session',
+      targetPlayerIds: owned.row.targets.map((target) => target.playerId),
+    });
   }
 
   revalidatePaths(...sessionPaths(owned.author, owned.row.id));

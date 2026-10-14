@@ -417,3 +417,79 @@ test('Football Center: el coach monta una sesión y el jugador la ve', async ({ 
   ]);
   await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
 });
+
+/**
+ * Destinatarios: el coach dirige un ejercicio a un jugador concreto, ve en su panel
+ * quién lo ha hecho, le manda un recordatorio y al otro jugador no le llega nada.
+ */
+test('Football Center: el coach dirige un ejercicio a un jugador', async ({ page, browser }) => {
+  await login(page, 'coach@demo.com', 'coach123');
+  await openCoachCenter(page);
+
+  // 1. Crea el ejercicio y lo dirige solo al jugador 1.
+  const title = `E2E assigned ${Date.now()}`;
+  await page.getByLabel('Title', { exact: true }).fill(title);
+  await page.getByLabel('Recipients').selectOption('SELECTED');
+  await page.getByLabel('Demo Player', { exact: true }).check();
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Save content' }).click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+
+  // 2. La tarjeta lo marca y el panel dice quién lo recibe.
+  await openCoachCenter(page);
+  const card = page.locator('.card-hover', { hasText: title }).first();
+  await expect(card.getByText('Only 1 player')).toBeVisible();
+  await card.getByRole('link', { name: 'Edit', exact: true }).click();
+  await page.waitForURL('**/edit', { timeout: 15_000 });
+  await expect(page.getByRole('heading', { name: 'Who has done it' })).toBeVisible();
+  await expect(page.getByText('1 player receives it · 1 pending')).toBeVisible();
+  await expect(page.getByText('Demo Player', { exact: true })).toBeVisible();
+
+  // 3. El jugador elegido lo ve (marcado «For you») y el otro no.
+  const targeted = await browser.newContext();
+  const targetedPage = await targeted.newPage();
+  await login(targetedPage, 'player@demo.com', 'player123');
+  await targetedPage.goto(`${BASE}/dashboard/player/training`);
+  await targetedPage.getByRole('button', { name: 'Exercises' }).click();
+  await expect(targetedPage.getByText(title).first()).toBeVisible();
+  await expect(targetedPage.getByText('For you').first()).toBeVisible();
+  await targeted.close();
+
+  const other = await browser.newContext();
+  const otherPage = await other.newPage();
+  await login(otherPage, 'player2@demo.com', 'player2123');
+  await otherPage.goto(`${BASE}/dashboard/player/training`);
+  await otherPage.getByRole('button', { name: 'Exercises' }).click();
+  await expect(otherPage.getByText(title)).toHaveCount(0);
+  await other.close();
+
+  // 4. El recordatorio llega solo a quien le falta.
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page.getByRole('button', { name: 'Send reminder' }).click(),
+  ]);
+  await page.waitForURL('**/edit', { timeout: 15_000 });
+
+  const reminded = await browser.newContext();
+  const remindedPage = await reminded.newPage();
+  await login(remindedPage, 'player@demo.com', 'player123');
+  await remindedPage.goto(`${BASE}/dashboard/player/notifications`);
+  await expect(remindedPage.getByText(`${title} is still pending`).first()).toBeVisible();
+  await reminded.close();
+
+  // 5. Limpieza: el test borra lo que ha creado.
+  await openCoachCenter(page);
+  await Promise.all([
+    page.waitForResponse((response) => response.request().method() === 'POST'),
+    page
+      .locator('.card-hover', { hasText: title })
+      .first()
+      .getByRole('button', { name: 'Delete' })
+      .click(),
+  ]);
+  await page.waitForURL('**/dashboard/coach/training', { timeout: 15_000 });
+  await openCoachCenter(page);
+  await expect(page.getByText(title)).toHaveCount(0);
+});

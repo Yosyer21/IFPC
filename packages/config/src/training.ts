@@ -116,6 +116,28 @@ export const TRAINING_PUBLISH_STATE_LABELS: Record<TrainingPublishState, string>
 };
 
 // ---------------------------------------------------------------------------
+// Destinatarios (toda la audiencia o solo los elegidos)
+// ---------------------------------------------------------------------------
+
+/** A quién va dirigido el contenido o la sesión. */
+export const TRAINING_SCOPES = ['AUDIENCE', 'SELECTED'] as const;
+export type TrainingScope = (typeof TRAINING_SCOPES)[number];
+
+export const TRAINING_SCOPE_LABELS: Record<TrainingScope, string> = {
+  AUDIENCE: 'All your players',
+  SELECTED: 'Only the players you pick',
+};
+
+/** Opciones del desplegable de destinatarios. */
+export const TRAINING_SCOPE_OPTIONS: { value: string; label: string }[] = TRAINING_SCOPES.map(
+  (scope) => ({ value: scope, label: TRAINING_SCOPE_LABELS[scope] })
+);
+
+export function isTrainingScope(value: unknown): value is TrainingScope {
+  return typeof value === 'string' && (TRAINING_SCOPES as readonly string[]).includes(value);
+}
+
+// ---------------------------------------------------------------------------
 // Medios (portada y vídeo del contenido)
 // ---------------------------------------------------------------------------
 

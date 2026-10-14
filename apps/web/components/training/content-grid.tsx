@@ -43,6 +43,15 @@ export function TrainingContentGrid({
               <div className="flex flex-wrap items-center gap-2">
                 {state === 'DRAFT' ? <Badge variant="warning">Draft</Badge> : null}
                 {state === 'SCHEDULED' ? <Badge variant="outline">Scheduled</Badge> : null}
+                {item.scope === 'SELECTED' ? (
+                  showPublishState ? (
+                    <Badge variant="outline">
+                      Only {item.targetCount} player{item.targetCount === 1 ? '' : 's'}
+                    </Badge>
+                  ) : (
+                    <Badge>For you</Badge>
+                  )
+                ) : null}
                 <Badge>{trainingCategoryLabel(item.category)}</Badge>
                 {item.quizQuestions > 0 ? (
                   <Badge variant="outline">Quiz · {item.quizQuestions}</Badge>

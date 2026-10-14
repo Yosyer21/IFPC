@@ -1,10 +1,16 @@
 import { prisma } from '@ifpc/database';
-import { trainingWorkloadLabel, type TrainingOrigin, type TrainingStatus } from '@ifpc/config';
+import {
+  trainingWorkloadLabel,
+  type TrainingOrigin,
+  type TrainingScope,
+  type TrainingStatus,
+} from '@ifpc/config';
 import {
   authorOf,
   ownerTypeConditions,
   playerTrainingAudience,
   publishedConditions,
+  scopeConditions,
   type PlayerTrainingAudience,
   type TrainingAuthor,
 } from '@/lib/training';
@@ -39,6 +45,13 @@ export interface TrainingSessionView {
   /** Día sugerido (0 = lunes … 6 = domingo). */
   weekday: number | null;
   status: TrainingStatus;
+  /** A toda la audiencia o solo a los jugadores elegidos. */
+  scope: TrainingScope;
+  /** Jugadores elegidos cuando `scope = SELECTED`. */
+  targetPlayerIds: string[];
+  /** Autor de la sesión (su coach o club), para el panel de destinatarios. */
+  coachId: string | null;
+  clubId: string | null;
   publishAt: Date | null;
   ownerType: TrainingOrigin;
   author: TrainingAuthor;
@@ -51,7 +64,13 @@ export interface TrainingSessionView {
 
 /** Condición Prisma de las sesiones visibles para una audiencia. */
 export function sessionVisibilityWhere(audience: PlayerTrainingAudience, now: Date = new Date()) {
-  return { AND: [...publishedConditions(now), { OR: ownerTypeConditions(audience) }] };
+  return {
+    AND: [
+      ...publishedConditions(now),
+      { OR: ownerTypeConditions(audience) },
+      { OR: scopeConditions(audience) },
+    ],
+  };
 }
 
 /** Suma de la duración de los ejercicios de una sesión. */
@@ -76,7 +95,11 @@ interface SessionRow {
   weekday: number | null;
   ownerType: string;
   status: string;
+  scope: string;
+  coachId: string | null;
+  clubId: string | null;
   publishAt: Date | null;
+  targets: { playerId: string }[];
   coach: { id: string; clubName: string | null; user: { name: string | null } } | null;
   club: { id: string; name: string } | null;
   items: {
@@ -118,6 +141,7 @@ const SESSION_INCLUDE = {
   },
   coach: { select: { id: true, clubName: true, user: { select: { name: true } } } },
   club: { select: { id: true, name: true } },
+  targets: { select: { playerId: true } },
 } as const;
 
 /** Convierte una fila de Prisma en la sesión que pinta la vista. */
@@ -139,6 +163,10 @@ function mapSessionRow(row: SessionRow, completedIds: Set<string>): TrainingSess
     description: row.description,
     weekday: row.weekday,
     status: row.status as TrainingStatus,
+    scope: row.scope as TrainingScope,
+    targetPlayerIds: row.targets.map((target) => target.playerId),
+    coachId: row.coachId,
+    clubId: row.clubId,
     publishAt: row.publishAt,
     ownerType: row.ownerType as TrainingOrigin,
     author: authorOf(row),

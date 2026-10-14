@@ -15,14 +15,30 @@ import { notifyTrainingAudience } from '@/lib/training-notify';
 export async function publishDueTrainingContent(now: Date = new Date()): Promise<{ id: string }[]> {
   const due = await prisma.trainingContent.findMany({
     where: { status: 'PUBLISHED', publishAt: { not: null, lte: now } },
-    select: { id: true, title: true, ownerType: true, coachId: true, clubId: true },
+    select: {
+      id: true,
+      title: true,
+      ownerType: true,
+      coachId: true,
+      clubId: true,
+      scope: true,
+      targets: { select: { playerId: true } },
+    },
     take: 200,
   });
   if (due.length === 0) return [];
 
   for (const content of due) {
     await prisma.trainingContent.update({ where: { id: content.id }, data: { publishAt: null } });
-    await notifyTrainingAudience(content);
+    await notifyTrainingAudience({
+      id: content.id,
+      title: content.title,
+      ownerType: content.ownerType,
+      coachId: content.coachId,
+      clubId: content.clubId,
+      scope: content.scope,
+      targetPlayerIds: content.targets.map((target) => target.playerId),
+    });
   }
 
   return due.map((content) => ({ id: content.id }));
@@ -43,6 +59,8 @@ export async function publishDueTrainingSessions(
       ownerType: true,
       coachId: true,
       clubId: true,
+      scope: true,
+      targets: { select: { playerId: true } },
       items: { select: { id: true }, take: 1 },
     },
     take: 200,
@@ -59,6 +77,8 @@ export async function publishDueTrainingSessions(
       ownerType: session.ownerType,
       coachId: session.coachId,
       clubId: session.clubId,
+      scope: session.scope,
+      targetPlayerIds: session.targets.map((target) => target.playerId),
       notificationKind: 'session',
     });
   }

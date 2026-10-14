@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { createTrainingContentAction, updateTrainingContentAction } from '@/app/actions/training';
 import { Button, Input, Select } from '@ifpc/ui';
 import { VisibilityFields, defaultVisibility } from '@/components/training/visibility-fields';
+import { AudienceFields } from '@/components/training/audience-fields';
 import {
   TRAINING_AUTHOR_CATEGORIES,
   TRAINING_CATEGORY_LABELS,
@@ -29,6 +30,10 @@ export interface TrainingContentFormValues {
   status: string;
   /** Fecha de publicación programada, si la tiene. */
   publishAt: Date | null;
+  /** Destinatarios: `AUDIENCE` o `SELECTED`. */
+  scope: string;
+  /** Jugadores elegidos cuando `scope = SELECTED`. */
+  targetPlayerIds: string[];
   /** Ejercicio estructurado (ficha de campo). */
   series: number | null;
   reps: string | null;
@@ -45,6 +50,8 @@ export interface TrainingContentFormProps {
   content?: TrainingContentFormValues;
   /** Categorías elegibles (por defecto, las de coach/club). */
   categories?: readonly string[];
+  /** Jugadores del autor, para poder dirigir el contenido a algunos. */
+  players?: { playerId: string; name: string }[];
 }
 
 /**
@@ -55,6 +62,7 @@ export function TrainingContentForm({
   defaultKind = 'EXERCISE',
   content,
   categories = TRAINING_AUTHOR_CATEGORIES,
+  players = [],
 }: TrainingContentFormProps) {
   const editing = Boolean(content);
   const [state, formAction, pending] = useActionState(
@@ -219,6 +227,12 @@ export function TrainingContentForm({
           Series, reps, rest, space and material show up in the exercise sheet.
         </p>
       </fieldset>
+
+      <AudienceFields
+        players={players}
+        defaultScope={content?.scope ?? 'AUDIENCE'}
+        selectedPlayerIds={content?.targetPlayerIds ?? []}
+      />
 
       <VisibilityFields defaultValue={visibilityDefault} publishAt={content?.publishAt ?? null} />
 

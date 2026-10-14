@@ -13,6 +13,7 @@ import { TrainingSessionCard } from '@/components/training/session-card';
 import { TrainingSessionForm } from '@/components/training/session-form';
 import { IconBook, IconPlay, IconUsers } from '@/components/dashboard/icons';
 import { coachPlayerCount, listAuthoredTraining } from '@/lib/training';
+import { authorPlayers } from '@/lib/training-assignments';
 import { listAuthoredTrainingSessions } from '@/lib/training-sessions';
 
 export const metadata: Metadata = { title: 'Football Center' };
@@ -31,10 +32,11 @@ export default async function CoachFootballCenterPage() {
   });
   if (!coach) notFound();
 
-  const [items, players, sessions] = await Promise.all([
+  const [items, players, sessions, audiencePlayers] = await Promise.all([
     listAuthoredTraining({ coachId: coach.id }),
     coachPlayerCount(coach.id),
     listAuthoredTrainingSessions({ coachId: coach.id }),
+    authorPlayers({ coachId: coach.id, clubId: null }),
   ]);
 
   const courses = items.filter((item) => item.kind === 'COURSE');
@@ -62,7 +64,7 @@ export default async function CoachFootballCenterPage() {
       <Card>
         <CardContent>
           <h2 className="mb-4 font-semibold">New {kind === 'COURSE' ? 'course' : 'exercise'}</h2>
-          <TrainingContentForm defaultKind={kind} />
+          <TrainingContentForm defaultKind={kind} players={audiencePlayers} />
         </CardContent>
       </Card>
     </div>
@@ -101,7 +103,7 @@ export default async function CoachFootballCenterPage() {
       <Card>
         <CardContent>
           <h2 className="mb-4 font-semibold">New session</h2>
-          <TrainingSessionForm />
+          <TrainingSessionForm players={audiencePlayers} />
         </CardContent>
       </Card>
     </div>

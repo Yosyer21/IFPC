@@ -14,9 +14,18 @@ import {
 } from '@ifpc/config';
 import { trainingContentSchema } from '@ifpc/validation';
 import type { ActionState } from './auth';
+import { notifyUser } from '@/lib/notifications/notify';
 import { dashboardPath } from '@/lib/safe-redirect';
 import { revalidatePaths } from '@/lib/revalidate';
 import { resolveStorage } from '@/lib/storage';
+import {
+  contentRecipients,
+  pendingRecipients,
+  playerUserIds,
+  resolveTrainingAssignment,
+  targetCreateInput,
+  targetUpdateInput,
+} from '@/lib/training-assignments';
 import {
   parsePassScore,
   parseQuizQuestions,
@@ -129,6 +138,11 @@ export async function createTrainingContentAction(
     return { error: visibility.error };
   }
 
+  const assignment = await resolveTrainingAssignment(formData, author);
+  if ('error' in assignment) {
+    return { error: assignment.error };
+  }
+
   let created;
   try {
     created = await prisma.trainingContent.create({
@@ -139,13 +153,18 @@ export async function createTrainingContentAction(
         ownerType: author.coachId ? 'COACH' : 'CLUB',
         coachId: author.coachId,
         clubId: author.clubId,
+        ...targetCreateInput(assignment),
       },
     });
   } catch {
     return { error: 'The content could not be published.' };
   }
 
-  await notifyIfNewlyVisible(null, created);
+  await notifyIfNewlyVisible(null, {
+    ...created,
+    scope: created.scope,
+    targetPlayerIds: assignment.playerIds,
+  });
   revalidatePaths(...authorPaths(author));
   redirect(authorHome(author));
 }
@@ -256,7 +275,10 @@ async function findOwnedContent(contentId: string) {
   const author = await trainingAuthor(session.user.id);
   if (!author.coachId && !author.clubId) return null;
 
-  const content = await prisma.trainingContent.findUnique({ where: { id: contentId } });
+  const content = await prisma.trainingContent.findUnique({
+    where: { id: contentId },
+    include: { targets: { select: { playerId: true } } },
+  });
   if (!content) return null;
 
   const owns =
@@ -309,20 +331,65 @@ export async function updateTrainingContentAction(
     return { error: visibility.error };
   }
 
+  const assignment = await resolveTrainingAssignment(formData, owned.author);
+  if ('error' in assignment) {
+    return { error: assignment.error };
+  }
+
   let updated;
   try {
     updated = await prisma.trainingContent.update({
       where: { id: owned.content.id },
-      data: { ...parsed.data, status: visibility.status, publishAt: visibility.publishAt },
+      data: {
+        ...parsed.data,
+        status: visibility.status,
+        publishAt: visibility.publishAt,
+        ...targetUpdateInput(assignment),
+      },
     });
   } catch {
     return { error: 'The content could not be saved.' };
   }
 
   // De borrador o programado a visible: es el momento de avisar a los jugadores.
-  await notifyIfNewlyVisible(owned.content, updated);
+  await notifyIfNewlyVisible(owned.content, {
+    ...updated,
+    scope: updated.scope,
+    targetPlayerIds: assignment.playerIds,
+  });
   revalidatePaths(...authorPaths(owned.author, owned.content.id));
   redirect(authorHome(owned.author));
+}
+
+/**
+ * Recuerda a los jugadores que todavía no han hecho el contenido. Es el empujón
+ * del panel del autor: solo avisa a quien le falta, no a todos.
+ */
+export async function nudgeTrainingContentAction(formData: FormData): Promise<void> {
+  const owned = await findOwnedContent(str(formData, 'contentId') ?? '');
+  if (!owned) {
+    return;
+  }
+
+  const recipients = pendingRecipients(
+    await contentRecipients({
+      ...owned.content,
+      targetPlayerIds: owned.content.targets.map((target) => target.playerId),
+    })
+  );
+  const userIds = await playerUserIds(recipients.map((recipient) => recipient.playerId));
+  for (const userId of userIds) {
+    await notifyUser({
+      userId,
+      type: 'training',
+      title: 'Training reminder',
+      message: `${owned.content.title} is still pending`,
+      link: `/dashboard/player/training/${owned.content.id}`,
+    });
+  }
+
+  revalidatePaths(...authorPaths(owned.author, owned.content.id));
+  redirect(trainingEditPath(owned.author, owned.content.id));
 }
 
 /**
@@ -340,7 +407,10 @@ export async function publishTrainingContentAction(formData: FormData): Promise<
     data: { status: 'PUBLISHED', publishAt: null },
   });
 
-  await notifyIfNewlyVisible(owned.content, updated);
+  await notifyIfNewlyVisible(owned.content, {
+    ...updated,
+    targetPlayerIds: owned.content.targets.map((target) => target.playerId),
+  });
   revalidatePaths(...authorPaths(owned.author, owned.content.id));
   redirect(authorHome(owned.author));
 }

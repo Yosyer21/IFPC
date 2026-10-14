@@ -155,6 +155,33 @@ export async function main() {
 
   const playerProfile = await prisma.player.findUnique({ where: { userId: playerUser.id } });
 
+  // Segundo jugador de demo: sin él no se puede ver el reparto por destinatario ni
+  // el panel de «quién lo ha hecho» con más de una persona.
+  const player2Hash = await bcrypt.hash('player2123', 10);
+  const player2User = await prisma.user.upsert({
+    where: { email: 'player2@demo.com' },
+    update: {},
+    create: {
+      email: 'player2@demo.com',
+      name: 'Second Player',
+      role: 'PLAYER',
+      passwordHash: player2Hash,
+    },
+  });
+  await prisma.player.upsert({
+    where: { userId: player2User.id },
+    update: {},
+    create: {
+      userId: player2User.id,
+      firstName: 'Second',
+      lastName: 'Player',
+      position: 'MC',
+      competitionLevel: 'nacional',
+      status: 'AVAILABLE',
+    },
+  });
+  const player2Profile = await prisma.player.findUnique({ where: { userId: player2User.id } });
+
   // ─── Career history deportiva del player demo ──────────────
   if (playerProfile) {
     const career = [
@@ -215,6 +242,16 @@ export async function main() {
       },
       update: {},
       create: { coachId: coachProfile.id, playerId: playerProfile.id },
+    });
+  }
+
+  if (coachProfile && player2Profile) {
+    await prisma.coachPlayer.upsert({
+      where: {
+        coachId_playerId: { coachId: coachProfile.id, playerId: player2Profile.id },
+      },
+      update: {},
+      create: { coachId: coachProfile.id, playerId: player2Profile.id },
     });
   }
 
@@ -1807,6 +1844,22 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
     });
   }
 
+  if (player2Profile) {
+    await prisma.contract.upsert({
+      where: { id: 'contract-demo-2' },
+      update: {},
+      create: {
+        id: 'contract-demo-2',
+        clubId: club.id,
+        playerId: player2Profile.id,
+        startsAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+        endsAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        status: 'SIGNED',
+        signedAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
   await prisma.trainingContent.upsert({
     where: { id: 'tc-club-1' },
     update: {},
@@ -1883,6 +1936,17 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
         },
       });
     }
+
+    // Ejemplo de reparto por destinatario: este ejercicio solo lo ve el jugador 1.
+    if (playerProfile) {
+      await prisma.trainingContent.update({
+        where: { id: 'tc-coach-ex-1' },
+        data: {
+          scope: 'SELECTED',
+          targets: { deleteMany: {}, create: [{ playerId: playerProfile.id }] },
+        },
+      });
+    }
   }
 
   const clubSession = await prisma.trainingSession.upsert({
@@ -1913,6 +1977,7 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
   console.log('Seed completed:');
   console.log(`- admin: admin@ifpc.com / admin123`);
   console.log(`- player: player@demo.com / player123`);
+  console.log(`- second player: player2@demo.com / player2123`);
   console.log(`- parent: parent@demo.com / parent123`);
   console.log(`- club: club@demo.com / club123`);
   console.log(`- agent: agent@demo.com / agent123`);

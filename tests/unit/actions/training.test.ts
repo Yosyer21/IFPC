@@ -16,9 +16,11 @@ const mocks = vi.hoisted(() => ({
   storageRemove: vi.fn(),
   revalidatePaths: vi.fn(),
   progressFindUnique: vi.fn(),
+  progressFindMany: vi.fn(),
   progressUpsert: vi.fn(),
   progressDelete: vi.fn(),
   playerFindUnique: vi.fn(),
+  playerFindMany: vi.fn(),
   coachPlayerFindMany: vi.fn(),
   contractFindMany: vi.fn(),
   notificationCreate: vi.fn(),
@@ -43,10 +45,11 @@ vi.mock('@ifpc/database', () => ({
     quiz: { deleteMany: mocks.quizDeleteMany, create: mocks.quizCreate },
     trainingProgress: {
       findUnique: mocks.progressFindUnique,
+      findMany: mocks.progressFindMany,
       upsert: mocks.progressUpsert,
       delete: mocks.progressDelete,
     },
-    player: { findUnique: mocks.playerFindUnique },
+    player: { findUnique: mocks.playerFindUnique, findMany: mocks.playerFindMany },
     coachPlayer: { findMany: mocks.coachPlayerFindMany },
     contract: { findMany: mocks.contractFindMany },
     notification: { create: mocks.notificationCreate },
@@ -57,6 +60,7 @@ import {
   createTrainingContentAction,
   deleteTrainingContentAction,
   deleteContentQuizAction,
+  nudgeTrainingContentAction,
   publishTrainingContentAction,
   saveContentQuizAction,
   toggleTrainingProgressAction,
@@ -97,6 +101,8 @@ beforeEach(() => {
   mocks.contentUpdate.mockResolvedValue({ id: 'content-1' });
   mocks.coachPlayerFindMany.mockResolvedValue([]);
   mocks.contractFindMany.mockResolvedValue([]);
+  mocks.progressFindMany.mockResolvedValue([]);
+  mocks.playerFindMany.mockResolvedValue([{ userId: 'user-9' }]);
   mocks.notificationCreate.mockResolvedValue({ id: 'notification-1' });
   mocks.quizDeleteMany.mockResolvedValue({ count: 0 });
   mocks.quizCreate.mockResolvedValue({ id: 'quiz-1' });
@@ -259,6 +265,85 @@ describe('createTrainingContentAction', () => {
     expect(state.error).toBeTruthy();
     expect(mocks.contentCreate).not.toHaveBeenCalled();
   });
+
+  it('dirige el contenido a los jugadores elegidos', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.coachPlayerFindMany.mockResolvedValue([
+      { player: { id: 'player-1', firstName: 'Demo', lastName: 'Player' } },
+    ]);
+    mocks.contentCreate.mockResolvedValue({
+      id: 'content-1',
+      title: 'Cone dribbling circuit',
+      status: 'PUBLISHED',
+      publishAt: null,
+      ownerType: 'COACH',
+      coachId: 'coach-1',
+      clubId: null,
+      scope: 'SELECTED',
+    });
+
+    const formData = form({ ...baseFields, scope: 'SELECTED' });
+    formData.append('playerIds', 'player-1');
+
+    await captureRedirect(() => createTrainingContentAction({}, formData));
+
+    expect(mocks.contentCreate.mock.calls[0][0].data).toMatchObject({
+      scope: 'SELECTED',
+      targets: { create: [{ playerId: 'player-1' }] },
+    });
+    // El aviso va solo al jugador elegido, no a toda la audiencia.
+    expect(mocks.notificationCreate).toHaveBeenCalledTimes(1);
+    expect(mocks.notificationCreate.mock.calls[0][0].data).toMatchObject({ userId: 'user-9' });
+    expect(mocks.coachPlayerFindMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('exige elegir al menos un jugador para dirigirlo', async () => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+
+    const state = await createTrainingContentAction({}, form({ ...baseFields, scope: 'SELECTED' }));
+
+    expect(state.error).toBe('Pick at least one player, or send it to all your players.');
+    expect(mocks.contentCreate).not.toHaveBeenCalled();
+  });
+});
+
+describe('nudgeTrainingContentAction', () => {
+  beforeEach(() => {
+    mocks.coachFindUnique.mockResolvedValue({ id: 'coach-1' });
+    mocks.contentFindUnique.mockResolvedValue({ ...ownedContent, targets: [] });
+    mocks.coachPlayerFindMany.mockResolvedValue([
+      { player: { id: 'player-1', firstName: 'Demo', lastName: 'Player' } },
+      { player: { id: 'player-2', firstName: 'Second', lastName: 'Player' } },
+    ]);
+    mocks.progressFindMany.mockResolvedValue([{ playerId: 'player-1', completedAt: new Date() }]);
+    mocks.playerFindMany.mockResolvedValue([{ userId: 'user-2' }]);
+  });
+
+  it('solo recuerda a quien le falta', async () => {
+    const redirectTo = await captureRedirect(() =>
+      nudgeTrainingContentAction(form({ contentId: 'content-1' }))
+    );
+
+    expect(mocks.notificationCreate).toHaveBeenCalledTimes(1);
+    expect(mocks.notificationCreate.mock.calls[0][0].data).toMatchObject({
+      userId: 'user-2',
+      title: 'Training reminder',
+      message: 'Old title is still pending',
+      link: '/dashboard/player/training/content-1',
+    });
+    expect(redirectTo).toBe('/dashboard/coach/training/content-1/edit');
+  });
+
+  it('si ya lo han hecho todos, no avisa a nadie', async () => {
+    mocks.progressFindMany.mockResolvedValue([
+      { playerId: 'player-1', completedAt: new Date() },
+      { playerId: 'player-2', completedAt: new Date() },
+    ]);
+
+    await captureRedirect(() => nudgeTrainingContentAction(form({ contentId: 'content-1' })));
+
+    expect(mocks.notificationCreate).not.toHaveBeenCalled();
+  });
 });
 
 describe('deleteTrainingContentAction', () => {
@@ -339,6 +424,8 @@ const ownedContent = {
   videoUrl: null,
   status: 'PUBLISHED',
   publishAt: null,
+  scope: 'AUDIENCE',
+  targets: [],
 };
 
 describe('updateTrainingContentAction', () => {
