@@ -5,7 +5,6 @@
     "dockerfilePath": "infrastructure/docker/Dockerfile.web"
   },
   "deploy": {
-    "startCommand": "sh ./start-web.sh",
     "healthcheckPath": "/",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",

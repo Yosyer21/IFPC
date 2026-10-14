@@ -49,15 +49,16 @@ function readToken(raw: string): string | null {
 }
 
 const server = createServer((req, res) => {
-  // Healthcheck para Railway y para comprobar que el servicio está vivo.
-  if (req.url?.startsWith('/healthz')) {
+  // Healthcheck para Railway y para comprobar que el servicio está vivo. El
+  // `railway.json` del repo comprueba `/`, así que esa ruta también responde 200.
+  if (req.url?.startsWith('/healthz') || req.url === '/') {
     res.writeHead(200, { 'content-type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, rooms: registry.list().length }));
+    res.end(JSON.stringify({ ok: true, service: 'rtc', rooms: registry.list().length }));
     return;
   }
 
-  res.writeHead(426, { 'content-type': 'text/plain' });
-  res.end('WebSocket required');
+  res.writeHead(404, { 'content-type': 'text/plain' });
+  res.end('WebSocket endpoint');
 });
 
 const wss = new WebSocketServer({ server });
