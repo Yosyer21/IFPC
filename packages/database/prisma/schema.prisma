@@ -101,6 +101,9 @@ model User {
   role          Role      @default(PLAYER)
   emailVerified DateTime?
   image         String?
+  /// Cuándo terminó de elegir su tipo de cuenta (altas con Google o sociales).
+  /// Mientras es nulo, la cuenta existe pero todavía no tiene perfil de rol.
+  onboardedAt   DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

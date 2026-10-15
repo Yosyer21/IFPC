@@ -1,7 +1,15 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { auth, signIn, signOut, isRole, hashPassword, AuthError } from '@ifpc/auth';
+import {
+  auth,
+  signIn,
+  signOut,
+  hashPassword,
+  unstable_update,
+  AuthError,
+} from '@ifpc/auth';
+import { isSignupRole } from '@ifpc/config';
 import { prisma } from '@ifpc/database';
 import {
   loginSchema,
@@ -14,19 +22,26 @@ import {
   universityOnboardingSchema,
   schoolOnboardingSchema,
 } from '@ifpc/validation';
-import type { Role } from '@ifpc/types';
 import { createHash, randomBytes } from 'node:crypto';
 import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/email/resend';
+import { dashboardPath } from '@/lib/safe-redirect';
+import { createRoleProfile, downloadRemoteAvatar } from '@/lib/signup';
+
+/**
+ * Arranca el flujo de Google. El `redirectTo` se valida como ruta interna del
+ * dashboard para que un enlace manipulado no pueda sacar a nadie del sitio.
+ */
+export async function googleSignInAction(formData: FormData): Promise<void> {
+  const callbackUrl = dashboardPath(formData.get('callbackUrl'));
+  await signIn('google', { redirectTo: callbackUrl });
+}
 
 export interface ActionState {
   error?: string;
   success?: string;
 }
 
-export async function loginAction(
-  _prev: ActionState,
-  formData: FormData
-): Promise<ActionState> {
+export async function loginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = loginSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -53,10 +68,7 @@ export async function loginAction(
   return { error: '' };
 }
 
-export async function registerAction(
-  _prev: ActionState,
-  formData: FormData
-): Promise<ActionState> {
+export async function registerAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = registerSchema.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -67,10 +79,11 @@ export async function registerAction(
   }
 
   const rawRole = (formData.get('role') as string) ?? '';
-  if (!isRole(rawRole)) {
-    return { error: 'Invalid account type.' };
+  // De momento solo se pueden crear cuentas de jugador, entrenador y club.
+  if (!isSignupRole(rawRole)) {
+    return { error: 'Choose a valid account type.' };
   }
-  const role: Role = rawRole;
+  const role = rawRole;
 
   const passwordHash = await hashPassword(parsed.data.password);
   const email = parsed.data.email.toLowerCase();
@@ -80,47 +93,22 @@ export async function registerAction(
   try {
     userId = await prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
-        data: { name: parsed.data.name, email, role, passwordHash },
+        data: {
+          name: parsed.data.name,
+          email,
+          role,
+          passwordHash,
+          // El alta por email ya elige tipo de cuenta aquí mismo.
+          onboardedAt: new Date(),
+        },
       });
-      switch (role) {
-        case 'PLAYER':
-          await tx.player.create({
-            data: { userId: user.id, firstName: parsed.data.name, lastName: '' },
-          });
-          break;
-        case 'PARENT':
-          await tx.parent.create({ data: { userId: user.id } });
-          break;
-        case 'COACH':
-          await tx.coach.create({ data: { userId: user.id } });
-          break;
-        case 'SCOUT':
-          await tx.scout.create({ data: { userId: user.id } });
-          break;
-        case 'AGENT':
-          await tx.agent.create({ data: { userId: user.id } });
-          break;
-        case 'CLUB':
-          await tx.club.create({
-            data: { userId: user.id, email, name: parsed.data.name, country },
-          });
-          break;
-        case 'SCOUT':
-          await tx.scout.create({ data: { userId: user.id } });
-          break;
-        case 'UNIVERSITY':
-          await tx.university.create({
-            data: { userId: user.id, name: parsed.data.name, country },
-          });
-          break;
-        case 'SCHOOL':
-          await tx.school.create({
-            data: { userId: user.id, name: parsed.data.name, country },
-          });
-          break;
-        default:
-          break;
-      }
+      await createRoleProfile(tx, {
+        userId: user.id,
+        role,
+        name: parsed.data.name,
+        email,
+        country,
+      });
       return user.id;
     });
   } catch {
@@ -164,6 +152,77 @@ export async function registerAction(
   }
 
   return { error: '' };
+}
+
+/**
+ * Alta con Google: el callback `signIn` ya creó la cuenta (con `onboardedAt` nulo
+ * y sin perfil de rol). Aquí la persona elige su tipo de cuenta, se crea el
+ * perfil, se marca la cuenta como completada, se refresca la sesión —para que deje
+ * de decir PLAYER— y entra al dashboard con la animación de bienvenida.
+ */
+export async function completeSignupAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const rawRole = (formData.get('role') as string) ?? '';
+  if (!isSignupRole(rawRole)) {
+    return { error: 'Choose a valid account type.' };
+  }
+  const role = rawRole;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      role: true,
+      onboardedAt: true,
+    },
+  });
+  if (!user) {
+    return { error: 'User not found.' };
+  }
+  if (user.onboardedAt) {
+    redirect(`/dashboard/${user.role.toLowerCase()}`);
+  }
+
+  const country = ((formData.get('country') as string) ?? '').trim() || 'Unspecified';
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.user.update({ where: { id: user.id }, data: { role } });
+      await createRoleProfile(tx, {
+        userId: user.id,
+        role,
+        name: user.name,
+        email: user.email,
+        country,
+      });
+    });
+  } catch {
+    return { error: 'Your account could not be completed. Please try again.' };
+  }
+
+  // La foto del proveedor se copia a disco; si falla, la persona se queda con sus
+  // iniciales y puede subir una desde Ajustes.
+  const avatar = user.image ?? (await downloadRemoteAvatar(session.user.image));
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { onboardedAt: new Date(), ...(avatar ? { image: avatar } : {}) },
+  });
+
+  // La sesión nació con el rol por defecto: se refresca para que el middleware y
+  // el dashboard usen el rol elegido sin obligar a volver a iniciar sesión.
+  await unstable_update({ user: { role } });
+
+  redirect(`/dashboard/${role.toLowerCase()}?welcome=1`);
 }
 
 export async function completeOnboardingAction(

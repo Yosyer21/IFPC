@@ -17,11 +17,17 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   const [user, unreadCount, notifications] = await Promise.all([
     prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { name: true, image: true },
+      select: { name: true, image: true, onboardedAt: true },
     }),
     countUnreadNotifications(session.user.id),
     listNotifications(session.user.id),
   ]);
+
+  // Alta a medias (por ejemplo con Google): antes de entrar hay que elegir tipo
+  // de cuenta, porque todavía no existe su perfil de rol.
+  if (user && !user.onboardedAt) {
+    redirect('/welcome');
+  }
 
   return (
     <DashboardShell
@@ -35,5 +41,3 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     </DashboardShell>
   );
 }
-
-

@@ -6,6 +6,7 @@ import type { FeedNotification } from '@/lib/discovery';
 import { CommandPalette } from './command-palette';
 import { DashboardHeader } from './header';
 import { DashboardSidebar } from './sidebar';
+import { WelcomeOverlay } from './welcome-overlay';
 import { FALLBACK_NAV, NAV } from './nav';
 
 /**
@@ -103,6 +104,9 @@ export function DashboardShell({
       </div>
 
       <CommandPalette open={searchOpen} onClose={() => setSearchOpen(false)} sections={sections} />
+
+      {/* Bienvenida de una sola vez (tras crear la cuenta): `?welcome=1`. */}
+      <WelcomeOverlay name={userName} role={role} imageUrl={userImage} />
     </div>
   );
 }
