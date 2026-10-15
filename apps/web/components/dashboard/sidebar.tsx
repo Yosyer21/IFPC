@@ -60,14 +60,20 @@ function motionFor(icon?: string): string {
  * Lista de navegación. En modo `collapsed` se pinta como rail de iconos con
  * tooltip; en modo expandido, secciones colapsables con iconos y el item activo
  * marcado con `aria-current="page"`.
+ *
+ * `flat` es el drawer móvil: las secciones van como **etiquetas** y todos los
+ * items se ven de una vez —sin botones que desplegar— con objetivos táctiles más
+ * grandes, para que cualquier destino esté a un toque.
  */
 function NavItems({
   sections,
   collapsed,
+  flat = false,
   unreadCount,
 }: {
   sections: NavSection[];
   collapsed: boolean;
+  flat?: boolean;
   unreadCount?: number;
 }) {
   const pathname = usePathname();
@@ -162,26 +168,34 @@ function NavItems({
   }
 
   return (
-    <nav className="flex flex-col gap-4" aria-label="Main navigation">
+    <nav className={`flex flex-col ${flat ? 'gap-3' : 'gap-4'}`} aria-label="Main navigation">
       {sections.map((section) => {
         const open = Boolean(openSections[section.label]);
         const active = sectionHasActive(section);
         return (
           <div key={section.label}>
-            <button
-              type="button"
-              onClick={() => toggleSection(section.label)}
-              aria-expanded={open}
-              className={`flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
-                active ? 'text-brand' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-              }`}
-            >
-              {section.label}
-              <IconChevronDown
-                className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
-              />
-            </button>
-            {open ? (
+            {flat ? (
+              <div className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {section.label}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => toggleSection(section.label)}
+                aria-expanded={open}
+                className={`flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors ${
+                  active
+                    ? 'text-brand'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                }`}
+              >
+                <span>{section.label}</span>
+                <IconChevronDown
+                  className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
+                />
+              </button>
+            )}
+            {flat || open ? (
               <div className="mt-0.5 flex flex-col gap-0.5">
                 {section.items.map((item) => {
                   const itemActive = isActiveHref(pathname, item.href);
@@ -192,7 +206,9 @@ function NavItems({
                       href={item.href}
                       aria-current={itemActive ? 'page' : undefined}
                       data-active={itemActive ? 'true' : undefined}
-                      className={`nav-item relative flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
+                      className={`nav-item relative flex items-center rounded-lg transition-colors ${
+                        flat ? 'gap-3 px-3 py-2.5 text-[15px]' : 'gap-2.5 px-3 py-1.5 text-sm'
+                      } ${
                         itemActive
                           ? 'font-medium text-brand'
                           : 'text-muted-foreground hover:bg-brand/10 hover:text-brand'
@@ -244,6 +260,15 @@ export function DashboardSidebar({
   onOpenSearch: () => void;
   unreadCount?: number;
 }) {
+  // Filtro del drawer: escribe y la lista se acorta sola (todos los items se ven
+  // ya, así que esto solo acelera encontrar uno).
+  const [query, setQuery] = useState('');
+
+  // Al cerrar se limpia, para que el drawer abra siempre completo.
+  useEffect(() => {
+    if (!mobileOpen) setQuery('');
+  }, [mobileOpen]);
+
   // Cierra el drawer móvil con Escape.
   useEffect(() => {
     if (!mobileOpen) return;
@@ -254,39 +279,71 @@ export function DashboardSidebar({
     return () => window.removeEventListener('keydown', onKey);
   }, [mobileOpen, onCloseMobile]);
 
+  const trimmed = query.trim().toLowerCase();
+  const visibleSections = trimmed
+    ? sections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter(
+            (item) =>
+              item.label.toLowerCase().includes(trimmed) ||
+              section.label.toLowerCase().includes(trimmed)
+          ),
+        }))
+        .filter((section) => section.items.length > 0)
+    : sections;
+
   return (
     <>
-      {/* Drawer móvil (controlado desde el shell/header). */}
-      {mobileOpen ? (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div
-            className="absolute inset-0 bg-black/60"
-            onClick={onCloseMobile}
-            aria-hidden="true"
+      {/* Drawer móvil (controlado desde el shell/header). La capa vive siempre
+          montada para que se animen tanto la apertura como el cierre (`nav-layer`). */}
+      <div
+        className="nav-layer fixed inset-0 z-50 md:hidden"
+        data-open={mobileOpen ? 'true' : undefined}
+      >
+        <div
+          className="nav-scrim absolute inset-0 bg-black/60"
+          onClick={onCloseMobile}
+          aria-hidden="true"
+        />
+        <aside
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation"
+          className="nav-drawer absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-border bg-ink p-4"
+        >
+          <div className="mb-3 flex items-center justify-between">
+            <Link href="/" className="text-gradient-brand text-lg font-black tracking-tight">
+              Future Baller
+            </Link>
+            <button
+              type="button"
+              onClick={onCloseMobile}
+              aria-label="Close menu"
+              className="rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand"
+            >
+              <IconX className="h-5 w-5" />
+            </button>
+          </div>
+
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.currentTarget.value)}
+            placeholder="Search in the menu…"
+            aria-label="Filter navigation"
+            className="mb-3 h-10 w-full rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07]"
           />
-          <aside
-            role="dialog"
-            aria-modal="true"
-            aria-label="Navigation"
-            className="absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-border bg-ink p-4"
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <Link href="/" className="text-gradient-brand text-lg font-black tracking-tight">
-                Future Baller
-              </Link>
-              <button
-                type="button"
-                onClick={onCloseMobile}
-                aria-label="Close menu"
-                className="rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand"
-              >
-                <IconX className="h-5 w-5" />
-              </button>
-            </div>
-            <NavItems sections={sections} collapsed={false} unreadCount={unreadCount} />
-          </aside>
-        </div>
-      ) : null}
+
+          {visibleSections.length > 0 ? (
+            <NavItems sections={visibleSections} collapsed={false} flat unreadCount={unreadCount} />
+          ) : (
+            <p className="px-3 py-6 text-center text-sm text-muted-foreground">
+              Nothing matches “{query.trim()}”.
+            </p>
+          )}
+        </aside>
+      </div>
 
       {/* Sidebar de escritorio: rail colapsable con estado persistente. */}
       <aside
