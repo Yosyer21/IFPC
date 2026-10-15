@@ -15,9 +15,21 @@ export default async function PlayerSettingsPage() {
   if (!user) return null;
 
   const items = [
-    { href: '/dashboard/player/settings/account', label: 'Account', description: `Name and email (${user.email})` },
-    { href: '/dashboard/player/settings/privacy', label: 'Privacy', description: 'Control who sees your profile' },
-    { href: '/dashboard/player/settings/notifications', label: 'Notifications', description: 'Alert preferences' },
+    {
+      href: '/dashboard/player/settings/account',
+      label: 'Account',
+      description: `Name, photo, email (${user.email}) and password`,
+    },
+    {
+      href: '/dashboard/player/settings/privacy',
+      label: 'Privacy',
+      description: 'Who can find you, blocked and muted profiles',
+    },
+    {
+      href: '/dashboard/player/settings/notifications',
+      label: 'Notifications',
+      description: 'In-app alerts and email copies by category',
+    },
   ];
 
   return (
