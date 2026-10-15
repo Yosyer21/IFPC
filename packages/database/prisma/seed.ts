@@ -1986,6 +1986,15 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
   console.log(`- university: university@demo.com / university123`);
   console.log(`- club id: ${club.id}`);
   console.log(`- training content: ${trainingContents.length} items`);
+
+  // Las cuentas de demo (y cualquier cuenta creada por email antes de que
+  // existiera el campo) ya tienen su perfil de rol: si `onboardedAt` queda nulo,
+  // el guard del dashboard las mandaría a /welcome. Las altas sociales a medias
+  // (sin contraseña) se quedan como están, que para eso están.
+  await prisma.user.updateMany({
+    where: { onboardedAt: null, NOT: { passwordHash: null } },
+    data: { onboardedAt: new Date() },
+  });
 }
 
 // Auto-executes only when invoked directly (pnpm db:seed, scripts:seed).
