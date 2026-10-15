@@ -34,6 +34,7 @@
     "scripts:normalize-categories": "node --env-file=.env --import=tsx scripts/maintenance/normalize-categories.ts",
     "scripts:weekly-digest": "node --env-file=.env --import=tsx scripts/maintenance/weekly-digest.ts",
     "scripts:social-fixture": "node --env-file=.env --import=tsx scripts/development/social-signup-fixture.ts",
+    "scripts:google-check": "node scripts/development/check-google-button.mjs",
     "scripts:create-admin": "node --env-file=.env --import=tsx scripts/development/create-admin.ts",
     "scripts:create-test-users": "node --env-file=.env --import=tsx scripts/development/create-test-users.ts",
     "scripts:seed-demo": "node --env-file=.env --import=tsx scripts/development/seed-demo-data.ts",
