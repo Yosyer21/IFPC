@@ -7,6 +7,7 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { COMPETITION_LEVEL_LABELS, PLAYER_STATUS_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
+import { CountUp } from '@/components/player/count-up';
 import { StatCard } from '@/components/player/stat-card';
 import { GOAL_STATUS_LABELS } from '@/lib/labels';
 import { canonicalEvaluationCategory, evaluationCategoryLabel } from '@/lib/player-development';
@@ -143,7 +144,7 @@ export default async function PlayerDashboardPage() {
   ];
 
   const quickActions = [
-    { href: '/dashboard/player/training', icon: IconPlay, label: 'Entrenar' },
+    { href: '/dashboard/player/training', icon: IconPlay, label: 'Train' },
     { href: '/dashboard/discovery', icon: IconMessageCircle, label: 'Share on Discovery' },
     { href: '/dashboard/player/opportunities', icon: IconTarget, label: 'Find opportunities' },
     { href: '/dashboard/player/pathway', icon: IconRoute, label: 'My pathway' },
@@ -173,8 +174,8 @@ export default async function PlayerDashboardPage() {
   return (
     <div className="mx-auto max-w-6xl">
       {/* Hero */}
-      <section className="animate-fade-up mb-6 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-card via-card to-primary/5 p-6">
-        <div className="flex flex-wrap items-center gap-5">
+      <section className="animate-fade-up mb-5 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-card via-card to-primary/5 p-4 sm:mb-6 sm:p-6">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-5">
           <PlayerAvatar
             firstName={player.firstName}
             lastName={player.lastName}
@@ -183,10 +184,10 @@ export default async function PlayerDashboardPage() {
           />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight">
+              <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
                 {greeting()}, {player.firstName}
               </h1>
-              <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
+              <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-500 sm:px-2.5 sm:text-xs">
                 <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
                 {statusLabel}
               </span>
@@ -194,23 +195,23 @@ export default async function PlayerDashboardPage() {
                 <Badge variant="success">{membership.tier}</Badge>
               ) : null}
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
               {positionLabel}
               {competitionLabel ? ` · ${competitionLabel}` : ''}
               {player.clubName ? ` · ${player.clubName}` : ''}
               {unreadNotifications > 0 ? ` · ${unreadNotifications} unread notifications` : ''}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
             <Link
               href="/dashboard/player/profile/edit"
-              className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
+              className="rounded-md border border-border px-3 py-2 text-center text-xs transition-colors hover:bg-muted sm:text-sm"
             >
               Edit profile
             </Link>
             <Link
               href={`/players/${player.id}`}
-              className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+              className="rounded-md bg-primary px-3 py-2 text-center text-xs font-medium text-primary-foreground transition-colors hover:bg-emerald-600 sm:text-sm"
             >
               View public profile
             </Link>
@@ -218,17 +219,17 @@ export default async function PlayerDashboardPage() {
         </div>
 
         {/* Quick actions */}
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:grid-cols-4">
           {quickActions.map((action, i) => {
             const Icon = action.icon;
             return (
               <Link
                 key={action.href}
                 href={action.href}
-                className="animate-fade-up flex items-center justify-center gap-2 rounded-lg border border-border/70 px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-foreground"
+                className="animate-fade-up flex items-center justify-center gap-1.5 rounded-lg border border-border/70 px-2.5 py-2 text-center text-xs leading-tight text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-foreground sm:gap-2 sm:px-3 sm:text-sm"
                 style={{ animationDelay: `${80 + i * 60}ms` }}
               >
-                <Icon className="h-4 w-4 text-primary" />
+                <Icon className="h-3.5 w-3.5 shrink-0 text-primary sm:h-4 sm:w-4" />
                 {action.label}
               </Link>
             );
@@ -236,8 +237,33 @@ export default async function PlayerDashboardPage() {
         </div>
       </section>
 
-      {/* Stats */}
-      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      {/* Stats: en móvil van las tres en una misma línea dentro de una tarjeta; desde
+          sm se recuperan las tarjetas de siempre. */}
+      <Card className="animate-fade-up mb-5 sm:mb-6 sm:hidden">
+        <div className="grid grid-cols-3 divide-x divide-border/60">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <Link
+                key={stat.href}
+                href={stat.href}
+                className="flex flex-col items-center gap-1.5 px-1 text-center"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
+                <span className="text-lg font-bold leading-none tabular-nums">
+                  <CountUp value={stat.value} />
+                </span>
+                <span className="text-[10.5px] leading-tight text-muted-foreground">
+                  {stat.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </Card>
+      <div className="mb-6 hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, i) => (
           <StatCard key={stat.href} {...stat} delay={80 + i * 70} />
         ))}

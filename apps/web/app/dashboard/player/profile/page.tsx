@@ -119,7 +119,9 @@ export default async function PlayerProfilePage() {
             </Badge>
           }
           actions={
-            <>
+            /* En el móvil estas acciones bajan a una fila compacta bajo la tarjeta
+               (ver más abajo), para no apilar dos botones grandes en la cabecera. */
+            <div className="hidden sm:flex sm:flex-wrap sm:items-center sm:gap-3">
               <StatusToggle status={player.status} />
               <Link
                 href="/dashboard/player/profile/edit"
@@ -127,7 +129,7 @@ export default async function PlayerProfilePage() {
               >
                 Edit profile
               </Link>
-            </>
+            </div>
           }
           coverEditor={
             <CoverPhotoEditor
@@ -142,6 +144,18 @@ export default async function PlayerProfilePage() {
             />
           }
         />
+
+        {/* Acciones del dueño en el móvil: una sola fila de dos chips en vez de dos
+            botones grandes apilados dentro de la cabecera. */}
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:hidden">
+          <StatusToggle status={player.status} size="sm" fullWidth />
+          <Link
+            href="/dashboard/player/profile/edit"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-all hover:brightness-105"
+          >
+            Edit profile
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -214,24 +228,27 @@ export default async function PlayerProfilePage() {
             </CardContent>
           </Card>
 
-          <ProfileChecklistCard state={checklist} />
+          <ProfileChecklistCard state={checklist} editHref="/dashboard/player/profile/edit" />
 
           <Card className="animate-fade-up" style={{ animationDelay: '240ms' }}>
-            <CardContent className="flex flex-col gap-1">
+            <CardContent>
               <h2 className="mb-2 font-semibold">My profile card</h2>
-              {subLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="flex items-center gap-2.5 rounded-md px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  >
-                    <Icon className="h-4 w-4 text-primary" />
-                    {link.label}
-                  </Link>
-                );
-              })}
+              {/* En el móvil va en dos columnas: eran cinco filas-botón a lo ancho. */}
+              <div className="grid grid-cols-2 gap-1.5 sm:flex sm:flex-col sm:gap-1">
+                {subLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:gap-2.5 sm:py-2 sm:text-sm"
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-primary" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
         </div>

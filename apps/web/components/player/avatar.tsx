@@ -3,7 +3,8 @@ import Image from 'next/image';
 const SIZES = {
   sm: { box: 'h-9 w-9 text-sm', px: 36 },
   md: { box: 'h-12 w-12 text-base', px: 48 },
-  lg: { box: 'h-16 w-16 text-xl', px: 64 },
+  // En móvil el avatar grande se queda en 48px para que la cabecera no ocupe pantalla.
+  lg: { box: 'h-12 w-12 text-base sm:h-16 sm:w-16 sm:text-xl', px: 64 },
 } as const;
 
 /**

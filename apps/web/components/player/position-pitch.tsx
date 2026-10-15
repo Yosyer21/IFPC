@@ -23,7 +23,7 @@ const GROUP_LABELS: Record<PitchGroup, string> = {
 /** Dibujo de la cancha: capas animadas (césped, barrido), líneas y halo/marcador. */
 function PitchBoard({ spot }: { spot: PitchSpot | null }) {
   return (
-    <div className="relative aspect-[3/4] w-full max-w-[240px] shrink-0 overflow-hidden rounded-2xl border border-border bg-panel">
+    <div className="relative aspect-[3/4] w-full max-w-[240px] shrink-0 self-center overflow-hidden rounded-2xl border border-border bg-panel sm:self-auto">
       {/* Césped a franjas, moviéndose muy despacio. */}
       <div
         aria-hidden="true"

@@ -158,6 +158,7 @@ export default async function ClubProfilePage() {
         <div className="flex flex-col gap-4">
           <ProfileChecklistCard
             state={checklist}
+            editHref="/dashboard/club/profile/edit"
             completeText="Complete profile: players and their families see everything they look for."
           />
 
@@ -213,4 +214,3 @@ export default async function ClubProfilePage() {
     </div>
   );
 }
-
