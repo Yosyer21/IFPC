@@ -29,7 +29,9 @@ Railway deploys the repository from GitHub. The repo is a pnpm monorepo with
 | `DATABASE_URL` | from the PostgreSQL plugin |
 | `REDIS_URL` | from the Redis plugin (optional) |
 | `AUTH_SECRET` | Auth.js secret (`openssl rand -base64 32`) |
+| `AUTH_URL` | Auth.js base URL: the app's public URL (must match the domain used in the Google redirect URI) |
 | `NEXT_PUBLIC_APP_URL` | public URL of the app (the `.up.railway.app` domain or a custom one) |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | optional, sign-in/sign-up with Google (see `docs/technical/authentication.md`) |
 | `RESEND_API_KEY` | recovery/verification email |
 | `RESEND_FROM_EMAIL` | sender (optional) |
 | `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | payments (optional) |
@@ -37,10 +39,36 @@ Railway deploys the repository from GitHub. The repo is a pnpm monorepo with
 
 > The same variables for web and worker. `DATABASE_URL` and `REDIS_URL` come from the plugins.
 
-## Migrations (one-time)
+## Inicio de sesión con Google
 
-After creating the database, apply the schema. From local, connecting through the Railway
-tunnel (the `postgres.railway.internal` host is private):
+1. En el cliente OAuth (**Web application**) de la consola de Google añade:
+   - _Authorized JavaScript origins_: `https://futureballler.up.railway.app` (+ `http://localhost:3000`)
+   - _Authorized redirect URIs_: `https://futureballler.up.railway.app/api/auth/callback/google`
+     (+ `http://localhost:3000/api/auth/callback/google`)
+2. Guarda las credenciales en el servicio web (el secreto por `--stdin`, para no dejarlo en
+   el historial):
+
+   ```bash
+   railway variable set -s IFPC AUTH_GOOGLE_ID=xxxx.apps.googleusercontent.com
+   printf '%s' 'GOCSPX-xxxx' | railway variable set -s IFPC AUTH_GOOGLE_SECRET --stdin
+   ```
+
+   Al cambiar variables, Railway redespliega solo. Auth.js construye el `redirect_uri` a
+   partir de `AUTH_URL`, así que **debe** coincidir con el que registres en Google.
+3. Comprueba que el provider está activo:
+
+   ```bash
+   curl -s https://futureballler.up.railway.app/api/auth/providers   # debe aparecer "google"
+   ```
+
+## Migrations
+
+`start-web.sh` ejecuta `prisma db push --skip-generate` en **cada arranque**, así que un
+deploy mantiene la base de datos alineada con `packages/database/prisma/schema.prisma`
+automáticamente (se ve en los logs: *«Your database is now in sync with your Prisma
+schema»*). Lo de abajo solo hace falta para aplicar un cambio de esquema **sin desplegar**,
+o para sembrar a mano. Desde local, a través del túnel de Railway (el host
+`postgres.railway.internal` es privado):
 
 ```bash
 railway connect Postgres --tunnel-only --port 55432
@@ -85,13 +113,14 @@ with `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`.
 
 ## Applied state (2026-08)
 
-- **Web**: `IFPC` service, online, domain `https://ifpc.up.railway.app` (el antiguo
-  `ifpc-production-0c78.up.railway.app` ya no resuelve).
+- **Web**: `IFPC` service, online, domain `https://futureballler.up.railway.app` (los
+  antiguos `ifpc.up.railway.app` e `ifpc-production-0c78.up.railway.app` ya no resuelven).
 - **PostgreSQL**: `Postgres` plugin (postgres-ssl:18), `postgres-volume` volume,
   `DATABASE_URL` injected into the web service.
-- **Web variables**: `USE_PGLITE=false`, `DATABASE_URL`, `AUTH_SECRET`,
-  `NEXT_PUBLIC_APP_URL` (public domain). `RESEND_API_KEY`, `STRIPE_*` and `S3_*` are
-  still pending (optional, depending on enabled features).
+- **Web variables**: `USE_PGLITE=false`, `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL` y
+  `NEXT_PUBLIC_APP_URL` (los dos últimos con el dominio público), `SEED_DEMO_DATA=true`.
+  `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` se añaden cuando existan las credenciales.
+  `RESEND_API_KEY`, `STRIPE_*` y `S3_*` siguen pendientes (opcionales).
 - **Worker**: pending deployment — requires creating the service from the dashboard
   with *Dockerfile Path* `infrastructure/docker/Dockerfile.worker` and a Redis plugin
   (`REDIS_URL`). The web currently inserts notifications synchronously
