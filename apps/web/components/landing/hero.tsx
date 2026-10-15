@@ -14,8 +14,8 @@ export function Hero() {
       {/* Background photo + overlays */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/images/football-01.jpg"
-          alt="Young footballers competing for the ball on the pitch"
+          src="/assets/future-baller-training.jpg"
+          alt="Young players training with Future Baller coaches"
           fill
           priority
           sizes="100vw"

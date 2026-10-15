@@ -6,7 +6,7 @@ const FOUNDERS: { name: string; role: string; initials: string; img?: string }[]
     name: 'Chloe Logarzo',
     role: 'Matildas midfielder · Ex-professional',
     initials: 'CL',
-    img: '/images/chloe-logarzo.jpg',
+    img: '/assets/player-of-the-match-trophy.jpg',
   },
   { name: 'Emily Gielnik', role: 'Matildas forward · Ex-professional', initials: 'EG' },
 ];
@@ -21,8 +21,8 @@ export function Founders() {
           <div className="relative">
             <div className="relative h-[420px] overflow-hidden rounded-3xl border border-ink/10">
               <Image
-                src="/images/chloe-logarzo.jpg"
-                alt="Chloe Logarzo, Matildas midfielder, in the Australia kit"
+                src="/assets/player-of-the-match-trophy.jpg"
+                alt="Chloe Logarzo with the Player of the Match trophy at the 2019 World Cup"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover object-top"

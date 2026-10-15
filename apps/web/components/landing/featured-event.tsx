@@ -8,8 +8,8 @@ export function FeaturedEvent() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-[2rem] border border-ink/10">
           <Image
-            src="/images/football-03.jpg"
-            alt="Elite football training session"
+            src="/assets/player-celebration-night.jpg"
+            alt="A footballer applauding the crowd under the floodlights"
             fill
             sizes="100vw"
             className="object-cover"
@@ -54,7 +54,7 @@ export function FeaturedEvent() {
             <div className="flex flex-col items-center gap-6 lg:items-end lg:justify-end">
               <div className="relative h-80 w-64 shrink-0 overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
                 <Image
-                  src="/images/chloe-logarzo.jpg"
+                  src="/assets/player-of-the-match-trophy.jpg"
                   alt="Chloe Logarzo, Matildas midfielder"
                   fill
                   sizes="256px"

@@ -8,21 +8,24 @@ const OFFERINGS = [
     accent: 'text-brand/60',
     title: 'Inclusive Football Clinics',
     text: 'Immersive 5-hour sessions focused on technical skills, tactical awareness, speed & agility and the mindset to succeed at any level. Open to all abilities and delivered by elite coaches and guest players.',
-    image: '/images/football-02.jpg',
+    image: '/assets/player-on-the-ball.jpg',
+    alt: 'A footballer carrying the ball during a match',
   },
   {
     n: '02',
     accent: 'text-brand/60',
     title: 'Super Sessions & Squad Experiences',
     text: 'Exclusive training brought directly to your club or team — on-pitch focus with off-pitch leadership development, tailored to your squad and schedule.',
-    image: '/images/football-04.jpg',
+    image: '/assets/player-running.jpg',
+    alt: 'A footballer running during a match',
   },
   {
     n: '03',
     accent: 'text-brand/60',
     title: 'Future Baller Planner',
     text: 'A professional goal-setting journal inspired by the performance processes of elite players, to stay organised, intentional and focused all season long.',
-    image: '/images/football-08.jpg',
+    image: '/assets/player-goal-roar.jpg',
+    alt: 'A footballer celebrating a goal',
   },
 ];
 
@@ -49,7 +52,7 @@ export function Offerings() {
               >
                 <Image
                   src={offer.image}
-                  alt={offer.title}
+                  alt={offer.alt}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"

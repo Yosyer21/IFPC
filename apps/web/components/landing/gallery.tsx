@@ -1,9 +1,18 @@
 import Image from 'next/image';
 
 const SHOTS = [
-  { src: '/images/football-05.jpg', alt: 'Footballers contesting the ball during a match' },
-  { src: '/images/football-06.jpg', alt: 'Players competing on the pitch' },
-  { src: '/images/football-03.jpg', alt: 'Match action during a game' },
+  {
+    src: '/assets/player-dribbling.jpg',
+    alt: 'A footballer driving forward with the ball',
+  },
+  {
+    src: '/assets/player-celebration-night.jpg',
+    alt: 'A footballer applauding the crowd after a night match',
+  },
+  {
+    src: '/assets/player-portrait-stadium.jpg',
+    alt: 'A footballer on the pitch with the crowd behind',
+  },
 ];
 
 export function Gallery() {
