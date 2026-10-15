@@ -195,7 +195,9 @@ export async function updateAccountAction(
     return { error: 'Could not update the account.' };
   }
 
-  redirect('/dashboard/player/settings/account');
+  // La página de ajustes puede indicar a dónde volver (por defecto, la del jugador).
+  const backTo = str(formData, 'redirectTo');
+  redirect(backTo ? dashboardPath(backTo) : '/dashboard/player/settings/account');
 }
 
 export async function uploadDocumentAction(
