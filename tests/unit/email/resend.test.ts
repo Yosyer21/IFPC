@@ -43,6 +43,17 @@ describe('lib/email/resend', () => {
     expect(result.ok).toBe(false);
   });
 
+  it('sendNotificationEmail devuelve el mismo aviso en dev', async () => {
+    const result = await email.sendNotificationEmail({
+      to: 'test@ifpc.com',
+      name: 'Demo Player',
+      title: 'Nuevo aviso',
+      message: 'Alguien ha reaccionado a tu publicación.',
+      url: 'http://localhost:3000/dashboard/player/notifications',
+    });
+    expect(result.ok).toBe(false);
+  });
+
   it('sendEmail con key real hace fetch a Resend', async () => {
     process.env.RESEND_API_KEY = 're_real_key';
     vi.resetModules();

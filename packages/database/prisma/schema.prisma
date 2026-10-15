@@ -135,6 +135,8 @@ model User {
   preferenceAbout   AuthorPreference[] @relation("AuthorPreferenceAuthor")
   /// Presencias en salas de vídeo (coach, club y jugadores).
   roomParticipations TrainingRoomParticipant[]
+  /// Canales activados por categoría de aviso (ver `lib/notifications/preferences`).
+  notificationPreferences NotificationPreference[]
 
   @@index([role])
 }
@@ -478,6 +480,25 @@ model Notification {
 
   @@index([userId, read])
   @@index([userId, type, link, read])
+}
+
+/// Preferencias de avisos por usuario y **categoría** (no por tipo suelto): así
+/// añadir tipos nuevos no necesita migración. Sin fila, valen los valores por
+/// defecto (dentro de la plataforma sí, email no).
+model NotificationPreference {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category  String
+  /// Aviso en la bandeja de la plataforma.
+  inApp     Boolean  @default(true)
+  /// Copia por email (solo avisos; los correos de seguridad van aparte).
+  email     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, category])
+  @@index([userId])
 }
 
 model Membership {

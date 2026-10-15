@@ -1,4 +1,12 @@
 import { prisma } from '@ifpc/database';
+import { sendNotificationEmail } from '../email/resend';
+import {
+  DEFAULT_PREFERENCES,
+  mergePreferences,
+  wantsEmail,
+  wantsInApp,
+  type NotificationPreferences,
+} from './preferences';
 
 export interface NotifyInput {
   userId: string;
@@ -11,8 +19,34 @@ export interface NotifyInput {
 /** Ventana en la que los avisos del mismo tipo y destino se agrupan. */
 export const NOTIFICATION_GROUP_WINDOW_HOURS = 24;
 
+/** Preferencias del usuario; si la lectura falla, se avisa como siempre. */
+async function safePreferences(userId: string): Promise<NotificationPreferences> {
+  try {
+    const rows = await prisma.notificationPreference.findMany({
+      where: { userId },
+      select: { category: true, inApp: true, email: true },
+    });
+    return mergePreferences(rows);
+  } catch {
+    return DEFAULT_PREFERENCES;
+  }
+}
+
+/** Enlace absoluto para el email (los avisos guardan rutas internas). */
+function absoluteUrl(link?: string | null): string | null {
+  if (!link) return null;
+  if (/^https?:\/\//.test(link)) return link;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+  return `${appUrl}${link.startsWith('/') ? '' : '/'}${link}`;
+}
+
 /**
  * Creates a notification synchronously and reliably.
+ *
+ * Respeta las preferencias del usuario (Ajustes → Notifications): si silenció la
+ * categoría no se guarda nada, y si tiene el email activo se manda además una
+ * copia a su dirección **verificada**. Los correos de seguridad (verificación y
+ * recuperación de contraseña) no pasan por aquí: no se pueden desactivar.
  *
  * Worker integration: the payload is identical to the `notification` job in
  * apps/worker (send-notification). In production it will be queued via BullMQ
@@ -20,6 +54,11 @@ export const NOTIFICATION_GROUP_WINDOW_HOURS = 24;
  * so it does not depend on Redis.
  */
 export async function notifyUser(input: NotifyInput): Promise<void> {
+  const preferences = await safePreferences(input.userId);
+  if (!wantsInApp(preferences, input.type)) {
+    return;
+  }
+
   await prisma.notification.create({
     data: {
       userId: input.userId,
@@ -29,6 +68,28 @@ export async function notifyUser(input: NotifyInput): Promise<void> {
       link: input.link ?? null,
     },
   });
+
+  if (!wantsEmail(preferences, input.type)) return;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: input.userId },
+      select: { email: true, name: true, emailVerified: true },
+    });
+    // Sin dirección verificada no se manda la copia por email.
+    if (!user?.emailVerified) return;
+
+    await sendNotificationEmail({
+      to: user.email,
+      name: user.name,
+      title: input.title,
+      message: input.message,
+      url: absoluteUrl(input.link),
+    });
+  } catch (error) {
+    // La copia por email nunca debe romper el aviso interno.
+    console.error('[notify] no se pudo enviar la copia por email', error);
+  }
 }
 
 /**
