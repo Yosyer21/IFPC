@@ -93,6 +93,30 @@ export function evaluationCategoryLabel(category: string): string {
   return canonical ? EVALUATION_CATEGORY_LABELS[canonical] : category;
 }
 
+/**
+ * Cambios necesarios para dejar las categorías guardadas en su forma canónica
+ * (útil para el script de mantenimiento `scripts:normalize-categories`). No toca
+ * los valores desconocidos: solo los que se reconocen y no están ya canónicos.
+ */
+export function planCategoryNormalization(rows: readonly { id: string; category: string }[]): {
+  changes: { id: string; from: string; to: EvaluationCategory }[];
+  unchanged: number;
+} {
+  const changes: { id: string; from: string; to: EvaluationCategory }[] = [];
+  let unchanged = 0;
+
+  for (const row of rows) {
+    const canonical = canonicalEvaluationCategory(row.category);
+    if (canonical && canonical !== row.category) {
+      changes.push({ id: row.id, from: row.category, to: canonical });
+    } else {
+      unchanged += 1;
+    }
+  }
+
+  return { changes, unchanged };
+}
+
 /** Media 0-10 con un decimal. */
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 

@@ -8,6 +8,7 @@ import {
   evaluationSummary,
   evaluationTrend,
   goalStats,
+  planCategoryNormalization,
 } from '@/lib/player-development';
 
 const NOW = new Date('2026-06-15T12:00:00Z');
@@ -78,6 +79,32 @@ describe('evaluationCategoryLabel', () => {
     expect(evaluationCategoryLabel('psicológica')).toBe('Psychological');
     expect(evaluationCategoryLabel('technical')).toBe('Technique');
     expect(evaluationCategoryLabel('raro')).toBe('raro');
+  });
+});
+
+describe('planCategoryNormalization', () => {
+  it('propone solo los valores reconocidos que no están ya canónicos', () => {
+    const { changes, unchanged } = planCategoryNormalization([
+      { id: 'e1', category: 'technical' },
+      { id: 'e2', category: 'psicológica' },
+      { id: 'e3', category: 'TÁCTICA' },
+      { id: 'e4', category: 'mental' },
+      { id: 'e5', category: 'physical' },
+    ]);
+
+    expect(changes).toEqual([
+      { id: 'e2', from: 'psicológica', to: 'psychological' },
+      { id: 'e3', from: 'TÁCTICA', to: 'tactical' },
+    ]);
+    expect(unchanged).toBe(3);
+  });
+
+  it('es idempotente: si todo está canónico no hay nada que cambiar', () => {
+    const rows = [
+      { id: 'e1', category: 'technical' },
+      { id: 'e2', category: 'psychological' },
+    ];
+    expect(planCategoryNormalization(rows)).toEqual({ changes: [], unchanged: 2 });
   });
 });
 
