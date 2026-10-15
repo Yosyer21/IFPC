@@ -7,7 +7,9 @@ test.describe('Authentication', () => {
 
     await page.fill('input[name="email"]', 'nadie@test.com');
     await page.fill('input[name="password"]', 'wrong-password');
-    await page.click('button[type="submit"]');
+    // La página tiene dos formularios (Google y email): hay que apuntar al botón
+    // de credenciales por su texto, no al primer `button[type="submit"]`.
+    await page.getByRole('button', { name: 'Sign in' }).click();
 
     await expect(page.getByText('Incorrect credentials. Please try again.')).toBeVisible();
   });
