@@ -10,8 +10,20 @@ import { hashPassword } from '@ifpc/auth';
  */
 const EMAIL = 'coach.new@demo.com';
 
+/**
+ * Limpia los perfiles de rol que haya podido crear el alta desde este email.
+ * El club guarda el email en su propia fila (y es único): si solo se borrase el
+ * usuario, quedaría huérfano y el siguiente alta fallaría por email duplicado.
+ */
+async function clearProfiles() {
+  await prisma.player.deleteMany({ where: { user: { email: EMAIL } } });
+  await prisma.coach.deleteMany({ where: { user: { email: EMAIL } } });
+  await prisma.club.deleteMany({ where: { email: EMAIL } });
+}
+
 async function main() {
   const mode = process.argv[2];
+  await clearProfiles();
 
   if (mode === 'delete') {
     const user = await prisma.user.findUnique({
@@ -19,15 +31,13 @@ async function main() {
       select: { id: true },
     });
     if (user) {
-      await prisma.coach.deleteMany({ where: { userId: user.id } });
       await prisma.notificationPreference.deleteMany({ where: { userId: user.id } });
       await prisma.user.delete({ where: { id: user.id } });
     }
-    console.log(`borrado: ${EMAIL}`);
+    console.log(`borrado: ${EMAIL} (con sus perfiles de rol)`);
     return;
   }
 
-  await prisma.coach.deleteMany({ where: { user: { email: EMAIL } } });
   await prisma.user.deleteMany({ where: { email: EMAIL } });
   const user = await prisma.user.create({
     data: {
