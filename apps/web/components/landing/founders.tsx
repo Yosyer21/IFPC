@@ -8,7 +8,12 @@ const FOUNDERS: { name: string; role: string; initials: string; img?: string }[]
     initials: 'CL',
     img: '/assets/player-of-the-match-trophy.jpg',
   },
-  { name: 'Emily Gielnik', role: 'Matildas forward · Ex-professional', initials: 'EG' },
+  {
+    name: 'Emily Gielnik',
+    role: 'Matildas forward · Ex-professional',
+    initials: 'EG',
+    img: '/assets/founder-emily-gielnik.jpg',
+  },
 ];
 
 const VALUES = ['Technical skills', 'Mindset', 'Leadership', 'Resilience', 'Self-belief'];
@@ -29,7 +34,24 @@ export function Founders() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
             </div>
-            <div className="absolute -bottom-5 -right-5 hidden rounded-2xl border border-ink/10 bg-white px-6 py-4 shadow-xl sm:block">
+
+            {/* Emily, en una tarjeta que se solapa con la foto de Chloe. */}
+            <div className="absolute -bottom-6 -right-4 w-32 overflow-hidden rounded-2xl border-4 border-white bg-white shadow-2xl sm:-right-6 sm:w-44">
+              <div className="relative aspect-[4/5]">
+                <Image
+                  src="/assets/founder-emily-gielnik.jpg"
+                  alt="Emily Gielnik, Matildas forward"
+                  fill
+                  sizes="(max-width: 640px) 128px, 176px"
+                  className="object-cover object-top"
+                />
+              </div>
+              <p className="px-2 py-1.5 text-center text-[10px] font-semibold text-ink">
+                Emily Gielnik
+              </p>
+            </div>
+
+            <div className="absolute -left-5 -top-5 hidden rounded-2xl border border-ink/10 bg-white px-6 py-4 shadow-xl sm:block">
               <p className="text-xs uppercase tracking-wider text-subtle">Attend every camp</p>
               <p className="mt-1 text-sm font-semibold text-ink">Chloe &amp; Emily</p>
             </div>
