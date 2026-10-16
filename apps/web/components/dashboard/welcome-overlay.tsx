@@ -3,6 +3,7 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { PlayerAvatar } from '@/components/player/avatar';
+import { RoleFigure } from '@/components/auth/role-figure';
 import { IconTarget, IconUsers, IconWhistle } from './icons';
 import { nameParts } from '@/lib/names';
 
@@ -92,15 +93,15 @@ function Overlay({
         aria-hidden="true"
       />
 
-      <div className="relative flex max-w-md flex-col items-center text-center">
+      <div className="relative flex max-h-full w-full max-w-md flex-col items-center overflow-y-auto py-6 text-center">
         <span
-          className="animate-fade-up mb-8 text-[11px] font-bold uppercase tracking-[0.3em] text-brand"
+          className="animate-fade-up mb-6 text-[11px] font-bold uppercase tracking-[0.3em] text-brand"
           style={{ animationDelay: '80ms' }}
         >
           Welcome to Future Baller
         </span>
 
-        <div className="animate-scale-in relative mb-8" style={{ animationDelay: '160ms' }}>
+        <div className="animate-scale-in relative mb-4" style={{ animationDelay: '160ms' }}>
           <span
             className="absolute inset-0 -z-10 animate-pulse-dot rounded-full bg-brand/30 blur-2xl"
             aria-hidden="true"
@@ -123,17 +124,29 @@ function Overlay({
           ) : null}
         </h1>
 
+        {/* La figura del perfil elegido, en grande: cada tipo tiene la suya. */}
+        <div
+          className="animate-scale-in relative mt-4 flex items-center justify-center"
+          style={{ animationDelay: '340ms' }}
+        >
+          <span
+            className="pointer-events-none absolute h-20 w-20 animate-pulse-dot rounded-full bg-brand/25 blur-2xl sm:h-28 sm:w-28"
+            aria-hidden="true"
+          />
+          <RoleFigure role={role} active className="h-20 w-20 sm:h-28 sm:w-28" />
+        </div>
+
         <span
-          className="animate-fade-up mt-5 inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/15 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand"
-          style={{ animationDelay: '360ms' }}
+          className="animate-fade-up mt-4 inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/15 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-brand"
+          style={{ animationDelay: '440ms' }}
         >
           <Icon className="h-4 w-4" />
           {copy.label}
         </span>
 
         <p
-          className="animate-fade-up mt-5 text-base leading-relaxed text-mist/70"
-          style={{ animationDelay: '440ms' }}
+          className="animate-fade-up mt-4 text-base leading-relaxed text-mist/70"
+          style={{ animationDelay: '510ms' }}
         >
           {copy.line}
         </p>
@@ -141,15 +154,15 @@ function Overlay({
         <button
           type="button"
           onClick={close}
-          className="glow animate-fade-up mt-9 inline-flex items-center justify-center rounded-full bg-brand px-8 py-3.5 text-base font-bold text-ink transition-transform hover:scale-[1.03]"
-          style={{ animationDelay: '560ms' }}
+          className="glow animate-fade-up mt-7 inline-flex items-center justify-center rounded-full bg-brand px-8 py-3.5 text-base font-bold text-ink transition-transform hover:scale-[1.03]"
+          style={{ animationDelay: '600ms' }}
         >
           Let&apos;s go
         </button>
 
         <p
           className="animate-fade-up mt-4 text-xs text-mist/45"
-          style={{ animationDelay: '640ms' }}
+          style={{ animationDelay: '680ms' }}
         >
           You can change your details any time in Settings.
         </p>

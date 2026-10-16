@@ -5,6 +5,7 @@ import { registerAction, type ActionState } from '@/app/actions/auth';
 import { Button, Input } from '@ifpc/ui';
 import { SIGNUP_ROLE_OPTIONS, type SignupRole } from '@ifpc/config';
 import { GoogleButton } from './google-button';
+import { RoleChoiceCards } from './role-choice-cards';
 
 export function RegisterForm({
   initialRole,
@@ -37,30 +38,7 @@ export function RegisterForm({
       ) : null}
 
       <form action={formAction} className="flex flex-col gap-4">
-        <div>
-          <label className="mb-2 block text-sm font-medium">Account type</label>
-          <div className="grid grid-cols-1 gap-2">
-            {SIGNUP_ROLE_OPTIONS.map((item) => (
-              <label
-                key={item.value}
-                className={`flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm ${
-                  role === item.value ? 'border-primary bg-primary/5' : 'border-border'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="role"
-                  value={item.value}
-                  checked={role === item.value}
-                  onChange={() => setRole(item.value)}
-                  className="accent-primary"
-                />
-                <span className="font-medium">{item.label}</span>
-                <span className="text-muted-foreground">· {item.description}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+        <RoleChoiceCards value={role} onChange={setRole} />
 
         <Input name="name" label="Full name" placeholder="Your name" required />
         <Input

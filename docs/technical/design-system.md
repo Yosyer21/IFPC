@@ -51,19 +51,24 @@ Todo se mueve solo con `transform`/`opacity` (barato) y el contenedor lleva
 
 ## Utilidades globales (`globals.css`)
 
-| Utilidad                 | Uso                                                                               |
-| ------------------------ | --------------------------------------------------------------------------------- |
-| `.glass-card`            | Panel translúcido + blur + borde. Usado por `Card`.                               |
-| `.surface`               | Panel sólido para overlays (modales, dropdowns).                                  |
-| `.app-ambient`           | Fondo del área privada: barras rectangulares anguladas a 115° con marco y brillo. |
-| `.bg-bars-faint`         | Franjas anguladas tenues sobre fondos claros.                                     |
-| `.bg-bars-faint-invert`  | Las mismas franjas sobre superficies oscuras.                                     |
-| `.chip-gradient`         | Chip de icono / item activo del sidebar (lima).                                   |
-| `.text-gradient-brand`   | Wordmark y títulos con degradado lima de marca.                                   |
-| `.text-gradient`         | Degradado lima para titulares sobre superficies oscuras.                          |
-| `.card-hover`            | Elevación y borde en hover para tarjetas enlazadas.                               |
-| `.glow`                  | Halo lima para CTAs.                                                              |
-| `.reveal` / `.animate-*` | Animaciones de entrada (fade-up, drift, marquee…).                                |
+| Utilidad                          | Uso                                                                                                                                                            |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.glass-card`                     | Panel translúcido + blur + borde. Usado por `Card`.                                                                                                            |
+| `.surface`                        | Panel sólido para overlays (modales, dropdowns).                                                                                                               |
+| `.app-ambient`                    | Fondo del área privada: barras rectangulares anguladas a 115° con marco y brillo.                                                                              |
+| `.bg-bars-faint`                  | Franjas anguladas tenues sobre fondos claros.                                                                                                                  |
+| `.bg-bars-faint-invert`           | Las mismas franjas sobre superficies oscuras.                                                                                                                  |
+| `.chip-gradient`                  | Chip de icono / item activo del sidebar (lima).                                                                                                                |
+| `.text-gradient-brand`            | Wordmark y títulos con degradado lima de marca.                                                                                                                |
+| `.text-gradient`                  | Degradado lima para titulares sobre superficies oscuras.                                                                                                       |
+| `.card-hover`                     | Elevación y borde en hover para tarjetas enlazadas.                                                                                                            |
+| `.glow`                           | Halo lima para CTAs.                                                                                                                                           |
+| `.reveal` / `.animate-*`          | Animaciones de entrada (fade-up, drift, marquee…).                                                                                                             |
+| `.role-card` / `.role-figure`     | Elección de perfil (`/welcome` y registro): tres figuras animadas —balón, pizarra y escudo— que arrancan al pasar el ratón por la tarjeta o al quedar elegida. |
+| `.wizard-track` / `.wizard-slide` | Alta en diapositivas (`/welcome`): el paso activo llega deslizándose y su contenido entra con un fade-up al activarse.                                         |
+
+Todas las animaciones respetan `prefers-reduced-motion`: las de entrada aparecen ya en su estado
+final y las figuras se quedan quietas.
 
 ## Componentes compartidos (el punto de propagación)
 

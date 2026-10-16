@@ -963,6 +963,295 @@
     }
   }
 
+  .role-card {
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.25s,
+      background-color 0.25s,
+      box-shadow 0.25s;
+  }
+
+  .role-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .role-card[data-active='true'] {
+    box-shadow: 0 12px 32px -14px rgba(196, 247, 71, 0.5);
+  }
+
+  /* Las tres figuras se mueven a la vez, cada una con su animación; la tarjeta
+     elegida además se levanta, brilla y marca la palomita. `--role-play` permite
+     parar todas de golpe (reducir movimiento) sin tocar cada animación. */
+  .role-figure {
+    --role-play: running;
+  }
+
+  .role-figure .role-idle {
+    animation: fb-role-idle 5s ease-in-out infinite;
+  }
+
+  @keyframes fb-role-idle {
+    0%,
+    100% {
+      transform: translateY(-1.5px);
+    }
+    50% {
+      transform: translateY(1.5px);
+    }
+  }
+
+  /* ── Jugador: el balón rueda, bota y deja estela ─────────────────────── */
+  .role-figure .role-ball {
+    animation: fb-role-ball 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-ball-spin {
+    animation: fb-role-ball-spin 1.5s linear infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-ball-shadow {
+    animation: fb-role-ball-shadow 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-trail {
+    animation: fb-role-trail 1.2s ease-out infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  @keyframes fb-role-ball {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-15px);
+    }
+    46% {
+      transform: translateY(0) scaleX(1.07) scaleY(0.93);
+    }
+  }
+
+  @keyframes fb-role-ball-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes fb-role-ball-shadow {
+    0%,
+    100% {
+      transform: scaleX(1);
+      opacity: 0.35;
+    }
+    30% {
+      transform: scaleX(0.7);
+      opacity: 0.15;
+    }
+    46% {
+      transform: scaleX(1.06);
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes fb-role-trail {
+    0% {
+      opacity: 0;
+      transform: translateX(8px);
+    }
+    35% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+  }
+
+  /* ── Entrenador: la jugada se dibuja y el punto la recorre ───────────── */
+  .role-figure .role-play {
+    stroke-dasharray: 130;
+    animation: fb-role-draw 2.4s cubic-bezier(0.4, 0, 0.5, 1) infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-runner {
+    animation: fb-role-runner 2.4s cubic-bezier(0.4, 0, 0.5, 1) infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-whistle {
+    animation: fb-role-whistle 2.4s ease-in-out infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  @keyframes fb-role-draw {
+    0% {
+      stroke-dashoffset: 130;
+    }
+    60%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes fb-role-runner {
+    0%,
+    18% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    30% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+      transform: translate(36px, -20px);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(44px, -24px);
+    }
+  }
+
+  @keyframes fb-role-whistle {
+    0%,
+    100% {
+      transform: rotate(-7deg);
+    }
+    50% {
+      transform: rotate(9deg);
+    }
+  }
+
+  /* ── Club: gradas que se encienden por filas y escudo que late ───────── */
+  .role-figure .role-stand {
+    animation: fb-role-stand 2.6s ease-in-out infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-crest {
+    animation: fb-role-crest 2.6s ease-in-out infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  .role-figure .role-beam {
+    animation: fb-role-beam 3.2s ease-in-out infinite;
+    animation-play-state: var(--role-play);
+  }
+
+  @keyframes fb-role-stand {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fb-role-crest {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-2px) scale(1.03);
+    }
+  }
+
+  @keyframes fb-role-beam {
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  /* Palomita de la tarjeta elegida: entra con un pop. */
+  .role-tick {
+    animation: fb-role-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes fb-role-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Accesibilidad: con «reducir movimiento» las entradas aparecen ya en su
+     estado final y las figuras se quedan quietas. */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up,
+    .animate-fade-up-slow,
+    .animate-scale-in,
+    .animate-intro-up,
+    .animate-intro-bar,
+    .reveal,
+    .reveal-in,
+    .role-tick {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
+    }
+
+    .role-figure {
+      --role-play: paused !important;
+    }
+
+    .role-figure .role-idle {
+      animation: none !important;
+    }
+
+    .wizard-track {
+      transition: none !important;
+    }
+
+    .wizard-inner {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
+    }
+  }
+
+  /* ── Alta en diapositivas (/welcome) ──────────────────────────────────── */
+  .wizard-track {
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* La diapositiva que no toca se desvanece: al deslizarse no se ven las dos. */
+  .wizard-slide {
+    opacity: 0;
+    transition: opacity 0.35s ease-out;
+  }
+
+  .wizard-slide[data-active='true'] {
+    opacity: 1;
+  }
+
+  /* El contenido del paso entra al activarse (y vuelve a entrar al retroceder). */
+  .wizard-slide[data-active='true'] .wizard-inner {
+    animation: fb-wizard-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes fb-wizard-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   /* Punto del timeline de una meta cumplida: brilla. */
   .dev-dot-glow {
     box-shadow: 0 0 16px 2px rgba(196, 247, 71, 0.6);
