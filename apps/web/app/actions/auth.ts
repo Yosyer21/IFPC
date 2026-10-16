@@ -1,14 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import {
-  auth,
-  signIn,
-  signOut,
-  hashPassword,
-  unstable_update,
-  AuthError,
-} from '@ifpc/auth';
+import { auth, signIn, signOut, hashPassword, unstable_update, AuthError } from '@ifpc/auth';
 import { isSignupRole } from '@ifpc/config';
 import { prisma } from '@ifpc/database';
 import {
@@ -25,7 +18,8 @@ import {
 import { createHash, randomBytes } from 'node:crypto';
 import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/email/resend';
 import { dashboardPath } from '@/lib/safe-redirect';
-import { createRoleProfile, downloadRemoteAvatar } from '@/lib/signup';
+import { nameParts } from '@/lib/names';
+import { createRoleProfile, downloadRemoteAvatar, type SignupProfileDetails } from '@/lib/signup';
 
 /**
  * Arranca el flujo de Google. El `redirectTo` se valida como ruta interna del
@@ -193,17 +187,70 @@ export async function completeSignupAction(
     redirect(`/dashboard/${user.role.toLowerCase()}`);
   }
 
-  const country = ((formData.get('country') as string) ?? '').trim() || 'Unspecified';
+  const str = (key: string): string | null => {
+    const value = formData.get(key);
+    return typeof value === 'string' && value.trim() ? value.trim() : null;
+  };
+
+  // El asistente recoge distinto según el tipo de cuenta. Se valida aquí, con los
+  // mismos esquemas que el onboarding, para poder devolver un error concreto.
+  const { firstName: accountFirstName, lastName: accountLastName } = nameParts(user.name);
+  let country = str('country') ?? 'Unspecified';
+  let details: SignupProfileDetails = {};
+  let displayName: string | null = null;
+
+  if (role === 'PLAYER') {
+    const parsed = playerProfileSchema.safeParse({
+      firstName: str('firstName') ?? accountFirstName,
+      lastName: str('lastName') ?? accountLastName,
+      dateOfBirth: str('dateOfBirth') ?? undefined,
+      nationality: str('nationality'),
+      position: str('position'),
+      foot: str('foot'),
+    });
+    if (!parsed.success) {
+      return { error: 'Check your name, position and date of birth.' };
+    }
+    details = { ...parsed.data };
+    displayName = [parsed.data.firstName, parsed.data.lastName].filter(Boolean).join(' ');
+  } else if (role === 'COACH') {
+    const parsed = coachOnboardingSchema.safeParse({ clubName: str('clubName') });
+    if (!parsed.success) {
+      return { error: 'Check the coach details.' };
+    }
+    details = { clubName: parsed.data.clubName ?? null };
+    displayName = str('name');
+  } else if (role === 'CLUB') {
+    const parsed = clubOnboardingSchema.safeParse({
+      name: str('name') ?? user.name,
+      country: str('country') ?? undefined,
+      city: str('city'),
+      league: str('league'),
+    });
+    if (!parsed.success) {
+      return { error: 'Check the club name and country.' };
+    }
+    country = parsed.data.country;
+    details = {
+      name: parsed.data.name,
+      city: parsed.data.city ?? null,
+      league: parsed.data.league ?? null,
+    };
+  }
 
   try {
     await prisma.$transaction(async (tx) => {
-      await tx.user.update({ where: { id: user.id }, data: { role } });
+      await tx.user.update({
+        where: { id: user.id },
+        data: { role, ...(displayName ? { name: displayName } : {}) },
+      });
       await createRoleProfile(tx, {
         userId: user.id,
         role,
         name: user.name,
         email: user.email,
         country,
+        details,
       });
     });
   } catch {

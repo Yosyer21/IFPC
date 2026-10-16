@@ -37,10 +37,10 @@ export default async function WelcomePage() {
       </div>
 
       <p className="mb-6 text-sm text-muted-foreground">
-        One last step: tell us what kind of account you want and we will set everything up.
+        Tell us what kind of account you want and we will set everything up — it takes four steps.
       </p>
 
-      <CompleteSignupForm />
+      <CompleteSignupForm accountName={user.name} />
     </div>
   );
 }

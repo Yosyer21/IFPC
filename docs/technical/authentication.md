@@ -45,11 +45,15 @@ Como las sesiones son JWT y **no hay adaptador de Prisma**, el callback `signIn`
 - **email existente sin verificar** → no se vincula: se le pide entrar con su contraseña
   (si no, alguien que se registró con un correo ajeno sin verificar perdería la cuenta).
 
-Después del consentimiento, `/welcome` pide el **tipo de cuenta** (solo jugador,
-entrenador y club: `SIGNUP_ROLE_OPTIONS` en `@ifpc/config`), crea el perfil con
-`createRoleProfile` (`apps/web/lib/signup.ts`), marca `onboardedAt`, refresca la sesión con
-`unstable_update` y entra al dashboard con la **animación de bienvenida**
-(`WelcomeOverlay`, una sola vez vía `?welcome=1`).
+Después del consentimiento, `/welcome` es un **alta en cuatro diapositivas**
+(`CompleteSignupForm`): primero el tipo de cuenta (solo jugador, entrenador y club:
+`SIGNUP_ROLE_OPTIONS` en `@ifpc/config`) y después, según cuál sea, los datos del perfil —
+nombre, posición, pie y fecha de nacimiento del jugador; club del entrenador; o nombre,
+país, ciudad y liga del club. Se validan con los mismos esquemas que el onboarding
+(`playerProfileSchema`, `coachOnboardingSchema`, `clubOnboardingSchema`) y `createRoleProfile`
+(`apps/web/lib/signup.ts`) crea el perfil ya completo; luego se marca `onboardedAt`, se
+refresca la sesión con `unstable_update` y se entra al dashboard con la **animación de
+bienvenida** (`WelcomeOverlay`, una sola vez vía `?welcome=1`).
 
 La foto de Google se copia a `/uploads/photos` (best-effort): si falla, la persona se queda
 con sus iniciales y puede subir una desde Ajustes → Account.
