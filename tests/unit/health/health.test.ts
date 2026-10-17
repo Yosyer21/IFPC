@@ -4,14 +4,17 @@ import {
   FACTOR_DOT_CLASSES,
   HEALTH_FACTORS,
   HEALTH_TONES,
+  bestStreak,
   compoundGain,
   completionRatio,
   factorNeighbours,
   factorOfTheDay,
+  filterFactors,
   formatGain,
   getHealthFactor,
   healthStorageKey,
   normalizeProgress,
+  progressSummary,
   recentDayKeys,
   streakDays,
   toggleHabit,
@@ -192,5 +195,44 @@ describe('progreso local', () => {
   it('la clave de almacenamiento es propia de cada factor', () => {
     expect(healthStorageKey('sleep')).toContain('sleep');
     expect(healthStorageKey('sleep')).not.toBe(healthStorageKey('mind'));
+  });
+});
+
+describe('récords y buscador', () => {
+  const now = new Date('2026-10-16T12:00:00Z');
+
+  it('bestStreak encuentra la racha más larga, no solo la actual', () => {
+    expect(bestStreak([])).toBe(0);
+    expect(bestStreak(['2026-10-16'])).toBe(1);
+    // Con un hueco en medio gana la de tres días.
+    expect(
+      bestStreak(['2026-10-01', '2026-10-02', '2026-10-03', '2026-10-10', '2026-10-11'])
+    ).toBe(3);
+    // Desorden y duplicados no cambian el resultado.
+    expect(bestStreak(['2026-10-03', '2026-10-01', '2026-10-02', '2026-10-02'])).toBe(3);
+    // Cruza el cambio de mes.
+    expect(bestStreak(['2026-10-30', '2026-10-31', '2026-11-01'])).toBe(3);
+  });
+
+  it('progressSummary reúne racha actual, mejor racha y total', () => {
+    const days = ['2026-10-14', '2026-10-15', '2026-10-16', '2026-10-01', '2026-10-02'];
+    expect(progressSummary(days, now)).toEqual({ current: 3, best: 3, total: 5 });
+    expect(progressSummary([], now)).toEqual({ current: 0, best: 0, total: 0 });
+  });
+
+  it('filterFactors busca por título, por hábito y sin acentos', () => {
+    expect(filterFactors(HEALTH_FACTORS, '')).toHaveLength(HEALTH_FACTORS.length);
+    expect(filterFactors(HEALTH_FACTORS, 'WATER').map((factor) => factor.slug)).toContain(
+      'hydration'
+    );
+    // Coincide por un hábito, no solo por el título.
+    expect(filterFactors(HEALTH_FACTORS, 'caffeine').map((factor) => factor.slug)).toEqual([
+      'sleep',
+    ]);
+    // El acento no impide encontrar el factor.
+    expect(filterFactors(HEALTH_FACTORS, 'consisténcy').map((factor) => factor.slug)).toContain(
+      'consistency'
+    );
+    expect(filterFactors(HEALTH_FACTORS, 'zzz')).toEqual([]);
   });
 });

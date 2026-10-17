@@ -369,3 +369,66 @@ export function toggleHabit(
 
   return { day: today, habits: habits.sort((a, b) => a - b), days };
 }
+
+/**
+ * La racha **más larga** que se ha logrado nunca (no la actual): el «récord» que
+ * sirve de referencia cuando la racha de hoy se rompe.
+ */
+export function bestStreak(dayKeys: readonly string[]): number {
+  const days = [...new Set(dayKeys)].sort();
+  if (days.length === 0) return 0;
+
+  let best = 1;
+  let run = 1;
+  for (let index = 1; index < days.length; index += 1) {
+    const previous = days[index - 1];
+    const current = days[index];
+    if (!previous || !current) continue;
+
+    const gap = Date.parse(`${current}T00:00:00Z`) - Date.parse(`${previous}T00:00:00Z`);
+    if (gap === DAY_MS) {
+      run += 1;
+      best = Math.max(best, run);
+    } else {
+      run = 1;
+    }
+  }
+  return best;
+}
+
+/** Resumen del progreso de un factor: racha actual, mejor racha y días completados. */
+export function progressSummary(
+  dayKeys: readonly string[],
+  now: Date = new Date()
+): { current: number; best: number; total: number } {
+  const days = [...new Set(dayKeys)];
+  return { current: streakDays(days, now), best: bestStreak(days), total: days.length };
+}
+
+/** Texto sin acentos y en minúsculas, para comparar lo que escribe la persona. */
+function normalizeText(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
+/**
+ * Filtra los factores por lo que se escriba en el buscador: título, gancho,
+ * acción rápida, resumen y hábitos (sin acentos y sin distinguir mayúsculas).
+ * Sin consulta devuelve la lista completa.
+ */
+export function filterFactors(
+  factors: readonly HealthFactor[],
+  query: string
+): HealthFactor[] {
+  const needle = normalizeText(query);
+  if (!needle) return [...factors];
+
+  return factors.filter((factor) =>
+    [factor.title, factor.tagline, factor.quickAction, factor.summary, ...factor.habits].some(
+      (field) => normalizeText(field).includes(needle)
+    )
+  );
+}

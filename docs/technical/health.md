@@ -39,8 +39,18 @@ El hub no es solo lectura: da una entrada diaria y deja marcar los hábitos.
 - **Ritmo semanal** — `weekPlan` reparte los factores por los días (lunes…domingo,
   0 = lunes como en el resto de la app) y la tarjeta «The week» marca el día de hoy.
 - **Cheat sheet** — una `quickAction` por factor, para consultar de un vistazo.
-- **Salto rápido** — chips-ancla a cada tarjeta (`#slug`), porque con siete tarjetas
-  recorrer la página entera para llegar a una concreta es incómodo (sobre todo en móvil).
+- **Salto rápido** — chips-ancla a cada tarjeta (`#slug`), **pegajosos** bajo la
+  cabecera (`sticky top-14 z-30`, por debajo del `z-40` del header), porque con siete
+  tarjetas recorrer la página entera para llegar a una concreta es incómodo.
+- **Buscador** — filtra los factores en vivo por título, gancho, acción rápida, resumen
+  y hábitos, sin acentos ni mayúsculas (`filterFactors`), con estado vacío explicativo.
+- **Tu progreso en la rejilla** — cada tarjeta muestra tu estado («Done today»,
+  «2/4 today», «3-day streak») leído del mismo `localStorage`; por eso la rejilla es un
+  componente cliente (`FactorGrid`) y las tarjetas conservan su `id` para las anclas.
+- **Récords** — además de la racha actual, la ficha muestra la **mejor racha**
+  (`bestStreak`) y los **días completados** (`progressSummary`).
+- **Reinicio** — «Reset today» (desmarca el día) y «Reset factor» (borra todo el
+  progreso, con confirmación en dos pasos, sin diálogos nativos del navegador).
 - **Checklist de hábitos** (`components/health/habit-checklist.tsx`) — casillas por
   hábito con progreso «2/4 today», barra, **racha de días seguidos** y la tira de los
   **últimos 14 días**. Se guarda en **`localStorage`** (`ifpc.health.v1.<slug>`), así
@@ -76,10 +86,11 @@ nunca en el texto, para que la lectura no cambie de factor a factor.
 
 | Pieza | Responsabilidad |
 | --- | --- |
-| `apps/web/lib/health.ts` | Contenido curado de los factores + helpers puros (`getHealthFactor`, `factorNeighbours`, `compoundGain`, `formatGain`, `factorOfTheDay`, `weekPlan`, `recentDayKeys`, `streakDays`, `normalizeProgress`, `toggleHabit`) |
+| `apps/web/lib/health.ts` | Contenido curado de los factores + helpers puros (`getHealthFactor`, `factorNeighbours`, `compoundGain`, `formatGain`, `factorOfTheDay`, `weekPlan`, `recentDayKeys`, `streakDays`, `bestStreak`, `progressSummary`, `normalizeProgress`, `toggleHabit`, `filterFactors`) |
 | `apps/web/app/dashboard/health/page.tsx` | Portada: la idea en números + «Hoy: el 1 %», salto rápido, rejilla, ritmo semanal y *cheat sheet* |
 | `apps/web/app/dashboard/health/[slug]/page.tsx` | Ficha de un factor: por qué, checklist de hábitos, cómo medirlo y «Pairs well with» |
-| `apps/web/components/health/habit-checklist.tsx` | Cliente: casillas con progreso, racha y últimos 14 días (en `localStorage`) |
+| `apps/web/components/health/factor-grid.tsx` | Cliente: rejilla con buscador y el progreso de cada factor leído del navegador |
+| `apps/web/components/health/habit-checklist.tsx` | Cliente: casillas con progreso, racha actual, mejor racha, días completados, tira de 14 días y reinicio (en `localStorage`) |
 | `apps/web/components/dashboard/icons.tsx` | Iconos de salud (`health`, `moon`, `droplet`, `apple`, `heart`, `stretch`, `bulb`, `repeat`) |
 | `tests/unit/health/health.test.ts` | Contenido, enlaces cruzados, navegación, 1 % compuesto, factor del día, ritmo semanal y progreso local |
 

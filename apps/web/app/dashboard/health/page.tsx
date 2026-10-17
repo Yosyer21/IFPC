@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Card, CardContent } from '@ifpc/ui';
 import { ICONS } from '@/components/dashboard/icons';
+import { FactorGrid } from '@/components/health/factor-grid';
 import { PageHeader } from '@/components/player/page-header';
 import {
   FACTOR_CHIP_CLASSES,
@@ -105,7 +106,10 @@ export default function HealthHubPage() {
       </Card>
 
       {/* Salto rápido: con siete tarjetas, evita recorrerlas enteras. */}
-      <nav aria-label="Jump to a factor" className="animate-fade-up mb-3 flex flex-wrap gap-2">
+      <nav
+        aria-label="Jump to a factor"
+        className="animate-fade-up sticky top-14 z-30 -mx-1 mb-3 flex flex-wrap gap-2 bg-background/80 px-1 py-2 backdrop-blur-md"
+      >
         {HEALTH_FACTORS.map((factor) => (
           <a
             key={factor.slug}
@@ -118,45 +122,8 @@ export default function HealthHubPage() {
         ))}
       </nav>
 
-      {/* Rejilla de factores. */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {HEALTH_FACTORS.map((factor, index) => {
-          const Icon = ICONS[factor.icon];
-          return (
-            <Link
-              key={factor.slug}
-              id={factor.slug}
-              href={`/dashboard/health/${factor.slug}`}
-              className="animate-fade-up group block scroll-mt-24 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              style={{ animationDelay: `${index * 55}ms` }}
-            >
-              <Card className="card-hover h-full border border-border/60 bg-white/[0.02] group-hover:border-brand/40">
-                <CardContent className="flex h-full flex-col gap-3">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-transform group-hover:scale-105 ${FACTOR_CHIP_CLASSES[factor.tone]}`}
-                    >
-                      {Icon ? <Icon className="h-5 w-5" /> : null}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="truncate font-semibold transition-colors group-hover:text-brand">
-                        {factor.title}
-                      </h3>
-                      <p className="line-clamp-2 text-xs text-muted-foreground">{factor.tagline}</p>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground">{factor.summary}</p>
-
-                  <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                    Read the 1% →
-                  </span>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
-      </div>
+      {/* Rejilla de factores: en cliente, porque muestra tu progreso del navegador. */}
+      <FactorGrid factors={HEALTH_FACTORS} />
 
       {/* Ritmo semanal y chuleta: consulta rápida al final de la página. */}
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
