@@ -126,6 +126,71 @@ with `ERR_UNKNOWN_BUILTIN_MODULE: No such built-in module: node:sqlite`.
   (`REDIS_URL`). The web currently inserts notifications synchronously
   (`notifyUser`), so it does not depend on Redis.
 
+## Applied state (verificado 2026-10)
+
+`railway status --json` con la sesión actual (`railway whoami`):
+
+- Proyecto **`IFPC`**, entorno **`production`**, con **tres servicios `RUNNING`**:
+  `IFPC` (web, puerto 8080 interno), `Postgres` y `rtc` (salas de vídeo, puerto 4001).
+- El despliegue activo del web se corresponde con el último commit de `main`
+  (`meta.commitHash` y `meta.commitAuthor` en `railway status --json`), con
+  `reason: deploy` y `repo: Yosyer21/IFPC`: **el push a `main` despliega solo**.
+- `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` **ya están puestas**: `/api/auth/providers`
+  devuelve `credentials` **y** `google`.
+- En el arranque del web, `prisma db push` informa de que la base **ya está en sync** y el
+  seed de demo vuelve a dejar disponibles los usuarios (`player@demo.com / player123`, …),
+  así que el smoke autenticado funciona contra producción.
+
+
+## Verificación del despliegue (CLI)
+
+La sesión de la CLI se comprueba con `railway whoami` (no pide nada si ya hay sesión).
+**Ojo**: este repo está enlazado al servicio **`rtc`**, así que los comandos sin `-s`
+muestran los logs del servicio de salas; para el web hay que indicarlo.
+
+```bash
+railway whoami
+railway status --json                                  # proyecto, servicios y despliegues
+railway status --json | jq -r \
+  '.environments.edges[].node.serviceInstances.edges[].node
+   | {service: (.serviceName // .name), status: (.activeDeployments[0].instances[0].status // "-")}'
+railway logs --lines 60 -s IFPC -d                     # logs del deploy del web
+railway logs --lines 25 -s rtc  -d                     # logs del servicio de salas
+```
+
+Un despliegue sano del web muestra, en este orden:
+`[start] aplicando esquema Prisma…` → *«The database is already in sync with the Prisma schema»*
+→ `[start] cargando datos de demo (SEED_DEMO_DATA=true)…` → `[start] arrancando servidor web…`
+→ `✓ Ready`. El servicio `rtc` muestra `[rtc] salas escuchando en :4001`.
+
+Smoke público (sin sesión):
+
+```bash
+for p in / /login /api/auth/providers /robots.txt /sitemap.xml; do
+  printf '%s  %s\n' "$(curl -s -o /dev/null -w '%{http_code}' "https://futureballler.up.railway.app$p")" "$p"
+done
+# /api/auth/providers debe incluir "credentials" y "google"
+```
+
+Smoke autenticado (solo lectura) con Playwright contra producción: entrar con un usuario
+demo (`player@demo.com / player123`) y comprobar `/dashboard/health` (título, 7 tarjetas,
+buscador) y `/dashboard/calendar` (rejilla y día seleccionable). **No** pulsar hábitos ni
+guardar nada para no escribir en la base de datos de producción.
+
+## Aviso: `railway.json` (Config as Code) queda obsoleto
+
+Railway avisa en los logs de cada despliegue:
+
+> Config as Code (railway.json / railway.toml) is deprecated. Prefer Infrastructure as
+> Code (.railway/railway.ts) … Existing files keep working until **2026-12-01**.
+
+**No se ha migrado a propósito.** `railway config migrate` genera `.railway/railway.ts` y,
+a partir de ahí, **Railway pasa a considerar la IaC como dueña de la configuración del
+proyecto**: si el fichero generado no declara los tres servicios (`IFPC`, `Postgres`,
+`rtc`), un despliegue posterior podría alterarlos o eliminarlos. La migración hay que
+hacerla revisando el fichero generado y, a ser posible, probándola antes fuera de
+producción. Fecha límite: **1 de diciembre de 2026**.
+
 ## Building the Dockerfiles locally (validation)
 
 ```bash
