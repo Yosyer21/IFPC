@@ -16,6 +16,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/player', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
         { href: '/dashboard/player/profile', label: 'My profile', icon: 'user' },
         { href: '/dashboard/player/development', label: 'My development', icon: 'trending' },
       ],
@@ -51,6 +53,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/club', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
         { href: '/dashboard/club/profile', label: 'Club profile', icon: 'briefcase' },
         { href: '/dashboard/club/training', label: 'Football Center', icon: 'play' },
         { href: '/dashboard/club/staff', label: 'Staff', icon: 'users' },
@@ -76,6 +80,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/agent', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
       ],
     },
     {
@@ -106,6 +112,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/scout', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
       ],
     },
     {
@@ -124,6 +132,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/coach', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
       ],
     },
     {
@@ -143,6 +153,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/parent', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
         { href: '/dashboard/parent/settings', label: 'Settings', icon: 'settings' },
       ],
     },
@@ -163,6 +175,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/university', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
         { href: '/dashboard/university/profile', label: 'Profile', icon: 'briefcase' },
       ],
     },
@@ -180,6 +194,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/school', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
         { href: '/dashboard/school/profile', label: 'Organization profile', icon: 'briefcase' },
       ],
     },
@@ -197,6 +213,8 @@ export const NAV: Record<string, NavSection[]> = {
       items: [
         { href: '/dashboard/admin', label: 'Overview', icon: 'home' },
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
+        { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
+        { href: '/dashboard/health', label: 'Health', icon: 'health' },
       ],
     },
     {

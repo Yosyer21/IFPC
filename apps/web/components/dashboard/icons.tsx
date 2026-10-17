@@ -354,6 +354,81 @@ export function IconPanelLeft(props: IconProps) {
   );
 }
 
+/* ── Salud: «THE "1%" FACTOR» ─────────────────────────────────────────── */
+
+export function IconActivity(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M3 12h4l2.5-6 3 12L15 12h6" />
+    </Base>
+  );
+}
+
+export function IconMoon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z" />
+    </Base>
+  );
+}
+
+export function IconDroplet(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M12 3s6 6.4 6 10.4a6 6 0 1 1-12 0C6 9.4 12 3 12 3Z" />
+    </Base>
+  );
+}
+
+export function IconApple(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M12 8.5c-3.3 0-6 2.7-6 6 0 3.9 3 7.5 6 7.5s6-3.6 6-7.5c0-3.3-2.7-6-6-6Z" />
+      <path d="M12 8.5V5" />
+      <path d="M12 5c1.9 0 3.5-1.3 3.5-3-1.9 0-3.5 1.3-3.5 3Z" />
+    </Base>
+  );
+}
+
+export function IconHeart(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M20.4 6.5a5 5 0 0 0-7.1 0L12 7.8l-1.3-1.3a5 5 0 1 0-7.1 7.1L12 22l8.4-8.4a5 5 0 0 0 0-7.1Z" />
+    </Base>
+  );
+}
+
+export function IconStretch(props: IconProps) {
+  return (
+    <Base {...props}>
+      <circle cx="12" cy="4.5" r="2" />
+      <path d="M12 6.5V13" />
+      <path d="M6 10.5h12" />
+      <path d="m8.5 21.5 3.5-8.5 3.5 8.5" />
+    </Base>
+  );
+}
+
+export function IconBulb(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .8 1.6V18h5.4v-2.5c0-.6.3-1.2.8-1.6A6 6 0 0 0 12 3Z" />
+      <path d="M9.5 21h5" />
+    </Base>
+  );
+}
+
+export function IconRepeat(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="m17 2 4 4-4 4" />
+      <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+      <path d="m7 22-4-4 4-4" />
+      <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+    </Base>
+  );
+}
+
 export const ICONS: Record<string, (props: IconProps) => ReactElement> = {
   home: IconHome,
   trending: IconTrendingUp,
@@ -388,4 +463,12 @@ export const ICONS: Record<string, (props: IconProps) => ReactElement> = {
   layers: IconLayers,
   panel: IconPanelLeft,
   chart: IconChart,
+  health: IconActivity,
+  moon: IconMoon,
+  droplet: IconDroplet,
+  apple: IconApple,
+  heart: IconHeart,
+  stretch: IconStretch,
+  bulb: IconBulb,
+  repeat: IconRepeat,
 };

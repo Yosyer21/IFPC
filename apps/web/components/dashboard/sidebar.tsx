@@ -50,6 +50,8 @@ const ICON_MOTION: Record<string, string> = {
   whistle: 'nav-icon-pop',
   check: 'nav-icon-pop',
   play: 'nav-icon-pop',
+  calendar: 'nav-icon-pop',
+  health: 'nav-icon-float',
 };
 
 function motionFor(icon?: string): string {

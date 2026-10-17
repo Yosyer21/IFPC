@@ -23,6 +23,8 @@ export const SHARED_DASHBOARD_PREFIXES: readonly string[] = [
   '/dashboard/discovery',
   '/dashboard/live-sessions',
   '/dashboard/rooms',
+  '/dashboard/calendar',
+  '/dashboard/health',
 ];
 
 /** `true` si `pathname` es exactamente `prefix` o una ruta por debajo de él. */

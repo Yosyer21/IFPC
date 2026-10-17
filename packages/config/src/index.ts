@@ -14,3 +14,4 @@ export * from './profile';
 export * from './club-profile';
 export * from './training';
 export * from './discovery';
+export * from './calendar';

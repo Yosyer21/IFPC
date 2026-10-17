@@ -6,9 +6,10 @@ RBAC basado en el rol de la sesión (`packages/auth/src/permissions.ts`).
 
 - `ROLE_DASHBOARD_PREFIXES[role]` define el área accesible de cada rol (incluye `SCHOOL` → `/dashboard/school`).
 - `SHARED_DASHBOARD_PREFIXES` lista las **áreas compartidas** que ve cualquier perfil con
-  sesión (`/dashboard/discovery`, `/dashboard/live-sessions` y `/dashboard/rooms`). Es la
-  única excepción al guard por rol: así un jugador entra a lo que le invita su coach (una
-  sala de vídeo, una sesión anunciada) sin abrir el resto de áreas privadas.
+  sesión (`/dashboard/discovery`, `/dashboard/live-sessions`, `/dashboard/rooms`,
+  `/dashboard/calendar` y `/dashboard/health`). Es la única excepción al guard por rol: así un
+  jugador entra a lo que le invita su coach (una sala de vídeo, una sesión anunciada) sin abrir
+  el resto de áreas privadas.
 - `canAccessDashboard(role, pathname)` comprueba el prefijo **con límite de segmento**
   (`/dashboard/discovery-x` no cuenta como `/dashboard/discovery`).
 - El middleware usa esa misma función (una sola fuente de verdad, cubierta por

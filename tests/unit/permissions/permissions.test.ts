@@ -35,6 +35,12 @@ describe('canAccessDashboard', () => {
       // Salas de vídeo: el coach abre la sala y el jugador entra por el enlace.
       expect(canAccessDashboard(role, '/dashboard/rooms')).toBe(true);
       expect(canAccessDashboard(role, '/dashboard/rooms/abcd2345')).toBe(true);
+      // Calendario del sistema: agrega eventos de todas las áreas.
+      expect(canAccessDashboard(role, '/dashboard/calendar')).toBe(true);
+      expect(canAccessDashboard(role, '/dashboard/calendar/2026-10')).toBe(true);
+      // Salud («THE "1%" FACTOR»): hub de contenido para cualquier perfil.
+      expect(canAccessDashboard(role, '/dashboard/health')).toBe(true);
+      expect(canAccessDashboard(role, '/dashboard/health/sleep')).toBe(true);
     }
   });
 
@@ -43,6 +49,8 @@ describe('canAccessDashboard', () => {
     for (const role of ROLES) {
       expect(canAccessDashboard(role, '/dashboard/discovery-evil')).toBe(false);
       expect(canAccessDashboard(role, '/dashboard/rooms-evil')).toBe(false);
+      expect(canAccessDashboard(role, '/dashboard/calendar-evil')).toBe(false);
+      expect(canAccessDashboard(role, '/dashboard/health-evil')).toBe(false);
     }
     // Y una ruta bajo el área de otro rol sigue cerrada.
     expect(canAccessDashboard('CLUB', '/dashboard/player/discovery')).toBe(false);
