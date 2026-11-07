@@ -109,7 +109,7 @@ export default async function RoomsPage() {
                     {window.open ? (
                       <Link
                         href={`/dashboard/rooms/${room.joinCode}`}
-                        className="text-sm font-medium text-primary hover:underline"
+                        className="text-sm font-medium text-[#4f6b0a] hover:underline"
                       >
                         {isAuthor ? 'Open room' : 'Join room'}
                       </Link>

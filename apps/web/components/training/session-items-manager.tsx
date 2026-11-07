@@ -138,7 +138,7 @@ export function TrainingSessionItemsManager({
           />
           <button
             type="submit"
-            className="h-10 rounded-xl border border-border px-4 text-sm font-medium transition-colors hover:bg-white/5"
+            className="h-10 rounded-xl border border-border px-4 text-sm font-medium transition-colors hover:bg-muted"
           >
             Add
           </button>

@@ -94,7 +94,7 @@ export function CommandPalette({
         className="surface animate-scale-in w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-center gap-2.5 border-b border-white/10 px-4 py-3">
+        <div className="flex items-center gap-2.5 border-b border-border px-4 py-3">
           <IconSearch className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
             ref={inputRef}
@@ -104,7 +104,7 @@ export function CommandPalette({
             aria-label="Search pages"
             className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/60"
           />
-          <kbd className="rounded border border-white/10 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+          <kbd className="rounded border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground">
             ESC
           </kbd>
         </div>
@@ -130,7 +130,7 @@ export function CommandPalette({
                     className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                       isActive
                         ? 'chip-gradient font-medium'
-                        : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     {Icon ? (

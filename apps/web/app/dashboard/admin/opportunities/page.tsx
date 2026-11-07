@@ -1,10 +1,20 @@
 import type { Metadata } from 'next';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
-import { Badge, Card, CardContent } from '@ifpc/ui';
+import { Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { closeOpportunityAction } from '@/app/actions/admin';
 import { PageHeader } from '@/components/player/page-header';
+import { StatusBadge } from '@/components/admin/status-badge';
+
+/** Color de la etiqueta por tipo de oportunidad (paleta suave de referencia). */
+const OPPORTUNITY_TONE: Record<string, string> = {
+  TRIAL: 'fb-tag-violet',
+  SCOUTING: 'fb-tag-blue',
+  CONTRACT: 'fb-tag-amber',
+  SCHOLARSHIP: 'fb-tag-lime',
+  ACADEMY: 'fb-tag-gray',
+};
 
 export const metadata: Metadata = { title: 'Opportunities' };
 
@@ -34,37 +44,42 @@ export default async function AdminOpportunitiesPage() {
         </Card>
       ) : (
         <div className="flex flex-col gap-2">
-          {opportunities.map((opportunity) => (
-            <Card key={opportunity.id}>
-              <CardContent className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <p className="font-semibold">{opportunity.title}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {opportunity.club?.name ?? opportunity.university?.name ?? '—'} ·{' '}
-                    {(OPPORTUNITY_TYPE_LABELS as Record<string, string | undefined>)[
-                      opportunity.type
-                    ] ?? opportunity.type}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant={opportunity.status === 'OPEN' ? 'success' : 'default'}>
-                    {opportunity.status}
-                  </Badge>
+          {opportunities.map((opportunity) => {
+            const typeLabel =
+              (OPPORTUNITY_TYPE_LABELS as Record<string, string | undefined>)[opportunity.type] ??
+              opportunity.type;
+            return (
+              <Card key={opportunity.id} className="card-hover">
+                <CardContent className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span
+                        className={`fb-tag ${OPPORTUNITY_TONE[opportunity.type] ?? 'fb-tag-gray'}`}
+                      >
+                        {typeLabel}
+                      </span>
+                      <StatusBadge status={opportunity.status} />
+                    </div>
+                    <p className="mt-1 font-semibold">{opportunity.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
+                    </p>
+                  </div>
                   {opportunity.status === 'OPEN' ? (
                     <form action={closeOpportunityAction}>
                       <input type="hidden" name="opportunityId" value={opportunity.id} />
                       <button
                         type="submit"
-                        className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+                        className="rounded-xl border border-border px-3 py-1.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
                       >
                         Close
                       </button>
                     </form>
                   ) : null}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

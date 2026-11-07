@@ -6,6 +6,26 @@ navegación y los paneles oscuros, superficies claras, acento **verde lima**, gl
 y animaciones suaves — nace en el landing y se propaga mediante **componentes
 compartidos**, no página a página.
 
+## Rediseño 2.0 (identidad deportiva premium)
+
+El área privada pasa a un **tema claro** de plataforma deportiva: fondo papel
+`#F3F4F1`, tarjetas blancas con borde fino `#E3E5E1`, sidebar **fijo y oscuro**
+`#11151B` y un único acento **verde lima** `#C5F447`. La web pública y el auth
+conservan su identidad oscura: sus layouts envuelven el contenido en `.dark`, así
+que los tokens oscuros se re-aplican a ese subárbol sin tocar cada página.
+
+- **Tipografía**: `Anton` (titulares condensados, mayúsculas) + `Inter` (texto/UI),
+  cargadas con `next/font` en `apps/web/app/layout.tsx` como `--font-display` /
+  `--font-sans` (Tailwind: `font-display` / `font-sans`). En el área privada los
+  `h1` de página se pintan automáticamente como titulares deportivos.
+- **Primitivas** (`globals.css`): `.glass-card` (tarjeta blanca), `.surface`
+  (overlays), `.fb-page-title`/`.fb-page-sub` (encabezado de página),
+  `.fb-section-label`, `.fb-panel`/`.fb-stat` (paneles oscuros destacados y KPIs)
+  y `.fb-tag[-lime|amber|violet|blue|gray]` (etiquetas suaves por categoría).
+- **Shell**: `components/dashboard/{sidebar,header,dashboard-shell}.tsx` — sidebar
+  oscuro con wordmark FUTURE/BALLER e item activo en lima; barra superior blanca
+  compacta con búsqueda (⌘K), avisos y menú de usuario.
+
 ## Paleta
 
 | Token      | Hex       | Uso                                                      |

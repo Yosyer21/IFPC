@@ -208,7 +208,7 @@ function DayCell({
           ? 'border-brand/60 bg-brand/15 ring-1 ring-brand/50'
           : today
             ? 'border-brand/30 bg-brand/10'
-            : 'bg-white/[0.02] hover:border-brand/30 hover:bg-white/[0.05]'
+            : 'bg-muted/40 hover:border-brand/30 hover:bg-muted/40'
       }`}
       style={{ animationDelay: `${Math.min(index * 8, 340)}ms` }}
     >
@@ -351,7 +351,7 @@ export default async function CalendarPage({
         {KIND_ORDER.map((kind) => (
           <span
             key={kind}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-white/[0.02] px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-brand/30 hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:border-brand/30 hover:text-foreground"
           >
             <span className={`h-2.5 w-2.5 rounded-full ${DOTS[kind]}`} />
             {CALENDAR_EVENT_LABELS[kind]}

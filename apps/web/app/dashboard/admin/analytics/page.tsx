@@ -92,7 +92,7 @@ export default async function AdminAnalyticsPage() {
               <CardContent>
                 <h2 className="font-semibold">{section.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{section.description}</p>
-                <span className="mt-3 inline-block text-sm text-primary group-hover:underline">
+                <span className="mt-3 inline-block text-sm text-[#4f6b0a] group-hover:underline">
                   View analytics →
                 </span>
               </CardContent>

@@ -67,7 +67,7 @@ export default async function PlayerNotificationSettingsPage() {
           </p>
           <Link
             href="/dashboard/player/notifications"
-            className="text-sm text-primary hover:underline"
+            className="text-sm text-[#4f6b0a] hover:underline"
           >
             See my notifications →
           </Link>

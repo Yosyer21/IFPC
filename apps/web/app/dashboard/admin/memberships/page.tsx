@@ -36,7 +36,7 @@ export default async function AdminMembershipsPage() {
             {tier}: {count}
           </Badge>
         ))}
-        <Link href="/dashboard/admin/memberships/payments" className="text-sm text-primary hover:underline">
+        <Link href="/dashboard/admin/memberships/payments" className="text-sm text-[#4f6b0a] hover:underline">
           Payments ({payments}) →
         </Link>
       </div>

@@ -9,19 +9,24 @@ export function Table({ className = '', ...props }: HTMLAttributes<HTMLTableElem
 }
 
 export function TableHeader({ className = '', ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={`border-b border-border/60 bg-white/[0.03] ${className}`} {...props} />;
+  return <thead className={`border-b border-border bg-muted/50 ${className}`} {...props} />;
 }
 
 export function TableBody({ className = '', ...props }: HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className={`divide-y divide-border/60 ${className}`} {...props} />;
+  return <tbody className={`divide-y divide-border ${className}`} {...props} />;
 }
 
 export function TableRow({ className = '', ...props }: HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={`transition-colors hover:bg-white/[0.04] ${className}`} {...props} />;
+  return <tr className={`transition-colors hover:bg-muted/40 ${className}`} {...props} />;
 }
 
 export function TableHead({ className = '', ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
-  return <th className={`px-4 py-3 text-left font-medium ${className}`} {...props} />;
+  return (
+    <th
+      className={`px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground ${className}`}
+      {...props}
+    />
+  );
 }
 
 export function TableCell({ className = '', ...props }: TdHTMLAttributes<HTMLTableCellElement>) {

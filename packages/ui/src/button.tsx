@@ -13,15 +13,15 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    'inline-flex items-center justify-center rounded-full font-semibold transition-all disabled:pointer-events-none disabled:opacity-50';
+    'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50';
   const sizes = {
-    sm: 'px-3 py-1.5 text-xs',
-    md: 'px-4 py-2 text-sm',
+    sm: 'h-8 px-3 text-xs',
+    md: 'h-10 px-4 text-sm',
   };
   const variants = {
-    primary: 'bg-brand text-ink shadow-lg shadow-brand/20 hover:brightness-105 active:scale-[0.99]',
-    outline: 'border border-border bg-white/5 hover:bg-white/10',
-    ghost: 'hover:bg-muted',
+    primary: 'bg-brand text-ink hover:brightness-95',
+    outline: 'border border-border bg-card text-foreground hover:bg-muted',
+    ghost: 'text-foreground hover:bg-muted',
   };
   return (
     <button className={`${base} ${sizes[size]} ${variants[variant]} ${className}`} {...props} />

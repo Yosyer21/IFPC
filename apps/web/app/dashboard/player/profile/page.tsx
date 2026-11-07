@@ -243,7 +243,7 @@ export default async function PlayerProfilePage() {
                       href={link.href}
                       className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:gap-2.5 sm:py-2 sm:text-sm"
                     >
-                      <Icon className="h-4 w-4 shrink-0 text-primary" />
+                      <Icon className="h-4 w-4 shrink-0 text-[#4f6b0a]" />
                       {link.label}
                     </Link>
                   );
@@ -258,7 +258,7 @@ export default async function PlayerProfilePage() {
       <section className="mt-6 flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">My posts</h2>
-          <Link href="/dashboard/discovery" className="text-sm text-primary hover:underline">
+          <Link href="/dashboard/discovery" className="text-sm text-[#4f6b0a] hover:underline">
             Post on Discovery →
           </Link>
         </div>

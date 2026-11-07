@@ -50,7 +50,7 @@ export default async function AdminSettingsPermissionsPage() {
               <ul className="flex flex-col gap-1.5">
                 {(ROLE_PERMISSIONS[role] ?? []).map((permission) => (
                   <li key={permission} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="mt-0.5 text-primary">✓</span>
+                    <span className="mt-0.5 text-[#4f6b0a]">✓</span>
                     {permission}
                   </li>
                 ))}

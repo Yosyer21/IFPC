@@ -43,7 +43,7 @@ export default async function ContentPage() {
               <CardContent>
                 <h2 className="font-semibold">{category.title}</h2>
                 <p className="mt-1 text-sm text-muted-foreground">{category.description}</p>
-                <span className="mt-3 inline-block text-sm text-primary group-hover:underline">
+                <span className="mt-3 inline-block text-sm text-[#4f6b0a] group-hover:underline">
                   Manage →
                 </span>
               </CardContent>

@@ -1,6 +1,5 @@
 import type { ComponentType, SVGProps } from 'react';
 import Link from 'next/link';
-import { Card, CardContent } from '@ifpc/ui';
 import {
   IconFile,
   IconInbox,
@@ -89,28 +88,35 @@ export function ClubProfileStats({
   ];
 
   return (
-    <Card className={`animate-fade-up ${className ?? ''}`} style={{ animationDelay: '80ms' }}>
-      <CardContent className="flex flex-col gap-4">
-        <h2 className="font-semibold">Club activity</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {kpis.map((kpi) => {
-            const Icon = kpi.icon;
-            return (
-              <Link
-                key={kpi.label}
-                href={kpi.href}
-                className="rounded-lg border border-border px-3 py-2.5 transition-colors hover:border-primary/50 hover:bg-primary/5"
-              >
-                <span className="flex items-center gap-2 text-muted-foreground">
-                  <Icon className="h-3.5 w-3.5 shrink-0 text-primary" />
-                  <span className="truncate text-xs">{kpi.label}</span>
+    <section
+      className={`fb-panel animate-fade-up relative overflow-hidden p-5 sm:p-6 ${className ?? ''}`}
+    >
+      <div className="relative flex items-center justify-between gap-3">
+        <h2 className="text-sm font-semibold text-white">Club activity</h2>
+        <span className="fb-section-label text-white/40">At a glance</span>
+      </div>
+      <div className="relative mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {kpis.map((kpi) => {
+          const Icon = kpi.icon;
+          return (
+            <Link
+              key={kpi.label}
+              href={kpi.href}
+              className="rounded-xl border border-white/10 px-4 py-3 transition-colors hover:border-brand/40 hover:bg-white/5"
+            >
+              <span className="flex items-center gap-1.5 text-white/50">
+                <Icon className="h-3.5 w-3.5 shrink-0 text-brand" />
+                <span className="truncate text-[10px] font-semibold uppercase tracking-[0.12em]">
+                  {kpi.label}
                 </span>
-                <span className="mt-1 block text-2xl font-bold tabular-nums">{kpi.value}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+              </span>
+              <span className="mt-1 block font-display text-3xl leading-none text-brand tabular-nums">
+                {kpi.value}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
   );
 }

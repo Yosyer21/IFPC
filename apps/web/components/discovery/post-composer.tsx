@@ -15,11 +15,11 @@ import {
 import { COMMENTS_POLICY_LABELS } from '@/lib/labels';
 
 const fieldClass =
-  'w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
+  'w-full rounded-xl border border-border bg-muted px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-muted focus:ring-2 focus:ring-ring/40';
 
 /** Botón de la barra inferior: solo icono, con nombre accesible oculto. */
 const toolClass =
-  'inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground';
+  'inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground';
 
 /** Opciones de encuesta al abrirla y máximo que acepta la validación. */
 const POLL_START = 2;
@@ -91,7 +91,7 @@ export function PostComposer({
               key={mention.id}
               type="button"
               onClick={() => insertMention(mention.name)}
-              className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+              className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               @{mention.name}
             </button>
@@ -120,7 +120,7 @@ export function PostComposer({
               <button
                 type="button"
                 onClick={() => setPollCount((count) => count + 1)}
-                className="text-xs font-medium text-emerald-300 hover:underline"
+                className="text-xs font-medium text-emerald-600 hover:underline"
               >
                 Add option
               </button>
@@ -225,7 +225,7 @@ export function PostComposer({
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}
       {state.success ? <p className="text-sm text-emerald-400">{state.success}</p> : null}
 
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
         <div className="flex items-center gap-1">
           <label htmlFor={fileId} className={toolClass} title="Photo or video">
             <IconImage className="h-4 w-4" />

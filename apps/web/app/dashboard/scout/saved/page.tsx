@@ -36,7 +36,7 @@ export default async function ScoutSavedPage() {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               You have not saved any players.{' '}
-              <Link href="/dashboard/scout/players" className="text-primary hover:underline">
+              <Link href="/dashboard/scout/players" className="text-[#4f6b0a] hover:underline">
                 Explore players
               </Link>
             </p>

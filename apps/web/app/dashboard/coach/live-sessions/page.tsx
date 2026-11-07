@@ -133,7 +133,7 @@ export default async function CoachLiveSessionsPage() {
               <div className="flex items-center gap-3">
                 <Link
                   href={`/dashboard/live-sessions/${liveSession.id}`}
-                  className="text-sm font-medium text-primary hover:underline"
+                  className="text-sm font-medium text-[#4f6b0a] hover:underline"
                 >
                   Open
                 </Link>

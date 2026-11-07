@@ -15,13 +15,13 @@ export function Select({ label, options, placeholder, className = '', id, ...pro
   return (
     <div className="flex flex-col gap-1.5">
       {label ? (
-        <label htmlFor={selectId} className="text-sm font-medium">
+        <label htmlFor={selectId} className="text-xs font-semibold text-foreground/80">
           {label}
         </label>
       ) : null}
       <select
         id={selectId}
-        className={`h-10 w-full rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40 ${className}`}
+        className={`h-10 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground outline-none transition-colors focus:border-brand focus:ring-2 focus:ring-ring/40 ${className}`}
         {...props}
       >
         {placeholder ? <option value="">{placeholder}</option> : null}

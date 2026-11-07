@@ -59,7 +59,7 @@ export default async function AdminRecruitmentPage() {
                   ))
                 )}
               </div>
-              <Link href={section.href} className="mt-3 inline-block text-sm text-primary hover:underline">
+              <Link href={section.href} className="mt-3 inline-block text-sm text-[#4f6b0a] hover:underline">
                 See all →
               </Link>
             </CardContent>

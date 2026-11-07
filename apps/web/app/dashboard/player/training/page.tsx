@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { auth } from '@ifpc/auth';
 import { Tabs } from '@ifpc/ui';
 import { PageHeader } from '@/components/player/page-header';
+import { FeaturedSessionPanel } from '@/components/training/featured-session-panel';
 import { TrainingSection } from '@/components/training/content-section';
 import { TrainingSessionSection } from '@/components/training/session-section';
 import { TrainingProgressPanel } from '@/components/training/progress-panel';
@@ -60,6 +61,9 @@ export default async function PlayerFootballCenterPage() {
   };
 
   const planGroups = splitTrainingSessions(plan.sessions);
+  // Próxima sesión destacada: la del coach si la hay; si no, la primera del plan.
+  const featured =
+    plan.sessions.find((session) => session.ownerType === 'COACH') ?? plan.sessions[0] ?? null;
   const planTab = (
     <div className="flex flex-col gap-6">
       {plan.sessions.length === 0 ? (
@@ -107,6 +111,7 @@ export default async function PlayerFootballCenterPage() {
         subtitle="Courses, exercises, your weekly plan and your progress: general, from your coach and from your club"
         icon="play"
       />
+      {featured ? <FeaturedSessionPanel session={featured} /> : null}
       <Tabs tabs={tabs} defaultValue="courses" />
     </div>
   );

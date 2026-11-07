@@ -78,7 +78,7 @@ export function TrainingSessionCard({
             <p className="text-xs text-muted-foreground">
               {session.completedCount} of {total} completed
             </p>
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div className="h-1.5 overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full rounded-full bg-emerald-400"
                 style={{ width: `${Math.round((session.completedCount / total) * 100)}%` }}

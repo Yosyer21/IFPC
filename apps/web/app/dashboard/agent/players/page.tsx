@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
-import { Badge, Card, CardContent } from '@ifpc/ui';
+import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
+import { StatusBadge } from '@/components/admin/status-badge';
 
 export const metadata: Metadata = { title: 'My players' };
 
@@ -28,7 +29,7 @@ export default async function AgentPlayersPage() {
       <PageHeader title="My players" icon="users">
         <Link
           href="/dashboard/agent/players/add"
-          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+          className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-ink transition-colors hover:brightness-95"
         >
           Add player
         </Link>
@@ -39,7 +40,7 @@ export default async function AgentPlayersPage() {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               You don't represent any player yet.{' '}
-              <Link href="/dashboard/agent/players/add" className="text-primary hover:underline">
+              <Link href="/dashboard/agent/players/add" className="text-[#4f6b0a] hover:underline">
                 Add your first player
               </Link>
             </p>
@@ -60,23 +61,23 @@ export default async function AgentPlayersPage() {
                     lastName={entry.player.lastName}
                     size="md"
                   />
-                  <div className="min-w-0">
-                    <h2 className="truncate font-semibold">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="truncate text-base font-bold leading-snug">
                       {entry.player.firstName} {entry.player.lastName}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {entry.player.position
-                        ? ((POSITION_LABELS as Record<string, string | undefined>)[
-                            entry.player.position
-                          ] ?? entry.player.position)
-                        : 'Undefined position'}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <Badge variant="success">{entry.player.status}</Badge>
-                      <span className="text-xs text-muted-foreground">
-                        Desde {entry.since.toLocaleDateString('en-GB')}
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      <span className="fb-tag fb-tag-gray">
+                        {entry.player.position
+                          ? ((POSITION_LABELS as Record<string, string | undefined>)[
+                              entry.player.position
+                            ] ?? entry.player.position)
+                          : 'Undefined position'}
                       </span>
+                      <StatusBadge status={entry.player.status} />
                     </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Since {entry.since.toLocaleDateString('en-GB')}
+                    </p>
                   </div>
                 </CardContent>
               </Card>

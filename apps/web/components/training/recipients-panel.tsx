@@ -63,7 +63,7 @@ export function TrainingRecipientsPanel({
               <input type="hidden" name={field} value={target.id} />
               <button
                 type="submit"
-                className="rounded-md border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/5"
+                className="rounded-md border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
               >
                 Send reminder
               </button>

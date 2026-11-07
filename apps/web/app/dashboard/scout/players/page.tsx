@@ -49,30 +49,35 @@ export default async function ScoutPlayersPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {players.map((player) => (
             <Card key={player.id} className="card-hover h-full">
-              <CardContent className="flex flex-col gap-2">
+              <CardContent className="flex h-full flex-col gap-3">
                 <div className="flex items-center gap-3">
                   <PlayerAvatar firstName={player.firstName} lastName={player.lastName} size="md" />
-                  <div className="min-w-0">
-                    <h2 className="truncate font-semibold">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="truncate text-base font-bold leading-snug">
                       {player.firstName} {player.lastName}
                     </h2>
-                    <p className="truncate text-sm text-muted-foreground">
-                      {player.position
-                        ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
-                          player.position)
-                        : 'No position'}
-                      {player.heightCm ? ` · ${player.heightCm} cm` : ''}
-                    </p>
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      <span className="fb-tag fb-tag-gray">
+                        {player.position
+                          ? ((POSITION_LABELS as Record<string, string | undefined>)[
+                              player.position
+                            ] ?? player.position)
+                          : 'No position'}
+                      </span>
+                      {player.heightCm ? (
+                        <span className="text-xs text-muted-foreground">{player.heightCm} cm</span>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
-                <form action={savePlayerAction}>
+                <form action={savePlayerAction} className="mt-auto">
                   <input type="hidden" name="playerId" value={player.id} />
                   <button
                     type="submit"
-                    className={`w-full rounded-md border px-3 py-1.5 text-sm transition-colors ${
+                    className={`w-full rounded-xl border px-3 py-2 text-sm font-semibold transition-colors ${
                       savedIds.has(player.id)
-                        ? 'border-emerald-600/40 text-emerald-600 hover:bg-muted'
-                        : 'border-border hover:bg-muted'
+                        ? 'border-[#4f6b0a]/40 bg-brand/10 text-[#4f6b0a] hover:bg-brand/15'
+                        : 'border-border bg-card text-foreground hover:bg-muted'
                     }`}
                   >
                     {savedIds.has(player.id) ? '★ Saved' : 'Save'}

@@ -52,7 +52,7 @@ export default async function ScoutOpportunitiesPage() {
                 </p>
                 <Link
                   href="/dashboard/scout/players"
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-[#4f6b0a] hover:underline"
                 >
                   Find candidates →
                 </Link>

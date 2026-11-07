@@ -34,7 +34,7 @@ const SETTINGS_PATHS: Record<string, string> = {
 };
 
 const itemClass =
-  'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand';
+  'flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground';
 
 /**
  * Barra superior del área privada: menú móvil, búsqueda global (⌘K), avisos y
@@ -64,28 +64,28 @@ export function DashboardHeader({
   const settingsHref = SETTINGS_PATHS[role];
 
   return (
-    <header className="sticky top-0 z-40 flex items-center gap-2 border-b border-brand/25 bg-muted px-4 py-3">
+    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-border bg-card px-4 lg:px-6">
       <button
         type="button"
         onClick={onOpenMenu}
         aria-label="Open menu"
-        className="rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:bg-brand/10 hover:text-brand md:hidden"
+        className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
       >
         <IconMenu className="h-5 w-5" />
       </button>
 
-      <Link href="/" className="text-gradient-brand text-base font-black tracking-tight md:hidden">
-        Future Baller
+      <Link href="/" className="font-display text-lg uppercase tracking-tight text-ink md:hidden">
+        FUTURE <span className="text-brand">BALLER</span>
       </Link>
 
       <button
         type="button"
         onClick={onOpenSearch}
-        className="nav-item hidden items-center gap-2 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-brand md:inline-flex"
+        className="hidden h-9 items-center gap-2 rounded-full bg-muted px-3.5 text-sm text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
       >
-        <IconSearch className="nav-icon nav-icon-pop h-4 w-4" />
+        <IconSearch className="h-4 w-4" />
         Search pages…
-        <kbd className="ml-3 px-1.5 py-0.5 text-[11px] text-muted-foreground/70">⌘K</kbd>
+        <kbd className="ml-4 text-[11px] text-muted-foreground/70">⌘K</kbd>
       </button>
 
       <div className="flex-1" />
@@ -95,7 +95,7 @@ export function DashboardHeader({
       <Dropdown
         align="right"
         trigger={
-          <span className="flex items-center gap-2 py-1 pl-1 pr-2 text-muted-foreground transition-colors hover:text-brand">
+          <span className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 text-muted-foreground transition-colors hover:text-foreground">
             <PlayerAvatar
               firstName={firstName}
               lastName={lastName}
@@ -105,7 +105,7 @@ export function DashboardHeader({
             <span className="hidden max-w-32 truncate text-sm font-medium sm:block">
               {userName}
             </span>
-            <IconChevronDown className="h-4 w-4 text-brand" />
+            <IconChevronDown className="h-4 w-4 text-muted-foreground" />
           </span>
         }
       >

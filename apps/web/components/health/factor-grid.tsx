@@ -89,7 +89,7 @@ export function FactorGrid({ factors }: { factors: HealthFactor[] }) {
           value={query}
           onChange={(event) => setQuery(event.currentTarget.value)}
           placeholder="Filter: sleep, water, focus…"
-          className="h-10 w-full rounded-xl border border-border bg-white/[0.03] px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-brand/50 focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-10 w-full rounded-xl border border-border bg-muted/50 px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-brand/50 focus-visible:ring-2 focus-visible:ring-ring"
         />
       </label>
 
@@ -114,7 +114,7 @@ export function FactorGrid({ factors }: { factors: HealthFactor[] }) {
                 className="animate-fade-up group block scroll-mt-32 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 style={{ animationDelay: `${index * 55}ms` }}
               >
-                <Card className="card-hover h-full border border-border/60 bg-white/[0.02] group-hover:border-brand/40">
+                <Card className="card-hover h-full border border-border/60 bg-muted/40 group-hover:border-brand/40">
                   <CardContent className="flex h-full flex-col gap-3">
                     <div className="flex items-center gap-3">
                       <span

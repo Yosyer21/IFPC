@@ -120,7 +120,7 @@ export default async function ParentChildTrainingPage({
                   </div>
                   <Link
                     href={`/dashboard/parent/children/${playerId}/training`}
-                    className="text-sm text-primary hover:underline"
+                    className="text-sm text-[#4f6b0a] hover:underline"
                   >
                     View →
                   </Link>

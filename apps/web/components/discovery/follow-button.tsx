@@ -32,7 +32,7 @@ export function FollowButton({
     ? 'px-2.5 py-1 text-xs font-semibold'
     : 'px-4 py-2 text-sm font-semibold';
   const style = following
-    ? 'border border-border bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground'
+    ? 'border border-border bg-muted text-muted-foreground hover:bg-muted hover:text-foreground'
     : 'bg-gradient-to-r from-cyan-400 via-emerald-400 to-lime-400 text-emerald-950 shadow-lg shadow-emerald-500/20 hover:brightness-105';
 
   return (

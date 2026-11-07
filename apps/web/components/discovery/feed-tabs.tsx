@@ -40,8 +40,8 @@ export function FeedTabs({
             aria-current={active ? 'page' : undefined}
             className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
               active
-                ? 'bg-emerald-500/15 text-emerald-300'
-                : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+                ? 'bg-emerald-500/15 text-emerald-700'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
             }`}
           >
             {DISCOVERY_TAB_LABELS[tab] ?? tab}
@@ -52,7 +52,7 @@ export function FeedTabs({
       {filters.tag ? (
         <Link
           href={hrefFor(base, filters.tab, { ...filters, tag: null })}
-          className="ml-auto rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+          className="ml-auto rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           Remove #{filters.tag}
         </Link>

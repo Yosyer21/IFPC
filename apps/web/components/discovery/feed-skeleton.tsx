@@ -5,7 +5,7 @@
  */
 import { Card, CardContent } from '@ifpc/ui';
 
-const bar = 'animate-pulse rounded bg-white/10';
+const bar = 'animate-pulse rounded bg-muted';
 
 /** Esqueleto de una post. */
 export function PostSkeleton() {
@@ -20,7 +20,7 @@ export function PostSkeleton() {
             <div className={`h-3 w-3/4 ${bar}`} />
           </div>
         </div>
-        <div className="mt-3 flex gap-4 border-t border-white/10 pt-3">
+        <div className="mt-3 flex gap-4 border-t border-border pt-3">
           <div className={`h-3 w-16 ${bar}`} />
           <div className={`h-3 w-20 ${bar}`} />
         </div>

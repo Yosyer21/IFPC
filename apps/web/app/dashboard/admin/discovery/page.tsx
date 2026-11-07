@@ -81,7 +81,7 @@ export default async function AdminDiscoveryPage() {
                   </p>
                 ) : null}
 
-                <ul className="flex flex-col gap-1 border-l border-white/10 pl-3">
+                <ul className="flex flex-col gap-1 border-l border-border pl-3">
                   {entry.reports.map((report) => (
                     <li key={report.id} className="text-xs text-muted-foreground">
                       <span className="font-medium text-foreground">{report.reporter.name}</span>:{' '}
@@ -93,7 +93,7 @@ export default async function AdminDiscoveryPage() {
                 <div className="flex flex-wrap items-center gap-2">
                   <Link
                     href={`/dashboard/discovery/${entry.id}`}
-                    className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+                    className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     See post
                   </Link>

@@ -75,7 +75,7 @@ export default async function UniversityOpportunitiesPage() {
                   ) : null}
                   {isScholarship ? (
                     <div className="mt-auto flex items-center gap-2 pt-2">
-                      <IconBook className="h-4 w-4 text-primary" />
+                      <IconBook className="h-4 w-4 text-[#4f6b0a]" />
                       <span className="text-xs text-muted-foreground">
                         Compatible with higher education
                       </span>

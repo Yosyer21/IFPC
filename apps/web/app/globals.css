@@ -15,27 +15,27 @@
    * ellos, así que cambiar la paleta se hace aquí y se propaga a toda la app.
    */
   :root {
-    --background: 80 13% 95%;
-    --foreground: 213 21% 8%;
-    --card: 0 0% 100%;
-    --card-foreground: 213 21% 8%;
-    --border: 200 8% 88%;
-    --primary: 77 92% 62%;
-    --primary-foreground: 213 21% 8%;
-    --muted: 80 8% 92%;
-    --muted-foreground: 216 10% 45%;
-    --destructive: 0 74% 42%;
+    --background: 80 12% 95%; /* #F3F4F1 — fondo principal (papel) */
+    --foreground: 216 18% 11%; /* #171B21 — texto principal */
+    --card: 0 0% 100%; /* #FFFFFF — tarjetas */
+    --card-foreground: 216 18% 11%;
+    --border: 90 6% 89%; /* #E3E5E1 — bordes finos */
+    --primary: 76 89% 62%; /* #C5F447 — verde lima */
+    --primary-foreground: 217 23% 9%;
+    --muted: 80 8% 92%; /* gris claro de inputs/franjas */
+    --muted-foreground: 217 9% 45%; /* #69717E — texto secundario */
+    --destructive: 0 72% 45%;
     --destructive-foreground: 0 0% 100%;
-    --ring: 77 92% 62%;
-    --radius: 0.5rem;
+    --ring: 76 89% 62%;
+    --radius: 0.75rem;
 
     /* Tokens de marca (reutilizables desde Tailwind: bg-brand, text-ink, …) */
-    --brand: 77 92% 62%;
-    --brand-foreground: 213 21% 8%;
-    --ink: 213 21% 8%;
-    --panel: 213 20% 9%;
-    --mist: 80 13% 95%;
-    --subtle: 216 10% 45%;
+    --brand: 76 89% 62%; /* #C5F447 */
+    --brand-foreground: 217 23% 9%;
+    --ink: 217 23% 9%; /* #11151B — negro azulado (sidebar/paneles) */
+    --panel: 217 19% 13%; /* #1B2028 — negro secundario */
+    --mist: 80 12% 95%; /* #F3F4F1 */
+    --subtle: 217 9% 45%; /* #69717E */
   }
 
   .dark {
@@ -44,15 +44,15 @@
     --card: 213 20% 9%;
     --card-foreground: 0 0% 97%;
     --border: 213 14% 19%;
-    --primary: 77 92% 62%;
+    --primary: 76 89% 62%;
     --primary-foreground: 213 21% 8%;
     --muted: 213 16% 13%;
     --muted-foreground: 216 12% 68%;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --ring: 77 92% 62%;
+    --ring: 76 89% 62%;
 
-    --brand: 77 92% 62%;
+    --brand: 76 89% 62%;
     --brand-foreground: 213 21% 8%;
     --ink: 213 21% 8%;
     --panel: 213 20% 9%;
@@ -326,15 +326,91 @@
 
   /* Seamless sections: the app no longer draws "cards". Surfaces are reserved
      for overlays (see `.surface`). */
+  /* White card surface (Future Baller 2.0): plana, borde discreto, sin blur. */
   .glass-card {
-    background-color: transparent;
-    border: 1px solid transparent;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px 0 hsl(var(--ink) / 0.04);
   }
 
   /* Solid panel for overlays: modals, dropdowns, popovers, command palette. */
   .surface {
     background-color: hsl(var(--card));
     border: 1px solid hsl(var(--border));
+    border-radius: 1rem;
+    box-shadow: 0 12px 32px -18px hsl(var(--ink) / 0.35);
+  }
+
+  /* ── Future Baller 2.0 — primitivas visuales del rediseño ──────────────── */
+  /* Titulares deportivos: condensados, en mayúsculas, con peso visual. */
+  .fb-display {
+    font-family: var(--font-display), 'Anton', 'Oswald', system-ui, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.9;
+  }
+  .fb-page-title {
+    font-family: var(--font-display), 'Anton', 'Oswald', system-ui, sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: 0.005em;
+    font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+    color: hsl(var(--foreground));
+  }
+  .fb-page-sub {
+    margin-top: 0.4rem;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    color: hsl(var(--muted-foreground));
+  }
+  .fb-section-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+  /* Panel oscuro destacado (#11151B) para información y KPIs importantes. */
+  .fb-panel {
+    background-color: hsl(var(--ink));
+    color: #fff;
+    border-radius: 1.25rem;
+  }
+  .fb-panel-line {
+    border-color: hsl(0 0% 100% / 0.1);
+  }
+  .fb-stat {
+    font-family: var(--font-display), 'Anton', 'Oswald', system-ui, sans-serif;
+    line-height: 1;
+    color: hsl(var(--brand));
+  }
+  /* Etiquetas suaves por categoría (verde, ámbar, violeta, azul, gris). */
+  .fb-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 0.45rem;
+    padding: 0.12rem 0.45rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+  }
+  .fb-tag-lime { background: hsl(var(--brand) / 0.18); color: #4f6b0a; }
+  .fb-tag-amber { background: hsl(32 90% 55% / 0.16); color: #a4580a; }
+  .fb-tag-violet { background: hsl(258 70% 60% / 0.16); color: #5b3bb0; }
+  .fb-tag-blue { background: hsl(210 80% 52% / 0.16); color: #1f5fa6; }
+  .fb-tag-gray { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+
+  /* En el área privada los H1 de página son titulares deportivos. */
+  .dashboard-main h1 {
+    font-family: var(--font-display), 'Anton', 'Oswald', system-ui, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    line-height: 0.95;
   }
 
   /* ── Fondo del área privada ──────────────────────────────────────────────

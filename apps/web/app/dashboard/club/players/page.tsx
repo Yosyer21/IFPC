@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
-import { Badge, Card, CardContent } from '@ifpc/ui';
+import { Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
 import { PlayerAvatar } from '@/components/player/avatar';
@@ -51,22 +51,35 @@ export default async function ClubPlayersPage() {
               <Card className="card-hover h-full">
                 <CardContent className="flex items-center gap-3">
                   <PlayerAvatar firstName={player.firstName} lastName={player.lastName} size="md" />
-                  <div className="min-w-0">
-                    <h2 className="truncate font-semibold">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="truncate text-base font-bold leading-snug">
                       {player.firstName} {player.lastName}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {player.position
-                        ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ??
-                          player.position)
-                        : 'Undefined position'}
-                      {player.heightCm ? ` · ${player.heightCm} cm` : ''}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <Badge>{player.nationality ?? '—'}</Badge>
-                      <Badge variant="success">
-                        {player.videos.length > 0 ? `${player.videos.length} video(s)` : 'No videos'}
-                      </Badge>
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      <span className="fb-tag fb-tag-gray">
+                        {player.position
+                          ? ((POSITION_LABELS as Record<string, string | undefined>)[
+                              player.position
+                            ] ?? player.position)
+                          : 'Undefined position'}
+                      </span>
+                      {player.heightCm ? (
+                        <span className="text-xs text-muted-foreground">{player.heightCm} cm</span>
+                      ) : null}
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                      {player.nationality ? (
+                        <span className="fb-tag fb-tag-blue">{player.nationality}</span>
+                      ) : null}
+                      <span
+                        className={`fb-tag ${
+                          player.videos.length > 0 ? 'fb-tag-lime' : 'fb-tag-gray'
+                        }`}
+                      >
+                        {player.videos.length > 0
+                          ? `${player.videos.length} video(s)`
+                          : 'No videos'}
+                      </span>
                     </div>
                   </div>
                 </CardContent>

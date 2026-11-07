@@ -153,20 +153,25 @@ export default async function ClubDashboardPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      {/* Hero compacto */}
-      <section className="animate-fade-up mb-6 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-card via-card to-primary/5 p-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+      {/* Hero (panel oscuro destacado) */}
+      <section className="fb-panel animate-fade-up relative mb-6 overflow-hidden p-6 sm:p-7">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-12 top-0 h-full w-40 rotate-12 bg-brand/10"
+          style={{ clipPath: 'polygon(40% 0, 100% 0, 60% 100%, 0 100%)' }}
+        />
+        <div className="relative flex flex-wrap items-center gap-4">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand text-ink">
             <IconShield className="h-7 w-7" />
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight">{club.name}</h1>
-              <Badge variant={club.verified ? 'success' : 'warning'}>
+              <h1 className="text-2xl text-white">{club.name}</h1>
+              <span className={`fb-tag ${club.verified ? 'fb-tag-lime' : 'fb-tag-amber'}`}>
                 {club.verified ? 'Verified' : 'Pending verification'}
-              </Badge>
+              </span>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-white/60">
               {club.city ? `${club.city}, ` : ''}
               {club.country}
               {club.league ? ` · ${club.league}` : ''} · Recruitment centre
@@ -175,19 +180,19 @@ export default async function ClubDashboardPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/dashboard/club/opportunities"
-              className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
+              className="rounded-xl border border-white/15 px-3 py-2 text-sm text-white transition-colors hover:bg-white/10"
             >
               Post opportunity
             </Link>
             <Link
               href="/dashboard/club/requirements/new"
-              className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
+              className="rounded-xl border border-white/15 px-3 py-2 text-sm text-white transition-colors hover:bg-white/10"
             >
               New requirement
             </Link>
             <Link
               href="/dashboard/club/applications"
-              className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+              className="rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-ink transition-colors hover:brightness-95"
             >
               View requests
             </Link>
@@ -201,7 +206,7 @@ export default async function ClubDashboardPage() {
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-500">
             <IconBell className="h-4 w-4" />
           </span>
-          <p className="flex-1 text-sm text-amber-100">
+          <p className="flex-1 text-sm text-amber-700">
             You have <strong>{pendingActions.length} action{pendingActions.length === 1 ? '' : 's'} pending</strong> en el centro de reclutamiento.
           </p>
           <Link
@@ -216,7 +221,7 @@ export default async function ClubDashboardPage() {
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-500">
             <IconShield className="h-4 w-4" />
           </span>
-          <p className="text-sm text-emerald-100">
+          <p className="text-sm text-emerald-700">
             All caught up. You have no pending actions in the recruitment center.
           </p>
         </div>
@@ -234,7 +239,7 @@ export default async function ClubDashboardPage() {
         <CardContent>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="font-semibold">Pipeline de reclutamiento</h2>
-            <Link href="/dashboard/club/applications" className="text-sm text-primary hover:underline">
+            <Link href="/dashboard/club/applications" className="text-sm text-[#4f6b0a] hover:underline">
               Gestionar requests →
             </Link>
           </div>
@@ -250,7 +255,7 @@ export default async function ClubDashboardPage() {
                 >
                   <Card className="card-hover h-full">
                     <CardContent className="flex flex-col items-center gap-1 text-center">
-                      <Icon className="h-5 w-5 text-primary" />
+                      <Icon className="h-5 w-5 text-[#4f6b0a]" />
                       <div className="text-3xl font-bold tabular-nums">
                         <CountUp value={stage.value} />
                       </div>
@@ -319,7 +324,7 @@ export default async function ClubDashboardPage() {
           <CardContent>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-semibold">Active requirements</h2>
-              <Link href="/dashboard/club/requirements/new" className="text-sm text-primary hover:underline">
+              <Link href="/dashboard/club/requirements/new" className="text-sm text-[#4f6b0a] hover:underline">
                 Create →
               </Link>
             </div>
@@ -335,7 +340,7 @@ export default async function ClubDashboardPage() {
                     href={`/dashboard/club/requirements/${requirement.id}`}
                     className="flex items-center gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary/50"
                   >
-                    <IconBriefcase className="h-4 w-4 shrink-0 text-primary" />
+                    <IconBriefcase className="h-4 w-4 shrink-0 text-[#4f6b0a]" />
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{requirement.title}</div>
                       <div className="truncate text-xs text-muted-foreground">
@@ -366,7 +371,7 @@ export default async function ClubDashboardPage() {
               <div className="flex flex-col divide-y divide-border/60">
                 {recentApps.map((application) => (
                   <div key={application.id} className="flex items-center gap-3 py-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-[#4f6b0a]">
                       <IconUsers className="h-4 w-4" />
                     </span>
                     <div className="min-w-0 flex-1">
@@ -392,7 +397,7 @@ export default async function ClubDashboardPage() {
                 ))}
                 {recentInquiries.map((inquiry) => (
                   <div key={inquiry.id} className="flex items-center gap-3 py-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-[#4f6b0a]">
                       <IconMail className="h-4 w-4" />
                     </span>
                     <div className="min-w-0 flex-1">
@@ -426,7 +431,7 @@ export default async function ClubDashboardPage() {
                       href={action.href}
                       className="flex items-center gap-3 rounded-md border border-border p-3 transition-colors hover:border-primary/50 hover:bg-primary/5"
                     >
-                      <Icon className="h-4 w-4 shrink-0 text-primary" />
+                      <Icon className="h-4 w-4 shrink-0 text-[#4f6b0a]" />
                       <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-medium">{action.text}</div>
                         <div className="text-xs text-muted-foreground">{action.meta}</div>

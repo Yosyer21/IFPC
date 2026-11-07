@@ -6,7 +6,7 @@ import { POST_COMMENT_MAX } from '@ifpc/validation';
 import { Button } from '@ifpc/ui';
 
 const fieldClass =
-  'w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
+  'w-full rounded-xl border border-border bg-muted px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-muted focus:ring-2 focus:ring-ring/40';
 
 /** Añade un comment a una post (o una reply si se pasa `parentId`). */
 export function CommentForm({ postId, parentId }: { postId: string; parentId?: string }) {

@@ -114,7 +114,7 @@ export default async function DiscoveryAnalyticsPage() {
                   <Link
                     key={tag.tag}
                     href={`/dashboard/discovery/tag/${tag.tag}`}
-                    className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+                    className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     #{tag.tag} · {tag.posts}
                   </Link>

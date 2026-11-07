@@ -35,7 +35,7 @@ export default async function AgentClubsPage() {
           <CardContent className="py-10 text-center">
             <p className="text-sm text-muted-foreground">
               You haven't had relationships with clubs yet. Make a{' '}
-              <Link href="/dashboard/agent/submissions/new" className="text-primary hover:underline">
+              <Link href="/dashboard/agent/submissions/new" className="text-[#4f6b0a] hover:underline">
                 new submission
               </Link>{' '}
               to get started.
@@ -54,7 +54,7 @@ export default async function AgentClubsPage() {
               <Card className="card-hover">
                 <CardContent className="flex items-center justify-between gap-4">
                   <div className="flex min-w-0 items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-[#4f6b0a]">
                       <IconBriefcase className="h-5 w-5" />
                     </span>
                     <div className="min-w-0">

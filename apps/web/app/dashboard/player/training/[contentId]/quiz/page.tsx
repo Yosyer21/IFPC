@@ -115,7 +115,7 @@ export default async function PlayerQuizPage({
           <div className="flex flex-wrap gap-2">
             <Link
               href={`/dashboard/player/training/${contentId}/quiz`}
-              className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-white/5"
+              className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
             >
               Retake quiz
             </Link>
@@ -140,7 +140,7 @@ export default async function PlayerQuizPage({
                   {question.options.map((option) => (
                     <label
                       key={option.id}
-                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-white/5"
+                      className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-muted"
                     >
                       <input
                         type="radio"

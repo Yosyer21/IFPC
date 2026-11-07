@@ -15,7 +15,7 @@ export interface PlayerRowData {
 
 export function PlayerRow({ player }: { player: PlayerRowData }) {
   return (
-    <Card>
+    <Card className="card-hover">
       <CardContent className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-semibold">
@@ -23,7 +23,7 @@ export function PlayerRow({ player }: { player: PlayerRowData }) {
           </p>
           <p className="text-sm text-muted-foreground">{player.user.email}</p>
           {player.position ? (
-            <p className="text-xs text-muted-foreground">{player.position}</p>
+            <span className="fb-tag fb-tag-gray mt-1 inline-flex">{player.position}</span>
           ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">

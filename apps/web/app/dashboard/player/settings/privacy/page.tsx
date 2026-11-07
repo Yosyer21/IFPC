@@ -78,7 +78,7 @@ export default async function PlayerPrivacySettingsPage() {
               {player ? (
                 <Link
                   href={`/players/${player.id}`}
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-[#4f6b0a] hover:underline"
                 >
                   See my public profile →
                 </Link>

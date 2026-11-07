@@ -41,7 +41,7 @@ export function DraftsCard({ drafts }: { drafts: FeedPost[] }) {
             <div className="flex shrink-0 items-center gap-2">
               <Link
                 href={`/dashboard/discovery/${draft.id}`}
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+                className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
                 Ver
               </Link>

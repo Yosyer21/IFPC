@@ -109,7 +109,7 @@ export default async function ParentPathwaysPage() {
                       ) : null}
                       <Link
                         href={`/dashboard/parent/children/${player.id}/development`}
-                        className="inline-flex items-center gap-1 text-primary hover:underline"
+                        className="inline-flex items-center gap-1 text-[#4f6b0a] hover:underline"
                       >
                         <IconRoute className="h-3.5 w-3.5" />
                         View development

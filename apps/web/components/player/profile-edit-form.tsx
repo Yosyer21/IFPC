@@ -135,7 +135,7 @@ export function ProfileEditForm({ player }: { player: Player }) {
                   name="openTo"
                   value={value}
                   defaultChecked={player.openTo?.includes(value) ?? false}
-                  className="h-4 w-4 rounded border-border bg-white/5 accent-emerald-400"
+                  className="h-4 w-4 rounded border-border bg-muted accent-emerald-400"
                 />
                 {PROFILE_OPEN_TO_LABELS[value]}
               </label>
@@ -158,7 +158,7 @@ export function ProfileEditForm({ player }: { player: Player }) {
                     className="peer sr-only"
                   />
                   <span
-                    className="flex h-9 w-9 items-center justify-center rounded-full ring-offset-2 ring-offset-card transition peer-checked:ring-2 peer-checked:ring-white/70"
+                    className="flex h-9 w-9 items-center justify-center rounded-full ring-offset-2 ring-offset-card transition peer-checked:ring-2 peer-checked:ring-brand/70"
                     style={{ backgroundColor: hex, boxShadow: `0 0 24px -8px ${hex}` }}
                   >
                     <span className="sr-only">{label}</span>

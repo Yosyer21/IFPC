@@ -44,7 +44,7 @@ export default async function PlayerProgressPage() {
       {overall === null ? (
         <Card className="animate-fade-up">
           <CardContent className="flex flex-col items-center gap-3 py-12 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-[#4f6b0a]">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"

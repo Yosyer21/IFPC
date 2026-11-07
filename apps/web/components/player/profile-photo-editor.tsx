@@ -18,7 +18,7 @@ export function ProfilePhotoEditor({ hasImage, redirectTo }: ProfilePhotoEditorP
   const [state, formAction, pending] = useActionState(updateProfilePhotoAction, {});
   const inputId = useId();
   const chip =
-    'rounded-full border border-border bg-white/5 px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground';
+    'rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground';
 
   return (
     <div className="flex flex-wrap items-center gap-2">

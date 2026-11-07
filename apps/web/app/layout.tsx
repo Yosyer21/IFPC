@@ -1,6 +1,13 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Anton, Inter } from 'next/font/google';
 import './globals.css';
+
+// Tipografía del sistema: Anton (titulares deportivos, condensada y gruesa) e
+// Inter (texto y UI). Se exponen como variables CSS y Tailwind las usa en
+// `font-display` / `font-sans`.
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const anton = Anton({ subsets: ['latin'], weight: '400', variable: '--font-display', display: 'swap' });
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
 
@@ -43,8 +50,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="min-h-screen bg-background text-foreground antialiased">
+    <html lang="en" className={`${inter.variable} ${anton.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         {children}
       </body>
     </html>

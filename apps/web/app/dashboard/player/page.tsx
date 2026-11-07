@@ -229,7 +229,7 @@ export default async function PlayerDashboardPage() {
                 className="animate-fade-up flex items-center justify-center gap-1.5 rounded-lg border border-border/70 px-2.5 py-2 text-center text-xs leading-tight text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-foreground sm:gap-2 sm:px-3 sm:text-sm"
                 style={{ animationDelay: `${80 + i * 60}ms` }}
               >
-                <Icon className="h-3.5 w-3.5 shrink-0 text-primary sm:h-4 sm:w-4" />
+                <Icon className="h-3.5 w-3.5 shrink-0 text-[#4f6b0a] sm:h-4 sm:w-4" />
                 {action.label}
               </Link>
             );
@@ -249,7 +249,7 @@ export default async function PlayerDashboardPage() {
                 href={stat.href}
                 className="flex flex-col items-center gap-1.5 px-1 text-center"
               >
-                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/10 text-[#4f6b0a]">
                   <Icon className="h-3.5 w-3.5" />
                 </span>
                 <span className="text-lg font-bold leading-none tabular-nums">
@@ -277,7 +277,7 @@ export default async function PlayerDashboardPage() {
               {evaluationCount > 0 ? (
                 <Link
                   href="/dashboard/player/development/evaluations"
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-[#4f6b0a] hover:underline"
                 >
                   View assessments →
                 </Link>
@@ -289,7 +289,7 @@ export default async function PlayerDashboardPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-[#4f6b0a]">
                   <IconWhistle className="h-7 w-7" />
                 </span>
                 <p className="max-w-xs text-sm text-muted-foreground">
@@ -298,7 +298,7 @@ export default async function PlayerDashboardPage() {
                 </p>
                 <Link
                   href="/dashboard/player/development/progress"
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-[#4f6b0a] hover:underline"
                 >
                   See my progress →
                 </Link>
@@ -344,7 +344,7 @@ export default async function PlayerDashboardPage() {
             <h2 className="font-semibold">Recent activity</h2>
             <Link
               href="/dashboard/player/notifications"
-              className="text-sm text-primary hover:underline"
+              className="text-sm text-[#4f6b0a] hover:underline"
             >
               See notifications →
             </Link>
@@ -359,7 +359,7 @@ export default async function PlayerDashboardPage() {
                 const Icon = item.icon;
                 return (
                   <div key={item.key} className="flex items-center gap-3 py-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-[#4f6b0a]">
                       <Icon className="h-4 w-4" />
                     </span>
                     <div className="min-w-0 flex-1">

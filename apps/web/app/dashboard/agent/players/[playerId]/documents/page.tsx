@@ -63,7 +63,7 @@ export default async function AgentPlayerDocumentsPage({
                     href={document.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-primary hover:underline"
+                    className="text-sm text-[#4f6b0a] hover:underline"
                   >
                     Open
                   </a>

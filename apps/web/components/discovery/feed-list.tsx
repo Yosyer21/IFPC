@@ -67,7 +67,7 @@ export function FeedList({
             onClick={loadMore}
             disabled={pending}
             aria-live="polite"
-            className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground disabled:opacity-50"
+            className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
           >
             {pending ? 'Loading…' : 'Show more'}
           </button>

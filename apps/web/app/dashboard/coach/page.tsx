@@ -158,22 +158,27 @@ export default async function CoachDashboardPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      {/* Hero */}
-      <section className="animate-fade-up mb-6 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-card via-card to-primary/5 p-6">
-        <div className="flex flex-wrap items-center gap-5">
+      {/* Hero (panel oscuro destacado) */}
+      <section className="fb-panel animate-fade-up relative mb-6 overflow-hidden p-6 sm:p-7">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-12 top-0 h-full w-40 rotate-12 bg-brand/10"
+          style={{ clipPath: 'polygon(40% 0, 100% 0, 60% 100%, 0 100%)' }}
+        />
+        <div className="relative flex flex-wrap items-center gap-5">
           <PlayerAvatar firstName={coachFirstName} lastName={coachLastName} size="lg" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold tracking-tight">
+              <h1 className="text-2xl text-white">
                 {greeting()}, {coachFirstName}
               </h1>
-              <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-500">
-                <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/15 px-2.5 py-0.5 text-xs font-semibold text-brand">
+                <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-brand" />
                 Coach
               </span>
-              {coach.clubName ? <Badge>{coach.clubName}</Badge> : null}
+              {coach.clubName ? <span className="fb-tag fb-tag-lime">{coach.clubName}</span> : null}
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-white/60">
               Manage your players' development
               {players.length > 0
                 ? ` · ${players.length} player${players.length === 1 ? '' : 's'} in your care`
@@ -183,13 +188,13 @@ export default async function CoachDashboardPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/dashboard/coach/players"
-              className="rounded-md border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
+              className="rounded-xl border border-white/15 px-3 py-2 text-sm text-white transition-colors hover:bg-white/10"
             >
               View players
             </Link>
             <Link
               href={registerHref}
-              className="rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+              className="rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-ink transition-colors hover:brightness-95"
             >
               Register assessment
             </Link>
@@ -197,17 +202,17 @@ export default async function CoachDashboardPage() {
         </div>
 
         {/* Quick actions */}
-        <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="relative mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
           {quickActions.map((action, i) => {
             const Icon = action.icon;
             return (
               <Link
                 key={action.label}
                 href={action.href}
-                className="animate-fade-up flex items-center justify-center gap-2 rounded-lg border border-border/70 px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-foreground"
+                className="animate-fade-up flex items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm text-white/70 transition-colors hover:border-brand/40 hover:bg-white/5 hover:text-white"
                 style={{ animationDelay: `${80 + i * 60}ms` }}
               >
-                <Icon className="h-4 w-4 text-primary" />
+                <Icon className="h-4 w-4 text-brand" />
                 {action.label}
               </Link>
             );
@@ -230,7 +235,7 @@ export default async function CoachDashboardPage() {
               {evaluations.length > 0 ? (
                 <Link
                   href="/dashboard/coach/evaluations"
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-[#4f6b0a] hover:underline"
                 >
                   View assessments →
                 </Link>
@@ -242,7 +247,7 @@ export default async function CoachDashboardPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3 py-10 text-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-[#4f6b0a]">
                   <IconWhistle className="h-7 w-7" />
                 </span>
                 <p className="max-w-xs text-sm text-muted-foreground">
@@ -287,7 +292,7 @@ export default async function CoachDashboardPage() {
             <h2 className="font-semibold">Recent activity</h2>
             <Link
               href="/dashboard/coach/evaluations"
-              className="text-sm text-primary hover:underline"
+              className="text-sm text-[#4f6b0a] hover:underline"
             >
               View assessments →
             </Link>
@@ -302,7 +307,7 @@ export default async function CoachDashboardPage() {
                 const Icon = item.icon;
                 return (
                   <div key={item.key} className="flex items-center gap-3 py-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-[#4f6b0a]">
                       <Icon className="h-4 w-4" />
                     </span>
                     <div className="min-w-0 flex-1">
@@ -324,7 +329,7 @@ export default async function CoachDashboardPage() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">My players</h2>
           {players.length > 0 ? (
-            <Link href="/dashboard/coach/players" className="text-sm text-primary hover:underline">
+            <Link href="/dashboard/coach/players" className="text-sm text-[#4f6b0a] hover:underline">
               See all →
             </Link>
           ) : null}

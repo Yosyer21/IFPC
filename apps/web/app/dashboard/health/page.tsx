@@ -114,7 +114,7 @@ export default function HealthHubPage() {
           <a
             key={factor.slug}
             href={`#${factor.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white/[0.02] px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-brand/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-brand/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${FACTOR_DOT_CLASSES[factor.tone]}`} />
             {factor.title}

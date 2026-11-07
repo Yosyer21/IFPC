@@ -9,7 +9,7 @@ import {
 } from '@/lib/discovery-content';
 
 const fieldClass =
-  'h-10 rounded-xl border border-border bg-white/5 px-3 text-sm outline-none transition-colors focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40';
+  'h-10 rounded-xl border border-border bg-muted px-3 text-sm outline-none transition-colors focus:border-primary/60 focus:bg-muted focus:ring-2 focus:ring-ring/40';
 
 /** URL del feed conservando pestaña, tag y filters (sin búsqueda). */
 function clearHref(filters: FeedFilters, base: string): string {

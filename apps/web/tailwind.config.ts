@@ -9,6 +9,10 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Anton', 'Oswald', 'system-ui', 'sans-serif'],
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -47,6 +51,10 @@ const config: Config = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        card: '0 1px 2px 0 hsl(var(--ink) / 0.05)',
+        panel: '0 24px 60px -32px hsl(var(--ink) / 0.5)',
       },
     },
   },

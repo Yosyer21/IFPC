@@ -73,7 +73,7 @@ export function CareerForm({ entry }: { entry?: CareerEntryValues }) {
           name="notes"
           rows={3}
           defaultValue={entry?.notes ?? ''}
-          className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-white/[0.07] focus:ring-2 focus:ring-ring/40"
+          className="w-full rounded-xl border border-border bg-muted px-3 py-2 text-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary/60 focus:bg-muted focus:ring-2 focus:ring-ring/40"
         />
       </div>
       {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}

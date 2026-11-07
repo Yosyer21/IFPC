@@ -55,7 +55,7 @@ export function NotificationsBell({
 
       {open ? (
         <div
-          className={`absolute top-full z-50 mt-2 max-w-[85vw] rounded-2xl border border-border bg-panel p-3 shadow-xl ${
+          className={`absolute top-full z-50 mt-2 max-w-[85vw] rounded-2xl border border-border bg-card p-3 shadow-xl ${
             compact ? 'left-0 w-72' : 'right-0 w-80'
           }`}
         >

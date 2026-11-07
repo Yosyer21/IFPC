@@ -30,7 +30,7 @@ export default async function PlayerApplicationsPage() {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               You haven't sent any applications yet.{' '}
-              <Link href="/dashboard/player/opportunities" className="text-primary hover:underline">
+              <Link href="/dashboard/player/opportunities" className="text-[#4f6b0a] hover:underline">
                 See opportunities
               </Link>
             </p>

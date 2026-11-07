@@ -73,7 +73,7 @@ export default async function ClubMatchingPage() {
               Create requirements to receive player suggestions.{' '}
               <Link
                 href="/dashboard/club/requirements/new"
-                className="text-primary hover:underline"
+                className="text-[#4f6b0a] hover:underline"
               >
                 Create requirement
               </Link>
@@ -120,7 +120,7 @@ export default async function ClubMatchingPage() {
                   </span>
                   <Link
                     href={`/dashboard/club/players/${player.id}`}
-                    className="text-primary hover:underline"
+                    className="text-[#4f6b0a] hover:underline"
                   >
                     View profile →
                   </Link>

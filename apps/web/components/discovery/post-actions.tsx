@@ -128,7 +128,7 @@ export function PostActions({
                 rows={2}
                 required
                 placeholder="Reason for the report"
-                className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-xs outline-none focus:border-primary/60"
+                className="w-full rounded-xl border border-border bg-muted px-3 py-2 text-xs outline-none focus:border-primary/60"
               />
               {reportState.error ? (
                 <p className="text-xs text-destructive">{reportState.error}</p>

@@ -92,7 +92,7 @@ export default async function AdminSettingsSecurityPage() {
           <ul className="flex flex-col gap-1.5">
             {practices.map((practice) => (
               <li key={practice} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="mt-0.5 text-primary">✓</span>
+                <span className="mt-0.5 text-[#4f6b0a]">✓</span>
                 {practice}
               </li>
             ))}

@@ -40,7 +40,7 @@ function Stat({
       </div>
       <div className="mt-0.5 flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-muted-foreground">
         <span
-          className={`h-2 w-2 shrink-0 rounded-full ${active ? FACTOR_DOT_CLASSES[tone] : 'bg-white/10'}`}
+          className={`h-2 w-2 shrink-0 rounded-full ${active ? FACTOR_DOT_CLASSES[tone] : 'bg-muted'}`}
         />
         {label}
       </div>
@@ -147,7 +147,7 @@ export function HabitChecklist({
         </span>
       </div>
 
-      <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
+      <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-muted">
         <div
           className={`h-full rounded-full transition-[width] duration-500 ${FACTOR_DOT_CLASSES[tone]}`}
           style={{ width: `${Math.round(ratio * 100)}%` }}
@@ -159,7 +159,7 @@ export function HabitChecklist({
           const done = progress.habits.includes(index);
           return (
             <li key={habit}>
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border/60 p-3 transition-colors hover:border-brand/40 hover:bg-white/[0.03]">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border/60 p-3 transition-colors hover:border-brand/40 hover:bg-muted/50">
                 <input
                   type="checkbox"
                   className="peer sr-only"
@@ -205,7 +205,7 @@ export function HabitChecklist({
               title={day}
               aria-hidden="true"
               className={`h-3.5 w-3.5 rounded-sm transition-colors ${
-                completed.has(day) ? FACTOR_DOT_CLASSES[tone] : 'bg-white/5'
+                completed.has(day) ? FACTOR_DOT_CLASSES[tone] : 'bg-muted'
               }`}
             />
           ))}
@@ -225,7 +225,7 @@ export function HabitChecklist({
                 <button
                   type="button"
                   onClick={resetFactor}
-                  className="rounded-lg border border-red-500/40 px-2 py-1 text-red-300 transition-colors hover:bg-red-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="rounded-lg border border-red-500/40 px-2 py-1 text-red-600 transition-colors hover:bg-red-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   Confirm delete
                 </button>
@@ -241,7 +241,7 @@ export function HabitChecklist({
               <button
                 type="button"
                 onClick={() => setConfirming(true)}
-                className="rounded-lg border border-border px-2 py-1 text-muted-foreground transition-colors hover:border-red-500/40 hover:text-red-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="rounded-lg border border-border px-2 py-1 text-muted-foreground transition-colors hover:border-red-500/40 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Reset factor
               </button>

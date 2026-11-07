@@ -24,9 +24,9 @@ export function Tabs({ tabs, defaultValue }: TabsProps) {
             key={tab.value}
             type="button"
             onClick={() => setActive(tab.value)}
-            className={`-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
+            className={`-mb-px border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
               active === tab.value
-                ? 'border-primary text-primary'
+                ? 'border-brand text-foreground'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
             }`}
           >

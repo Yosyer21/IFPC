@@ -106,7 +106,7 @@ export default async function PlayerCareerPage() {
                 ) : null}
 
                 <details>
-                  <summary className="cursor-pointer text-sm text-primary">Edit</summary>
+                  <summary className="cursor-pointer text-sm text-[#4f6b0a]">Edit</summary>
                   <div className="mt-3">
                     <CareerForm entry={entry} />
                   </div>

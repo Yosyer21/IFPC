@@ -235,7 +235,7 @@ export function PostCard({
         </div>
 
         {readOnly ? (
-          <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-white/10 pt-3 text-xs text-muted-foreground">
+          <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-border pt-3 text-xs text-muted-foreground">
             <span>{post.counts.likes} likes</span>
             <Link href={`${base}/${post.id}`} className="hover:text-foreground">
               {post.counts.comments} comments

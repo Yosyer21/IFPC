@@ -164,7 +164,7 @@ export default async function ClubLiveSessionsPage() {
                       {liveSession.club ? ` · ${liveSession.club.name}` : ''}
                     </p>
                   </div>
-                  <span className="text-sm font-medium text-primary">Open session →</span>
+                  <span className="text-sm font-medium text-[#4f6b0a]">Open session →</span>
                 </CardContent>
               </Card>
             </Link>
@@ -207,7 +207,7 @@ export default async function ClubLiveSessionsPage() {
               <div className="flex items-center gap-3">
                 <Link
                   href={`/dashboard/live-sessions/${liveSession.id}`}
-                  className="text-sm font-medium text-primary hover:underline"
+                  className="text-sm font-medium text-[#4f6b0a] hover:underline"
                 >
                   Open
                 </Link>
@@ -237,7 +237,7 @@ export default async function ClubLiveSessionsPage() {
         <div className="flex flex-col gap-2">
           {past.map((liveSession) => (
             <Link key={liveSession.id} href={`/dashboard/live-sessions/${liveSession.id}`}>
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 p-3 transition-colors hover:bg-white/5">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border/60 p-3 transition-colors hover:bg-muted">
                 <div className="min-w-0">
                   <div className="text-sm font-medium">{liveSession.title}</div>
                   <div className="mt-1 text-xs text-muted-foreground">

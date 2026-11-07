@@ -100,7 +100,7 @@ export default async function SchoolDashboardPage() {
             </dl>
             <Link
               href="/dashboard/school/profile"
-              className="mt-4 inline-block text-sm text-primary hover:underline"
+              className="mt-4 inline-block text-sm text-[#4f6b0a] hover:underline"
             >
               See organisation profile →
             </Link>
@@ -113,7 +113,7 @@ export default async function SchoolDashboardPage() {
               <h2 className="font-semibold">Upcoming clinics y camps</h2>
               <Link
                 href="/dashboard/school/opportunities"
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-[#4f6b0a] hover:underline"
               >
                 See opportunities →
               </Link>
@@ -129,7 +129,7 @@ export default async function SchoolDashboardPage() {
                     key={camp.id}
                     className="flex items-center gap-3 rounded-md border border-border p-3"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-[#4f6b0a]">
                       <IconCalendar className="h-5 w-5" />
                     </span>
                     <div className="min-w-0 flex-1">

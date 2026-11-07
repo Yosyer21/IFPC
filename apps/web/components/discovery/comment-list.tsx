@@ -133,7 +133,7 @@ export function CommentList({
             />
           </ul>
           {comments.some((comment) => comment.parentId === root.id) ? (
-            <ul className="ml-10 flex flex-col gap-3 border-l border-white/10 pl-3">
+            <ul className="ml-10 flex flex-col gap-3 border-l border-border pl-3">
               {comments
                 .filter((comment) => comment.parentId === root.id)
                 .map((reply) => (

@@ -45,7 +45,7 @@ export default async function RoomPage({
         <p className="mt-2 text-sm text-muted-foreground">
           Rooms are private: only the author and the invited players can join.
         </p>
-        <Link href="/dashboard/rooms" className="mt-4 inline-block text-sm text-primary hover:underline">
+        <Link href="/dashboard/rooms" className="mt-4 inline-block text-sm text-[#4f6b0a] hover:underline">
           ← Back to rooms
         </Link>
       </div>

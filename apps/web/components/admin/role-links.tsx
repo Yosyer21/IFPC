@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const ROLE_LINKS = [
   { role: 'PLAYER', label: 'Players', href: '/dashboard/admin/users/players' },
@@ -11,20 +14,24 @@ const ROLE_LINKS = [
   { role: 'SCHOOL', label: 'Schools / Community', href: '/dashboard/admin/users/schools' },
 ] as const;
 
+const PILL_ACTIVE = 'rounded-full bg-ink px-3.5 py-1.5 text-sm font-semibold text-white';
+const PILL_INACTIVE =
+  'rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground';
+
+/** Filtros por rol como pills; el activo va relleno en tinta. */
 export function RoleLinks() {
+  const pathname = usePathname();
+  const allHref = '/dashboard/admin/users';
   return (
     <div className="mb-4 flex flex-wrap gap-2">
-      <Link
-        href="/dashboard/admin/users"
-        className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
-      >
+      <Link href={allHref} className={pathname === allHref ? PILL_ACTIVE : PILL_INACTIVE}>
         All
       </Link>
       {ROLE_LINKS.map((link) => (
         <Link
           key={link.role}
           href={link.href}
-          className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted"
+          className={pathname === link.href ? PILL_ACTIVE : PILL_INACTIVE}
         >
           {link.label}
         </Link>

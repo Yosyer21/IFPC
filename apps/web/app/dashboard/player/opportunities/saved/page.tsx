@@ -30,7 +30,7 @@ export default async function PlayerSavedOpportunitiesPage() {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               You haven't saved any opportunity yet.{' '}
-              <Link href="/dashboard/player/opportunities" className="text-primary hover:underline">
+              <Link href="/dashboard/player/opportunities" className="text-[#4f6b0a] hover:underline">
                 Explore opportunities
               </Link>
             </p>

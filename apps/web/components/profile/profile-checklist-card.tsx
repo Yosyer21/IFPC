@@ -60,7 +60,7 @@ export function ProfileChecklistCard({
               className="flex w-full items-center justify-between gap-2 rounded-lg border border-border/70 px-3 py-2 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground sm:hidden"
             >
               <span>Complete the missing {missing.length} details</span>
-              <span className="shrink-0 font-medium text-primary">Edit profile →</span>
+              <span className="shrink-0 font-medium text-[#4f6b0a]">Edit profile →</span>
             </Link>
             <ul className="hidden w-full flex-col gap-0.5 sm:flex">
               {missing.map((item) => (

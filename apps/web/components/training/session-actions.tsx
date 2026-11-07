@@ -24,14 +24,14 @@ export function TrainingSessionActions({
     <div className="flex flex-wrap items-center gap-3">
       <Link
         href={`${basePath}/sessions/${session.id}/edit`}
-        className="text-xs font-medium text-primary hover:underline"
+        className="text-xs font-medium text-[#4f6b0a] hover:underline"
       >
         Edit
       </Link>
       {state !== 'PUBLISHED' ? (
         <form action={publishTrainingSessionAction}>
           <input type="hidden" name="sessionId" value={session.id} />
-          <button type="submit" className="text-xs font-medium text-emerald-300 hover:underline">
+          <button type="submit" className="text-xs font-medium text-emerald-600 hover:underline">
             Publish now
           </button>
         </form>
