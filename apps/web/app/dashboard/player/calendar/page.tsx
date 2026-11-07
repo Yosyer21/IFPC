@@ -10,6 +10,7 @@ import {
 import {
   isSameMonth,
   listCalendarEvents,
+  monthParam,
   parseMonthParam,
   shiftMonth,
   startOfMonth,
@@ -64,6 +65,7 @@ export default async function PlayerCalendarPage({
       sub: event.detail,
       kind: event.kind,
       label: CALENDAR_EVENT_LABELS[event.kind],
+      href: event.href,
     }));
 
   const kinds = [...new Set(events.map((event) => event.kind))] as CalendarEventKind[];
@@ -75,6 +77,9 @@ export default async function PlayerCalendarPage({
   const now = new Date();
   const todayDay = isSameMonth(now, month) ? now.getUTCDate() : undefined;
 
+  const prevHref = `?month=${monthParam(shiftMonth(month, -1))}`;
+  const nextHref = `?month=${monthParam(shiftMonth(month, 1))}`;
+
   const data: CalendarData = {
     year: month.getUTCFullYear(),
     monthIndex: month.getUTCMonth(),
@@ -84,6 +89,7 @@ export default async function PlayerCalendarPage({
     events,
     legend,
     note: NOTE,
+    monthNav: { prevHref, nextHref },
   };
 
   return (
