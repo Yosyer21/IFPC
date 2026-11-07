@@ -77,8 +77,8 @@ export default async function PlayerCalendarPage({
   const now = new Date();
   const todayDay = isSameMonth(now, month) ? now.getUTCDate() : undefined;
 
-  const prevHref = `?month=${monthParam(shiftMonth(month, -1))}`;
-  const nextHref = `?month=${monthParam(shiftMonth(month, 1))}`;
+  const prevHref = `/dashboard/player/calendar?month=${monthParam(shiftMonth(month, -1))}`;
+  const nextHref = `/dashboard/player/calendar?month=${monthParam(shiftMonth(month, 1))}`;
 
   const data: CalendarData = {
     year: month.getUTCFullYear(),

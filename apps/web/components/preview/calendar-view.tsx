@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Calendar, ChevronDown, Plus } from 'lucide-react';
 
 export interface CalendarEventData {
@@ -111,6 +112,29 @@ export function CalendarView({ data = DEMO }: { data?: CalendarData }) {
   const dayEvents = eventsByDay.get(selected) ?? [];
   const weekdayName = DAY_NAMES[(firstOffset + selected - 1) % 7];
   const headerLabel = todayDay === selected ? 'Today' : 'Selected day';
+
+  const router = useRouter();
+  useEffect(() => {
+    if (!monthNav?.prevHref && !monthNav?.nextHref) return;
+    function onKey(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+      ) {
+        return;
+      }
+      if (event.key === 'ArrowLeft' && monthNav?.prevHref) {
+        event.preventDefault();
+        router.push(monthNav.prevHref);
+      } else if (event.key === 'ArrowRight' && monthNav?.nextHref) {
+        event.preventDefault();
+        router.push(monthNav.nextHref);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [monthNav, router]);
 
   return (
     <div>
@@ -230,7 +254,14 @@ export function CalendarView({ data = DEMO }: { data?: CalendarData }) {
                   <div key={index} className="rounded-2xl p-4" style={{ backgroundColor: style.bg }}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-[#374151]">{event.time}</p>
+                        <p className="flex items-center gap-1.5 text-xs font-semibold text-[#374151]">
+                          {selected === todayDay ? (
+                            <span className="rounded bg-[#d1fc2a] px-1.5 py-0.5 text-[9px] font-bold uppercase text-[#0a0a0a]">
+                              Today
+                            </span>
+                          ) : null}
+                          {event.time}
+                        </p>
                         <p className="mt-1 text-sm font-black uppercase leading-tight text-[#111]">
                           {event.href ? (
                             <Link href={event.href} className="underline-offset-2 hover:underline">
