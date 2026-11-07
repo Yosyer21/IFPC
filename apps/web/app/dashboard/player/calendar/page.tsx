@@ -89,7 +89,7 @@ export default async function PlayerCalendarPage({
     events,
     legend,
     note: NOTE,
-    monthNav: { prevHref, nextHref },
+    monthNav: { prevHref, nextHref, todayHref: '/dashboard/player/calendar' },
   };
 
   return (

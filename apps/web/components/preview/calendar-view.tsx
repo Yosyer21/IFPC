@@ -32,7 +32,7 @@ export interface CalendarData {
   legend: CalendarLegendItem[];
   note?: string;
   /** Si se pasa, el selector de mes muestra flechas ‹ › que navegan. */
-  monthNav?: { prevHref?: string; nextHref?: string };
+  monthNav?: { prevHref?: string; nextHref?: string; todayHref?: string };
 }
 
 interface ToneStyle {
@@ -140,6 +140,14 @@ export function CalendarView({ data = DEMO }: { data?: CalendarData }) {
               >
                 ›
               </Link>
+              {monthNav.todayHref ? (
+                <Link
+                  href={monthNav.todayHref}
+                  className="ml-1 inline-flex h-9 items-center rounded-xl border border-[#e5e7eb] px-3 text-sm font-semibold text-[#111] transition-colors hover:bg-[#f8f9fa]"
+                >
+                  Today
+                </Link>
+              ) : null}
             </div>
           ) : (
             <button
@@ -162,13 +170,16 @@ export function CalendarView({ data = DEMO }: { data?: CalendarData }) {
               if (day === null) return <div key={`blank-${index}`} />;
               const evs = eventsByDay.get(day) ?? [];
               const isSelected = day === selected;
+              const isToday = day === todayDay;
               return (
                 <button key={day} type="button" onClick={() => setSelected(day)} className="flex flex-col items-center py-1">
                   <span
                     className={
                       isSelected
                         ? 'flex h-9 w-9 items-center justify-center rounded-full bg-[#111] text-sm font-semibold text-white'
-                        : 'flex h-9 w-9 items-center justify-center rounded-full text-sm text-[#374151] transition-colors hover:bg-[#f1f2f4]'
+                        : isToday
+                          ? 'flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold text-[#111] ring-2 ring-[#d1fc2a]'
+                          : 'flex h-9 w-9 items-center justify-center rounded-full text-sm text-[#374151] transition-colors hover:bg-[#f1f2f4]'
                     }
                   >
                     {day}
