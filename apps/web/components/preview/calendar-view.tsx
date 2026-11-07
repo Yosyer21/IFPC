@@ -3,59 +3,109 @@
 import { useState } from 'react';
 import { Calendar, ChevronDown, Plus } from 'lucide-react';
 
-type EvType = 'Training' | 'Match' | 'Rookie session' | 'Meeting';
-
-interface Ev {
-  type: EvType;
+export interface CalendarEventData {
+  day: number;
   time: string;
   title: string;
-  sub: string;
+  sub?: string | null;
+  /** Clave de estilo (spec: Training/Match/…; real: live/room/trial/…). */
+  kind: string;
+  /** Texto de la insignia del evento. */
+  label: string;
 }
 
-const YEAR = 2026;
-const MONTH = 9; // 0-based → October
-const MONTH_LABEL = 'October 2026';
+export interface CalendarLegendItem {
+  kind: string;
+  label: string;
+}
+
+export interface CalendarData {
+  year: number;
+  monthIndex: number;
+  monthLabel: string;
+  todayDay?: number;
+  initialDay?: number;
+  events: CalendarEventData[];
+  legend: CalendarLegendItem[];
+  note?: string;
+}
+
+interface ToneStyle {
+  dot: string;
+  bg: string;
+  badgeBg: string;
+  badgeFg: string;
+}
+
+const STYLE: Record<string, ToneStyle> = {
+  Training: { dot: '#84cc16', bg: '#ecfccb', badgeBg: '#d9f99d', badgeFg: '#3f6212' },
+  Match: { dot: '#111111', bg: '#f3f4f6', badgeBg: '#e5e7eb', badgeFg: '#111111' },
+  'Rookie session': { dot: '#38bdf8', bg: '#e0f2fe', badgeBg: '#bae6fd', badgeFg: '#075985' },
+  Meeting: { dot: '#ef4444', bg: '#e0f2fe', badgeBg: '#bae6fd', badgeFg: '#075985' },
+  live: { dot: '#84cc16', bg: '#ecfccb', badgeBg: '#d9f99d', badgeFg: '#3f6212' },
+  room: { dot: '#38bdf8', bg: '#e0f2fe', badgeBg: '#bae6fd', badgeFg: '#075985' },
+  trial: { dot: '#ef4444', bg: '#fee2e2', badgeBg: '#fecaca', badgeFg: '#991b1b' },
+  camp: { dot: '#34d399', bg: '#d1fae5', badgeBg: '#a7f3d0', badgeFg: '#065f46' },
+  deadline: { dot: '#f97316', bg: '#ffedd5', badgeBg: '#fed7aa', badgeFg: '#9a3412' },
+  pathway: { dot: '#a78bfa', bg: '#ede9fe', badgeBg: '#ddd6fe', badgeFg: '#5b21b6' },
+  goal: { dot: '#84cc16', bg: '#ecfccb', badgeBg: '#d9f99d', badgeFg: '#3f6212' },
+};
+
+const FALLBACK: ToneStyle = { dot: '#9aa0a6', bg: '#f3f4f6', badgeBg: '#e5e7eb', badgeFg: '#374151' };
+
+function toneOf(kind: string): ToneStyle {
+  return STYLE[kind] ?? FALLBACK;
+}
+
 const WEEKDAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-// Oct 1 2026 is a Thursday → Monday-first offset = 3.
-const FIRST_OFFSET = (new Date(YEAR, MONTH, 1).getDay() + 6) % 7;
-const DAYS_IN_MONTH = new Date(YEAR, MONTH + 1, 0).getDate();
-
-const DOT: Record<EvType, string> = {
-  Training: '#84cc16',
-  Match: '#111111',
-  'Rookie session': '#38bdf8',
-  Meeting: '#ef4444',
-};
-
-const CARD: Record<EvType, { bg: string; badgeBg: string; badgeFg: string }> = {
-  Meeting: { bg: '#e0f2fe', badgeBg: '#bae6fd', badgeFg: '#075985' },
-  Training: { bg: '#ecfccb', badgeBg: '#d9f99d', badgeFg: '#3f6212' },
-  Match: { bg: '#f3f4f6', badgeBg: '#e5e7eb', badgeFg: '#111111' },
-  'Rookie session': { bg: '#e0f2fe', badgeBg: '#bae6fd', badgeFg: '#075985' },
-};
-
-const EVENTS: Record<number, Ev[]> = {
-  8: [{ type: 'Training', time: '17:00 - 18:00', title: 'Team training', sub: 'U16 Girls · Riverside Park' }],
-  13: [
-    { type: 'Meeting', time: '16:00 - 16:30', title: 'Video call: Coach Sam', sub: 'Parent included' },
-    { type: 'Training', time: '17:00 - 18:00', title: 'Team training', sub: 'U16 Girls · Riverside Park' },
+const DEMO: CalendarData = {
+  year: 2026,
+  monthIndex: 9,
+  monthLabel: 'October 2026',
+  todayDay: 13,
+  initialDay: 13,
+  events: [
+    { day: 8, time: '17:00 - 18:00', title: 'Team training', sub: 'U16 Girls · Riverside Park', kind: 'Training', label: 'Training' },
+    { day: 13, time: '16:00 - 16:30', title: 'Video call: Coach Sam', sub: 'Parent included', kind: 'Meeting', label: 'Meeting' },
+    { day: 13, time: '17:00 - 18:00', title: 'Team training', sub: 'U16 Girls · Riverside Park', kind: 'Training', label: 'Training' },
+    { day: 16, time: '10:00 - 11:30', title: 'League match: City FC', sub: 'Away · League fixture', kind: 'Match', label: 'Match' },
+    { day: 20, time: '18:00 - 19:00', title: 'Rookie session', sub: 'Ball mastery · Small group', kind: 'Rookie session', label: 'Rookie session' },
+    { day: 27, time: '16:00 - 16:30', title: 'Trial debrief', sub: 'Coach + family', kind: 'Meeting', label: 'Meeting' },
   ],
-  16: [{ type: 'Match', time: '10:00 - 11:30', title: 'League match: City FC', sub: 'Away · League fixture' }],
-  20: [{ type: 'Rookie session', time: '18:00 - 19:00', title: 'Rookie session', sub: 'Ball mastery · Small group' }],
-  27: [{ type: 'Meeting', time: '16:00 - 16:30', title: 'Trial debrief', sub: 'Coach + family' }],
+  legend: [
+    { kind: 'Training', label: 'Training' },
+    { kind: 'Match', label: 'Match' },
+    { kind: 'Rookie session', label: 'Rookie session' },
+    { kind: 'Meeting', label: 'Meeting / Trial' },
+  ],
+  note: 'Sessions booked in “The 1% Factor” and trials accepted in the Transfer Window appear here automatically.',
 };
 
-const CELLS: (number | null)[] = [
-  ...Array.from({ length: FIRST_OFFSET }, () => null),
-  ...Array.from({ length: DAYS_IN_MONTH }, (_, i) => i + 1),
-];
+export function CalendarView({ data = DEMO }: { data?: CalendarData }) {
+  const { year, monthIndex, monthLabel, todayDay, events, legend, note } = data;
 
-export function CalendarView() {
-  const [selected, setSelected] = useState(13);
-  const events = EVENTS[selected] ?? [];
-  const weekdayName = DAY_NAMES[(FIRST_OFFSET + selected - 1) % 7];
+  const firstOffset = (new Date(year, monthIndex, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  const cells: (number | null)[] = [
+    ...Array.from({ length: firstOffset }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+
+  const eventsByDay = new Map<number, CalendarEventData[]>();
+  for (const event of events) {
+    const list = eventsByDay.get(event.day) ?? [];
+    list.push(event);
+    eventsByDay.set(event.day, list);
+  }
+
+  const [selected, setSelected] = useState<number>(
+    data.initialDay ?? todayDay ?? events[0]?.day ?? 1
+  );
+  const dayEvents = eventsByDay.get(selected) ?? [];
+  const weekdayName = DAY_NAMES[(firstOffset + selected - 1) % 7];
+  const headerLabel = todayDay === selected ? 'Today' : 'Selected day';
 
   return (
     <div>
@@ -64,14 +114,13 @@ export function CalendarView() {
       </div>
 
       <div className="grid gap-6 rounded-3xl bg-white p-5 shadow-sm sm:p-8 lg:grid-cols-[1.05fr_1fr]">
-        {/* Monthly calendar */}
         <div>
           <button
             type="button"
             className="mb-5 inline-flex items-center gap-2 rounded-xl border border-[#e5e7eb] px-3.5 py-2 text-sm font-semibold text-[#111] transition-colors hover:bg-[#f8f9fa]"
           >
             <Calendar className="h-4 w-4 text-[#6b7280]" />
-            {MONTH_LABEL}
+            {monthLabel}
             <ChevronDown className="h-4 w-4 text-[#9aa0a6]" />
           </button>
 
@@ -81,17 +130,12 @@ export function CalendarView() {
                 {day}
               </div>
             ))}
-            {CELLS.map((day, index) => {
+            {cells.map((day, index) => {
               if (day === null) return <div key={`blank-${index}`} />;
-              const evs = EVENTS[day] ?? [];
+              const evs = eventsByDay.get(day) ?? [];
               const isSelected = day === selected;
               return (
-                <button
-                  key={day}
-                  type="button"
-                  onClick={() => setSelected(day)}
-                  className="flex flex-col items-center py-1"
-                >
+                <button key={day} type="button" onClick={() => setSelected(day)} className="flex flex-col items-center py-1">
                   <span
                     className={
                       isSelected
@@ -103,11 +147,7 @@ export function CalendarView() {
                   </span>
                   <span className="mt-0.5 flex h-1.5 items-center gap-0.5">
                     {evs.slice(0, 3).map((event, i) => (
-                      <span
-                        key={i}
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ backgroundColor: DOT[event.type] }}
-                      />
+                      <span key={i} className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: toneOf(event.kind).dot }} />
                     ))}
                   </span>
                 </button>
@@ -115,53 +155,51 @@ export function CalendarView() {
             })}
           </div>
 
-          {/* Legend */}
           <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-            {(['Training', 'Match', 'Rookie session', 'Meeting'] as EvType[]).map((type) => (
-              <span key={type} className="inline-flex items-center gap-1.5 text-[11px] text-[#6b7280]">
-                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: DOT[type] }} />
-                {type === 'Meeting' ? 'Meeting / Trial' : type}
+            {legend.map((item) => (
+              <span key={item.kind} className="inline-flex items-center gap-1.5 text-[11px] text-[#6b7280]">
+                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: toneOf(item.kind).dot }} />
+                {item.label}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Day detail */}
         <div className="relative rounded-2xl border border-[#eef0f2] bg-[#fbfbfc] p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9aa0a6]">Today</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9aa0a6]">{headerLabel}</p>
               <div className="flex items-baseline gap-2">
                 <span className="font-black leading-none text-[#111] text-5xl">{selected}</span>
                 <span className="text-sm text-[#6b7280]">{weekdayName}</span>
               </div>
             </div>
             <span className="shrink-0 text-sm text-[#6b7280]">
-              {events.length} event{events.length === 1 ? '' : 's'}
+              {dayEvents.length} event{dayEvents.length === 1 ? '' : 's'}
             </span>
           </div>
 
           <div className="mt-4 flex flex-col gap-3">
-            {events.length === 0 ? (
+            {dayEvents.length === 0 ? (
               <p className="rounded-xl border border-dashed border-[#e5e7eb] px-4 py-8 text-center text-sm text-[#9aa0a6]">
                 No events scheduled for this day.
               </p>
             ) : (
-              events.map((event, index) => {
-                const style = CARD[event.type];
+              dayEvents.map((event, index) => {
+                const style = toneOf(event.kind);
                 return (
                   <div key={index} className="rounded-2xl p-4" style={{ backgroundColor: style.bg }}>
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <p className="text-xs font-semibold text-[#374151]">{event.time}</p>
                         <p className="mt-1 text-sm font-black uppercase leading-tight text-[#111]">{event.title}</p>
-                        <p className="mt-0.5 text-xs text-[#6b7280]">{event.sub}</p>
+                        {event.sub ? <p className="mt-0.5 text-xs text-[#6b7280]">{event.sub}</p> : null}
                       </div>
                       <span
                         className="shrink-0 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase"
                         style={{ backgroundColor: style.badgeBg, color: style.badgeFg }}
                       >
-                        {event.type}
+                        {event.label}
                       </span>
                     </div>
                   </div>
@@ -170,9 +208,7 @@ export function CalendarView() {
             )}
           </div>
 
-          <p className="mt-5 text-[11px] leading-relaxed text-[#9aa0a6]">
-            Sessions booked in “The 1% Factor” and trials accepted in the Transfer Window appear here automatically.
-          </p>
+          {note ? <p className="mt-5 text-[11px] leading-relaxed text-[#9aa0a6]">{note}</p> : null}
 
           <button
             type="button"
