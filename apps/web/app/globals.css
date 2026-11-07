@@ -1334,3 +1334,45 @@
     animation: fb-icon-breathe 2.6s ease-in-out infinite;
   }
 }
+
+/* ── Landing: balón de fútbol 3D ─────────────────────────────────────────── */
+.fb-ball-3d {
+  transform: perspective(1000px) rotateX(12deg) rotateY(-18deg);
+  transform-style: preserve-3d;
+  animation: fb-ball-wobble 8s ease-in-out infinite;
+  will-change: transform;
+  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.45));
+}
+
+@keyframes fb-ball-wobble {
+  0%,
+  100% {
+    transform: perspective(1000px) rotateX(12deg) rotateY(-18deg) translateY(0);
+  }
+  50% {
+    transform: perspective(1000px) rotateX(4deg) rotateY(14deg) translateY(-14px);
+  }
+}
+
+.fb-ball-shadow {
+  animation: fb-ball-shadow-pulse 8s ease-in-out infinite;
+}
+
+@keyframes fb-ball-shadow-pulse {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleX(0.82);
+    opacity: 0.32;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fb-ball-3d,
+  .fb-ball-shadow {
+    animation: none !important;
+  }
+}

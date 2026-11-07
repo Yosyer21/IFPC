@@ -3,6 +3,7 @@ import { Intro } from '@/components/landing/intro';
 import { Navbar } from '@/components/landing/navbar';
 import { Hero } from '@/components/landing/hero';
 import { Marquee } from '@/components/landing/marquee';
+import { BallShowcase } from '@/components/landing/ball-showcase';
 import { Mission } from '@/components/landing/mission';
 import { Offerings } from '@/components/landing/offerings';
 import { Gallery } from '@/components/landing/gallery';
@@ -27,6 +28,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <Marquee />
+        <BallShowcase />
         <Reveal>
           <Mission />
         </Reveal>
