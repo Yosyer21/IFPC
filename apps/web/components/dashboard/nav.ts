@@ -19,6 +19,7 @@ export const NAV: Record<string, NavSection[]> = {
         { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
         { href: '/dashboard/health', label: 'Health', icon: 'health' },
         { href: '/dashboard/player/profile', label: 'My profile', icon: 'user' },
+        { href: '/dashboard/player/id', label: 'Player ID', icon: 'file' },
         { href: '/dashboard/player/development', label: 'My development', icon: 'trending' },
       ],
     },
