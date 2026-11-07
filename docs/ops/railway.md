@@ -11,7 +11,10 @@ Railway deploys the repository from GitHub. The repo is a pnpm monorepo with
 | **Worker** (BullMQ) | `.` (root) | `infrastructure/docker/Dockerfile.worker` | — (processes queues) |
 
 - The first service created when connecting the repo uses the root `railway.json`
-  (web, Dockerfile.web + `/` healthcheck).
+  (web, Dockerfile.web + `/api/health` healthcheck). El healthcheck es un endpoint
+  dedicado (`apps/web/app/api/health/route.ts`): **200** si el proceso y la base de
+  datos responden (un `SELECT 1`), **503** si la base de datos no contesta. Es
+  distinto del hub de salud de producto (`/dashboard/health`).
 - The **worker** is added as a second service: in the dashboard → *New Service* →
   same repository → adjust *Dockerfile Path* to `infrastructure/docker/Dockerfile.worker`.
 
@@ -166,7 +169,7 @@ Un despliegue sano del web muestra, en este orden:
 Smoke público (sin sesión):
 
 ```bash
-for p in / /login /api/auth/providers /robots.txt /sitemap.xml; do
+for p in / /login /api/health /api/auth/providers /robots.txt /sitemap.xml; do
   printf '%s  %s\n' "$(curl -s -o /dev/null -w '%{http_code}' "https://futureballler.up.railway.app$p")" "$p"
 done
 # /api/auth/providers debe incluir "credentials" y "google"
