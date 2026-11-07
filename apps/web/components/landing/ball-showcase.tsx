@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { IconArrowRight } from './icons';
-import { SoccerBall } from './soccer-ball';
+import { SoccerBall3D } from './soccer-ball-3d';
 
 /**
  * Sección de la landing con un espacio dedicado al balón de fútbol 3D. Fondo
@@ -49,8 +49,8 @@ export function BallShowcase() {
             className="fb-ball-shadow pointer-events-none absolute bottom-4 h-6 w-52 rounded-full bg-black/60 blur-2xl"
             aria-hidden="true"
           />
-          <div className="fb-ball-3d relative w-60 sm:w-80">
-            <SoccerBall className="h-full w-full" />
+          <div className="relative aspect-square w-60 sm:w-80">
+            <SoccerBall3D className="h-full w-full" />
           </div>
         </div>
       </div>
