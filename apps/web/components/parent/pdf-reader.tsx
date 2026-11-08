@@ -5,9 +5,9 @@ import { Download, ExternalLink, Loader2, Minus, Plus } from 'lucide-react';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 
 /**
- * Lector de PDF propio: renderiza cada página a un <canvas> con PDF.js dentro de
- * un marco con el estilo de la app (zoom, contador y scroll), de modo que el
- * documento se sienta parte de la página en vez de un visor incrustado.
+ * Lector de PDF propio (PDF.js) que renderiza cada página a <canvas> dentro de
+ * un marco con el estilo de la app. Responsive: en móvil ajusta las páginas al
+ * ancho (sin scroll horizontal), con controles táctiles y toolbar que envuelve.
  */
 export function PdfReader({ url, title }: { url: string; title: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -41,7 +41,7 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
     };
   }, [url]);
 
-  // Ancho disponible.
+  // Ancho disponible (contenedor de scroll, sin padding).
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
@@ -60,16 +60,17 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
     container.replaceChildren();
     setStatus('loading');
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const pad = width < 640 ? 20 : 32;
 
     (async () => {
       for (let pageNumber = 1; pageNumber <= doc.numPages; pageNumber += 1) {
         if (cancelled) return;
         const page = await doc.getPage(pageNumber);
         const baseViewport = page.getViewport({ scale: 1 });
-        const fitScale = (width - 4) / baseViewport.width;
+        const fitScale = Math.max(0.1, (width - pad) / baseViewport.width);
         const viewport = page.getViewport({ scale: fitScale * zoom });
         const canvas = document.createElement('canvas');
-        canvas.className = 'mx-auto mb-4 block rounded-lg bg-white shadow-md ring-1 ring-black/5';
+        canvas.className = 'mx-auto mb-3 block rounded-lg bg-white shadow-md ring-1 ring-black/5 sm:mb-4';
         canvas.width = Math.floor(viewport.width * dpr);
         canvas.height = Math.floor(viewport.height * dpr);
         canvas.style.width = `${Math.floor(viewport.width)}px`;
@@ -90,20 +91,22 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card">
-      {/* Barra superior del lector */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-muted/40 px-3 py-2">
-        <div className="flex items-center gap-1.5">
-          <span className="flex h-2.5 w-2.5 rounded-full bg-[#ef4444]" aria-hidden="true" />
-          <span className="flex h-2.5 w-2.5 rounded-full bg-[#f59e0b]" aria-hidden="true" />
-          <span className="flex h-2.5 w-2.5 rounded-full bg-[#22c55e]" aria-hidden="true" />
-          <span className="ml-2 max-w-40 truncate text-xs font-semibold text-muted-foreground">
+      {/* Barra superior del lector (envuelve en móvil) */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-muted/40 px-2.5 py-2 sm:px-3">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <span className="hidden items-center gap-1.5 sm:flex" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+          </span>
+          <span className="truncate text-xs font-semibold text-muted-foreground sm:ml-2">
             {title}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1 sm:gap-1.5">
           {doc ? (
-            <span className="mr-1 hidden text-xs font-semibold text-muted-foreground sm:inline">
+            <span className="mr-1 hidden text-xs font-semibold text-muted-foreground md:inline">
               {doc.numPages} page{doc.numPages === 1 ? '' : 's'}
             </span>
           ) : null}
@@ -111,7 +114,7 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
             <button
               type="button"
               onClick={() => setZoom((z) => Math.max(0.6, Math.round((z - 0.2) * 10) / 10))}
-              className="flex h-8 w-8 items-center justify-center text-muted-foreground hover:text-foreground"
+              className="flex h-9 w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               aria-label="Zoom out"
             >
               <Minus className="h-4 w-4" />
@@ -119,7 +122,7 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
             <button
               type="button"
               onClick={() => setZoom(1)}
-              className="min-w-12 px-1 text-xs font-semibold text-muted-foreground hover:text-foreground"
+              className="min-w-11 px-1 text-xs font-semibold text-muted-foreground hover:text-foreground"
               aria-label="Reset zoom"
             >
               {Math.round(zoom * 100)}%
@@ -127,7 +130,7 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
             <button
               type="button"
               onClick={() => setZoom((z) => Math.min(2.6, Math.round((z + 0.2) * 10) / 10))}
-              className="flex h-8 w-8 items-center justify-center text-muted-foreground hover:text-foreground"
+              className="flex h-9 w-9 items-center justify-center text-muted-foreground hover:text-foreground"
               aria-label="Zoom in"
             >
               <Plus className="h-4 w-4" />
@@ -137,27 +140,27 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-xs font-semibold text-foreground hover:bg-muted"
+            className="flex h-9 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-xs font-semibold text-foreground hover:bg-muted"
+            aria-label="Open in new tab"
           >
             <ExternalLink className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Open</span>
           </a>
           <a
             href={url}
             download
-            className="flex h-8 items-center gap-1.5 rounded-lg bg-brand px-2.5 text-xs font-semibold text-ink hover:brightness-95"
+            className="flex h-9 items-center gap-1.5 rounded-lg bg-brand px-2.5 text-xs font-semibold text-ink hover:brightness-95"
+            aria-label="Download"
           >
             <Download className="h-3.5 w-3.5" /> <span className="hidden sm:inline">Download</span>
           </a>
         </div>
       </div>
 
-      {/* Cuerpo con las páginas */}
-      <div ref={wrapRef} className="relative max-h-[80vh] overflow-auto bg-[#eceef1] p-4">
+      {/* Cuerpo con las páginas (scroll, sin padding para medir bien) */}
+      <div ref={wrapRef} className="relative max-h-[78vh] overflow-auto bg-[#eceef1]">
         {status === 'error' ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-            <p className="text-sm text-muted-foreground">
-              We couldn’t display this document inline.
-            </p>
+          <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
+            <p className="text-sm text-muted-foreground">We couldn’t display this document inline.</p>
             <a
               href={url}
               target="_blank"
@@ -177,7 +180,7 @@ export function PdfReader({ url, title }: { url: string; title: string }) {
           </div>
         ) : null}
 
-        <div ref={pagesRef} />
+        <div ref={pagesRef} className="p-2.5 sm:p-4" />
       </div>
     </div>
   );

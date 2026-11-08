@@ -69,7 +69,7 @@ export function BallShowcase() {
             className="fb-ball-shadow pointer-events-none absolute bottom-3 h-6 w-60 rounded-[100%] bg-black/60 blur-2xl"
             aria-hidden="true"
           />
-          <div className="relative aspect-square w-72 sm:w-96">
+          <div className="relative aspect-square w-64 sm:w-96">
             <SoccerBall3D className="h-full w-full" />
           </div>
         </div>

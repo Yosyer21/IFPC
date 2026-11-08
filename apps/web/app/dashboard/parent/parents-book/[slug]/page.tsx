@@ -31,29 +31,31 @@ export default async function ParentsBookDocPage({
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-black uppercase tracking-tight">{doc.title}</h1>
+          <h1 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">{doc.title}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {doc.category}
             {doc.description ? ` · ${doc.description}` : ''}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <a
-            href={doc.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
-          >
-            Open in new tab
-          </a>
-          <a
-            href={doc.url}
-            download
-            className="rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-ink transition-colors hover:brightness-95"
-          >
-            Download
-          </a>
-        </div>
+        {!isPdf ? (
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={doc.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-xl border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+            >
+              Open in new tab
+            </a>
+            <a
+              href={doc.url}
+              download
+              className="rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-ink transition-colors hover:brightness-95"
+            >
+              Download
+            </a>
+          </div>
+        ) : null}
       </div>
 
       {isPdf ? (

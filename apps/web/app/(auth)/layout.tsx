@@ -28,7 +28,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           </span>
         </Link>
 
-        <div className="animate-fade-up rounded-3xl border border-border bg-card p-7 shadow-sm sm:p-8">
+        <div className="animate-fade-up rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-8">
           {children}
         </div>
 

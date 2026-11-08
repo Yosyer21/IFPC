@@ -116,7 +116,7 @@ export function ParentsBookExplorer({ docs }: { docs: ParentsBookDoc[] }) {
                 className="group animate-fade-up block"
                 style={{ animationDelay: `${Math.min(index, 12) * 40}ms` }}
               >
-                <div className="glass-card card-hover relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl p-5 hover:ring-2 hover:ring-brand/30">
+                <div className="glass-card card-hover relative flex h-full flex-col gap-3 overflow-hidden rounded-2xl p-4 hover:ring-2 hover:ring-brand/30 sm:p-5">
                   <span
                     aria-hidden="true"
                     className="absolute inset-y-0 left-0 w-1"
