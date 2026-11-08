@@ -35,6 +35,40 @@ const ALLOWED = new Set([
   'csv',
 ]);
 
+/** Organización temática de las guías por número (`FB 01`, `FB 02`…). */
+const CATEGORY_BY_NUM: Record<string, string> = {
+  '01': 'Wellbeing',
+  '02': 'Mindset',
+  '03': 'Support',
+  '04': 'Support',
+  '05': 'Matchday',
+  '06': 'Mindset',
+  '07': 'Wellbeing',
+  '08': 'Mindset',
+  '09': 'Matchday',
+  '10': 'Matchday',
+  '11': 'Mindset',
+  '12': 'Matchday',
+  '13': 'Pathway',
+  '14': 'Wellbeing',
+  '15': 'Wellbeing',
+  '16': 'Mindset',
+  '17': 'Mindset',
+  '18': 'Support',
+  '19': 'Pathway',
+  '20': 'Pathway',
+  '21': 'Pathway',
+  '22': 'Wellbeing',
+  '23': 'Mindset',
+};
+
+/** Número inicial del nombre (tras quitar el prefijo "FB"). */
+function leadingNumber(filename: string): string | null {
+  const base = filename.replace(/\.[^.]+$/, '').replace(/^fb[\s-]*/i, '');
+  const match = /^(\d{1,2})/.exec(base);
+  return match?.[1] ?? null;
+}
+
 function prettyTitle(filename: string): string {
   let base = filename.replace(/\.[^.]+$/, '').replace(/\s+/g, ' ').trim();
   base = base.replace(/^fb[\s-]*/i, '');
@@ -87,13 +121,17 @@ export async function readParentsBookDocs(): Promise<ParentsBookDoc[]> {
       .map((filename) => {
         const ext = path.extname(filename).toLowerCase().replace('.', '');
         const meta = META[filename] ?? {};
+        const num = leadingNumber(filename);
         return {
           slug: slugify(filename),
           filename,
           url: `/parents-book/${encodeURIComponent(filename)}`,
           title: meta.title ?? prettyTitle(filename),
           description: meta.description ?? null,
-          category: meta.category ?? (ext === 'pdf' ? 'Guide' : ext.toUpperCase()),
+          category:
+            meta.category ??
+            (num ? CATEGORY_BY_NUM[num] : undefined) ??
+            (ext === 'pdf' ? 'Guide' : ext.toUpperCase()),
           ext,
         } satisfies ParentsBookDoc;
       })
