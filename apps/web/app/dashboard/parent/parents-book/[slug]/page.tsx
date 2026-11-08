@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { PdfReader } from '@/components/parent/pdf-reader';
 import { getParentsBookDoc } from '@/lib/parents-book';
 
 export const metadata: Metadata = { title: 'Parents Book' };
@@ -55,18 +56,18 @@ export default async function ParentsBookDocPage({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-card">
-        {isPdf ? (
-          <iframe src={doc.url} title={doc.title} className="h-[78vh] w-full" />
-        ) : isImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
+      {isPdf ? (
+        <PdfReader url={doc.url} title={doc.title} />
+      ) : isImage ? (
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={doc.url} alt={doc.title} className="max-h-[78vh] w-full object-contain" />
-        ) : (
-          <div className="p-10 text-center text-sm text-muted-foreground">
-            This file type can’t be previewed here. Use “Open in new tab”.
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-border bg-card p-10 text-center text-sm text-muted-foreground">
+          This file type can’t be previewed here. Use “Open in new tab”.
+        </div>
+      )}
     </div>
   );
 }
