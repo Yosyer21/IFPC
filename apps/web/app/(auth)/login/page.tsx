@@ -23,9 +23,12 @@ export default async function LoginPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">Sign in</h1>
+      <h1 className="font-display text-3xl uppercase tracking-tight text-ink">Sign in</h1>
+      <p className="mt-1 mb-6 text-sm text-muted-foreground">
+        Welcome back — sign in to your Future Baller account.
+      </p>
       {oauthMessage ? (
-        <p className="mb-5 rounded-xl border border-warning/40 bg-warning/10 p-3 text-sm">
+        <p className="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
           {oauthMessage}
         </p>
       ) : null}

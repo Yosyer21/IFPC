@@ -238,7 +238,7 @@ export function CompleteSignupForm({
           />
           <RoleFigure role={role} active className="h-24 w-24" />
         </div>
-        <dl className="w-full space-y-2 rounded-xl border border-border bg-white/[0.03] p-3 text-sm">
+        <dl className="w-full space-y-2 rounded-xl border border-border bg-muted p-3 text-sm">
           {rows.map(([label, value]) => (
             <div key={label} className="flex items-baseline justify-between gap-3">
               <dt className="text-muted-foreground">{label}</dt>
@@ -254,7 +254,7 @@ export function CompleteSignupForm({
     <form ref={formRef} action={formAction} onKeyDown={onKeyDown} className="flex flex-col gap-5">
       {/* Progreso del alta */}
       <div className="flex items-center gap-3">
-        <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
+        <div className="h-1 flex-1 overflow-hidden rounded-full bg-muted">
           <div
             className="h-full rounded-full bg-primary transition-all duration-500"
             style={{ width: `${((step + 1) / total) * 100}%` }}

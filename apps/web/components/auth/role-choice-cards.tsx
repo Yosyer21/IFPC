@@ -34,7 +34,7 @@ export function RoleChoiceCards({
               className={`role-card group relative flex cursor-pointer flex-col items-center justify-start gap-1.5 rounded-xl border px-2 py-3 text-center ${
                 active
                   ? 'border-primary bg-primary/[0.07]'
-                  : 'border-border hover:border-primary/40 hover:bg-white/[0.02]'
+                  : 'border-border hover:border-primary/40 hover:bg-muted/50'
               }`}
             >
               <input
