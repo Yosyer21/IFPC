@@ -29,8 +29,8 @@ function drawBallTexture(ctx: CanvasRenderingContext2D, width: number, height: n
     ctx.fill();
   };
 
-  const cols = 10;
-  const rows = 7;
+  const cols = 8;
+  const rows = 5;
   const stepX = width / cols;
   const stepY = height / rows;
   for (let row = 0; row < rows; row += 1) {
@@ -153,6 +153,9 @@ export function SoccerBall3D({ className = '' }: { className?: string }) {
       const rim = new THREE.DirectionalLight(0xd1fc2a, 1.4);
       rim.position.set(2.5, -1, -2.5);
       scene.add(rim);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.7);
+      fill.position.set(3, 2, 4);
+      scene.add(fill);
 
       // Pivote (sube el balón en la escena para que no salga cortado).
       const pivot = new THREE.Group();
@@ -168,12 +171,14 @@ export function SoccerBall3D({ className = '' }: { className?: string }) {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
 
-      const geometry = new THREE.SphereGeometry(1, 128, 128);
-      const material = new THREE.MeshStandardMaterial({
+      const geometry = new THREE.SphereGeometry(1, 160, 160);
+      const material = new THREE.MeshPhysicalMaterial({
         map: texture,
-        roughness: 0.5,
+        roughness: 0.42,
         metalness: 0.0,
-        envMapIntensity: 1.15,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.32,
+        envMapIntensity: 1.35,
       });
       const ball = new THREE.Mesh(geometry, material);
       ball.castShadow = true;

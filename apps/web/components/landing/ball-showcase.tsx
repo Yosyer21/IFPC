@@ -3,14 +3,16 @@ import { IconArrowRight } from './icons';
 import { SoccerBall3D } from './soccer-ball-3d';
 
 /**
- * Sección de la landing con un espacio dedicado al balón de fútbol 3D. Fondo
- * oscuro (panel) para que el balón destaque; el movimiento 3D y la sombra vienen
- * de `.fb-ball-3d` / `.fb-ball-shadow` (globals.css).
+ * Sección de la landing con el balón 3D (WebGL). Fondo oscuro con glow de
+ * estadio, sombra de suelo y chips de estado; el balón se puede arrastrar.
  */
 export function BallShowcase() {
   return (
     <section className="relative overflow-hidden bg-panel py-16 sm:py-24">
-      <div className="pointer-events-none absolute inset-0 bg-bars-faint-invert opacity-60" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 bg-bars-faint-invert opacity-60"
+        aria-hidden="true"
+      />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
         <div>
@@ -24,6 +26,18 @@ export function BallShowcase() {
             Every journey begins the moment a girl first touches the ball. Our development
             environment turns that spark into skill, confidence and international opportunity.
           </p>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {['Interactive 3D', 'WebGL', 'Drag to spin'].map((chip) => (
+              <span
+                key={chip}
+                className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white/70"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/register"
@@ -40,16 +54,22 @@ export function BallShowcase() {
           </div>
         </div>
 
-        <div className="relative flex items-center justify-center py-6">
+        <div className="relative flex items-center justify-center py-10">
+          {/* Glow de estadio */}
           <div
-            className="pointer-events-none absolute h-72 w-72 rounded-full bg-brand/20 blur-[90px]"
+            className="pointer-events-none absolute h-[26rem] w-[26rem] rounded-full bg-brand/25 blur-[120px]"
             aria-hidden="true"
           />
           <div
-            className="fb-ball-shadow pointer-events-none absolute bottom-4 h-6 w-52 rounded-full bg-black/60 blur-2xl"
+            className="pointer-events-none absolute h-40 w-40 rounded-full bg-white/10 blur-[80px]"
             aria-hidden="true"
           />
-          <div className="relative aspect-square w-60 sm:w-80">
+          {/* Sombra de suelo */}
+          <div
+            className="fb-ball-shadow pointer-events-none absolute bottom-3 h-6 w-60 rounded-[100%] bg-black/60 blur-2xl"
+            aria-hidden="true"
+          />
+          <div className="relative aspect-square w-72 sm:w-96">
             <SoccerBall3D className="h-full w-full" />
           </div>
         </div>
