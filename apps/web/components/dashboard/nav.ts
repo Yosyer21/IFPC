@@ -156,6 +156,7 @@ export const NAV: Record<string, NavSection[]> = {
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/calendar', label: 'Calendar', icon: 'calendar' },
         { href: '/dashboard/health', label: 'Health', icon: 'health' },
+        { href: '/dashboard/parent/parents-book', label: 'Parents book', icon: 'book' },
         { href: '/dashboard/parent/settings', label: 'Settings', icon: 'settings' },
       ],
     },
