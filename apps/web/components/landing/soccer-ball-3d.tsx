@@ -3,41 +3,61 @@
 import { useEffect, useRef, useState } from 'react';
 import { SoccerBall } from './soccer-ball';
 
-/** Textura del balón (equirectangular) a 2K: pentágonos con sombreado interno. */
+/**
+ * Textura del balón (equirectangular) en disposición **esférica** correcta: 12
+ * pentágonos negros (5+5 en anillos + 2 casquetes polares) como un balón real.
+ * Cada pentágono se dibuja compensando la distorsión equirectangular (ancho
+ * dividido por `cos(latitud)`) para que NO se estiren cerca de los hemisferios.
+ */
 function drawBallTexture(ctx: CanvasRenderingContext2D, width: number, height: number) {
   const base = ctx.createLinearGradient(0, 0, 0, height);
   base.addColorStop(0, '#ffffff');
-  base.addColorStop(0.5, '#f4f5f2');
-  base.addColorStop(1, '#e3e6ea');
+  base.addColorStop(0.5, '#f5f6f3');
+  base.addColorStop(1, '#e4e7ea');
   ctx.fillStyle = base;
   ctx.fillRect(0, 0, width, height);
 
-  const pentagon = (cx: number, cy: number, r: number, rotDeg: number) => {
+  const ALPHA = 0.4; // radio angular del pentágono (rad)
+  const alphaDeg = (ALPHA * 180) / Math.PI;
+
+  const pentagon = (cx: number, cy: number, rx: number, ry: number) => {
     ctx.beginPath();
     for (let i = 0; i < 5; i += 1) {
-      const angle = ((-90 + i * 72 + rotDeg) * Math.PI) / 180;
-      const x = cx + r * Math.cos(angle);
-      const y = cy + r * Math.sin(angle);
+      const angle = ((-90 + i * 72) * Math.PI) / 180;
+      const x = cx + rx * Math.cos(angle);
+      const y = cy + ry * Math.sin(angle);
       if (i === 0) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
     ctx.closePath();
-    const shade = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, r * 0.15, cx, cy, r);
-    shade.addColorStop(0, '#2b2b32');
+    const shade = ctx.createRadialGradient(cx - rx * 0.3, cy - ry * 0.3, ry * 0.15, cx, cy, ry);
+    shade.addColorStop(0, '#2c2c33');
     shade.addColorStop(1, '#0c0c10');
     ctx.fillStyle = shade;
     ctx.fill();
   };
 
-  const cols = 8;
-  const rows = 5;
-  const stepX = width / cols;
-  const stepY = height / rows;
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      const cx = (col + (row % 2 ? 0.5 : 0)) * stepX + stepX / 2;
-      const cy = row * stepY + stepY / 2;
-      pentagon(cx, cy, stepX * 0.28, ((row * 17 + col * 23) % 72) - 36);
+  // Casquetes polares: el pentágono del polo se mapea como un casquete circular
+  // (banda de ancho completo) → sin estiramiento.
+  const capPx = (alphaDeg / 180) * height;
+  ctx.fillStyle = '#131318';
+  ctx.fillRect(0, 0, width, capPx);
+  ctx.fillRect(0, height - capPx, width, capPx);
+
+  // Dos anillos de 5 pentágonos a ±26.565° (vértices de un icosaedro).
+  const rings = [
+    { lat: 26.565, lons: [0, 72, 144, 216, 288] },
+    { lat: -26.565, lons: [36, 108, 180, 252, 324] },
+  ];
+  for (const ring of rings) {
+    const phi = (ring.lat * Math.PI) / 180;
+    const ry = (ALPHA / Math.PI) * height;
+    const rx = (ALPHA / Math.cos(phi) / (2 * Math.PI)) * width;
+    const cy = ((90 - ring.lat) / 180) * height;
+    for (const lon of ring.lons) {
+      for (const off of [-width, 0, width]) {
+        pentagon((lon / 360) * width + off, cy, rx, ry);
+      }
     }
   }
 }
