@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { IconBook, IconCheck } from './icons';
+import { Tilt3D } from './tilt-3d';
 
 const LEARN = [
   'Set clear goals',
@@ -14,7 +15,10 @@ export function FeaturedProduct() {
     <section className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="group relative h-80 overflow-hidden rounded-[2rem] border border-ink/10 bg-gradient-to-br from-brand/25 via-panel to-brand/10 sm:h-[30rem]">
+          <Tilt3D
+            max={7}
+            className="group relative h-80 overflow-hidden rounded-[2rem] border border-ink/10 bg-gradient-to-br from-brand/25 via-panel to-brand/10 sm:h-[30rem]"
+          >
             <div className="absolute -top-16 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-brand/20 blur-[100px]" />
             <Image
               src="/images/planner.jpg"
@@ -36,7 +40,7 @@ export function FeaturedProduct() {
                 <p className="text-xs text-white/60">By Migoals</p>
               </div>
             </div>
-          </div>
+          </Tilt3D>
 
           <div>
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-subtle">

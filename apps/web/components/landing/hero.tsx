@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { IconArrowRight, IconBall, IconStar } from './icons';
+import { ScrollParallax } from './scroll-parallax';
+import { Tilt3D } from './tilt-3d';
 
 const FACTS = [
   { value: '10–18', label: 'Ages welcome' },
@@ -29,10 +31,15 @@ export function Hero() {
         <div className="animate-drift absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-brand/10 blur-[130px]" />
       </div>
 
-      <IconBall
-        className="animate-spin-slow pointer-events-none absolute -right-16 bottom-8 hidden h-72 w-72 text-white/[0.05] lg:block"
-        aria-hidden="true"
-      />
+      <ScrollParallax
+        speed={0.12}
+        className="pointer-events-none absolute -right-16 bottom-8 hidden lg:block"
+      >
+        <IconBall
+          className="animate-spin-slow h-72 w-72 text-white/[0.05]"
+          aria-hidden="true"
+        />
+      </ScrollParallax>
 
       <div className="mx-auto flex min-h-[94vh] max-w-7xl flex-col justify-center px-4 pb-16 pt-32 sm:px-6">
         <div className="max-w-3xl">
@@ -80,12 +87,12 @@ export function Hero() {
             style={{ animationDelay: '440ms' }}
           >
             {FACTS.map((fact) => (
-              <div key={fact.label} className="glass rounded-2xl px-5 py-4">
+              <Tilt3D key={fact.label} max={7} className="glass rounded-2xl px-5 py-4">
                 <div className="text-2xl font-black text-white sm:text-3xl">{fact.value}</div>
                 <div className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-white/50">
                   {fact.label}
                 </div>
-              </div>
+              </Tilt3D>
             ))}
           </div>
         </div>

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { IconStar } from './icons';
+import { Tilt3D } from './tilt-3d';
 
 const FOUNDERS: { name: string; role: string; initials: string; img?: string }[] = [
   {
@@ -24,7 +25,7 @@ export function Founders() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid items-center gap-16 lg:grid-cols-2">
           <div className="relative">
-            <div className="relative h-[420px] overflow-hidden rounded-3xl border border-ink/10">
+            <Tilt3D max={6} className="relative h-[420px] overflow-hidden rounded-3xl border border-ink/10">
               <Image
                 src="/assets/player-of-the-match-trophy.jpg"
                 alt="Chloe Logarzo with the Player of the Match trophy at the 2019 World Cup"
@@ -33,7 +34,7 @@ export function Founders() {
                 className="object-cover object-top"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-            </div>
+            </Tilt3D>
 
             {/* Emily, en una tarjeta que se solapa con la foto de Chloe. */}
             <div className="absolute -bottom-6 -right-4 w-32 overflow-hidden rounded-2xl border-4 border-white bg-white shadow-2xl sm:-right-6 sm:w-44">

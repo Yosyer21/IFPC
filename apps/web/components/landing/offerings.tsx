@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { IconArrowRight } from './icons';
+import { Tilt3D } from './tilt-3d';
 
 const OFFERINGS = [
   {
@@ -45,8 +46,9 @@ export function Offerings() {
         <div className="mt-16 flex flex-col gap-16 sm:gap-24">
           {OFFERINGS.map((offer, index) => (
             <div key={offer.title} className="grid items-center gap-10 lg:grid-cols-2">
-              <div
-                className={`relative h-72 overflow-hidden rounded-[2rem] border border-ink/10 sm:h-[26rem] ${
+              <Tilt3D
+                max={8}
+                className={`h-72 overflow-hidden rounded-[2rem] border border-ink/10 sm:h-[26rem] ${
                   index % 2 === 1 ? 'lg:order-last' : ''
                 }`}
               >
@@ -58,7 +60,7 @@ export function Offerings() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
-              </div>
+              </Tilt3D>
               <div className="relative">
                 <span
                   className={`block text-7xl font-black leading-none sm:text-8xl ${offer.accent}`}
