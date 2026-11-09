@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { IconArrowRight, IconBall, IconStar } from './icons';
 import { ScrollParallax } from './scroll-parallax';
 import { Tilt3D } from './tilt-3d';
+import { HeroParticles } from './hero-particles';
 
 const FACTS = [
   { value: '10–18', label: 'Ages welcome' },
@@ -25,6 +26,7 @@ export function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-panel/85 via-panel/70 to-panel" />
         <div className="absolute inset-0 bg-gradient-to-r from-panel via-panel/55 to-transparent" />
+        <HeroParticles className="absolute inset-0" />
         {/* Colourful drifting blobs */}
         <div className="animate-drift absolute -left-20 top-24 h-96 w-96 rounded-full bg-brand/20 blur-[130px]" />
         <div className="animate-drift-slow absolute right-0 top-6 h-80 w-80 rounded-full bg-white/10 blur-[130px]" />
