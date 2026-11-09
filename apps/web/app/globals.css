@@ -252,6 +252,63 @@
     }
   }
 
+  /*
+   * Máscara del campo de partículas del hero. Mantiene el polvo luminoso
+   * alejado del texto: en móvil/tablet sólo aparece un resplandor en la
+   * esquina superior derecha; en escritorio el canvas vive en la mitad
+   * derecha y se funde hacia su borde izquierdo.
+   */
+  .hero-particles-mask {
+    -webkit-mask-image: radial-gradient(
+      ellipse 66% 26% at 82% -2%,
+      #000 0%,
+      rgba(0, 0, 0, 0.45) 55%,
+      transparent 82%
+    );
+    mask-image: radial-gradient(
+      ellipse 66% 26% at 82% -2%,
+      #000 0%,
+      rgba(0, 0, 0, 0.45) 55%,
+      transparent 82%
+    );
+  }
+
+  @media (min-width: 640px) {
+    .hero-particles-mask {
+      -webkit-mask-image: radial-gradient(
+        ellipse 62% 30% at 84% 0%,
+        #000 0%,
+        rgba(0, 0, 0, 0.4) 55%,
+        transparent 82%
+      );
+      mask-image: radial-gradient(
+        ellipse 62% 30% at 84% 0%,
+        #000 0%,
+        rgba(0, 0, 0, 0.4) 55%,
+        transparent 82%
+      );
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-particles-mask {
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 16%,
+        rgba(0, 0, 0, 0.4) 34%,
+        #000 66%
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        transparent 16%,
+        rgba(0, 0, 0, 0.4) 34%,
+        #000 66%
+      );
+    }
+  }
+
   .animate-drift {
     animation: fb-drift 16s ease-in-out infinite;
   }

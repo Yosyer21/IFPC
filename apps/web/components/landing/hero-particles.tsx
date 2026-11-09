@@ -3,9 +3,17 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Fondo 3D del hero (WebGL / three.js): campo de partículas con profundidad
- * (fog), brillo aditivo y parallax con el ratón. Ligero (DPR limitado, pausa si
- * la pestaña o el hero no están visibles) y respeta «reducir movimiento».
+ * Campo de partículas 3D del hero (WebGL / three.js).
+ *
+ * - Dos capas (núcleo + halo) sobre la misma geometría: brillo tipo bloom sin
+ *   postprocessing, para no perder la transparencia sobre la foto del hero.
+ * - El polvo se agrupa alrededor del balón (abajo-derecha) y una máscara CSS
+ *   (`.hero-particles-mask`) deja libre la zona de texto.
+ * - Al hacer scroll la cámara atraviesa el campo y las partículas se apagan,
+ *   de modo que la transición a la sección siguiente es limpia.
+ * - El cursor empuja las partículas (repulsión suave) además del parallax.
+ * - Respeta «reducir movimiento», se pausa fuera de viewport o con la pestaña
+ *   oculta y libera todos los recursos al desmontarse.
  */
 export function HeroParticles({ className = '' }: { className?: string }) {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -21,7 +29,11 @@ export function HeroParticles({ className = '' }: { className?: string }) {
 
       let renderer: import('three').WebGLRenderer | null = null;
       try {
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+        renderer = new THREE.WebGLRenderer({
+          antialias: true,
+          alpha: true,
+          powerPreference: 'high-performance',
+        });
       } catch {
         return;
       }
@@ -32,60 +44,109 @@ export function HeroParticles({ className = '' }: { className?: string }) {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setSize(width, height);
       renderer.setClearColor(0x000000, 0);
+      renderer.domElement.style.display = 'block';
       mount.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
-      scene.fog = new THREE.FogExp2(0x0a0a0a, 0.05);
-      const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 120);
+      scene.fog = new THREE.FogExp2(0x0b0f14, 0.055);
+      const camera = new THREE.PerspectiveCamera(58, width / height, 0.1, 120);
       camera.position.z = 6;
 
-      // Sprite redondo con brillo (una sola textura para todos los puntos).
-      const spriteCanvas = document.createElement('canvas');
-      spriteCanvas.width = 64;
-      spriteCanvas.height = 64;
-      const sctx = spriteCanvas.getContext('2d');
-      if (sctx) {
-        const grad = sctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-        grad.addColorStop(0, 'rgba(255,255,255,1)');
-        grad.addColorStop(0.4, 'rgba(255,255,255,0.55)');
-        grad.addColorStop(1, 'rgba(255,255,255,0)');
-        sctx.fillStyle = grad;
-        sctx.fillRect(0, 0, 64, 64);
-      }
-      const sprite = new THREE.CanvasTexture(spriteCanvas);
-      sprite.colorSpace = THREE.SRGBColorSpace;
+      /** Sprite radial: núcleo nítido o halo ancho para el falso bloom. */
+      const makeGlowTexture = (sharp: boolean) => {
+        const size = 128;
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          const grad = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+          if (sharp) {
+            grad.addColorStop(0, 'rgba(255,255,255,1)');
+            grad.addColorStop(0.35, 'rgba(255,255,255,0.7)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+          } else {
+            grad.addColorStop(0, 'rgba(255,255,255,0.5)');
+            grad.addColorStop(0.45, 'rgba(255,255,255,0.14)');
+            grad.addColorStop(1, 'rgba(255,255,255,0)');
+          }
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, size, size);
+        }
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
+      };
+      const coreSprite = makeGlowTexture(true);
+      const haloSprite = makeGlowTexture(false);
 
-      const COUNT = 1600;
+      const COUNT = 1400;
       const positions = new Float32Array(COUNT * 3);
       const colors = new Float32Array(COUNT * 3);
       const white = new THREE.Color('#ffffff');
       const lime = new THREE.Color('#d1fc2a');
+
       for (let i = 0; i < COUNT; i += 1) {
-        positions[i * 3] = (Math.random() - 0.5) * 16;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 11;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 11 - 2;
-        const color = Math.random() < 0.22 ? lime : white;
-        colors[i * 3] = color.r;
-        colors[i * 3 + 1] = color.g;
-        colors[i * 3 + 2] = color.b;
+        const index = i * 3;
+        let x: number;
+        let y: number;
+        let z: number;
+
+        if (Math.random() < 0.6) {
+          // Cúmulo alrededor del balón decorativo (abajo-derecha).
+          const radius = Math.pow(Math.random(), 0.62) * 4.4;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          x = 1.0 + radius * Math.sin(phi) * Math.cos(theta);
+          y = -0.8 + radius * Math.cos(phi) * 0.7;
+          z = -1.6 + radius * Math.sin(phi) * Math.sin(theta);
+        } else {
+          // Polvo ambiental, sesgado a la mitad derecha de la escena.
+          x = Math.random() * 9 - 4.5;
+          y = (Math.random() - 0.5) * 11;
+          z = (Math.random() - 0.5) * 11 - 2;
+        }
+
+        positions[index] = x;
+        positions[index + 1] = y;
+        positions[index + 2] = z;
+
+        const color = Math.random() < 0.26 ? lime : white;
+        colors[index] = color.r;
+        colors[index + 1] = color.g;
+        colors[index + 2] = color.b;
       }
       const basePositions = positions.slice();
 
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      const material = new THREE.PointsMaterial({
-        size: 0.15,
-        map: sprite,
+
+      const coreMaterial = new THREE.PointsMaterial({
+        size: 0.085,
+        map: coreSprite,
         transparent: true,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
         vertexColors: true,
         sizeAttenuation: true,
-        opacity: 0.9,
+        opacity: 0.85,
       });
-      const points = new THREE.Points(geometry, material);
-      scene.add(points);
+      const haloMaterial = new THREE.PointsMaterial({
+        size: 0.46,
+        map: haloSprite,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        sizeAttenuation: true,
+        opacity: 0.2,
+      });
+
+      const core = new THREE.Points(geometry, coreMaterial);
+      const halo = new THREE.Points(geometry, haloMaterial);
+      scene.add(halo);
+      scene.add(core);
 
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -96,36 +157,83 @@ export function HeroParticles({ className = '' }: { className?: string }) {
       if (!reduced) window.addEventListener('pointermove', onPointer, { passive: true });
 
       let visible = true;
-      const observer = new IntersectionObserver(
+      const visibilityObserver = new IntersectionObserver(
         (entries) => {
           visible = entries[0]?.isIntersecting ?? true;
         },
         { threshold: 0.01 }
       );
-      observer.observe(mount);
+      visibilityObserver.observe(mount);
 
       const clock = new THREE.Clock();
       let raf = 0;
+      const cursor = new THREE.Vector3();
+      const unprojected = new THREE.Vector3();
+      const direction = new THREE.Vector3();
+
       const animate = () => {
         raf = requestAnimationFrame(animate);
         if (document.hidden || !visible) return;
+
         const t = clock.getElapsedTime();
         pointer.x += (pointer.tx - pointer.x) * 0.05;
         pointer.y += (pointer.ty - pointer.y) * 0.05;
-        points.rotation.y = t * 0.04 + pointer.x * 0.3;
-        points.rotation.x = pointer.y * 0.18;
 
-        const attr = geometry.getAttribute('position') as import('three').BufferAttribute;
-        const array = attr.array as Float32Array;
+        // Progreso dentro del hero: la cámara entra en el campo al hacer scroll.
+        const rect = mount.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, -rect.top / Math.max(rect.height, 1)));
+        const fade = 1 - progress * 0.9;
+
+        camera.position.z = 6 - progress * 4.2;
+        core.rotation.y = t * 0.035 + pointer.x * 0.32 + progress * 0.35;
+        core.rotation.x = pointer.y * 0.16;
+        halo.rotation.copy(core.rotation);
+
+        coreMaterial.opacity = 0.85 * fade;
+        haloMaterial.opacity = 0.2 * fade;
+
+        // Cursor en el plano z = 0 para la repulsión.
+        unprojected.set(pointer.tx * 2, -pointer.ty * 2, 0.5).unproject(camera);
+        direction.copy(unprojected).sub(camera.position).normalize();
+        const planeDistance = -camera.position.z / (direction.z || -1);
+        cursor.copy(camera.position).addScaledVector(direction, planeDistance);
+
+        const attribute = geometry.getAttribute('position') as import('three').BufferAttribute;
+        const array = attribute.array as Float32Array;
+        const radius = 2.6;
+        const radiusSq = radius * radius;
+
         for (let i = 0; i < COUNT; i += 1) {
-          array[i * 3 + 1] =
-            (basePositions[i * 3 + 1] ?? 0) + Math.sin(t * 0.6 + i * 0.7) * 0.12;
+          const index = i * 3;
+          const baseX = basePositions[index] ?? 0;
+          const baseY = basePositions[index + 1] ?? 0;
+          const baseZ = basePositions[index + 2] ?? 0;
+
+          let px = baseX + Math.sin(t * 0.5 + i * 0.9) * 0.16;
+          let py = baseY + Math.sin(t * 0.65 + i * 0.7) * 0.14;
+          const pz = baseZ + Math.sin(t * 0.4 + i * 1.3) * 0.12;
+
+          const dx = px - cursor.x;
+          const dy = py - cursor.y;
+          const distanceSq = dx * dx + dy * dy;
+          if (distanceSq < radiusSq) {
+            const distance = Math.sqrt(distanceSq) || 0.0001;
+            const force = (1 - distance / radius) ** 2;
+            px += (dx / distance) * force * 1.15;
+            py += (dy / distance) * force * 1.15;
+          }
+
+          array[index] = px;
+          array[index + 1] = py;
+          array[index + 2] = pz;
         }
-        attr.needsUpdate = true;
+        attribute.needsUpdate = true;
+
         renderer!.render(scene, camera);
       };
 
       if (reduced) {
+        camera.position.z = 6;
         renderer.render(scene, camera);
       } else {
         animate();
@@ -144,12 +252,14 @@ export function HeroParticles({ className = '' }: { className?: string }) {
 
       cleanup = () => {
         cancelAnimationFrame(raf);
-        observer.disconnect();
+        visibilityObserver.disconnect();
         resizeObserver.disconnect();
         window.removeEventListener('pointermove', onPointer);
         geometry.dispose();
-        material.dispose();
-        sprite.dispose();
+        coreMaterial.dispose();
+        haloMaterial.dispose();
+        coreSprite.dispose();
+        haloSprite.dispose();
         renderer!.dispose();
         if (renderer!.domElement.parentNode === mount) {
           mount.removeChild(renderer!.domElement);
