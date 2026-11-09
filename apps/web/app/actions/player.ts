@@ -409,6 +409,134 @@ export async function applyToOpportunityAction(
   redirect('/dashboard/player/opportunities/applications');
 }
 
+/** Tipos de oferta que el jugador puede aceptar o rechazar. */
+const OFFER_KINDS = ['TRIAL', 'NEGOTIATION'] as const;
+type OfferKind = (typeof OFFER_KINDS)[number];
+
+function isOfferKind(value: string | null): value is OfferKind {
+  return value !== null && (OFFER_KINDS as readonly string[]).includes(value);
+}
+
+/**
+ * Aceptar una oferta **no** firma nada: al ser menores, la decisión se envía a
+ * la familia para que la apruebe. Avisa a cada padre/madre vinculado y deja la
+ * oferta pendiente de su respuesta.
+ */
+export async function requestOfferApprovalAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const offerId = str(formData, 'offerId');
+  const kind = str(formData, 'kind');
+  if (!offerId || !isOfferKind(kind)) {
+    return { error: 'Invalid offer.' };
+  }
+
+  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
+  if (!player) {
+    return { error: 'Player profile not found.' };
+  }
+
+  let organisation: string;
+  if (kind === 'TRIAL') {
+    const trial = await prisma.trial.findFirst({
+      where: { id: offerId, playerId: player.id },
+      include: { club: true },
+    });
+    if (!trial) {
+      return { error: 'Offer not found.' };
+    }
+    organisation = trial.club.name;
+  } else {
+    const negotiation = await prisma.negotiation.findFirst({
+      where: { id: offerId, playerId: player.id },
+      include: { club: true },
+    });
+    if (!negotiation) {
+      return { error: 'Offer not found.' };
+    }
+    organisation = negotiation.club.name;
+  }
+
+  const links = await prisma.parentChild.findMany({
+    where: { playerId: player.id },
+    select: { parent: { select: { userId: true } } },
+  });
+  if (links.length === 0) {
+    return { error: 'Link a parent or guardian to your account to send the acceptance.' };
+  }
+
+  const message = `${player.firstName} ${player.lastName} wants to accept the offer from ${organisation}.`;
+  try {
+    for (const link of links) {
+      await notifyUser({
+        userId: link.parent.userId,
+        type: 'application',
+        title: 'Approval needed: transfer offer',
+        message,
+        link: `/dashboard/parent/children/${player.id}/opportunities`,
+      });
+    }
+  } catch {
+    return { error: 'Could not notify your family. Please try again.' };
+  }
+
+  revalidatePaths('/dashboard/player/opportunities', '/dashboard/parent');
+  return { success: 'Sent to your parent for approval.' };
+}
+
+/**
+ * Rechazar una oferta: cancela la prueba (`CANCELLED`) o cierra la negociación
+ * (`REJECTED`). Solo se puede tocar una oferta del propio jugador.
+ */
+export async function declineOfferAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: 'Invalid session.' };
+  }
+
+  const offerId = str(formData, 'offerId');
+  const kind = str(formData, 'kind');
+  if (!offerId || !isOfferKind(kind)) {
+    return { error: 'Invalid offer.' };
+  }
+
+  const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
+  if (!player) {
+    return { error: 'Player profile not found.' };
+  }
+
+  if (kind === 'TRIAL') {
+    const trial = await prisma.trial.findFirst({ where: { id: offerId, playerId: player.id } });
+    if (!trial) {
+      return { error: 'Offer not found.' };
+    }
+    await prisma.trial.update({ where: { id: trial.id }, data: { status: 'CANCELLED' } });
+  } else {
+    const negotiation = await prisma.negotiation.findFirst({
+      where: { id: offerId, playerId: player.id },
+    });
+    if (!negotiation) {
+      return { error: 'Offer not found.' };
+    }
+    await prisma.negotiation.update({
+      where: { id: negotiation.id },
+      data: { status: 'REJECTED' },
+    });
+  }
+
+  revalidatePaths('/dashboard/player/opportunities');
+  return { success: 'Offer declined.' };
+}
+
 export async function saveOpportunityAction(formData: FormData): Promise<void> {
   const session = await auth();
   if (!session?.user?.id) {
