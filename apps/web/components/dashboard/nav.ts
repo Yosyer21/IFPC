@@ -1,7 +1,13 @@
-interface NavItem {
+export interface NavItem {
   href: string;
   label: string;
   icon?: string;
+  /**
+   * Rutas antiguas que siguen perteneciendo a este ítem. Sirven para que el
+   * sidebar mantenga el resaltado cuando se llega por un enlace heredado
+   * (p. ej. `/dashboard/player/profile` dentro de *Profile center*).
+   */
+  match?: string[];
 }
 
 export interface NavSection {
@@ -18,9 +24,17 @@ export const NAV: Record<string, NavSection[]> = {
         { href: '/dashboard/discovery', label: 'Discovery', icon: 'compass' },
         { href: '/dashboard/player/calendar', label: 'Calendar', icon: 'calendar' },
         { href: '/dashboard/health', label: 'Health', icon: 'health' },
-        { href: '/dashboard/player/profile', label: 'My profile', icon: 'user' },
-        { href: '/dashboard/player/id', label: 'Player ID', icon: 'file' },
-        { href: '/dashboard/player/development', label: 'My development', icon: 'trending' },
+        // Perfil, Player ID y desarrollo viven juntos en el Profile center.
+        {
+          href: '/dashboard/player/profile-center',
+          label: 'Profile center',
+          icon: 'layers',
+          match: [
+            '/dashboard/player/profile',
+            '/dashboard/player/id',
+            '/dashboard/player/development',
+          ],
+        },
       ],
     },
     {
@@ -249,4 +263,3 @@ export const FALLBACK_NAV: NavSection[] = [
     items: [{ href: '/dashboard', label: 'Overview', icon: 'home' }],
   },
 ];
-

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Tooltip } from '@ifpc/ui';
 import { ICONS, IconPanelLeft, IconSearch, IconX } from './icons';
-import type { NavSection } from './nav';
+import type { NavItem, NavSection } from './nav';
 
 /** Areas de rol: la portada `/dashboard/<rol>` es prefijo de todas sus subpaginas. */
 const ROLE_AREAS = new Set([
@@ -24,6 +24,12 @@ function isActiveHref(pathname: string, href: string) {
   const areaRoot = /^\/dashboard\/([^/]+)$/.exec(href)?.[1];
   if (areaRoot && ROLE_AREAS.has(areaRoot)) return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** Activo si coincide la ruta propia o alguna de sus rutas heredadas (`match`). */
+function isActiveItem(pathname: string, item: NavItem) {
+  if (isActiveHref(pathname, item.href)) return true;
+  return item.match?.some((href) => isActiveHref(pathname, href)) ?? false;
 }
 
 /** Wordmark FUTURE BALLER: FUTURE en blanco, BALLER en verde lima. */
@@ -66,7 +72,7 @@ function NavItems({
           >
             {section.items.map((item) => {
               const Icon = item.icon ? ICONS[item.icon] : undefined;
-              const active = isActiveHref(pathname, item.href);
+              const active = isActiveItem(pathname, item);
               return (
                 <Tooltip key={item.href} content={item.label}>
                   <Link
@@ -99,7 +105,7 @@ function NavItems({
           </div>
           {section.items.map((item) => {
             const Icon = item.icon ? ICONS[item.icon] : undefined;
-            const active = isActiveHref(pathname, item.href);
+            const active = isActiveItem(pathname, item);
             return (
               <Link
                 key={item.href}

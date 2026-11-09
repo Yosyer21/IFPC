@@ -22,11 +22,12 @@ test('Player area: navigation, saving opportunity, status and documents', async 
   // 1. Sidebar con secciones plegables del player
   await page.goto(`${BASE}/dashboard/player`);
   // The active section (Main) opens automatically
-  await expect(page.getByRole('link', { name: 'My development' })).toBeVisible();
-  // The other sections start collapsed and open when clicked
-  await page.getByRole('button', { name: 'Content' }).click();
+  await expect(page.getByRole('link', { name: 'Profile center' })).toBeVisible();
+  // Perfil, Player ID y desarrollo ya no ocupan tres huecos en el sidebar.
+  await expect(page.getByRole('link', { name: 'Player ID', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'My profile', exact: true })).toHaveCount(0);
+  // El sidebar actual muestra todas las secciones abiertas (sin plegables).
   await expect(page.getByRole('link', { name: 'My documents' })).toBeVisible();
-  await page.getByRole('button', { name: 'My career' }).click();
   await expect(page.getByRole('link', { name: 'Opportunities', exact: true })).toBeVisible();
 
   // 1b. Redesigned dashboard: hero, chart and dynamic counters
@@ -77,9 +78,9 @@ test('Player area: hamburger menu on mobile', async ({ page }) => {
   await page.goto(`${BASE}/dashboard/player`);
   await page.getByRole('button', { name: 'Open menu' }).click();
   // The drawer shows the navigation
-  await expect(page.getByRole('link', { name: 'My development' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Profile center' })).toBeVisible();
   // When navigating, the drawer closes by itself
-  await page.getByRole('link', { name: 'My development' }).click();
+  await page.getByRole('link', { name: 'Profile center' }).click();
   await expect(page.getByRole('button', { name: 'Open menu' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Close menu' })).toBeHidden();
 });
