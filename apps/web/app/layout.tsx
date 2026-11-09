@@ -66,6 +66,16 @@ export const metadata: Metadata = {
       'Holistic football development for girls aged 10–18, led by Matildas Chloe Logarzo and Emily Gielnik.',
   },
   robots: { index: true, follow: true },
+  // PWA: instalable en la pantalla de inicio (iconos + manifest).
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: ['/icons/icon-192.png'],
+  },
   // Instalación como app (iOS) y sin detección automática de teléfonos.
   appleWebApp: {
     capable: true,
