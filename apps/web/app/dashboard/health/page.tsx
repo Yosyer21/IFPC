@@ -108,7 +108,7 @@ export default function HealthHubPage() {
       {/* Salto rápido: con siete tarjetas, evita recorrerlas enteras. */}
       <nav
         aria-label="Jump to a factor"
-        className="animate-fade-up sticky top-14 z-30 -mx-1 mb-3 flex flex-wrap gap-2 bg-background/80 px-1 py-2 backdrop-blur-md"
+        className="animate-fade-up top-header-safe sticky z-30 -mx-1 mb-3 flex flex-wrap gap-2 bg-background/80 px-1 py-2 backdrop-blur-md"
       >
         {HEALTH_FACTORS.map((factor) => (
           <a
@@ -116,7 +116,9 @@ export default function HealthHubPage() {
             href={`#${factor.slug}`}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/40 px-3 py-1 text-xs text-muted-foreground transition-colors hover:border-brand/40 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${FACTOR_DOT_CLASSES[factor.tone]}`} />
+            <span
+              className={`h-2.5 w-2.5 shrink-0 rounded-full ${FACTOR_DOT_CLASSES[factor.tone]}`}
+            />
             {factor.title}
           </a>
         ))}

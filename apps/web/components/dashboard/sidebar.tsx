@@ -208,7 +208,7 @@ export function DashboardSidebar({
           role="dialog"
           aria-modal="true"
           aria-label="Navigation"
-          className="nav-drawer absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-white/10 bg-ink p-4"
+          className="nav-drawer pt-safe pb-safe absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col overflow-y-auto border-r border-white/10 bg-ink p-4"
         >
           <div className="mb-4 flex items-center justify-between">
             <Link href="/" aria-label="Future Baller home">

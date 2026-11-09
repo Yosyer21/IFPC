@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-mist px-4 py-12 text-foreground">
+    <main className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-mist px-4 py-12 pb-[calc(3rem+env(safe-area-inset-bottom))] text-foreground">
       {/* Glows lima suaves del nuevo sistema visual */}
       <div
         className="animate-drift pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-brand/20 blur-[130px]"
@@ -39,4 +39,3 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
     </main>
   );
 }
-

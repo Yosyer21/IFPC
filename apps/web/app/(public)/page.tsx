@@ -10,6 +10,7 @@ import { Gallery } from '@/components/landing/gallery';
 import { Founders } from '@/components/landing/founders';
 import { FeaturedEvent } from '@/components/landing/featured-event';
 import { FeaturedProduct } from '@/components/landing/featured-product';
+import { DownloadApp } from '@/components/landing/download-app';
 import { Newsletter } from '@/components/landing/newsletter';
 import { Footer } from '@/components/landing/footer';
 import { Reveal } from '@/components/landing/reveal';
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-mist text-ink selection:bg-brand/50">
+    <div className="min-h-[100dvh] overflow-x-hidden bg-mist text-ink selection:bg-brand/50">
       <Intro />
       <Navbar />
       <main>
@@ -46,6 +47,9 @@ export default function HomePage() {
         </Reveal>
         <Reveal>
           <FeaturedProduct />
+        </Reveal>
+        <Reveal>
+          <DownloadApp />
         </Reveal>
         <Reveal>
           <Newsletter />

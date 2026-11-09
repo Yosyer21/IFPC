@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.futureballer.app'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.futureballer.app'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+        // Servidor que carga la app. Cámbialo aquí si cambia el dominio.
+        buildConfigField 'String', 'APP_URL', '"https://futureballler.up.railway.app"'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        debug {
+        }
+        release {
+            minifyEnabled false
+            // Distribución directa (fuera de Play Store): se firma con la clave
+            // de debug para que el APK sea instalable sin gestionar un keystore.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

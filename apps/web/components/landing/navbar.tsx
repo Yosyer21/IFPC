@@ -27,7 +27,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
+    <header className="pt-safe fixed inset-x-0 top-0 z-50">
       <div
         className={`mx-auto flex max-w-7xl items-center justify-between px-4 transition-all sm:px-6 ${
           scrolled
@@ -52,6 +52,12 @@ export function Navbar() {
 
         <div className="hidden items-center gap-2 md:flex">
           <Link
+            href="/#download-app"
+            className="hidden items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium text-white/70 transition-colors hover:text-brand lg:inline-flex"
+          >
+            Get the app
+          </Link>
+          <Link
             href="/login"
             className="rounded-full px-4 py-2 text-sm font-medium text-white/80 transition-colors hover:text-brand"
           >
@@ -68,7 +74,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white/80 hover:bg-white/10 md:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/80 hover:bg-white/10 md:hidden"
           aria-label="Menu"
         >
           {open ? <IconX className="h-5 w-5" /> : <IconMenu className="h-5 w-5" />}
@@ -76,7 +82,7 @@ export function Navbar() {
       </div>
 
       {open ? (
-        <div className="mx-3 mt-2 rounded-2xl border border-white/10 bg-ink/95 px-4 pb-4 pt-2 backdrop-blur-md md:hidden">
+        <div className="mx-3 mt-2 max-h-[calc(100dvh-5rem)] overflow-y-auto rounded-2xl border border-white/10 bg-ink/95 px-4 pb-4 pt-2 backdrop-blur-md md:hidden">
           <nav className="flex flex-col gap-1">
             {LINKS.map((link) => (
               <Link
@@ -89,6 +95,13 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2">
+              <Link
+                href="/#download-app"
+                onClick={() => setOpen(false)}
+                className="rounded-full border border-brand/40 bg-brand/10 px-4 py-2.5 text-center text-sm font-semibold text-brand"
+              >
+                Download the app
+              </Link>
               <Link
                 href="/login"
                 onClick={() => setOpen(false)}

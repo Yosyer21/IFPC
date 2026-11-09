@@ -64,12 +64,12 @@ export function DashboardHeader({
   const settingsHref = SETTINGS_PATHS[role];
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-border bg-card px-4 lg:px-6">
+    <header className="pt-safe sticky top-0 z-40 flex min-h-14 items-center gap-3 border-b border-border bg-card px-4 lg:px-6">
       <button
         type="button"
         onClick={onOpenMenu}
         aria-label="Open menu"
-        className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
+        className="touch-target inline-flex items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
       >
         <IconMenu className="h-5 w-5" />
       </button>

@@ -59,9 +59,57 @@
     --mist: 80 13% 95%;
     --subtle: 216 10% 45%;
   }
+  @supports (-webkit-touch-callout: none) {
+    /* Sin esto iOS hace zoom al enfocar un campo con letra menor de 16px. */
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
 }
 
 @layer utilities {
+  /*
+   * Safe area (notch / barra de gestos). `viewport-fit=cover` hace que el
+   * contenido llegue al borde físico; estas utilidades devuelven el espacio
+   * necesario en cabeceras, drawers y pies. En navegadores sin notch valen 0.
+   */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .px-safe {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Altura del header sticky teniendo en cuenta el notch (usada por filtros). */
+  .top-header-safe {
+    top: calc(3.5rem + env(safe-area-inset-top));
+  }
+
+  .touch-target {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -456,11 +504,26 @@
     letter-spacing: 0.03em;
     line-height: 1.4;
   }
-  .fb-tag-lime { background: hsl(var(--brand) / 0.18); color: #4f6b0a; }
-  .fb-tag-amber { background: hsl(32 90% 55% / 0.16); color: #a4580a; }
-  .fb-tag-violet { background: hsl(258 70% 60% / 0.16); color: #5b3bb0; }
-  .fb-tag-blue { background: hsl(210 80% 52% / 0.16); color: #1f5fa6; }
-  .fb-tag-gray { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+  .fb-tag-lime {
+    background: hsl(var(--brand) / 0.18);
+    color: #4f6b0a;
+  }
+  .fb-tag-amber {
+    background: hsl(32 90% 55% / 0.16);
+    color: #a4580a;
+  }
+  .fb-tag-violet {
+    background: hsl(258 70% 60% / 0.16);
+    color: #5b3bb0;
+  }
+  .fb-tag-blue {
+    background: hsl(210 80% 52% / 0.16);
+    color: #1f5fa6;
+  }
+  .fb-tag-gray {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
 
   /* En el área privada los H1 de página son titulares deportivos. */
   .dashboard-main h1 {

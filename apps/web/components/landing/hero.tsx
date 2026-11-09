@@ -13,7 +13,7 @@ const FACTS = [
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-[94vh] overflow-hidden">
+    <section className="relative isolate min-h-[94dvh] overflow-hidden">
       {/* Background photo + overlays */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -37,13 +37,10 @@ export function Hero() {
         speed={0.12}
         className="pointer-events-none absolute -right-16 bottom-8 hidden lg:block"
       >
-        <IconBall
-          className="animate-spin-slow h-72 w-72 text-white/[0.05]"
-          aria-hidden="true"
-        />
+        <IconBall className="animate-spin-slow h-72 w-72 text-white/[0.05]" aria-hidden="true" />
       </ScrollParallax>
 
-      <div className="mx-auto flex min-h-[94vh] max-w-7xl flex-col justify-center px-4 pb-16 pt-32 sm:px-6">
+      <div className="mx-auto flex min-h-[94dvh] max-w-7xl flex-col justify-center px-4 pb-16 pt-[calc(8rem+env(safe-area-inset-top))] sm:px-6">
         <div className="max-w-3xl">
           <span className="animate-fade-up glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-brand">
             <IconBall className="h-4 w-4 animate-spin-slow" /> Empowering girls aged 10–18

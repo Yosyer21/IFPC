@@ -74,7 +74,7 @@ export function DashboardShell({
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-mist md:flex-row">
+    <div className="flex min-h-[100dvh] flex-col bg-mist md:flex-row">
       <DashboardSidebar
         sections={sections}
         collapsed={collapsed}
@@ -95,7 +95,9 @@ export function DashboardShell({
           onOpenMenu={() => setMobileOpen(true)}
           onOpenSearch={() => setSearchOpen(true)}
         />
-        <main className="dashboard-main flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="dashboard-main flex-1 px-4 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:px-6 lg:px-8">
+          {children}
+        </main>
       </div>
 
       <CommandPalette open={searchOpen} onClose={() => setSearchOpen(false)} sections={sections} />
