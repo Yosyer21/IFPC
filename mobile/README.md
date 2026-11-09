@@ -29,6 +29,14 @@ El APK queda en `app/build/outputs/apk/release/app-release.apk`. El script
 `mobile/scripts/build-apk.sh` lo compila y lo copia a
 `apps/web/public/downloads/future-baller.apk` (el archivo que sirve la landing).
 
+## targetSdk 34
+
+La app compila contra Android 15 (`compileSdk 35`) pero apunta a `targetSdk 34`
+a propósito: en Android 15+ las apps con target 35 pasan a edge-to-edge
+forzado y el WebView puede quedar bajo las barras del sistema y el teclado.
+Con target 34 se mantiene el comportamiento clásico (ajuste de ventana y
+barras respetadas).
+
 ## Cambiar el servidor
 
 Edita `APP_URL` en `app/build.gradle` y vuelve a compilar. La app solo abre
