@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Envoltorio nativo de Future Baller: un WebView a pantalla completa sobre la
@@ -36,6 +37,24 @@ public class MainActivity extends Activity {
     private static final String START_URL = BuildConfig.APP_URL;
     private static final String HOST = Uri.parse(START_URL).getHost();
     private static final int FILE_CHOOSER_REQUEST = 1001;
+
+    /** Dominios del flujo de Google que deben quedarse dentro del WebView. */
+    private static final String[] GOOGLE_AUTH_SUFFIXES = {
+            ".google.com",
+            ".gstatic.com",
+            ".googleusercontent.com",
+            ".googleapis.com"
+    };
+
+    private static boolean isGoogleAuthHost(String host) {
+        if (host == null) return false;
+        String lower = host.toLowerCase();
+        if ("google.com".equals(lower) || "gstatic.com".equals(lower)) return true;
+        for (String suffix : GOOGLE_AUTH_SUFFIXES) {
+            if (lower.endsWith(suffix)) return true;
+        }
+        return false;
+    }
 
     private WebView webView;
     private ProgressBar progress;
@@ -67,7 +86,14 @@ public class MainActivity extends Activity {
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setSupportMultipleWindows(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
-        settings.setUserAgentString(settings.getUserAgentString() + " FutureBallerApp/1.0");
+        // Google bloquea el OAuth cuando el UA del WebView lleva "; wv". Se
+        // elimina ese token (y "Version/4.0") para que la petición se vea como
+        // un Chrome móvil normal: así el botón de Google funciona dentro de la app.
+        String userAgent = settings.getUserAgentString();
+        if (userAgent != null && userAgent.contains("wv")) {
+            userAgent = userAgent.replace("; wv", "").replace("Version/4.0 ", "");
+        }
+        settings.setUserAgentString(userAgent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             settings.setSafeBrowsingEnabled(true);
         }
@@ -90,6 +116,22 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 progress.setVisibility(View.GONE);
+                // Red de seguridad: si Google rechaza el WebView, se vuelve al
+                // login con un aviso en vez de dejar al usuario en su error.
+                if (url != null && url.contains("accounts.google.com")) {
+                    view.evaluateJavascript(
+                            "(function(){var t=document.body?document.body.innerText:'';" +
+                                    "return t.indexOf('disallowed_useragent')>=0" +
+                                    "||t.indexOf('may not be secure')>=0" +
+                                    "||t.indexOf('Access blocked')>=0;})()",
+                            value -> {
+                                if ("true".equals(value)) {
+                                    Toast.makeText(MainActivity.this, R.string.google_blocked,
+                                            Toast.LENGTH_LONG).show();
+                                    view.loadUrl(START_URL);
+                                }
+                            });
+                }
             }
 
             @Override
@@ -169,6 +211,12 @@ public class MainActivity extends Activity {
                 openExternal(uri);
                 return true;
             }
+            return false;
+        }
+
+        // OAuth de Google: se queda en el WebView para que la sesión acabe en la
+        // app (si se abriera en Chrome, el login no volvería).
+        if (isWeb && isGoogleAuthHost(host)) {
             return false;
         }
 

@@ -92,7 +92,7 @@ export function DownloadApp() {
               </div>
 
               <p className="mt-4 text-xs leading-relaxed text-white/45">
-                Android 6.0+ · v1.0.0 · ~60 KB · The APK is installed directly, outside the Play
+                Android 6.0+ · v1.0.1 · ~60 KB · The APK is installed directly, outside the Play
                 Store: if your phone asks, allow installs from this source.
               </p>
             </div>

@@ -29,6 +29,15 @@ El APK queda en `app/build/outputs/apk/release/app-release.apk`. El script
 `mobile/scripts/build-apk.sh` lo compila y lo copia a
 `apps/web/public/downloads/future-baller.apk` (el archivo que sirve la landing).
 
+## Inicio de sesión con Google
+
+El OAuth de Google se queda **dentro** del WebView: la app limpia el token `wv`
+del User-Agent (Google bloquea los WebView que lo llevan) y permite navegar por
+`accounts.google.com`, `gstatic.com`, `googleusercontent.com` y `googleapis.com`
+sin abrirlos en el navegador externo (si se abrieran fuera, la sesión no
+volvería a la app). Si Google mostrara su pantalla de bloqueo, la app vuelve al
+login con un aviso para usar email y contraseña.
+
 ## targetSdk 34
 
 La app compila contra Android 15 (`compileSdk 35`) pero apunta a `targetSdk 34`
