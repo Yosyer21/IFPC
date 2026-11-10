@@ -1,7 +1,6 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import type { Prisma } from '@ifpc/database';
 import type { SignupRole } from '@ifpc/config';
+import { resolveStorage } from '@/lib/storage';
 
 /**
  * Datos que recoge el asistente de alta (slides), según el tipo de cuenta.
@@ -106,12 +105,13 @@ export async function downloadRemoteAvatar(url: string | null | undefined): Prom
     const bytes = Buffer.from(await response.arrayBuffer());
     if (bytes.byteLength === 0 || bytes.byteLength > MAX_AVATAR_BYTES) return null;
 
-    const dir = path.join(process.cwd(), 'public', 'uploads', 'photos');
-    await mkdir(dir, { recursive: true });
-    const filename = `${crypto.randomUUID()}.${ext}`;
-    await writeFile(path.join(dir, filename), bytes);
+    const { url: storedUrl } = await resolveStorage().save({
+      key: `photos/${crypto.randomUUID()}.${ext}`,
+      body: bytes,
+      contentType: mime,
+    });
 
-    return `/uploads/photos/${filename}`;
+    return storedUrl;
   } catch {
     return null;
   }

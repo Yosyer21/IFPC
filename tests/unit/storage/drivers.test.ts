@@ -187,4 +187,20 @@ describe('s3Driver contra un S3 local', () => {
       driver.save({ key: 'posts/rechazado.png', body: Buffer.from('x'), contentType: 'image/png' })
     ).rejects.toThrow('403');
   });
+
+  it('lee con GET firmado para el proxy de archivos', async () => {
+    const driver = s3Driver(settings());
+
+    const response = await driver.readObject?.('posts/video.mp4');
+
+    expect(response?.ok).toBe(true);
+    const request = received.at(-1);
+    expect(request?.method).toBe('GET');
+    expect(request?.url).toBe('/ifpc/posts/video.mp4');
+    expect(request?.headers['content-type']).toBeUndefined();
+    expect(request?.headers.authorization).toMatch(/^AWS4-HMAC-SHA256 /);
+    expect(request?.headers['x-amz-content-sha256']).toBe(
+      createHash('sha256').update('').digest('hex')
+    );
+  });
 });

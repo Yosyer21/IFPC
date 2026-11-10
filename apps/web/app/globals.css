@@ -67,6 +67,27 @@
       font-size: 16px;
     }
   }
+
+  /*
+   * Scrollbars invisibles (estética de app, también en el sidebar y en el
+   * sistema en general). El desplazamiento sigue funcionando con rueda, touch,
+   * teclado y trackpad; solo se oculta el indicador.
+   */
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 }
 
 @layer utilities {

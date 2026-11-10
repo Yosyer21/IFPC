@@ -1,14 +1,13 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { createHash, randomBytes } from 'node:crypto';
-import { mkdir, unlink, writeFile } from 'node:fs/promises';
-import path from 'node:path';
+import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { auth, hashPassword, verifyPassword } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { changePasswordSchema, updateEmailSchema } from '@ifpc/validation';
 import { sendVerificationEmail } from '@/lib/email/resend';
 import { dashboardPath } from '@/lib/safe-redirect';
+import { resolveStorage } from '@/lib/storage';
 import type { ActionState } from './auth';
 
 /** Accepted profile photo types mapped to the extension we store them with. */
@@ -19,19 +18,6 @@ const PHOTO_MIME_EXT: Record<string, string> = {
 };
 
 const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
-
-/** Absolute directory holding profile photos inside the public uploads folder. */
-const PHOTO_DIR = path.join(process.cwd(), 'public', 'uploads', 'photos');
-
-/** Best-effort removal of a previously uploaded local photo (never throws). */
-async function removeLocalPhoto(image: string | null): Promise<void> {
-  if (!image?.startsWith('/uploads/photos/')) return;
-  try {
-    await unlink(path.join(process.cwd(), 'public', image.replace(/^\//, '')));
-  } catch {
-    // The file may already be gone: nothing to clean up.
-  }
-}
 
 /**
  * Sube/reemplaza la foto de perfil del usuario autenticado (`User.image`), el
@@ -65,14 +51,18 @@ export async function updateProfilePhotoAction(
       where: { id: session.user.id },
       select: { image: true },
     });
-    await mkdir(PHOTO_DIR, { recursive: true });
-    const filename = `${crypto.randomUUID()}.${ext}`;
-    await writeFile(path.join(PHOTO_DIR, filename), Buffer.from(await file.arrayBuffer()));
+    // Mismo driver que el resto de subidas: disco en local, bucket en producción.
+    const storage = resolveStorage();
+    const { url } = await storage.save({
+      key: `photos/${randomUUID()}.${ext}`,
+      body: Buffer.from(await file.arrayBuffer()),
+      contentType: file.type,
+    });
     await prisma.user.update({
       where: { id: session.user.id },
-      data: { image: `/uploads/photos/${filename}` },
+      data: { image: url },
     });
-    await removeLocalPhoto(previous?.image ?? null);
+    await storage.remove(previous?.image ?? null);
   } catch {
     return { error: 'The photo could not be saved.' };
   }
@@ -92,7 +82,7 @@ export async function removeProfilePhotoAction(formData: FormData): Promise<void
     select: { image: true },
   });
   await prisma.user.update({ where: { id: session.user.id }, data: { image: null } });
-  await removeLocalPhoto(user?.image ?? null);
+  await resolveStorage().remove(user?.image ?? null);
 
   redirect(dashboardPath(formData.get('redirectTo')));
 }

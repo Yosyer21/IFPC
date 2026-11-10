@@ -19,6 +19,17 @@ export interface S3Settings {
 
 const trimSlash = (value: string): string => value.replace(/\/+$/, '');
 
+/**
+ * Base pública en modo *virtual-hosted*: `https://bucket.endpoint/…`.
+ * Insertar el bucket con `.replace('://', …)` producía `bucket.https://host`
+ * (inválido), así que aquí se reconstruye la URL de verdad (respetando puerto).
+ */
+function virtualHostBase(endpoint: string, bucket: string): string {
+  const url = new URL(endpoint);
+  url.hostname = `${bucket}.${url.hostname}`;
+  return trimSlash(url.toString());
+}
+
 /** Lee la configuración de S3 del entorno; `null` si falta algo imprescindible. */
 export function s3SettingsFromEnv(env: NodeJS.ProcessEnv = process.env): S3Settings | null {
   const endpoint = env.S3_ENDPOINT;
@@ -37,7 +48,7 @@ export function s3SettingsFromEnv(env: NodeJS.ProcessEnv = process.env): S3Setti
     secretAccessKey,
     publicBaseUrl: trimSlash(
       env.S3_PUBLIC_BASE_URL ??
-        (forcePathStyle ? `${trimSlash(endpoint)}/${bucket}` : `${bucket}.${trimSlash(endpoint)}`)
+        (forcePathStyle ? `${trimSlash(endpoint)}/${bucket}` : virtualHostBase(endpoint, bucket))
     ),
     forcePathStyle,
   };
@@ -63,14 +74,16 @@ export function s3Driver(
   };
 
   const request = async (
-    method: 'PUT' | 'DELETE',
+    method: 'PUT' | 'DELETE' | 'GET',
     key: string,
     body: Buffer,
     contentType?: string
   ): Promise<Response> => {
     const url = objectUrl(key);
     const payloadHash = sha256Hex(body);
-    const headers: Record<string, string> = { 'content-type': contentType ?? 'application/octet-stream' };
+    // GET no lleva content-type (no hay cuerpo); el resto sí.
+    const headers: Record<string, string> =
+      method === 'GET' ? {} : { 'content-type': contentType ?? 'application/octet-stream' };
     const signed = signRequest(
       { method, url, headers, payloadHash },
       {
@@ -98,6 +111,9 @@ export function s3Driver(
       }
       const encoded = key.split('/').map(encodeURIComponent).join('/');
       return { url: `${settings.publicBaseUrl}/${encoded}` };
+    },
+    async readObject(key) {
+      return request('GET', key, Buffer.alloc(0));
     },
     async remove(url) {
       if (!url?.startsWith(settings.publicBaseUrl)) return;

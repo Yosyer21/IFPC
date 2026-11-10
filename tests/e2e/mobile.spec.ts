@@ -71,6 +71,14 @@ test.describe('Mobile (390x844)', () => {
     const viewportMeta = await page.locator('meta[name="viewport"]').getAttribute('content');
     expect(viewportMeta).toContain('viewport-fit=cover');
 
+    // Scrollbars ocultos también en el documento (estética de app).
+    const scrollbars = await page.evaluate(() => ({
+      html: getComputedStyle(document.documentElement).scrollbarWidth,
+      body: getComputedStyle(document.body).scrollbarWidth,
+    }));
+    expect(scrollbars.html).toBe('none');
+    expect(scrollbars.body).toBe('none');
+
     // La landing ofrece la app y el APK se sirve de verdad.
     const apkLink = page.getByRole('link', { name: /download the apk/i });
     await expect(apkLink).toBeVisible();
@@ -113,6 +121,13 @@ test.describe('Mobile (390x844)', () => {
     await expect(drawer).toBeVisible();
     const drawerBox = await drawer.boundingBox();
     expect(drawerBox?.width ?? 0).toBeLessThanOrEqual(390);
+
+    // El sidebar tampoco muestra barra de scroll (el scroll sigue activo).
+    const sidebarScrollbar = await drawer.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return style.scrollbarWidth;
+    });
+    expect(sidebarScrollbar).toBe('none');
     await drawer.getByRole('link', { name: 'Profile center' }).click();
     await expect(page.getByRole('button', { name: 'Open menu' })).toBeVisible();
 

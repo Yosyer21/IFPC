@@ -32,6 +32,25 @@ await storage.remove(url);     // best-effort, ignora URLs que no son suyas
 Variables: `STORAGE_DRIVER`, `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`,
 `S3_SECRET_ACCESS_KEY`, `S3_REGION`, `S3_FORCE_PATH_STYLE`, `S3_PUBLIC_BASE_URL`, `UPLOAD_DIR`.
 
+## Railway Storage Buckets (producción)
+
+- Bucket **`ifpc-uploads`** (región `sjc`), creado con `railway bucket create ifpc-uploads --region sjc`.
+- Los buckets de Railway son **privados** (no hay URL pública): por eso `S3_PUBLIC_BASE_URL` apunta
+  a **`/api/files`** (ruta relativa, portable) y **`GET /api/files/[...key]`** firma un `GET` SigV4
+  contra el bucket (`StorageDriver.readObject`) y devuelve el objeto.
+- Prefijos públicos (`banners/`, `photos/`, `covers/`, `avatars/`, `posts/`, `training/`,
+  `club-banners/`, `club-logos/`) se sirven sin sesión y con caché inmutable; el resto (documentos)
+  exige sesión y no se cachea.
+- Variables en Railway: `STORAGE_DRIVER=s3`, `S3_ENDPOINT=https://t3.storageapi.dev`,
+  `S3_BUCKET=<bucket>`, `S3_REGION=auto`, `S3_FORCE_PATH_STYLE=false`,
+  `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` (de `railway bucket credentials`) y
+  `S3_PUBLIC_BASE_URL=/api/files`.
+- Las **fotos de perfil** (ajustes y alta con Google) usan el mismo driver que el resto de subidas:
+  disco en local y bucket en producción.
+- El driver construye bien la base *virtual-hosted* (`https://bucket.endpoint`) y expone
+  `readObject` para el proxy; las URLs guardadas en base de datos son estables (`/api/files/...`),
+  no presigned que caducan.
+
 ### Validación del firmador
 
 `signingPieces` (puro) devuelve la petición canónica, el *string to sign* y la firma, así que se

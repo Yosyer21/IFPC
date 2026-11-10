@@ -67,6 +67,18 @@ describe('s3SettingsFromEnv', () => {
     expect(settings?.publicBaseUrl).toBe('https://cdn.ifpc.example');
   });
 
+  it('sin CDN, la base virtual-hosted mete el bucket como subdominio', () => {
+    const settings = s3SettingsFromEnv({
+      S3_ENDPOINT: 'https://t3.storageapi.dev',
+      S3_BUCKET: 'ifpc-uploads-abc',
+      S3_ACCESS_KEY_ID: 'clave',
+      S3_SECRET_ACCESS_KEY: 'secreto',
+      S3_FORCE_PATH_STYLE: 'false',
+    });
+
+    expect(settings?.publicBaseUrl).toBe('https://ifpc-uploads-abc.t3.storageapi.dev');
+  });
+
   it('sin credenciales devuelve null', () => {
     expect(s3SettingsFromEnv({ S3_ENDPOINT: 'https://s3.amazonaws.com' })).toBeNull();
   });
