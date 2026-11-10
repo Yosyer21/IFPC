@@ -32,11 +32,13 @@ El APK queda en `app/build/outputs/apk/release/app-release.apk`. El script
 ## Inicio de sesión con Google
 
 El OAuth de Google se queda **dentro** del WebView: la app limpia el token `wv`
-del User-Agent (Google bloquea los WebView que lo llevan) y permite navegar por
-`accounts.google.com`, `gstatic.com`, `googleusercontent.com` y `googleapis.com`
-sin abrirlos en el navegador externo (si se abrieran fuera, la sesión no
-volvería a la app). Si Google mostrara su pantalla de bloqueo, la app vuelve al
-login con un aviso para usar email y contraseña.
+del User-Agent (Google bloquea los WebView que lo llevan) y activa un **modo
+autenticación** al abrir `/login`, `/register`, recuperación o verificación, o al
+entrar en un dominio de Google. Mientras dura, cualquier navegación http(s)
+—incluidos los enlaces de comprobación, dominios regionales, `g.co` o
+`recaptcha.net`— se carga en la app hasta volver a nuestro dominio. Si se abriera
+en el navegador externo, la sesión se perdería. Si Google mostrara su pantalla de
+bloqueo, la app vuelve al login con un aviso para usar email y contraseña.
 
 ## targetSdk 34
 

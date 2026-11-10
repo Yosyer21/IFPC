@@ -10,8 +10,8 @@ android {
         applicationId 'com.futureballer.app'
         minSdk 23
         targetSdk 34
-        versionCode 2
-        versionName '1.0.1'
+        versionCode 3
+        versionName '1.0.2'
         // Punto de entrada de la app: directo al login (el landing no se muestra).
         buildConfigField 'String', 'APP_URL', '"https://futureballler.up.railway.app/login"'
     }

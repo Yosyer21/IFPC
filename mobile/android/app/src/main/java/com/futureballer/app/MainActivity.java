@@ -38,23 +38,51 @@ public class MainActivity extends Activity {
     private static final String HOST = Uri.parse(START_URL).getHost();
     private static final int FILE_CHOOSER_REQUEST = 1001;
 
-    /** Dominios del flujo de Google que deben quedarse dentro del WebView. */
+    /**
+     * Dominios que pueden aparecer durante el OAuth de Google (incluye
+     * verificación en dos pasos, enlaces cortos y dominios regionales).
+     */
     private static final String[] GOOGLE_AUTH_SUFFIXES = {
             ".google.com",
             ".gstatic.com",
             ".googleusercontent.com",
-            ".googleapis.com"
+            ".googleapis.com",
+            ".ggpht.com",
+            ".youtube.com",
+            ".g.co",
+            ".goo.gl",
+            ".recaptcha.net"
     };
 
     private static boolean isGoogleAuthHost(String host) {
         if (host == null) return false;
         String lower = host.toLowerCase();
         if ("google.com".equals(lower) || "gstatic.com".equals(lower)) return true;
+        // google.es, google.co.uk, google.de… (cualquier Google regional).
+        if (lower.matches("(^|\\.)google\\.[a-z]{2,3}(\\.[a-z]{2})?$")) return true;
         for (String suffix : GOOGLE_AUTH_SUFFIXES) {
             if (lower.endsWith(suffix)) return true;
         }
         return false;
     }
+
+    /** Páginas de la app en las que cualquier navegación debe quedarse dentro. */
+    private static boolean isAuthPath(String path) {
+        return path.startsWith("/login")
+                || path.startsWith("/register")
+                || path.startsWith("/forgot-password")
+                || path.startsWith("/reset-password")
+                || path.startsWith("/verify-email")
+                || path.startsWith("/welcome");
+    }
+
+    /**
+     * Mientras es `true`, cualquier navegación http(s) se queda en el WebView.
+     * Se activa al entrar en un dominio de Google y se apaga al volver al nuestro:
+     * así ningún paso intermedio (verificación, enlaces cortos, dominios
+     * regionales) se escapa al navegador externo y pierde la sesión.
+     */
+    private boolean authInProgress = true;
 
     private WebView webView;
     private ProgressBar progress;
@@ -116,6 +144,10 @@ public class MainActivity extends Activity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 progress.setVisibility(View.GONE);
+                if (url != null && HOST != null && url.contains(HOST)) {
+                    String path = Uri.parse(url).getPath();
+                    authInProgress = path != null && isAuthPath(path);
+                }
                 // Red de seguridad: si Google rechaza el WebView, se vuelve al
                 // login con un aviso en vez de dejar al usuario en su error.
                 if (url != null && url.contains("accounts.google.com")) {
@@ -203,6 +235,7 @@ public class MainActivity extends Activity {
             String path = uri.getPath() == null ? "" : uri.getPath();
             // La app no muestra la landing: la raíz del sitio lleva al login.
             if (path.isEmpty() || "/".equals(path)) {
+                authInProgress = true;
                 webView.loadUrl(START_URL);
                 return true;
             }
@@ -211,12 +244,16 @@ public class MainActivity extends Activity {
                 openExternal(uri);
                 return true;
             }
+            // En login/registro/verificación no se sale a ningún sitio.
+            authInProgress = isAuthPath(path);
             return false;
         }
 
-        // OAuth de Google: se queda en el WebView para que la sesión acabe en la
-        // app (si se abriera en Chrome, el login no volvería).
-        if (isWeb && isGoogleAuthHost(host)) {
+        // OAuth de Google y cualquier paso intermedio (verificación en dos pasos,
+        // enlaces cortos, dominios regionales): se queda en el WebView. Mientras
+        // dura el flujo de autenticación no se abre el navegador con nada.
+        if (isWeb && (authInProgress || isGoogleAuthHost(host))) {
+            authInProgress = true;
             return false;
         }
 
