@@ -94,6 +94,16 @@ test.describe('Mobile (390x844)', () => {
     }
   });
 
+  test('con sesión, /login redirige al dashboard (entrada de la app)', async ({ page }) => {
+    await loginAsPlayer(page);
+    await page.goto(`${BASE}/login`);
+    await page.waitForURL('**/dashboard/**', { timeout: 15_000 });
+    await expect(page).toHaveURL(/\/dashboard\/player/);
+    await expect(
+      page.getByRole('heading', { name: /good (morning|afternoon|evening)/i })
+    ).toBeVisible();
+  });
+
   test('área del jugador: menú y páginas clave sin desbordes', async ({ page }) => {
     await loginAsPlayer(page);
 

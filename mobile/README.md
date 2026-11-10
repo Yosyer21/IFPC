@@ -41,6 +41,9 @@ barras respetadas).
 
 Edita `APP_URL` en `app/build.gradle` y vuelve a compilar. La app solo abre
 dentro del WebView su propio dominio; el resto de dominios van al navegador.
+La URL de entrada es `/login`: la app no muestra el landing y, si ya hay sesión,
+el servidor redirige a `/dashboard`. Cualquier navegación a la raíz del sitio
+también se redirige al login dentro de la app.
 
 ## Firma
 

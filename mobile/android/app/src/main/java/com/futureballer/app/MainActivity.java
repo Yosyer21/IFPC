@@ -159,6 +159,11 @@ public class MainActivity extends Activity {
         boolean isWeb = "https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme);
         if (isWeb && HOST != null && HOST.equalsIgnoreCase(host)) {
             String path = uri.getPath() == null ? "" : uri.getPath();
+            // La app no muestra la landing: la raíz del sitio lleva al login.
+            if (path.isEmpty() || "/".equals(path)) {
+                webView.loadUrl(START_URL);
+                return true;
+            }
             // El WebView no pinta PDFs ni instala APKs: se abren con otra app.
             if (path.endsWith(".pdf") || path.endsWith(".apk")) {
                 openExternal(uri);
