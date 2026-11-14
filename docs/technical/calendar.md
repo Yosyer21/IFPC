@@ -1,5 +1,11 @@
 # Calendario
 
+> **Una sola pantalla para todos los roles.** El jugador la ve en
+> `/dashboard/player/calendar` (título «My calendar») y el resto —club, coach,
+> parent, agente, scout, universidad, school y admin— en `/dashboard/calendar`.
+> Ambos renderizan `components/calendar/calendar-screen.tsx`; solo cambia el
+> conjunto de eventos que devuelve `listCalendarEvents` según la sesión.
+
 Vista **de solo lectura** que reúne en una rejilla mensual lo que ya está
 repartido por la plataforma. No crea ni edita nada: **no hay modelo
 `CalendarEvent`** ni migración. El valor está en agregar y en aplicar el mismo
