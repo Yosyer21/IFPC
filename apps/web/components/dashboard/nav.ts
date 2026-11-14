@@ -83,7 +83,7 @@ export const NAV: Record<string, NavSection[]> = {
         { href: '/dashboard/club/opportunities', label: 'Opportunities', icon: 'target' },
         { href: '/dashboard/club/requirements', label: 'Requirements', icon: 'check' },
         { href: '/dashboard/club/applications', label: 'Applications', icon: 'inbox' },
-        { href: '/dashboard/club/players', label: 'Players', icon: 'search' },
+        { href: '/dashboard/club/players', label: 'Find players', icon: 'search' },
         { href: '/dashboard/club/matching', label: 'Matching', icon: 'sparkles' },
         { href: '/dashboard/club/inquiries', label: 'Inquiries', icon: 'mail' },
       ],

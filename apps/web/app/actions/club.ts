@@ -13,6 +13,8 @@ import { clubProfileSchema, opportunitySchema } from '@ifpc/validation';
 import type { ActionState } from './auth';
 import { dashboardPath } from '@/lib/safe-redirect';
 import { resolveStorage } from '@/lib/storage';
+import { notifyUser } from '@/lib/notifications/notify';
+import { revalidatePaths } from '@/lib/revalidate';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -335,4 +337,123 @@ export async function removeClubLogoAction(formData: FormData): Promise<void> {
   await resolveStorage().remove(club.logoUrl);
 
   redirect(dashboardPath(formData.get('redirectTo')));
+}
+
+/** Vuelta a «Find players» conservando los filtros activos (nunca fuera del área). */
+function clubPlayersBack(formData: FormData): string {
+  const raw = str(formData, 'returnTo');
+  return raw && raw.startsWith('/dashboard/club/players') ? raw : '/dashboard/club/players';
+}
+
+/**
+ * Añade o quita un jugador de la shortlist del club (scouting). Es un toggle
+ * idempotente: si ya estaba, lo quita; si no, lo guarda.
+ */
+export async function toggleClubShortlistAction(formData: FormData): Promise<void> {
+  const club = await getClub();
+  if (!club) {
+    return;
+  }
+
+  const playerId = str(formData, 'playerId');
+  if (!playerId) {
+    redirect(clubPlayersBack(formData));
+  }
+
+  const existing = await prisma.clubShortlist.findUnique({
+    where: { clubId_playerId: { clubId: club.id, playerId } },
+  });
+
+  if (existing) {
+    await prisma.clubShortlist.delete({ where: { id: existing.id } });
+  } else {
+    const player = await prisma.player.findUnique({
+      where: { id: playerId },
+      select: { id: true },
+    });
+    if (player) {
+      await prisma.clubShortlist.create({ data: { clubId: club.id, playerId } });
+    }
+  }
+
+  revalidatePaths('/dashboard/club/players');
+  redirect(clubPlayersBack(formData));
+}
+
+/** Días hasta la prueba cuando el club invita desde «Find players». */
+const TRIAL_INVITE_DAYS = 7;
+
+/**
+ * Invita a un jugador a una prueba. Crea un `Trial` (SCHEDULED) la primera vez,
+ * avisa al jugador y a su familia, y es **idempotente**: si ya hay una prueba
+ * programada con ese club, no duplica nada.
+ */
+export async function invitePlayerToTrialAction(formData: FormData): Promise<void> {
+  const club = await getClub();
+  if (!club) {
+    return;
+  }
+
+  const playerId = str(formData, 'playerId');
+  if (!playerId) {
+    redirect(clubPlayersBack(formData));
+  }
+
+  const player = await prisma.player.findUnique({
+    where: { id: playerId },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      userId: true,
+      parents: { select: { parent: { select: { userId: true } } } },
+    },
+  });
+  if (!player) {
+    redirect(clubPlayersBack(formData));
+  }
+
+  const existing = await prisma.trial.findFirst({
+    where: { clubId: club.id, playerId, status: 'SCHEDULED' },
+  });
+
+  if (!existing) {
+    const startsAt = new Date(Date.now() + TRIAL_INVITE_DAYS * 86_400_000);
+    startsAt.setUTCHours(10, 0, 0, 0);
+
+    await prisma.trial.create({
+      data: {
+        clubId: club.id,
+        playerId,
+        startsAt,
+        location: club.city ?? club.country,
+        status: 'SCHEDULED',
+        notes: 'Trial invitation sent from Find players.',
+      },
+    });
+
+    try {
+      await notifyUser({
+        userId: player.userId,
+        type: 'application',
+        title: 'Trial invitation',
+        message: `${club.name} has invited you to a trial. Check your calendar.`,
+        link: '/dashboard/player/calendar',
+      });
+      for (const link of player.parents) {
+        await notifyUser({
+          userId: link.parent.userId,
+          type: 'application',
+          title: 'Trial invitation',
+          message: `${club.name} has invited ${player.firstName} ${player.lastName} to a trial.`,
+          link: '/dashboard/calendar',
+        });
+      }
+    } catch {
+      // La prueba ya está creada: un fallo del aviso no debe deshacerla.
+    }
+  }
+
+  revalidatePaths('/dashboard/club/players', '/dashboard/player/calendar', '/dashboard/calendar');
+  redirect(clubPlayersBack(formData));
 }

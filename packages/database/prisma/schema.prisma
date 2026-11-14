@@ -182,6 +182,7 @@ model Player {
   contracts     Contract[]
   scoutingReports ScoutingReport[]
   savedBy       SavedPlayer[]
+  shortlistedBy ClubShortlist[]
   agents        AgentPlayer[]
   coaches       CoachPlayer[]
   parents       ParentChild[]
@@ -345,6 +346,8 @@ model Club {
   inquiries     Inquiry[]
   requirements  Requirement[]
   staff         ClubStaff[]
+  /// Jugadores marcados como candidatos desde «Find players».
+  shortlist     ClubShortlist[]
   camps         Camp[]
   liveSessions  LiveSession[]
   /// Contenido del Football Center que publica el club.
@@ -1058,6 +1061,19 @@ model SavedPlayer {
   createdAt DateTime @default(now())
 
   @@unique([scoutId, playerId])
+}
+
+/// Candidatos que un club guarda desde «Find players» (scouting).
+model ClubShortlist {
+  id        String   @id @default(cuid())
+  clubId    String
+  club      Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([clubId, playerId])
+  @@index([playerId])
 }
 
 model Inquiry {

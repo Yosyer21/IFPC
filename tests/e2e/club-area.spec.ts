@@ -26,9 +26,10 @@ test('Club: centro de reclutamiento y bandeja de requests', async ({ page }) => 
   await expect(page.getByText('Pending actions').first()).toBeVisible();
   await expect(page.getByText('Recent activity').first()).toBeVisible();
 
-  // 2. Sidebar with the new Applications section
-  await page.getByRole('button', { name: 'Recruitment' }).click();
+  // 2. El sidebar muestra la sección de reclutamiento abierta (sin plegables)
+  //    y la entrada renovada de scouting.
   await expect(page.getByRole('link', { name: 'Applications', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Find players', exact: true })).toBeVisible();
 
   // 3. Bandeja de requests
   await page.goto(`${BASE}/dashboard/club/applications`);
@@ -77,10 +78,13 @@ test('Club: ve y entra a las sesiones que organizan sus coaches', async ({ page,
   );
 
   // 4. Y el jugador que entrena ese coach también la tiene en su lista.
-  const playerPage = await context.newPage();
+  //    Contexto aparte: con la sesión del club, /login redirige al dashboard.
+  const playerContext = await browser.newContext();
+  const playerPage = await playerContext.newPage();
   await login(playerPage, 'player@demo.com', 'player123');
   await playerPage.goto(`${BASE}/dashboard/player/live-sessions`);
   await expect(playerPage.getByText(title)).toBeVisible({ timeout: 15_000 });
 
+  await playerContext.close();
   await context.close();
 });
