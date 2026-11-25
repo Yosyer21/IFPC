@@ -69,8 +69,10 @@ COPY --from=builder /app/seed.mjs ./seed.mjs
 COPY --from=builder /app/rtc.mjs ./rtc.mjs
 COPY --from=builder /app/infrastructure/docker/start-web.sh ./start-web.sh
 # Storage privado de documentos. El proceso corre como `nextjs`, así que el
-# directorio debe existir y pertenecerle antes de bajar privilegios. Para
+# directorio debe existir y pertenecerle antes de bajar privilegios. La ruta se
+# fija explícitamente porque el server standalone puede cambiar el cwd. Para
 # persistencia entre deploys, montar un volumen y apuntar PRIVATE_UPLOAD_DIR.
+ENV PRIVATE_UPLOAD_DIR=/app/.private-uploads
 RUN mkdir -p /app/.private-uploads && chown nextjs:nodejs /app/.private-uploads
 USER nextjs
 EXPOSE 3000
