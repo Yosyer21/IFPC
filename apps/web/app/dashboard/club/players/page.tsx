@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
-import { matchScore } from '@ifpc/matching';
+import { affinityScore, matchScore } from '@ifpc/matching';
 import { FOOT_LABELS } from '@ifpc/config';
 import { Card, CardContent } from '@ifpc/ui';
 import { PlayerAvatar } from '@/components/player/avatar';
@@ -18,6 +18,9 @@ import {
   scoutingAgeGroup,
   scoutingHref,
 } from '@/lib/club-scouting';
+import { buildAffinityTarget } from '@/lib/affinity';
+import { canShowStatsAndClips, isVisibleToClubs } from '@/lib/minor';
+import { canContactPlayers } from '@/lib/verification';
 import { invitePlayerToTrialAction, toggleClubShortlistAction } from '@/app/actions/club';
 
 export const metadata: Metadata = { title: 'Find players' };
@@ -47,6 +50,12 @@ export default async function ClubPlayersPage({
   const club = await prisma.club.findUnique({ where: { userId: session.user.id } });
   if (!club) notFound();
 
+  // Un club debe estar verificado y con antecedentes para invitar a jugadores.
+  const canInvite = canContactPlayers({
+    verified: club.verified,
+    backgroundChecked: club.backgroundChecked,
+  });
+
   const params = await searchParams;
   const filters = parseScoutingFilters({ position: params.position, age: params.age });
   const currentHref = scoutingHref(BASE_PATH, filters);
@@ -56,7 +65,9 @@ export default async function ClubPlayersPage({
       where: { status: 'AVAILABLE' },
       include: {
         user: { select: { image: true } },
-        _count: { select: { videos: true } },
+        _count: { select: { videos: true, filmClips: true } },
+        // Visibilidad y stats/clips decididos por el padre (solo afecta a menores de 16).
+        parents: { select: { idVisibleToClubs: true, showStatsAndClips: true } },
       },
       orderBy: { updatedAt: 'desc' },
       take: 200,
@@ -65,7 +76,7 @@ export default async function ClubPlayersPage({
     prisma.clubShortlist.findMany({ where: { clubId: club.id }, select: { playerId: true } }),
     prisma.trial.findMany({
       where: { clubId: club.id, status: 'SCHEDULED' },
-      select: { playerId: true },
+      select: { playerId: true, parentApproval: true },
     }),
   ]);
 
@@ -79,14 +90,21 @@ export default async function ClubPlayersPage({
 
   const careerByPlayer = new Map(career.map((row) => [row.playerId, row._sum]));
   const shortlisted = new Set(shortlist.map((row) => row.playerId));
-  const invited = new Set(trials.map((row) => row.playerId));
+  const trialByPlayer = new Map(trials.map((row) => [row.playerId, row]));
   const now = new Date();
+  const affinityTarget = buildAffinityTarget(
+    { kind: 'club', name: club.name, country: club.country, city: club.city },
+    requirements
+  );
 
   const rows = players
     .filter((player) => matchesScoutingFilters(player, filters, now))
+    .filter((player) => isVisibleToClubs(player.dateOfBirth, player.parents, now))
     .map((player) => {
       const sum = careerByPlayer.get(player.id);
       const ageGroup = scoutingAgeGroup(ageOn(player.dateOfBirth, now));
+      // Privacidad: si el padre ocultó stats/clips de un menor, no entran en la afinidad.
+      const showDetails = canShowStatsAndClips(player.dateOfBirth, player.parents, now);
       const fit = requirements.length
         ? Math.max(
             ...requirements.map(
@@ -111,6 +129,21 @@ export default async function ClubPlayersPage({
           )
         : null;
 
+      const affinity = affinityScore(
+        {
+          position: player.position,
+          dateOfBirth: player.dateOfBirth,
+          nationality: player.nationality,
+          location: player.location,
+          clubName: player.clubName,
+          competitionLevel: player.competitionLevel,
+          appearances: showDetails ? (sum?.appearances ?? 0) : null,
+          goalContributions: showDetails ? (sum?.goals ?? 0) + (sum?.assists ?? 0) : null,
+          highlights: showDetails ? player._count.videos + player._count.filmClips : null,
+        },
+        affinityTarget
+      );
+
       const foot = player.foot
         ? ((FOOT_LABELS as Record<string, string | undefined>)[player.foot] ?? player.foot)
         : null;
@@ -123,10 +156,15 @@ export default async function ClubPlayersPage({
         goals: sum?.goals ?? 0,
         assists: sum?.assists ?? 0,
         fit,
+        affinity,
+        showDetails,
       };
     })
     .sort(
-      (a, b) => (b.fit ?? -1) - (a.fit ?? -1) || a.player.lastName.localeCompare(b.player.lastName)
+      (a, b) =>
+        b.affinity.total - a.affinity.total ||
+        (b.fit ?? -1) - (a.fit ?? -1) ||
+        a.player.lastName.localeCompare(b.player.lastName)
     );
 
   return (
@@ -214,10 +252,16 @@ export default async function ClubPlayersPage({
         </Card>
       ) : (
         <div className="mt-5 flex flex-col gap-3">
-          {rows.map(({ player, ageGroup, foot, apps, goals, assists, fit }, index) => {
+          {rows.map(
+            (
+              { player, ageGroup, foot, apps, goals, assists, fit, affinity, showDetails },
+              index
+            ) => {
             const isShortlisted = shortlisted.has(player.id);
-            const isInvited = invited.has(player.id);
-            const clips = player._count.videos;
+            const trial = trialByPlayer.get(player.id);
+            const isInvited = Boolean(trial);
+            const awaitsParent = trial?.parentApproval === 'PENDING';
+            const clips = player._count.videos + player._count.filmClips;
 
             return (
               <Card
@@ -253,29 +297,40 @@ export default async function ClubPlayersPage({
                     </div>
                   </div>
 
-                  <dl className="flex shrink-0 items-end gap-4 sm:gap-6">
-                    {[
-                      { label: 'Apps', value: apps },
-                      { label: 'Goals', value: goals },
-                      { label: 'Assists', value: assists },
-                    ].map((stat) => (
-                      <div key={stat.label} className="text-center">
-                        <dd className="text-xl font-black tabular-nums leading-none">
-                          {stat.value}
-                        </dd>
-                        <dt className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
-                          {stat.label}
-                        </dt>
-                      </div>
-                    ))}
-                  </dl>
+                  {showDetails ? (
+                    <dl className="flex shrink-0 items-end gap-4 sm:gap-6">
+                      {[
+                        { label: 'Apps', value: apps },
+                        { label: 'Goals', value: goals },
+                        { label: 'Assists', value: assists },
+                      ].map((stat) => (
+                        <div key={stat.label} className="text-center">
+                          <dd className="text-xl font-black tabular-nums leading-none">
+                            {stat.value}
+                          </dd>
+                          <dt className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                            {stat.label}
+                          </dt>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : (
+                    <p className="shrink-0 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Stats &amp; clips private
+                    </p>
+                  )}
 
                   <div className="shrink-0 text-xs text-muted-foreground lg:w-32 lg:text-right">
                     <p>
-                      {clips} highlight clip{clips === 1 ? '' : 's'}
+                      {showDetails
+                        ? `${clips} highlight clip${clips === 1 ? '' : 's'}`
+                        : 'Clips private'}
+                    </p>
+                    <p className="mt-0.5 text-sm font-black text-[#4f6b0a]">
+                      {affinity.total}% affinity
                     </p>
                     {fit !== null ? (
-                      <p className="mt-0.5 text-sm font-bold text-[#4f6b0a]">{fit}% fit</p>
+                      <p className="mt-0.5 text-[11px]">{fit}% fit to needs</p>
                     ) : null}
                   </div>
 
@@ -298,9 +353,9 @@ export default async function ClubPlayersPage({
 
                     {isInvited ? (
                       <span className="rounded-full bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground">
-                        Invite sent
+                        {awaitsParent ? 'Waiting for parent' : 'Invite sent'}
                       </span>
-                    ) : (
+                    ) : canInvite ? (
                       <form action={invitePlayerToTrialAction}>
                         <input type="hidden" name="playerId" value={player.id} />
                         <input type="hidden" name="returnTo" value={currentHref} />
@@ -311,12 +366,20 @@ export default async function ClubPlayersPage({
                           Invite to trial
                         </button>
                       </form>
+                    ) : (
+                      <span
+                        className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground"
+                        title="Your club must be verified and background-checked to invite players."
+                      >
+                        Verification required
+                      </span>
                     )}
                   </div>
                 </CardContent>
               </Card>
             );
-          })}
+            }
+          )}
         </div>
       )}
     </div>

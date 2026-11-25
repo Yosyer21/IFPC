@@ -24,6 +24,7 @@ function offer(overrides: Partial<TransferOffer> = {}): TransferOffer {
     kind: 'TRIAL',
     tag: 'TRIAL',
     isNew: true,
+    approvalPending: false,
     title: 'Offer',
     organisation: 'Club',
     message: null,
@@ -90,8 +91,24 @@ describe('opportunityCategory', () => {
       opportunityCategory({ id: '3', title: 'C', type: 'ACADEMY', location: null, closesAt: null })
     ).toBe('SCHOOL');
     expect(
-      opportunityCategory({ id: '4', title: 'D', type: 'TRIAL', location: null, closesAt: null })
+      opportunityCategory({
+        id: '4',
+        title: 'D',
+        type: 'TRIAL',
+        location: null,
+        closesAt: null,
+      })
     ).toBe('TRIALS');
+    expect(
+      opportunityCategory({
+        id: '5',
+        title: 'E',
+        type: 'SCHOLARSHIP',
+        location: null,
+        closesAt: null,
+        schoolId: 'school-1',
+      })
+    ).toBe('SCHOOL');
   });
 });
 
@@ -130,6 +147,11 @@ describe('offerFromTrial', () => {
     expect(offerFromTrial({ ...trial, submission: { notes: '   ' } }, NOW).message).toBe(
       'Nota interna'
     );
+  });
+
+  it('marca la oferta cuando espera la aprobación del padre', () => {
+    expect(offerFromTrial({ ...trial, parentApproval: 'PENDING' }, NOW).approvalPending).toBe(true);
+    expect(offerFromTrial(trial, NOW).approvalPending).toBe(false);
   });
 });
 
@@ -183,8 +205,34 @@ describe('matchFromOpportunity', () => {
       match: 72,
       location: 'Valencia',
       closesInDays: 4,
+      scholarship: null,
       href: '/dashboard/player/opportunities/opp-1',
     });
+  });
+
+  it('resume la beca cuando la oportunidad es un programa', () => {
+    const result = matchFromOpportunity(
+      {
+        id: 'opp-sch-1',
+        title: 'University sports scholarship',
+        type: 'SCHOLARSHIP',
+        location: 'Valencia',
+        closesAt: null,
+        universityId: 'uni-1',
+        university: { id: 'uni-1', name: 'Demo University' },
+        scholarship: {
+          coverage: 'FULL',
+          spots: 2,
+          amount: '100% tuition',
+          intakeYear: 2027,
+        },
+      },
+      80,
+      NOW
+    );
+
+    expect(result.category).toBe('UNIVERSITY');
+    expect(result.scholarship).toBe('Full scholarship · 2 spots · 100% tuition · Intake 2027');
   });
 
   it('usa un guion cuando la oportunidad no tiene organización', () => {
@@ -226,9 +274,34 @@ describe('applicationFromRow', () => {
       type: 'Scholarship',
       category: 'UNIVERSITY',
       status: 'PENDING',
+      approvalPending: false,
       daysAgo: 2,
       href: '/dashboard/player/opportunities/opp-1',
     });
+  });
+
+  it('marca la candidatura cuando espera la aprobación del padre', () => {
+    const result = applicationFromRow(
+      {
+        id: 'app-2',
+        status: 'PENDING',
+        parentApproval: 'PENDING',
+        createdAt: new Date(NOW.getTime() - DAY),
+        opportunity: {
+          id: 'opp-2',
+          title: 'Boarding scholarship',
+          type: 'SCHOLARSHIP',
+          location: null,
+          closesAt: null,
+          schoolId: 'school-1',
+          school: { id: 'school-1', name: 'Demo School' },
+        },
+      },
+      NOW
+    );
+
+    expect(result.approvalPending).toBe(true);
+    expect(result.category).toBe('SCHOOL');
   });
 });
 

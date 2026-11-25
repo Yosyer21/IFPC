@@ -43,6 +43,7 @@ export const FEED_ROLE_FILTERS = [
   'UNIVERSITY',
   'SCHOOL',
   'ADMIN',
+  'HEALTH_AGENT',
 ] as const;
 export type FeedRoleFilter = (typeof FEED_ROLE_FILTERS)[number];
 type FeedTypeFilter = (typeof FEED_TYPE_FILTERS)[number];

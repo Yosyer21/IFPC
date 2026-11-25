@@ -17,6 +17,7 @@ enum Role {
   UNIVERSITY
   SCHOOL
   ADMIN
+  HEALTH_AGENT
 }
 
 enum SchoolType {
@@ -115,6 +116,7 @@ model User {
   club          Club?
   university    University?
   school        School?
+  healthAgent   HealthAgent?
   memberships   Membership[]
   payments      Payment[]
   notifications Notification[]
@@ -140,8 +142,276 @@ model User {
   roomParticipations TrainingRoomParticipant[]
   /// Canales activados por categoría de aviso (ver `lib/notifications/preferences`).
   notificationPreferences NotificationPreference[]
+  filmClipNotes     FilmClipNote[]
+  meetings          Meeting[]
 
   @@index([role])
+}
+
+/// Disciplinas del rol unificado HEALTH_AGENT.
+enum HealthAgentSpecialty {
+  NUTRITION
+  PSYCHOLOGY
+  PHYSIOTHERAPY
+}
+
+enum HealthAgentFormat {
+  IN_PERSON
+  ONLINE
+  BOTH
+}
+
+/// Perfil de la práctica de un Health Agent (nutrición, psicología o fisio).
+/// La verificación (`verified`, `backgroundChecked`) la gestiona el admin.
+model HealthAgent {
+  id         String @id @default(cuid())
+  userId     String @unique
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  practiceName String
+  headline     String?
+  about        String?
+  specialties  HealthAgentSpecialty[]
+  services     String[]
+  approach     String[]
+
+  registrationNumber String?
+  insuranceProvider  String?
+  insuranceExpiresAt DateTime?
+  verified           Boolean @default(false)
+  backgroundChecked  Boolean @default(false)
+
+  priceFrom      Int?
+  currency       String           @default("EUR")
+  format         HealthAgentFormat @default(BOTH)
+  sessionsOnline Boolean          @default(true)
+
+  languages        String[]
+  city             String?
+  country          String?
+  website          String?
+  yearsExperience  Int?
+  clientsServed    Int?
+  availabilityNote String?
+
+  ratingAvg   Float?
+  reviewCount Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings          Booking[]
+  clientPlans       ClientPlan[]
+  reviews           SpecialistReview[]
+  availabilitySlots AvailabilitySlot[]
+
+  @@index([verified])
+  @@index([city])
+}
+
+/// The "1%" Factor: tipos de sesión de un especialista.
+enum BookingSessionType {
+  INTRO
+  FULL
+  PACKAGE
+}
+
+/// Estados del flujo: jugador pide -> padre aprueba y paga -> especialista acepta.
+enum BookingStatus {
+  AWAITING_PARENT
+  AWAITING_SPECIALIST
+  CONFIRMED
+  DECLINED
+  CANCELLED
+  COMPLETED
+}
+
+enum ClientPlanKind {
+  NUTRITION
+  PSYCHOLOGY
+  PHYSIOTHERAPY
+  ONE_TO_ONE
+}
+
+model Booking {
+  id             String      @id @default(cuid())
+  playerId       String
+  player         Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  healthAgentId  String
+  healthAgent    HealthAgent @relation(fields: [healthAgentId], references: [id], onDelete: Cascade)
+  parentId       String?
+  parent         Parent?     @relation(fields: [parentId], references: [id], onDelete: SetNull)
+
+  sessionType BookingSessionType
+  startsAt    DateTime
+  price       Int
+  currency    String             @default("EUR")
+  status      BookingStatus      @default(AWAITING_PARENT)
+  notes       String?
+
+  requestedByUserId     String?
+  parentApprovedAt      DateTime?
+  paidAt                DateTime?
+  specialistRespondedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  review SpecialistReview?
+
+  @@index([playerId, status])
+  @@index([healthAgentId, status])
+}
+
+model ClientPlan {
+  id            String      @id @default(cuid())
+  healthAgentId String
+  healthAgent   HealthAgent @relation(fields: [healthAgentId], references: [id], onDelete: Cascade)
+  playerId      String
+  player        Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  kind           ClientPlanKind
+  title          String
+  currentStep    Int     @default(1)
+  totalSteps     Int     @default(1)
+  progressPct    Int     @default(0)
+  /// El entrenador solo ve el avance si la familia lo permite (libro §2).
+  consentToShare Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([healthAgentId])
+  @@index([playerId])
+}
+
+model SpecialistReview {
+  id            String      @id @default(cuid())
+  healthAgentId String
+  healthAgent   HealthAgent @relation(fields: [healthAgentId], references: [id], onDelete: Cascade)
+  playerId      String
+  player        Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  bookingId     String      @unique
+  booking       Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@index([healthAgentId])
+}
+
+model AvailabilitySlot {
+  id              String      @id @default(cuid())
+  healthAgentId   String
+  healthAgent     HealthAgent @relation(fields: [healthAgentId], references: [id], onDelete: Cascade)
+  startsAt        DateTime
+  durationMinutes Int         @default(60)
+  createdAt       DateTime    @default(now())
+
+  @@unique([healthAgentId, startsAt])
+  @@index([healthAgentId, startsAt])
+}
+
+/// Film Room: clips del jugador publicados en Discovery + feedback del entrenador.
+enum FilmClipCategory {
+  HEAD_GAME
+  BUILD
+  ON_THE_BALL
+  FUEL
+}
+
+enum FilmClipStatus {
+  PENDING
+  REVIEWED
+}
+
+model FilmClip {
+  id       String @id @default(cuid())
+  playerId String
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  postId   String @unique
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  title    String
+  category FilmClipCategory
+  question String?
+  videoUrl String
+  status   FilmClipStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes FilmClipNote[]
+
+  @@index([playerId, createdAt])
+  @@index([status])
+}
+
+model FilmClipNote {
+  id             String   @id @default(cuid())
+  clipId         String
+  clip           FilmClip @relation(fields: [clipId], references: [id], onDelete: Cascade)
+  authorUserId   String
+  author         User     @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+  timestampSeconds Int    @default(0)
+  body           String
+  createdAt      DateTime @default(now())
+
+  @@index([clipId, createdAt])
+}
+
+/// Reunión creada desde el calendario ("Set up a meeting").
+model Meeting {
+  id              String   @id @default(cuid())
+  ownerId         String
+  owner           User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  title           String
+  startsAt        DateTime
+  durationMinutes Int      @default(30)
+  withWhom        String?
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  @@index([ownerId, startsAt])
+}
+
+/// Partido del equipo (calendario). Sin modelo `Team`: se asocia a coach o club.
+model Match {
+  id            String   @id @default(cuid())
+  coachId       String?
+  coach         Coach?   @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  clubId        String?
+  club          Club?    @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  opponent      String
+  startsAt      DateTime
+  venue         String?
+  home          Boolean  @default(true)
+  ourScore      Int?
+  opponentScore Int?
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  @@index([coachId, startsAt])
+  @@index([clubId, startsAt])
+}
+
+/// Entrenamiento con fecha concreta (calendario).
+model TrainingEvent {
+  id              String   @id @default(cuid())
+  coachId         String?
+  coach           Coach?   @relation(fields: [coachId], references: [id], onDelete: SetNull)
+  clubId          String?
+  club            Club?    @relation(fields: [clubId], references: [id], onDelete: SetNull)
+  title           String
+  startsAt        DateTime
+  durationMinutes Int      @default(60)
+  location        String?
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  @@index([coachId, startsAt])
+  @@index([clubId, startsAt])
 }
 
 model Player {
@@ -197,6 +467,10 @@ model Player {
   trainingSessionTargets TrainingSessionTarget[]
   /// Salas de vídeo a las que está invitado.
   trainingRoomTargets   TrainingRoomTarget[]
+  bookings      Booking[]
+  clientPlans   ClientPlan[]
+  specialistReviews SpecialistReview[]
+  filmClips     FilmClip[]
 
   @@index([status])
   @@index([position])
@@ -245,6 +519,7 @@ model Parent {
   updatedAt DateTime @updatedAt
 
   children ParentChild[]
+  bookings Booking[]
 }
 
 model ParentChild {
@@ -255,6 +530,15 @@ model ParentChild {
   player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
   since     DateTime @default(now())
   createdAt DateTime @default(now())
+
+  /// Protección de menores (libro §2): consentimiento y visibilidad del ID.
+  consentGiven          Boolean   @default(false)
+  consentAt             DateTime?
+  medicalInfoRegistered Boolean   @default(false)
+  idVisibleToClubs      Boolean   @default(true)
+  idVisibleToSchools    Boolean   @default(true)
+  showStatsAndClips     Boolean   @default(true)
+  allowDirectInvites    Boolean   @default(false)
 
   @@unique([parentId, playerId])
   @@index([playerId])
@@ -268,6 +552,11 @@ model Coach {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  /// Verificación / safeguarding (la gestiona el admin).
+  verified              Boolean @default(false)
+  backgroundChecked     Boolean @default(false)
+  safeguardingCertified Boolean @default(false)
+
   players CoachPlayer[]
   camps   Camp[]
   liveSessions LiveSession[]
@@ -277,6 +566,8 @@ model Coach {
   trainingSessions TrainingSession[]
   /// Salas de vídeo que abre el coach.
   trainingRooms TrainingRoom[]
+  matches       Match[]
+  trainingEvents TrainingEvent[]
 }
 
 model CoachPlayer {
@@ -328,6 +619,8 @@ model Club {
   league      String?
   logoUrl     String?
   verified    Boolean  @default(false)
+  safeguardingPolicy Boolean @default(false)
+  backgroundChecked Boolean @default(false)
   description String?
   /// Personalización del perfil del club (ver `packages/config/src/club-profile.ts`).
   headline    String?
@@ -356,6 +649,8 @@ model Club {
   trainingSessions TrainingSession[]
   /// Salas de vídeo que abre el club.
   trainingRooms TrainingRoom[]
+  matches       Match[]
+  trainingEvents TrainingEvent[]
 
   @@index([country])
 }
@@ -378,10 +673,14 @@ model University {
   name      String
   country   String
   city      String?
+  verified           Boolean @default(false)
+  safeguardingPolicy Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   opportunities Opportunity[]
+
+  scholarships Scholarship[]
 }
 
 model School {
@@ -396,8 +695,12 @@ model School {
   website     String?
   description String?
   verified    Boolean    @default(false)
+  safeguardingPolicy Boolean @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  opportunities Opportunity[]
+  scholarships Scholarship[]
 
   @@index([country])
 }
@@ -408,7 +711,9 @@ model Opportunity {
   club        Club?             @relation(fields: [clubId], references: [id], onDelete: Cascade)
   universityId String?
   university  University?       @relation(fields: [universityId], references: [id], onDelete: Cascade)
-  creatorType String            @default("CLUB") // CLUB | UNIVERSITY
+  schoolId    String?
+  school      School?           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  creatorType String            @default("CLUB") // CLUB | UNIVERSITY | SCHOOL
   title       String
   type        OpportunityType
   status      OpportunityStatus @default(OPEN)
@@ -428,7 +733,38 @@ model Opportunity {
   // Publicaciones de Discovery que comparten esta oportunidad.
   posts Post[]
 
+  /// Detalle extra cuando `type = SCHOLARSHIP`.
+  scholarship Scholarship?
+
   @@index([status, type])
+}
+
+/// Programa de beca (completa, parcial o plaza de internado) de una universidad
+/// o colegio. Se apoya en una `Opportunity` para reutilizar postulaciones,
+/// matching y aprobación del padre; aquí viven los datos del programa.
+model Scholarship {
+  id            String      @id @default(cuid())
+  opportunityId String      @unique
+  opportunity   Opportunity @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
+  universityId  String?
+  university    University? @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  schoolId      String?
+  school        School?     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  /// FULL | PARTIAL | BOARDING
+  coverage      String      @default("PARTIAL")
+  /// Plazas del programa (no de la oportunidad): cupos de la beca.
+  spots         Int         @default(1)
+  /// Texto libre: "100% tuition", "€8,000/year"…
+  amount        String?
+  /// GPA mínimo exigido (escala 0-4); `null` si no aplica.
+  minGpa        Float?
+  /// Año de ingreso (p. ej. 2027).
+  intakeYear    Int?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([universityId])
+  @@index([schoolId])
 }
 
 model Application {
@@ -438,11 +774,18 @@ model Application {
   opportunityId String
   opportunity   Opportunity       @relation(fields: [opportunityId], references: [id], onDelete: Cascade)
   status        ApplicationStatus @default(PENDING)
+  /// Aprobación del padre para <16: NOT_REQUIRED | PENDING | APPROVED | DECLINED.
+  parentApproval         String    @default("NOT_REQUIRED")
+  parentDecisionAt       DateTime?
+  parentDecisionByUserId String?
   message       String?
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
   @@unique([playerId, opportunityId])
+  @@index([parentApproval, status])
+  @@index([playerId, createdAt])
+  @@index([opportunityId, createdAt])
 }
 
 model SavedOpportunity {
@@ -486,6 +829,7 @@ model Notification {
 
   @@index([userId, read])
   @@index([userId, type, link, read])
+  @@index([userId, createdAt])
 }
 
 /// Preferencias de avisos por usuario y **categoría** (no por tipo suelto): así
@@ -534,6 +878,7 @@ model Payment {
   updatedAt             DateTime      @updatedAt
 
   @@index([userId])
+  @@index([userId, createdAt])
 }
 
 model PasswordResetToken {
@@ -971,12 +1316,17 @@ model Trial {
   endsAt       DateTime?
   location     String?
   status       String      @default("SCHEDULED") // SCHEDULED | COMPLETED | CANCELLED | NO_SHOW
+  /// Aprobación del padre para menores de 16: NOT_REQUIRED | PENDING | APPROVED | DECLINED.
+  parentApproval         String    @default("NOT_REQUIRED")
+  parentDecisionAt       DateTime?
+  parentDecisionByUserId String?
   notes        String?
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
 
   @@index([clubId])
   @@index([playerId])
+  @@index([playerId, parentApproval, status])
 }
 
 model Negotiation {
@@ -988,6 +1338,10 @@ model Negotiation {
   playerId     String
   player       Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
   status       String      @default("OPEN") // OPEN | ONGOING | ACCEPTED | REJECTED | CLOSED
+  /// Aprobación del padre para menores de 16: NOT_REQUIRED | PENDING | APPROVED | DECLINED.
+  parentApproval         String    @default("NOT_REQUIRED")
+  parentDecisionAt       DateTime?
+  parentDecisionByUserId String?
   offerAmount  Int?
   currency     String      @default("EUR")
   notes        String?
@@ -997,6 +1351,7 @@ model Negotiation {
   contract Contract?
 
   @@index([clubId])
+  @@index([playerId, parentApproval, status])
 }
 
 model Contract {
@@ -1029,10 +1384,18 @@ model Document {
   title     String
   url       String
   type      String   @default("other") // passport | contract | medical | other
+  /// Carpeta del libro: academic | identity | medical | references | offers | plans | other.
+  folder    String   @default("other")
+  /// Clave privada en el almacén (documentos nuevos; nunca se sirve estático).
+  storageKey String?
+  mimeType   String?
+  expiresAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([playerId])
+  @@index([playerId, createdAt])
+  @@index([expiresAt])
 }
 
 model ScoutingReport {
@@ -1118,6 +1481,7 @@ model ClubStaff {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   role      String   @default("STAFF") // OWNER | MANAGER | COACH | SCOUT
+  backgroundChecked Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -1305,6 +1669,7 @@ model Post {
   reports  PostReport[]
   pollVotes PostPollVote[]
   notInterested PostNotInterested[]
+  filmClip FilmClip?
 
   @@index([status, createdAt])
   @@index([authorId, createdAt])

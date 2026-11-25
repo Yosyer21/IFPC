@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, methodNotAllowed } from '@/lib/api/respond';
@@ -10,7 +11,7 @@ export async function GET() {
   }
 
   const schools = await prisma.school.findMany({
-    include: { user: true },
+    include: { user: { select: publicUserSelect } },
     orderBy: { name: 'asc' },
     take: 100,
   });

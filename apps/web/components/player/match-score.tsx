@@ -13,6 +13,11 @@ export function MatchScoreBadge({ score }: { score: number }) {
   return <Badge variant={variantFor(score)}>{score}% match</Badge>;
 }
 
+/** Compact affinity score, e.g. "72% affinity". */
+export function AffinityBadge({ score }: { score: number }) {
+  return <Badge variant={variantFor(score)}>{score}% affinity</Badge>;
+}
+
 /** Criterion-by-criterion explanation of a match score. */
 export function MatchBreakdown({ result }: { result: MatchScore }) {
   return (

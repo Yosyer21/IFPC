@@ -13,6 +13,7 @@ import { ClubCoverEditor } from '@/components/club/club-cover-editor';
 import { ClubLogo } from '@/components/club/club-logo';
 import { ClubLogoEditor } from '@/components/club/club-logo-editor';
 import { ClubProfileStats } from '@/components/club/profile-stats';
+import { IdActions } from '@/components/id/id-actions';
 import { PostCard } from '@/components/discovery/post-card';
 import {
   IconBriefcase,
@@ -76,6 +77,7 @@ export default async function ClubProfilePage() {
     ['Founded', club.foundedYear ? String(club.foundedYear) : '—'],
     ['Member since', club.createdAt.toLocaleDateString('en-GB')],
     ['Verification', club.verified ? 'Verified club' : 'Pending verification'],
+    ['Safeguarding', club.safeguardingPolicy ? 'Policy on file' : 'Not provided'],
   ];
 
   const subLinks = [
@@ -110,12 +112,15 @@ export default async function ClubProfilePage() {
             </Badge>
           }
           actions={
-            <Link
-              href="/dashboard/club/profile/edit"
-              className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
-            >
-              Edit club profile
-            </Link>
+            <>
+              <IdActions title="Club ID" />
+              <Link
+                href="/dashboard/club/profile/edit"
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
+              >
+                Edit club profile
+              </Link>
+            </>
           }
           coverEditor={
             <ClubCoverEditor hasBanner={Boolean(club.bannerUrl)} redirectTo={PROFILE_REDIRECT} />

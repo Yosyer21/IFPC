@@ -1,0 +1,87 @@
+================================================================================
+ BRECHA ENTRE EL LIBRO Y EL CODIGO ACTUAL  (analisis del repo IFPC)
+================================================================================
+Objetivo: saber que ya existe y que falta para cumplir el libro.
+
+--------------------------------------------------------------------------------
+ 1) ROLES
+--------------------------------------------------------------------------------
+ LIBRO (9): jugador, padre, entrenador, club, nutricionista, psicologo,
+            fisioterapeuta, entrenador 1 a 1, colegio/universidad.
+ CODIGO (nav.ts, 9): player, parent, coach, club, scout, agent, university,
+            school, admin.
+ - FALTAN en el codigo: nutritionist, psychologist, physio, coach_1to1 (los 4
+   especialistas de The "1%" Factor).
+ - SOBRAN respecto al libro: scout y agent (el libro los absorbe en Club/Find
+   players y Scouting profile); admin (no esta en el libro pero es necesario).
+ - DIFERENCIA DE AGRUPACION: el codigo separa school y university; el libro los
+   agrupa como "SCHOOLS & UNIVERSITIES".
+
+--------------------------------------------------------------------------------
+ 2) NAVEGACION (nombres)
+--------------------------------------------------------------------------------
+ El codigo (dashboard nav.ts) usa nombres ANTIGUOS; el libro coincide con el
+ "nuevo diseno" (/preview). Mapeo aproximado:
+   Profile center            -> Player ID + Profile
+   Football Center           -> Training
+   Opportunities             -> Transfer Window
+   Career history            -> (parte de Player ID / My Development)
+   Health                    -> (en el libro no hay menu "Health"; pasa a Fuel/My Development)
+   Discovery                 -> (en el libro no hay este item; lo social es Profile)
+   My documents              -> My documents
+   Live sessions             -> Live sessions
+ NO EXISTEN aun como menu/pantalla (libro): Film Room, The "1%" Factor,
+   My Development (como pagina), Transfer Window, Scouting profile, The Sideline,
+   Parent guides, Session Library, My Squad, Trials & offers, Staff & scouts,
+   Recruitment board, Scholarships, Bookings, Clients, Meal plans, Session notes,
+   Shared plans.
+
+--------------------------------------------------------------------------------
+ 3) PILARES DE DESARROLLO
+--------------------------------------------------------------------------------
+ LIBRO: Head Game | Build | On the Ball | Fuel  (4 categorias).
+ CODIGO (player/training): categorias tipo technical / strength-conditioning /
+   psychology. -> Hay que MAPEAR las categorias a los 4 pilares.
+
+--------------------------------------------------------------------------------
+ 4) RUTAS YA IMPLEMENTADAS QUE ENCAJAN CON EL LIBRO
+--------------------------------------------------------------------------------
+ - School ID  -> apps/web/app/dashboard/university/profile  (coincide con la captura
+                 "DEMO UNIVERSITY" del nuevo diseno).
+ - Player ID  -> dashboard/player/id  +  preview/player-profile.
+ - Calendar   -> dashboard/calendar   +  preview/calendar.
+ - Training   -> dashboard/player/training (pero con otras categorias).
+ - Transfer/Opportunities -> dashboard/player/opportunities.
+ - Live sessions -> dashboard/live-sessions, dashboard/player/live-sessions.
+ - My documents -> dashboard/player/documents.
+ - Membership, Notifications, Settings -> existen.
+
+--------------------------------------------------------------------------------
+ 5) LO QUE FALTA CONSTRUIR (lo grande)
+--------------------------------------------------------------------------------
+ - The "1%" Factor (marketplace de especialistas + flujo reserva/padre/especialista).
+ - Portales de especialistas: nutricionista, psicologo, fisio (+ entrenador 1 a 1).
+ - Film Room real (clips + feedback del entrenador con marca de tiempo).
+ - Motor de PROTECCION DE MENORES <16 EN SERVIDOR (padre en chats/reuniones/ofertas/
+   reservas, visibilidad del ID). Es critico y transversal.
+ - Club: Trials & offers, Staff & scouts, My Squad, Session Library.
+ - Colegio/Universidad: Recruitment board, Scholarships.
+ - Padre: The Sideline, Parent guides, aprobacion de ofertas.
+ - Modulos compartidos que aun no estan: Profile social completo, ID -> PDF,
+   Calendar con los 5 tipos/colores exactos.
+
+--------------------------------------------------------------------------------
+ 6) ROADMAP SUGERIDO (orden recomendado)
+--------------------------------------------------------------------------------
+ 1. Roles + Prisma: SpecialistProfile, Booking, ClientPlan, SessionNote, y enums
+    de estados (reserva, oferta, postulacion).
+ 2. Motor de proteccion <16 centralizado en servidor.
+ 3. Modulos compartidos (Profile social, Calendar 5 colores, ID -> PDF).
+ 4. Alinear nav al libro y crear las pantallas del jugador que faltan
+    (Training segun 4 pilares, Film Room, The "1%" Factor) reutilizando PreviewShell.
+ 5. The "1%" Factor: marketplace + flujo reserva -> padre paga -> especialista acepta.
+ 6. Portales de especialistas (nutri/psico/fisio) + entrenador 1 a 1.
+ 7. Club (Trials & offers, Staff & scouts, My Squad, Session Library).
+ 8. Colegio (Recruitment board, Scholarships).
+ 9. Decisiones legales/negocio (seccion 12_PENDIENTES).
+================================================================================

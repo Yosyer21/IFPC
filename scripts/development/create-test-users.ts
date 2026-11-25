@@ -21,7 +21,8 @@ type TestRole =
   | 'AGENT'
   | 'CLUB'
   | 'UNIVERSITY'
-  | 'SCHOOL';
+  | 'SCHOOL'
+  | 'HEALTH_AGENT';
 
 interface TestProfile {
   role: TestRole;
@@ -115,6 +116,15 @@ const PROFILES: TestProfile[] = [
     area: '/dashboard/school',
     notes: 'Programas y clínicas para colegios y servicios comunitarios.',
   },
+  {
+    role: 'HEALTH_AGENT',
+    label: 'Health agent (nutrición, psicología, fisio)',
+    name: 'Demo Health Agent',
+    email: 'health@demo.com',
+    password: 'health123',
+    area: '/dashboard/health-agent',
+    notes: 'Portal unificado: reservas aprobadas por el padre, planes y notas privadas.',
+  },
 ];
 
 /** Birth date for a player of the given age, so demo data stays valid over time. */
@@ -181,6 +191,9 @@ async function createProfileRecord(profile: TestProfile, userId: string) {
           city: 'Madrid',
           league: 'Liga F',
           description: 'Club de prueba para el área de reclutamiento.',
+          verified: true,
+          safeguardingPolicy: true,
+          backgroundChecked: true,
         },
       });
       break;
@@ -204,6 +217,44 @@ async function createProfileRecord(profile: TestProfile, userId: string) {
           contactName: 'Sports Department',
           website: 'https://www.ballaratgrammar.vic.edu.au',
           description: 'Escuela demo de Future Baller (programas y clínicas).',
+        },
+      });
+      break;
+    case 'HEALTH_AGENT':
+      await prisma.healthAgent.upsert({
+        where: { userId },
+        update: {},
+        create: {
+          userId,
+          practiceName: 'Fuel Lab Sports Nutrition',
+          headline: 'Nutrition, sport psychology & physio for young athletes',
+          about:
+            'A unified health team supporting players on and off the pitch: fuelling, mindset and return to play.',
+          specialties: ['NUTRITION', 'PSYCHOLOGY', 'PHYSIOTHERAPY'],
+          services: [
+            'Match-day fuel plans',
+            'Confidence & focus programmes',
+            'Return-to-play plans',
+          ],
+          approach: ['Food first', 'No weigh-ins for young players', 'Parents involved'],
+          registrationNumber: 'HA-2026-001',
+          insuranceProvider: 'SportSafe',
+          insuranceExpiresAt: new Date(new Date().getFullYear() + 1, 0, 1),
+          priceFrom: 60,
+          currency: 'EUR',
+          format: 'BOTH',
+          sessionsOnline: true,
+          languages: ['English', 'Spanish'],
+          city: 'Valencia',
+          country: 'Spain',
+          website: 'https://example.com',
+          yearsExperience: 8,
+          clientsServed: 120,
+          availabilityNote: 'Weekdays after school; online worldwide.',
+          verified: true,
+          backgroundChecked: true,
+          ratingAvg: 4.9,
+          reviewCount: 24,
         },
       });
       break;

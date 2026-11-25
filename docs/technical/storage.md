@@ -12,6 +12,18 @@
   imágenes, todas en `Post.mediaUrls`); los vídeos largos se recomiendan por URL externa
   (YouTube/Vimeo, lista blanca en `resolveEmbed`).
 
+## Documentos privados (2026-11)
+
+- Los documentos **no** usan `public/uploads`: se guardan en `PRIVATE_UPLOAD_DIR`
+  (por defecto `<repo>/.private-uploads/`, gitignored) y solo se leen por
+  `GET /api/documents/[documentId]/file`, que valida sesión/rol.
+- En producción hay que montar un **volumen persistente** en `PRIVATE_UPLOAD_DIR` o
+  mover el almacén a un bucket privado con URLs firmadas; el disco del contenedor es
+  efímero.
+- Los documentos antiguos que apuntan a `/uploads/documents/...` se migran con
+  `pnpm scripts:migrate-documents -- --apply` (mueve el archivo y actualiza
+  `storageKey`, `mimeType` y `url`).
+
 ## Drivers (`apps/web/lib/storage`)
 
 ```ts

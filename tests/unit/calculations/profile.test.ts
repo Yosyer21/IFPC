@@ -13,7 +13,7 @@ import {
   resolveProfileAccent,
   sanitizeProfileOpenTo,
 } from '@ifpc/config';
-import { playerProfileChecklist } from '@/lib/player';
+import { nextProfileStep, playerProfileChecklist } from '@/lib/player';
 
 describe('profileChecklistScore', () => {
   it('los pesos suman 100 y las claves siguen el orden declarado', () => {
@@ -152,5 +152,21 @@ describe('playerProfileChecklist', () => {
     const state = playerProfileChecklist({ ...base, position: null, image: null });
     // `position` (10) pesa más que la foto (8).
     expect(state.next?.key).toBe('position');
+  });
+
+  it('nextProfileStep prioriza un clip cuando aún no hay highlights', () => {
+    const step = nextProfileStep(playerProfileChecklist(base), 0);
+    expect(step?.label).toBe('Add a highlight clip');
+    expect(step?.href).toBe('/dashboard/player/film-room');
+  });
+
+  it('nextProfileStep usa el pendiente de más peso cuando ya hay clips', () => {
+    const step = nextProfileStep(playerProfileChecklist({ ...base, position: null }), 2);
+    expect(step?.label).toBe('Position');
+    expect(step?.href).toBe('/dashboard/player/profile/edit');
+  });
+
+  it('nextProfileStep no propone nada con perfil completo y clips', () => {
+    expect(nextProfileStep(playerProfileChecklist(base), 1)).toBeNull();
   });
 });

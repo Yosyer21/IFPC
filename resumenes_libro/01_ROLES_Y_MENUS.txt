@@ -1,0 +1,77 @@
+================================================================================
+ ROLES Y MENUS  (Seccion 1 del libro)
+================================================================================
+Cada rol tiene una "etiqueta de portal" y un menu lateral propio. Las pantallas
+compartidas (Profile, Calendar, ID, chat) se especifican una sola vez (Seccion 3).
+
+--------------------------------------------------------------------------------
+ 1) JUGADOR  ->  etiqueta: PLAYER
+--------------------------------------------------------------------------------
+ Ejemplo: Demo Player (delantera, U17)
+ Menu: Overview | Player ID | Profile | Calendar | My Development | Transfer Window
+       | Scouting profile | Membership | Training | Film Room | The "1%" Factor
+       | My Documents | Live sessions | Notifications | Settings
+ Proposito: arma un curriculum futbolistico, entrena, recibe comentarios del
+ entrenador, reserva especialistas (el padre aprueba) y recibe ofertas.
+
+ 2) PADRE / MADRE / TUTOR  ->  etiqueta: FOR PARENTS
+ Ejemplo: Demo Parent (madre de Mia U17 y Noah U14)
+ Menu: The Sideline | Parent ID | Profile | Calendar | My development |
+       Scouting profile | The "1%" Factor | Parent guides | My documents |
+       Membership & payments | Notifications | Settings
+ Proposito: supervisa a uno o mas hijos, aprueba y paga reservas, aprueba ofertas
+ y controla quien ve el ID del hijo.
+
+ 3) ENTRENADOR (de equipo)  ->  etiqueta: COACH HUB
+ Ejemplo: Coach Sam (U14 y U16 Girls)
+ Menu: Overview | Coach ID | Profile | Calendar | My Squad | Session Library |
+       Film Room | Live sessions | My documents | Membership | Notifications | Settings
+ Proposito: gestiona planteles, arma y envia sesiones, da comentarios en el Film
+ Room y escribe referencias.
+
+ 4) CLUB  ->  etiqueta: CLUB PORTAL
+ Ejemplo: Demo Club Academy (U12 a U19)
+ Menu: Overview | Club ID | Profile | Calendar | Find players | Trials & offers |
+       Staff & scouts | My documents | Membership | Notifications | Settings
+ Proposito: reclutamiento para becas y cupos; busca jugadores, arma listas de
+ preseleccion, publica pruebas e invita jugadores.
+
+ 5) NUTRICIONISTA  ->  etiqueta: FOR NUTRITIONISTS
+ Ejemplo: Fuel Lab Sports Nutrition
+ Menu: Dashboard | Nutritionist ID | Profile | Calendar | Bookings | Clients |
+       Meal plans | Live sessions | My documents | Membership | Notifications | Settings
+ Proposito: aparece en The "1%" Factor. Acepta reservas, da sesiones y comparte
+ planes de alimentacion.
+
+ 6) PSICOLOGO DEPORTIVO  ->  etiqueta: FOR SPORT PSYCHOLOGISTS
+ Ejemplo: Clear Head Sport Psychology
+ Menu: Dashboard | Psychologist ID | Profile | Calendar | Bookings | Clients |
+       Session notes | Live sessions | My documents | Membership | Notifications | Settings
+ Proposito: aparece en The "1%" Factor. Acepta reservas y lleva notas de sesion
+ PRIVADAS.
+
+ 7) FISIOTERAPEUTA  ->  etiqueta: FOR PHYSIOS
+ Ejemplo: Move Well Sports Physio (jugadores 10-18)
+ Menu: Dashboard | Physio ID | Profile | Calendar | Bookings | Clients |
+       Shared plans | Live sessions | My documents | Membership | Notifications | Settings
+ Proposito: aparece en The "1%" Factor. Acepta reservas y comparte planes de
+ rehabilitacion y regreso al juego.
+
+ 8) ENTRENADOR PERSONAL (1 a 1)  ->  SIN DISENAR (solo ficha)
+ Solo tiene ficha y panel de reserva dentro de The "1%" Factor.
+ Proposito: entrenamiento privado por posicion (tecnica, definicion, porteria,
+ mediocampo, defensa). Se recomienda darle el mismo portal que a los especialistas.
+
+ 9) COLEGIO Y UNIVERSIDAD  ->  etiqueta: SCHOOLS & UNIVERSITIES
+ Ejemplo: Demo University Football
+ Menu: Overview | School ID | Profile | Calendar | Recruitment board | Scholarships |
+       Find players | My documents | Membership | Notifications | Settings
+ Proposito: recluta para becas universitarias y cupos de internado escolar.
+
+--------------------------------------------------------------------------------
+ OBSERVACION
+--------------------------------------------------------------------------------
+ El libro NO define los roles "scout" ni "agent" como cuentas propias: la visoria
+ vive dentro del CLUB (Find players / Scouting profile) y del COLEGIO. Tampoco
+ menciona "admin" (aunque operativamente hace falta).
+================================================================================

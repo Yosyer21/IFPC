@@ -1,0 +1,88 @@
+================================================================================
+ ESPECIALISTAS  (Secciones 8, 9, 10 y 11 del libro)
+================================================================================
+Nutricionista, Psicologo y Fisioterapeuta comparten el MISMO esquema de portal
+(login 3.4 + Dashboard). Aparecen en The "1%" Factor. El Entrenador 1 a 1 solo
+tiene ficha (sin portal disenado). Todos: el padre aprueba y paga a los <16.
+
+--------------------------------------------------------------------------------
+ ESQUEMA COMUN DEL DASHBOARD (nutri / psico / fisio)
+--------------------------------------------------------------------------------
+ - Saludo: nombre de la practica + cuantas solicitudes esperan + sesiones de hoy.
+ - "View my listing": abre la ficha en The "1%" Factor como la ven jugadores/padres.
+ - 4 estadisticas: solicitudes pendientes, sesiones de esta semana, calificacion,
+   ingresos del mes (de reservas pagadas).
+ - Booking requests: solo solicitudes ya "Parent approved & paid" (muestra iniciales,
+   nombre, categoria, posicion, tipo de sesion, hora y precio). Accept / Decline
+   (una reserva pagada rechazada requiere reembolso; flujo sin disenar). Las aceptadas
+   van a ambos calendarios.
+ - Hoy: sesiones del dia. - Clientes activos: nombre, categoria, posicion, plan/programa
+   y semana + barra de % completado.
+ - Bookings y Clients son enlaces al Dashboard (no paginas separadas).
+ - Membership: planes y pagos (cuotas de ficha + pagos por sesiones completadas).
+
+--------------------------------------------------------------------------------
+ 8) NUTRICIONISTA (Meal plans)
+--------------------------------------------------------------------------------
+ - Cada cliente muestra su plan de alimentacion y semana (ej. "Match-day fuel plan ·
+   week 3 of 4") + % completado. Los planes se comparten con jugador y padre.
+ - Controles semanales: energia, sueno e hidratacion.
+ - Proteccion: <16 reservado/pagado por el padre; mensajes visibles para el padre;
+   SIN pesajes para jovenes; el entrenador solo ve resumen (con consentimiento).
+ - Sin disenar: armador de planes de alimentacion y formulario de control semanal.
+
+--------------------------------------------------------------------------------
+ 9) PSICOLOGO DEPORTIVO (Session notes)
+--------------------------------------------------------------------------------
+ - Cada cliente muestra su programa y numero de sesion (ej. "Confidence & focus ·
+   session 1 of 4") + % completado.
+ - NOTAS DE SESION PRIVADAS del psicologo. Los padres solo ven asistencia y objetivos.
+ - Proteccion: <16 reservado/pagado por el padre; los mensajes con jugadores incluyen
+   al padre (pero las notas siguen privadas); proceso de DEBER DE CUIDADO si un jugador
+   necesita mas apoyo (por definir); chats de talleres grupales visibles para padres.
+ - Sin disenar: editor de notas de sesion y proceso de escalamiento del deber de cuidado.
+
+--------------------------------------------------------------------------------
+ 10) FISIOTERAPEUTA (Shared plans / return to play)
+--------------------------------------------------------------------------------
+ - Cada cliente muestra su plan de regreso al juego y semana (ej. "Return to play ·
+   week 4 of 6") + % completado.
+ - El avance se comparte con jugador, padre y (con consentimiento) el entrenador del
+   club; el entrenador ve AVANCE, no detalle clinico.
+ - Proteccion: un padre debe estar presente o dar consentimiento para cada <16;
+   mensajes con <16 visibles para los padres.
+ - Sin disenar: armador de planes compartidos (ejercicios, semanas, seguimiento) y la
+   solicitud de consentimiento para compartir con el entrenador.
+
+--------------------------------------------------------------------------------
+ 11) ENTRENADOR PERSONAL (1 a 1) - SOLO FICHA
+--------------------------------------------------------------------------------
+ - Ficha en The "1%" Factor: especialidad, VERIFIED, calificacion, resenas, nombre,
+   descripcion corta, precio desde y formato (presencial). Titulo "One-on-One Coach".
+   Especialidades: Technical, Finishing, Goalkeeping, Midfield, Defending.
+ - Panel de reserva: Acerca de, credenciales (ej. licencia UEFA B, ex jugador de
+   academia), opciones de sesion, horarios y boton de solicitar/reservar (mismas reglas
+   que otros especialistas). Algunas fichas enlazan al Film Room (el coach 1 a 1 deberia
+   poder dar feedback en el Film Room). Pestania "One-on-One Coaches".
+ - Fichas de ejemplo: First Touch 1:1 ($70), Striker School ($65), Keeper Union ($60),
+   Midfield Engine 1:1 ($65), Defend Like a Pro ($60).
+ - Construccion recomendada: mismo portal que los especialistas, etiqueta
+   "FOR 1-ON-1 COACHES"; ID con licencias, especialidades por posicion y trayectoria
+   como jugador; panel de clientes por bloques de entrenamiento; acceso al Film Room de
+   sus clientes si la familia lo permite; mismas reglas de proteccion.
+   Falta decidir: si un entrenador de equipo que ofrece 1:1 es la misma cuenta o distinta.
+
+--------------------------------------------------------------------------------
+ ADDENDUM (catalogo, Seccion 16) - portal de especialistas
+--------------------------------------------------------------------------------
+ - Membership (especialistas): Listing Basic / Listing Pro; "Invoices & payouts"
+   (cuotas de la ficha + pagos semanales por sesiones completadas).
+ - My Documents (carpetas): Verification, Insurance, Client consent, Templates. Se marca
+   el vencimiento del seguro/registro para no perder la insignia de verificado.
+   (El psicologo NUNCA guarda notas de sesion aqui.)
+ - Settings: Verification (registro profesional, seguro, antecedentes, codigo de conducta)
+   + "Practice team" (+ Add practitioner). En el psicologo, "compartir objetivos con los
+   padres" esta siempre activado.
+ - Live sessions: "Host a session" (titulo, fecha, hora, duracion 30/45/60, a quien va,
+   cupos, precio); Go live el dia; repeticiones.
+================================================================================

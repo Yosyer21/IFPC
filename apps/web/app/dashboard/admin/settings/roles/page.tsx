@@ -49,6 +49,12 @@ const ROLE_INFO: Record<string, { label: string; description: string; prefix: st
       'Schools, school clubs and community services: programmes, groups and inclusive clinics.',
     prefix: '/dashboard/school',
   },
+  HEALTH_AGENT: {
+    label: 'Health agent',
+    description:
+      'Unified portal for nutrition, sport psychology and physiotherapy specialists.',
+    prefix: '/dashboard/health-agent',
+  },
   ADMIN: {
     label: 'Administrador',
     description: 'Control center: moderation, content and global configuration.',

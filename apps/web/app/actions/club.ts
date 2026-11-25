@@ -15,6 +15,8 @@ import { dashboardPath } from '@/lib/safe-redirect';
 import { resolveStorage } from '@/lib/storage';
 import { notifyUser } from '@/lib/notifications/notify';
 import { revalidatePaths } from '@/lib/revalidate';
+import { canContactPlayers } from '@/lib/verification';
+import { isVisibleToClubs, needsParentApproval } from '@/lib/minor';
 
 const str = (formData: FormData, key: string): string | null => {
   const value = formData.get(key);
@@ -261,6 +263,63 @@ export async function updateClubProfileAction(
   redirect('/dashboard/club/profile');
 }
 
+/**
+ * Crea (o vincula) el perfil de club de un usuario con rol CLUB que todavía no
+ * tiene fila `Club`. Evita el 404 del área del club en cuentas recién creadas o
+ * a las que se les asignó el rol desde el admin.
+ */
+export async function createClubProfileAction(
+  _prev: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const session = await auth();
+  if (!session?.user?.id || session.user.role !== 'CLUB') {
+    return { error: 'Invalid club.' };
+  }
+
+  const parsed = clubProfileSchema.safeParse({
+    name: str(formData, 'name') ?? undefined,
+    country: str(formData, 'country') ?? undefined,
+    city: str(formData, 'city'),
+    league: str(formData, 'league'),
+    foundedYear: num(formData, 'foundedYear'),
+    description: str(formData, 'description'),
+  });
+  if (!parsed.success) {
+    return { error: 'Please review the club data: name and country are required.' };
+  }
+
+  try {
+    const existing = await prisma.club.findUnique({ where: { userId: session.user.id } });
+    if (existing) {
+      await prisma.club.update({ where: { id: existing.id }, data: parsed.data });
+    } else {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { email: true },
+      });
+      if (!user?.email) return { error: 'Your account has no email address.' };
+
+      const byEmail = await prisma.club.findUnique({ where: { email: user.email } });
+      if (byEmail) {
+        await prisma.club.update({
+          where: { id: byEmail.id },
+          data: { ...parsed.data, userId: session.user.id },
+        });
+      } else {
+        await prisma.club.create({
+          data: { ...parsed.data, userId: session.user.id, email: user.email },
+        });
+      }
+    }
+  } catch {
+    return { error: 'Could not create the club profile.' };
+  }
+
+  revalidatePaths('/dashboard/club', '/dashboard/club/profile');
+  redirect('/dashboard/club');
+}
+
 /** Sube o reemplaza la portada del perfil (`Club.bannerUrl`). */
 export async function updateClubBannerAction(
   _prev: ActionState,
@@ -369,9 +428,13 @@ export async function toggleClubShortlistAction(formData: FormData): Promise<voi
   } else {
     const player = await prisma.player.findUnique({
       where: { id: playerId },
-      select: { id: true },
+      select: {
+        id: true,
+        dateOfBirth: true,
+        parents: { select: { idVisibleToClubs: true } },
+      },
     });
-    if (player) {
+    if (player && isVisibleToClubs(player.dateOfBirth, player.parents)) {
       await prisma.clubShortlist.create({ data: { clubId: club.id, playerId } });
     }
   }
@@ -394,6 +457,16 @@ export async function invitePlayerToTrialAction(formData: FormData): Promise<voi
     return;
   }
 
+  // Safeguarding: solo un club verificado y con antecedentes puede invitar.
+  if (
+    !canContactPlayers({
+      verified: club.verified,
+      backgroundChecked: club.backgroundChecked,
+    })
+  ) {
+    redirect(clubPlayersBack(formData));
+  }
+
   const playerId = str(formData, 'playerId');
   if (!playerId) {
     redirect(clubPlayersBack(formData));
@@ -405,11 +478,21 @@ export async function invitePlayerToTrialAction(formData: FormData): Promise<voi
       id: true,
       firstName: true,
       lastName: true,
+      dateOfBirth: true,
       userId: true,
-      parents: { select: { parent: { select: { userId: true } } } },
+      parents: {
+        select: {
+          idVisibleToClubs: true,
+          parent: { select: { userId: true } },
+        },
+      },
     },
   });
   if (!player) {
+    redirect(clubPlayersBack(formData));
+  }
+  // El padre puede ocultar el ID a clubes (menores de 16): no se invita a ciegas.
+  if (!isVisibleToClubs(player.dateOfBirth, player.parents)) {
     redirect(clubPlayersBack(formData));
   }
 
@@ -420,6 +503,8 @@ export async function invitePlayerToTrialAction(formData: FormData): Promise<voi
   if (!existing) {
     const startsAt = new Date(Date.now() + TRIAL_INVITE_DAYS * 86_400_000);
     startsAt.setUTCHours(10, 0, 0, 0);
+    // Menores de 16 con padre vinculado: primero decide la familia.
+    const requiresParent = needsParentApproval(player.dateOfBirth, player.parents);
 
     await prisma.trial.create({
       data: {
@@ -428,6 +513,7 @@ export async function invitePlayerToTrialAction(formData: FormData): Promise<voi
         startsAt,
         location: club.city ?? club.country,
         status: 'SCHEDULED',
+        parentApproval: requiresParent ? 'PENDING' : 'NOT_REQUIRED',
         notes: 'Trial invitation sent from Find players.',
       },
     });
@@ -436,17 +522,19 @@ export async function invitePlayerToTrialAction(formData: FormData): Promise<voi
       await notifyUser({
         userId: player.userId,
         type: 'application',
-        title: 'Trial invitation',
-        message: `${club.name} has invited you to a trial. Check your calendar.`,
-        link: '/dashboard/player/calendar',
+        title: requiresParent ? 'Trial invitation — waiting for your parent' : 'Trial invitation',
+        message: requiresParent
+          ? `${club.name} has invited you to a trial. Your parent needs to approve it first.`
+          : `${club.name} has invited you to a trial. Check your calendar.`,
+        link: '/dashboard/player/opportunities',
       });
       for (const link of player.parents) {
         await notifyUser({
           userId: link.parent.userId,
           type: 'application',
-          title: 'Trial invitation',
+          title: requiresParent ? 'Trial invitation to approve' : 'Trial invitation',
           message: `${club.name} has invited ${player.firstName} ${player.lastName} to a trial.`,
-          link: '/dashboard/calendar',
+          link: requiresParent ? '/dashboard/parent/approvals' : '/dashboard/calendar',
         });
       }
     } catch {
@@ -454,6 +542,12 @@ export async function invitePlayerToTrialAction(formData: FormData): Promise<voi
     }
   }
 
-  revalidatePaths('/dashboard/club/players', '/dashboard/player/calendar', '/dashboard/calendar');
+  revalidatePaths(
+    '/dashboard/club/players',
+    '/dashboard/player/calendar',
+    '/dashboard/calendar',
+    '/dashboard/parent/approvals',
+    '/dashboard/parent'
+  );
   redirect(clubPlayersBack(formData));
 }

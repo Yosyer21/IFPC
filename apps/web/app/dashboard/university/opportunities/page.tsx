@@ -14,7 +14,7 @@ export default async function UniversityOpportunitiesPage() {
 
   const opportunities = await prisma.opportunity.findMany({
     where: { status: 'OPEN' },
-    include: { club: true, university: true },
+    include: { club: true, university: true, school: true, scholarship: true },
     orderBy: [{ type: 'asc' }, { createdAt: 'desc' }],
   });
 
@@ -59,8 +59,11 @@ export default async function UniversityOpportunitiesPage() {
                   </div>
                   <h2 className="font-semibold">{opportunity.title}</h2>
                   <p className="text-sm text-muted-foreground">
-                  {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
-                </p>
+                    {opportunity.club?.name ??
+                      opportunity.university?.name ??
+                      opportunity.school?.name ??
+                      '—'}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {opportunity.position ? `Position: ${opportunity.position}` : ''}
                     {opportunity.ageMin || opportunity.ageMax

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
+import { PageHeader } from '@/components/player/page-header';
+import { QuickClubProfileForm } from '@/components/club/quick-club-profile-form';
 import { StatCard } from '@/components/player/stat-card';
 import { CountUp } from '@/components/player/count-up';
 import {
@@ -27,7 +28,25 @@ export default async function ClubDashboardPage() {
     where: { userId: session.user.id },
     include: { user: true },
   });
-  if (!club) notFound();
+  if (!club) {
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { name: true, email: true },
+    });
+    return (
+      <div className="mx-auto max-w-3xl">
+        <PageHeader
+          title="Set up your club"
+          subtitle="Create your club profile to unlock the recruitment centre."
+          icon="briefcase"
+        />
+        <QuickClubProfileForm
+          defaultName={user?.name ?? session.user.name ?? ''}
+          defaultEmail={user?.email ?? ''}
+        />
+      </div>
+    );
+  }
 
   const [opportunities, requirements, inquiries, applications] = await Promise.all([
     prisma.opportunity.findMany({ where: { clubId: club.id }, orderBy: { createdAt: 'desc' } }),

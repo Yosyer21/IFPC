@@ -1,0 +1,189 @@
+================================================================================
+ QUE FALTA EN LA PLATAFORMA  (lista accionable)
+================================================================================
+Comparacion libro (spec) vs CODIGO ACTUAL (schema Prisma, roles, rutas).
+Marcas: [FALTA] no existe | [PARCIAL] a medias | [DEFINIR] decision de negocio
+Prioridad: (P1) critico | (P2) importante | (P3) mejora
+
+YA EXISTE (base): User/Player/CareerEntry, Parent/ParentChild, Coach/CoachPlayer,
+Scout, Agent, Club/ClubStaff/ClubShortlist, University, School, Opportunity/Application/
+SavedOpportunity, Video, Notification, Membership/Payment (+Stripe), Training (contenido/
+sesiones/quiz/progreso), LiveSession, TrainingRoom, Pathway, PlayerGoal, Evaluation,
+Submission, Trial, Negotiation, Contract, Document, ScoutingReport, SavedPlayer, Inquiry,
+Requirement, Camp, Conversation/Message, Post/Follow/PostComment (Discovery), PrivacyRule.
+
+--------------------------------------------------------------------------------
+ P1 - CRITICO / TRANSVERSAL
+--------------------------------------------------------------------------------
+ 1) ROLES DE ESPECIALISTAS  [FALTA]
+    - Agregar NUTRITIONIST, PSYCHOLOGIST, PHYSIO, COACH_1TO1 a ROLES (hoy solo PLAYER,
+      PARENT, COACH, SCOUT, AGENT, CLUB, UNIVERSITY, SCHOOL, ADMIN).
+    - Onboarding + login de especialistas ("Apply to join") + portal.
+
+ 2) PROTECCION DE MENORES <16 (en SERVIDOR)  [PARCIAL]
+    - ParentChild: HECHO (consentimiento + fecha, ficha medica y 4 interruptores).
+    - Inclusion automatica del padre en chats, reuniones, ofertas y reservas de <16:
+      PARCIAL (reservas y ofertas/pruebas ya avisan y piden aprobacion; chats/reuniones no).
+    - Aprobacion + pago parental de reservas: HECHO. Aprobacion parental de ofertas:
+      HECHO para pruebas, ofertas de contrato y becas (`/dashboard/parent/approvals`).
+    - Visibilidad del ID controlada por el padre (clubes/colegios verificados, stats y
+      jugadas, invitaciones directas): HECHO.
+    - Verificacion de edad en registro + alta privacidad por defecto; al cumplir 16 se
+      libera el control (regla por confirmar).
+    - Docs de identidad/medicos: solo el padre sube (propuesto).
+    - La bandeja del padre existe; falta incluir al padre en chats/reuniones de <16.
+
+ 3) VERIFICACION / SAFEGUARDING  [PARCIAL]
+    - Solo existe Club.verified / University.verified (booleans). Faltan: background check,
+      certificado de proteccion infantil, primeros auxilios, politica de proteccion,
+      welfare officer, verificacion de especialistas y badges (Verified coach /
+      Background checked / Verified club / Safeguarding policy).
+    - El staff de club sin verificacion aprobada no puede contactar ni abrir documentos.
+
+ 4) THE "1%" FACTOR (especialistas)  [FALTA - backend completo]
+    - Modelos: SpecialistProfile, Booking, ClientPlan, SessionNote, SpecialistReview.
+    - Marketplace (jugador): pagina, pestanias por categoria, ficha, panel de reserva,
+      tipos de sesion (Intro 60% / Full / paquete 4x - $20), horarios.
+    - Flujo: Request booking -> padre aprueba y paga -> especialista acepta -> calendarios.
+    - Portal del especialista: Dashboard (stats, booking requests "Parent approved & paid",
+      hoy, clientes con plan y % de avance).
+    - Planes: Meal plans (nutri), Shared plans (fisio), Session notes privadas (psico),
+      bloques (1 a 1). Reembolsos, resenas, "Invoices & payouts".
+
+ 5) FILM ROOM  [FALTA]
+    - Modelo Clip (video + titulo + categoria Head Game/Build/On the Ball/Fuel + pregunta
+      + estado) y ClipNote (notas del entrenador con marca de tiempo).
+    - Estados/badges: Waiting for feedback / Coach replied / SENT / NEW NOTE / REVIEWED.
+    - Lado entrenador: revisar clips y agregar notas por minuto.
+    - Hoy "Video" es generico (url/thumbnail/status): no tiene este flujo.
+
+ 6) CALENDARIO UNIFICADO  [PARCIAL]
+    - No existe modelo Event/CalendarEvent; se arma por agregacion.
+    - 5 tipos con color exacto: Training(verde), Match(negro), Booked session(morado),
+      Meeting(azul), Trial/visit(naranja).
+    - "+ Set up a meeting" (con hora / All day), invitacion automatica al padre (<16),
+      eventos automaticos (reservas aceptadas, pruebas aceptadas, calendario del equipo).
+
+--------------------------------------------------------------------------------
+ P2 - FUNCIONALIDAD DE ROLES
+--------------------------------------------------------------------------------
+ 7) JUGADOR  [PARCIAL]
+    - Player ID: falta "Download as PDF" y "Share ID".
+    - Scouting profile (pagina dedicada): highlight reel (<=6 clips), fortalezas, que
+      busca, datos academicos con aprobacion, referencias, "Who viewed me",
+      "Preview as a scout".  [FALTA ruta]
+    - The "1%" Factor y Film Room (dependen de 4 y 5).  [FALTA ruta]
+    - Training: reproductor de sesiones; categorias mapeadas a los 4 pilares.
+    - My Development: alinear a Head Game/Build/On the Ball/Fuel; planes de especialistas.
+    - My Documents: carpetas del libro, archivado automatico, recordatorios de vencimiento,
+      compartir con aprobacion parental.
+    - Membership: planes/precios por definir; flujo <16 al padre.
+
+ 8) PADRE  [PARCIAL]
+    - The Sideline (existe dashboard/parent; revisar cobertura del libro).
+    - Parent ID: 4 interruptores de visibilidad: HECHO.
+    - The "1%" Factor - Requests to approve (depende de 4).  [PARCIAL]
+    - Aprobacion de ofertas: HECHO (pruebas, contratos y becas en
+      `/dashboard/parent/approvals`). - Parent guides: PARCIAL (parents-book/education).
+    - Membership & payments: PARCIAL (parent/payments).
+
+ 9) ENTRENADOR  [PARCIAL]
+    - My Squad: PARCIAL (CoachPlayer existe; falta equipo/codigo/matches/stats).
+    - Session Library: PARCIAL (TrainingSession + builder; faltan filtros/drill bank).
+    - Film Room lado entrenador: FALTA (depende de 5).
+    - Referencias, Convocatoria "Pick team & send to parents", Carga de resultados
+      (no hay modelo Match).  [FALTA]
+    - Coach ID: Download PDF / Share ID.  [FALTA]
+
+ 10) CLUB  [PARCIAL]
+    - Find players: PARCIAL (existe dashboard/club/players con diseno nuevo).
+    - Shortlist: existe (ClubShortlist).
+    - Trials & offers: Trial existe; falta mover postulantes por Applied > Reviewed >
+      Shortlisted > Decision y enviar ofertas formales.  [PARCIAL]
+    - Staff & scouts: PARCIAL (ClubStaff existe; falta UI de gestion).
+    - Club ID (Download PDF / Share) + verificacion.  [FALTA]
+    - Overview con "To do".
+
+ 11) COLEGIO / UNIVERSIDAD  [PARCIAL]
+    - Recruitment board por etapas (postulantes/becas/ofertas): PARCIAL.
+    - Scholarships (pagina + crear beca): HECHO en universidad y colegio (`Scholarship` 1:1 con
+      `Opportunity`: plazas, cobertura, financiacion, GPA minimo, curso; alta, cierre,
+      postulantes y aprobacion del padre para <16). Pendiente: pipeline formal de contratos y
+      `/api/scholarships`.
+    - Find players limitado a colegios verificados: PARCIAL.
+    - School ID: existe (dashboard/university/profile) pero falta PDF/Share.
+    - Verificacion del programa.
+
+ 12) MODULOS COMPARTIDOS  [PARCIAL]
+    - Profile social completo (edit/share, nuevo post, destacados, tagged, perfil privado
+      del padre): PARCIAL (hay Post/Follow/Chat; faltan destacados/tagged/vista visitante).
+    - Chat con aviso de proteccion e inclusion del padre: PARCIAL.
+    - ID -> PDF / Share: HECHO en player/club/school/university/health-agent.
+    - Notificaciones Today/Earlier + categorias por rol: HECHO en player/parent/coach/club/
+      health-agent (bandeja unificada, filtros, marcar leidas y recordatorios de documentos);
+      faltan admin/school/university/agent/scout.
+    - Membership planes por rol (Parent Free/Family; Coach Free/Pro/Club staff; Club
+      Academy Starter/Pro/Elite; specialist Listing Basic/Pro): DEFINIR precios/planes.
+
+ 13) MODELOS / BACKEND QUE FALTAN  [FALTA]
+    - SpecialistProfile, Booking, ClientPlan, SessionNote, SpecialistReview.
+    - Scholarship: HECHO (1:1 con Opportunity; plazas, cobertura, GPA y curso).
+    - Clip, ClipNote (Film Room).
+    - CalendarEvent (o unificar la agregacion) + Match/Team stats.
+    - Consent + 4 interruptores de visibilidad en ParentChild; Verification/BackgroundCheck;
+      Safeguarding.
+    - (Contract y Document ya existen.)
+
+ 14) ALGORITMOS / REGLAS  [DEFINIR]
+    - "Profile strength" (fuerza del perfil) en %: HECHO (checklist ponderada en perfil,
+      dashboard, Player ID y Transfer Window; club y health-agent usan la misma mecanica).
+      Pendiente: que los clips sumen dentro del puntaje (hoy "Add clip" es el consejo).
+    - % de coincidencia (matching): HECHO (motor + oportunidades + admin/club/agent).
+    - % de afinidad: HECHO en Find players de club y universidad (badge + breakdown por
+      criterio); el algoritmo tambien soporta colegios, pero aun no hay visor propio.
+    - Proveedor de pagos y comision; reembolsos/cancelaciones; tamano maximo de video.
+
+ 15) APIS QUE FALTAN  [FALTA]
+    - /api/specialists, /api/bookings, /api/clips (film room), /api/scholarships,
+      /api/calendar (eventos), /api/consent, /api/verification.
+    - (Existen: opportunities, applications, trials, training, live-sessions, memberships,
+      payments, notifications, matching, videos, documents, etc.)
+
+ 16) LEGAL / NEGOCIO  [DEFINIR]
+    - Hay info/privacy, copyright y disclaimer; faltan T&C completos, consentimiento
+      parental, aviso de privacidad infantil, codigos de conducta y enlaces en
+      registro/Settings/footer.
+    - Decisiones: que pasa al cumplir 16; funciones sociales para <16; metodo de
+      verificacion de edad; deber de cuidado del psicologo (escalamiento).
+
+ 17) DIFERENCIA DE ROLES  [DEFINIR]
+    - El libro NO trae SCOUT ni AGENT como cuentas; el codigo SI. Decidir si se mantienen
+      o se pliegan en Club/Colegio.
+    - El libro agrupa colegio+universidad; el codigo los separa (SCHOOL y UNIVERSITY).
+
+ 18) PANTALLAS DEL "NUEVO DISENO" (/preview)
+    - Implementadas: /preview/player-profile y /preview/calendar.
+    - Faltan en /preview: Training, Film Room, The "1%" Factor, My Development,
+      Transfer Window, Scouting profile, My Documents, Live sessions, Notifications,
+      Settings (algunas ya existen como paginas reales en dashboard, con otro diseno).
+
+================================================================================
+ RESUMEN POR PRIORIDAD
+================================================================================
+ P1 (critico): roles de especialistas; proteccion <16; verificacion/safeguarding;
+    The "1%" Factor; Film Room; calendario unificado (5 tipos).
+ P2: completar jugador/padre/entrenador (PDF del ID, scouting profile, referencias,
+    convocatoria, resultados de partidos, aprobacion de ofertas, documentos).
+ P3: club/colegio (trials & offers, scholarships, staff & scouts), modulos compartidos,
+    algoritmos y decisiones legales/negocio.
+
+ ROADMAP SUGERIDO
+  1. Roles + Prisma especialistas (SpecialistProfile/Booking/ClientPlan/SessionNote).
+  2. Motor <16 en servidor (consentimiento/visibilidad + aprobaciones).
+  3. The "1%" Factor (marketplace + flujo de reserva).
+  4. Film Room (Clip/ClipNote + notas con timestamp).
+  5. Calendario unificado (5 tipos + eventos automaticos).
+  6. Verificacion/safeguarding + badges.
+  7. Completar roles (PDF ID, scouting profile, referencias, scholarships, etc.).
+  8. Legal/negocio.
+================================================================================

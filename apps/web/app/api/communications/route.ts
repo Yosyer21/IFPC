@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
@@ -12,7 +13,7 @@ export async function GET() {
 
   const conversations = await prisma.conversation.findMany({
     include: {
-      participants: { include: { user: true } },
+      participants: { include: { user: { select: publicUserSelect } } },
       messages: { include: { sender: true }, orderBy: { createdAt: 'asc' } },
     },
     orderBy: { updatedAt: 'desc' },

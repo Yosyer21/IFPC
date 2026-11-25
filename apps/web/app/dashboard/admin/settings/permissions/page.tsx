@@ -21,6 +21,13 @@ const ROLE_PERMISSIONS: Record<string, string[]> = {
     'Inscribir grupos en camps',
     'See opportunities for their students',
   ],
+  HEALTH_AGENT: [
+    'Manage client bookings',
+    'Share meal plans, session plans and rehab plans',
+    'Private session notes',
+    'Host live sessions',
+    'See The "1%" Factor listing',
+  ],
   ADMIN: ['Full access', 'Verify players and clubs', 'Manage users and roles', 'Post content', 'View analytics', 'System settings'],
 };
 

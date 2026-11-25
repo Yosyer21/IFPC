@@ -42,6 +42,76 @@ export async function verifyClubAction(formData: FormData): Promise<void> {
   redirect('/dashboard/admin/clubs');
 }
 
+/**
+ * Cambia un flag de verificación/safeguarding de una entidad. Solo admin.
+ * `field` depende de la entidad; los valores no permitidos se ignoran.
+ */
+export async function setVerificationAction(formData: FormData): Promise<void> {
+  const session = await requireAdmin();
+  if (!session) return;
+
+  const entity = str(formData, 'entity');
+  const id = str(formData, 'id');
+  const field = str(formData, 'field');
+  const value = formData.get('value') === 'true';
+  if (!entity || !id || !field) return;
+
+  try {
+    switch (entity) {
+      case 'CLUB':
+        if (field === 'verified') {
+          await prisma.club.update({ where: { id }, data: { verified: value } });
+        } else if (field === 'safeguardingPolicy') {
+          await prisma.club.update({ where: { id }, data: { safeguardingPolicy: value } });
+        } else if (field === 'backgroundChecked') {
+          await prisma.club.update({ where: { id }, data: { backgroundChecked: value } });
+        }
+        break;
+      case 'UNIVERSITY':
+        if (field === 'verified') {
+          await prisma.university.update({ where: { id }, data: { verified: value } });
+        } else if (field === 'safeguardingPolicy') {
+          await prisma.university.update({ where: { id }, data: { safeguardingPolicy: value } });
+        }
+        break;
+      case 'SCHOOL':
+        if (field === 'verified') {
+          await prisma.school.update({ where: { id }, data: { verified: value } });
+        } else if (field === 'safeguardingPolicy') {
+          await prisma.school.update({ where: { id }, data: { safeguardingPolicy: value } });
+        }
+        break;
+      case 'COACH':
+        if (field === 'verified') {
+          await prisma.coach.update({ where: { id }, data: { verified: value } });
+        } else if (field === 'backgroundChecked') {
+          await prisma.coach.update({ where: { id }, data: { backgroundChecked: value } });
+        } else if (field === 'safeguardingCertified') {
+          await prisma.coach.update({ where: { id }, data: { safeguardingCertified: value } });
+        }
+        break;
+      case 'HEALTH_AGENT':
+        if (field === 'verified') {
+          await prisma.healthAgent.update({ where: { id }, data: { verified: value } });
+        } else if (field === 'backgroundChecked') {
+          await prisma.healthAgent.update({ where: { id }, data: { backgroundChecked: value } });
+        }
+        break;
+      case 'CLUB_STAFF':
+        if (field === 'backgroundChecked') {
+          await prisma.clubStaff.update({ where: { id }, data: { backgroundChecked: value } });
+        }
+        break;
+      default:
+        return;
+    }
+  } catch {
+    return;
+  }
+
+  redirect('/dashboard/admin/verification');
+}
+
 export async function setUserRoleAction(formData: FormData): Promise<void> {
   const session = await requireAdmin();
   if (!session) return;

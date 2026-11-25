@@ -11,6 +11,7 @@ export const ROLE_DASHBOARD_PREFIXES: Record<Role, string> = {
   UNIVERSITY: '/dashboard/university',
   SCHOOL: '/dashboard/school',
   ADMIN: '/dashboard/admin',
+  HEALTH_AGENT: '/dashboard/health-agent',
 };
 
 /**

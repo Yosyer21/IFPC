@@ -1,6 +1,6 @@
 FUTURE BALLER — PERFILES DE PRUEBA (TEST)
 ========================================
-Generado: 2026-10-05T23:06:38.619Z
+Generado: 2026-10-05T23:06:38.619Z · Actualizado: 2026-11-25 (Health Agent añadido)
 Base de datos: PGlite embebida (USE_PGLITE) → /home/yosh/Documentos/IFPC/.pglite
 App local: http://localhost:3000
 
@@ -88,6 +88,14 @@ PERFILES
   Área        : /dashboard/school
   Notas       : Programas y clínicas para colegios y servicios comunitarios.
 
+────────────────────────────────────────────────────────────────────────
+[HEALTH_AGENT]  Health agent (nutrición, psicología, fisio)
+  Nombre      : Demo Health Agent
+  Email       : health@demo.com
+  Contraseña  : health123
+  Área        : /dashboard/health-agent
+  Notas       : Portal unificado: reservas aprobadas por el padre, planes y notas privadas.
+
 TABLA RÁPIDA
 ------------
 ROL          EMAIL                      CONTRASEÑA        ÁREA
@@ -100,4 +108,5 @@ AGENT        agent@demo.com             agent123          /dashboard/agent
 CLUB         club@demo.com              club123           /dashboard/club
 UNIVERSITY   university@demo.com        university123     /dashboard/university
 SCHOOL       school@demo.com            school123         /dashboard/school
+HEALTH_AGENT health@demo.com            health123         /dashboard/health-agent
 

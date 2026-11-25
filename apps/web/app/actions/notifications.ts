@@ -8,6 +8,39 @@ import {
   weeklyDigestFromForm,
 } from '@/lib/notifications/preferences';
 import type { ActionState } from './auth';
+import { revalidatePaths } from '@/lib/revalidate';
+
+const NOTIFICATION_PATHS = [
+  '/dashboard/player/notifications',
+  '/dashboard/parent/notifications',
+  '/dashboard/coach/notifications',
+  '/dashboard/club/notifications',
+  '/dashboard/health-agent/notifications',
+];
+
+/** Marca un aviso del usuario como leído. */
+export async function markNotificationReadAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const id = formData.get('id');
+  if (typeof id !== 'string' || !id) return;
+  await prisma.notification.updateMany({
+    where: { id, userId: session.user.id },
+    data: { read: true },
+  });
+  revalidatePaths(...NOTIFICATION_PATHS);
+}
+
+/** Marca todos los avisos del usuario como leídos. */
+export async function markAllNotificationsReadAction(): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  await prisma.notification.updateMany({
+    where: { userId: session.user.id, read: false },
+    data: { read: true },
+  });
+  revalidatePaths(...NOTIFICATION_PATHS);
+}
 
 /**
  * Guarda qué categorías de aviso se ven dentro de la plataforma y cuáles se

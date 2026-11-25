@@ -16,7 +16,9 @@ import {
   schoolOnboardingSchema,
 } from '@ifpc/validation';
 import { createHash, randomBytes } from 'node:crypto';
+import { headers } from 'next/headers';
 import { sendPasswordResetEmail, sendVerificationEmail } from '@/lib/email/resend';
+import { rateLimit } from '@/lib/security/rate-limit';
 import { dashboardPath } from '@/lib/safe-redirect';
 import { nameParts } from '@/lib/names';
 import { createRoleProfile, downloadRemoteAvatar, type SignupProfileDetails } from '@/lib/signup';
@@ -35,6 +37,15 @@ export interface ActionState {
   success?: string;
 }
 
+/** Clave del limitador por IP (proxy/CDN incluido). */
+async function clientRateKey(prefix: string): Promise<string> {
+  const requestHeaders = await headers();
+  const forwarded = requestHeaders.get('x-forwarded-for');
+  const ip =
+    forwarded?.split(',')[0]?.trim() || requestHeaders.get('x-real-ip') || 'unknown';
+  return `${prefix}:${ip}`;
+}
+
 export async function loginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = loginSchema.safeParse({
     email: formData.get('email'),
@@ -44,7 +55,18 @@ export async function loginAction(_prev: ActionState, formData: FormData): Promi
     return { error: 'Invalid email or password.' };
   }
 
-  const callbackUrl = (formData.get('callbackUrl') as string) || '/dashboard';
+  const limit = rateLimit(
+    `${await clientRateKey('login')}:${parsed.data.email.toLowerCase()}`,
+    10,
+    15 * 60 * 1000
+  );
+  if (!limit.ok) {
+    return {
+      error: `Too many attempts. Try again in ${limit.retryAfterSeconds} seconds.`,
+    };
+  }
+
+  const callbackUrl = dashboardPath(formData.get('callbackUrl'));
 
   try {
     await signIn('credentials', {
@@ -70,6 +92,13 @@ export async function registerAction(_prev: ActionState, formData: FormData): Pr
   });
   if (!parsed.success) {
     return { error: 'Please review the form fields.' };
+  }
+
+  const limit = rateLimit(await clientRateKey('register'), 5, 60 * 60 * 1000);
+  if (!limit.ok) {
+    return {
+      error: `Too many sign-up attempts. Try again in ${limit.retryAfterSeconds} seconds.`,
+    };
   }
 
   const rawRole = (formData.get('role') as string) ?? '';
@@ -124,7 +153,7 @@ export async function registerAction(_prev: ActionState, formData: FormData): Pr
       const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
       const verifyUrl = `${appUrl}/verify-email?token=${token}`;
       const result = await sendVerificationEmail(email, verifyUrl);
-      if (!result.ok) {
+      if (!result.ok && process.env.NODE_ENV !== 'production') {
         console.log(`[auth] verification link: ${verifyUrl}`);
       }
     } catch (error) {
@@ -397,6 +426,13 @@ export async function forgotPasswordAction(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
+  const limit = rateLimit(await clientRateKey('forgot-password'), 5, 15 * 60 * 1000);
+  if (!limit.ok) {
+    return {
+      error: `Too many attempts. Try again in ${limit.retryAfterSeconds} seconds.`,
+    };
+  }
+
   const email = ((formData.get('email') as string) ?? '').toLowerCase().trim();
   if (!email) {
     return { error: 'Enter your email.' };
@@ -423,11 +459,18 @@ export async function forgotPasswordAction(
     };
   }
 
-  // Without Resend configured: in development the link stays visible in the console.
-  console.log(`[auth] recovery link: ${resetUrl}`);
+  // Sin Resend configurado, el enlace solo se muestra en desarrollo. En
+  // producción nunca se registra ni se devuelve un token al cliente.
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`[auth] recovery link: ${resetUrl}`);
+    return {
+      success:
+        'Check your email. (In development without Resend configured, the link is shown in the server console).',
+    };
+  }
+
   return {
-    success:
-      'Check your email. (In development without Resend configured, the link is shown in the server console).',
+    success: 'If the email exists, you will receive a link to reset your password.',
   };
 }
 
@@ -467,6 +510,13 @@ export async function resendVerificationEmailAction(): Promise<ActionState> {
   if (!user) return { error: 'User not found.' };
   if (user.emailVerified) return { success: 'Your email is already verified.' };
 
+  const limited = rateLimit(`verify-resend:${user.id}`, 3, 60 * 60 * 1000);
+  if (!limited.ok) {
+    return {
+      error: `Too many requests. Try again in ${limited.retryAfterSeconds} seconds.`,
+    };
+  }
+
   const token = randomBytes(32).toString('hex');
   const tokenHash = createHash('sha256').update(token).digest('hex');
   await prisma.emailVerificationToken.create({
@@ -480,9 +530,15 @@ export async function resendVerificationEmailAction(): Promise<ActionState> {
     return { success: 'We have sent you a new verification link to your email.' };
   }
 
-  console.log(`[auth] verification link: ${verifyUrl}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`[auth] verification link: ${verifyUrl}`);
+    return {
+      success: `Check your email. (In development without Resend configured, link: ${verifyUrl})`,
+    };
+  }
+
   return {
-    success: `Check your email. (In development without Resend configured, link: ${verifyUrl})`,
+    success: 'We could not send the email right now. Please try again later or contact support.',
   };
 }
 

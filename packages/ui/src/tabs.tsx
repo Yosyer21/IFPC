@@ -18,13 +18,19 @@ export function Tabs({ tabs, defaultValue }: TabsProps) {
   const current = tabs.find((tab) => tab.value === active);
   return (
     <div>
-      <div className="flex gap-1 border-b border-border">
+      <div
+        role="tablist"
+        aria-label="Sections"
+        className="flex gap-1 overflow-x-auto border-b border-border [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {tabs.map((tab) => (
           <button
             key={tab.value}
             type="button"
+            role="tab"
+            aria-selected={active === tab.value}
             onClick={() => setActive(tab.value)}
-            className={`-mb-px border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
+            className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
               active === tab.value
                 ? 'border-brand text-foreground'
                 : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -34,7 +40,9 @@ export function Tabs({ tabs, defaultValue }: TabsProps) {
           </button>
         ))}
       </div>
-      <div className="pt-4">{current?.content}</div>
+      <div role="tabpanel" className="pt-4">
+        {current?.content}
+      </div>
     </div>
   );
 }

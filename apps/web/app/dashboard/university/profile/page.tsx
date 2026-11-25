@@ -5,6 +5,7 @@ import { prisma } from '@ifpc/database';
 import { Card, CardContent } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { PageHeader } from '@/components/player/page-header';
+import { IdActions } from '@/components/id/id-actions';
 import { IconCheckCircle } from '@/components/dashboard/icons';
 
 export const metadata: Metadata = { title: 'School ID' };
@@ -80,6 +81,9 @@ export default async function UniversityProfilePage() {
         subtitle="Your program's CV. What families see when a scholarship is offered."
         icon="book"
       />
+      <div className="mb-4 flex justify-end">
+        <IdActions title="School ID" />
+      </div>
 
       {/* Panel oscuro destacado (referencia School ID) */}
       <section className="fb-panel animate-fade-up relative mb-6 overflow-hidden">

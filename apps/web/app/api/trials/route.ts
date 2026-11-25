@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
@@ -19,7 +20,7 @@ export async function GET() {
     if (!club) return NextResponse.json({ ok: true, trials: [] });
     const trials = await prisma.trial.findMany({
       where: { clubId: club.id },
-      include: { player: { include: { user: true } } },
+      include: { player: { include: { user: { select: publicUserSelect } } } },
       orderBy: { startsAt: 'desc' },
     });
     return NextResponse.json({ ok: true, trials });
@@ -38,7 +39,7 @@ export async function GET() {
 
   if (session.user.role !== 'ADMIN') return forbidden();
   const trials = await prisma.trial.findMany({
-    include: { player: { include: { user: true } }, club: true },
+    include: { player: { include: { user: { select: publicUserSelect } } }, club: true },
     orderBy: { startsAt: 'desc' },
     take: 200,
   });

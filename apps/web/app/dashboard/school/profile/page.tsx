@@ -4,6 +4,7 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { SCHOOL_TYPE_LABELS } from '@/lib/labels';
 import { PageHeader } from '@/components/player/page-header';
+import { IdActions } from '@/components/id/id-actions';
 
 export const metadata: Metadata = { title: 'Organisation' };
 
@@ -39,6 +40,10 @@ export default async function SchoolProfilePage() {
           {school.verified ? 'Verified' : 'Pending verification'}
         </Badge>
       </PageHeader>
+
+      <div className="mb-4 flex justify-end">
+        <IdActions title="Organisation ID" />
+      </div>
 
       <Card className="animate-fade-up">
         <CardContent>

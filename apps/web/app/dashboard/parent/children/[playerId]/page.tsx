@@ -7,6 +7,8 @@ import { Badge, Card, CardContent } from '@ifpc/ui';
 import { POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
 import { DonutChart, RadarChart } from '@/components/player/charts';
+import { ChildProtectionForm } from '@/components/parent/child-protection-form';
+import { isUnder16 } from '@/lib/minor';
 
 export const metadata: Metadata = { title: 'My child' };
 
@@ -132,6 +134,29 @@ export default async function ParentChildDetailPage({
           </div>
         </div>
       </section>
+
+      <Card className="animate-fade-up mb-6">
+        <CardContent>
+          <h2 className="mb-1 font-semibold">Protection &amp; visibility</h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Control who can see {player.firstName}&apos;s ID and stats. These rules are enforced
+            on the server.
+          </p>
+          <ChildProtectionForm
+            playerId={player.id}
+            values={{
+              consentGiven: link.consentGiven,
+              consentAt: link.consentAt ? link.consentAt.toLocaleDateString('en-GB') : null,
+              medicalInfoRegistered: link.medicalInfoRegistered,
+              idVisibleToClubs: link.idVisibleToClubs,
+              idVisibleToSchools: link.idVisibleToSchools,
+              showStatsAndClips: link.showStatsAndClips,
+              allowDirectInvites: link.allowDirectInvites,
+              isUnder16: isUnder16(player.dateOfBirth),
+            }}
+          />
+        </CardContent>
+      </Card>
 
       {/* Radar + ficha */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

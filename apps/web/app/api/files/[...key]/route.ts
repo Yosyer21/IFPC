@@ -21,6 +21,9 @@ const PUBLIC_PREFIXES = [
   'club-logos/',
 ];
 
+/** Prefijos que solo puede leer un admin por esta vía. */
+const ADMIN_ONLY_PREFIXES = ['documents/', 'contracts/', 'medical/'];
+
 /**
  * GET /api/files/[...key] — proxy firmado para Railway Storage Buckets.
  *
@@ -33,7 +36,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
   const { key: segments } = await params;
   const key = segments.join('/');
 
-  if (!key || key.includes('..') || key.includes('\\0')) {
+  if (!key || key.includes('..') || key.includes('\\0') || /%2e|%5c|%00/i.test(key)) {
     return new NextResponse('Not found', { status: 404 });
   }
 
@@ -43,12 +46,25 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
     if (!session?.user?.id) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
+    // Los documentos viven en un almacén privado y su única vía es
+    // `/api/documents/[id]/file` (con control por rol). Aquí no se sirven.
+    if (
+      ADMIN_ONLY_PREFIXES.some((prefix) => key.startsWith(prefix)) &&
+      session.user.role !== 'ADMIN'
+    ) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
   }
 
   const storage = resolveStorage();
 
   // Con el driver local el archivo ya se sirve como estático (`/uploads/...`).
   if (!storage.readObject) {
+    // Un fichero privado en disco NO se puede proteger por esta ruta: nunca se
+    // redirige a `/uploads` (sería accesible sin sesión).
+    if (!isPublic) {
+      return new NextResponse('Not found', { status: 404 });
+    }
     const base = process.env.NEXT_PUBLIC_APP_URL ?? '';
     return NextResponse.redirect(`${base}/uploads/${key}`, 307);
   }
@@ -70,6 +86,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ key
   if (contentType) headers.set('content-type', contentType);
   if (contentLength) headers.set('content-length', contentLength);
   headers.set('x-content-type-options', 'nosniff');
+  if (!isPublic) headers.set('content-disposition', 'attachment');
   headers.set(
     'cache-control',
     isPublic ? 'public, max-age=31536000, immutable' : 'private, max-age=0, must-revalidate'

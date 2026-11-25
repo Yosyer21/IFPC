@@ -44,7 +44,8 @@ export default async function ParentDashboardPage() {
   });
   const childIds = children.map((entry) => entry.playerId);
 
-  const [evaluations, activeGoals, trials, openOpportunities, payments] = await Promise.all([
+  const [evaluations, activeGoals, trials, negotiations, scholarshipApprovals, openOpportunities, payments] =
+    await Promise.all([
     prisma.evaluation.findMany({
       where: { playerId: { in: childIds } },
       include: { player: true },
@@ -58,6 +59,23 @@ export default async function ParentDashboardPage() {
       include: { player: true, club: true },
       orderBy: { startsAt: 'desc' },
     }),
+    prisma.negotiation.findMany({
+      where: {
+        playerId: { in: childIds },
+        parentApproval: 'PENDING',
+        status: { in: ['OPEN', 'ONGOING'] },
+      },
+      include: { player: true, club: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.application.count({
+      where: {
+        playerId: { in: childIds },
+        parentApproval: 'PENDING',
+        status: 'PENDING',
+        opportunity: { type: 'SCHOLARSHIP' },
+      },
+    }),
     prisma.opportunity.count({ where: { status: 'OPEN' } }),
     prisma.payment.findMany({
       where: { userId: session.user.id },
@@ -65,7 +83,13 @@ export default async function ParentDashboardPage() {
     }),
   ]);
 
-  const scheduledTrials = trials.filter((t) => t.status === 'SCHEDULED');
+  const scheduledTrials = trials.filter(
+    (t) => t.status === 'SCHEDULED' && t.parentApproval !== 'PENDING'
+  );
+  const pendingApprovals =
+    trials.filter((t) => t.parentApproval === 'PENDING' && t.status === 'SCHEDULED').length +
+    negotiations.length +
+    scholarshipApprovals;
   const upcomingTrials = scheduledTrials.filter(
     (t) => t.startsAt.getTime() < Date.now() + 7 * 24 * 60 * 60 * 1000
   );
@@ -120,6 +144,14 @@ export default async function ParentDashboardPage() {
 
   // Pending actions
   const pendingActions: { href: string; icon: typeof IconBell; text: string; meta: string }[] = [];
+  if (pendingApprovals > 0) {
+    pendingActions.push({
+      href: '/dashboard/parent/approvals',
+      icon: IconShield,
+      text: `${pendingApprovals} trial or offer${pendingApprovals === 1 ? '' : 's'} waiting for your approval`,
+      meta: 'Review approvals',
+    });
+  }
   if (upcomingTrials.length > 0) {
     pendingActions.push({
       href: '/dashboard/parent/children',

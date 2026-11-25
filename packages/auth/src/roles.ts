@@ -12,6 +12,7 @@ export const ROLES: readonly Role[] = [
   'UNIVERSITY',
   'SCHOOL',
   'ADMIN',
+  'HEALTH_AGENT',
 ];
 
 export function isRole(value: string): value is Role {

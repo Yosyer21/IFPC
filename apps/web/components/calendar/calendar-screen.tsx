@@ -27,20 +27,9 @@ import {
 } from '@/lib/calendar';
 
 /**
- * Paleta del calendario: la **misma identidad de la app** (lima de marca en
- * `border-l-brand` + las familias que ya usa el dashboard: emerald, amber, red y
- * cyan). El color va en el **filete izquierdo** y en el punto de la leyenda; el
- * cuerpo de la ficha es neutro para que el texto se lea siempre igual.
+ * Paleta del calendario: la **misma identidad de la app**. El color va en el
+ * punto de la leyenda y en los puntos de actividad de cada día.
  */
-const TONES: Record<CalendarEventKind, string> = {
-  live: 'border-l-brand bg-brand/20 hover:bg-brand/30',
-  room: 'border-l-cyan-400 bg-cyan-500/20 hover:bg-cyan-500/30',
-  trial: 'border-l-amber-400 bg-amber-500/20 hover:bg-amber-500/30',
-  camp: 'border-l-emerald-400 bg-emerald-500/20 hover:bg-emerald-500/30',
-  deadline: 'border-l-red-400 bg-red-500/20 hover:bg-red-500/30',
-  pathway: 'border-l-violet-400 bg-violet-500/20 hover:bg-violet-500/30',
-  goal: 'border-l-lime-300 bg-lime-400/20 hover:bg-lime-400/30',
-};
 
 /** Punto de la leyenda y de la rejilla compacta (móvil). */
 const DOTS: Record<CalendarEventKind, string> = {
@@ -51,6 +40,10 @@ const DOTS: Record<CalendarEventKind, string> = {
   deadline: 'bg-red-400',
   pathway: 'bg-violet-400',
   goal: 'bg-lime-300',
+  booking: 'bg-fuchsia-400',
+  meeting: 'bg-blue-400',
+  match: 'bg-zinc-400',
+  training: 'bg-emerald-400',
 };
 
 const KIND_ORDER = Object.keys(CALENDAR_EVENT_LABELS) as CalendarEventKind[];
@@ -94,42 +87,6 @@ function hrefFor(basePath: string, query: Record<string, string>) {
   const params = new URLSearchParams(query);
   const qs = params.toString();
   return qs ? `${basePath}?${qs}` : basePath;
-}
-
-/** Ficha de un evento: enlace si tiene destino, etiqueta si no. */
-function EventChip({ event, delay = 0 }: { event: CalendarEvent; delay?: number }) {
-  const className = `animate-fade-up flex w-full items-center gap-1 overflow-hidden rounded-md border border-transparent border-l-2 px-1.5 py-[3px] text-left text-[11px] leading-none text-foreground transition-all hover:translate-x-0.5 sm:text-xs ${TONES[event.kind]}`;
-  const body = (
-    <>
-      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${DOTS[event.kind]}`} />
-      <span className="min-w-0 flex-1 truncate font-medium">{event.title}</span>
-      <span className="shrink-0 tabular-nums text-[10px] text-muted-foreground">
-        {TIME_FORMAT.format(event.at)}
-      </span>
-    </>
-  );
-
-  if (!event.href) {
-    return (
-      <span
-        className={className}
-        style={{ animationDelay: `${delay}ms` }}
-        title={event.detail ?? undefined}
-      >
-        {body}
-      </span>
-    );
-  }
-  return (
-    <Link
-      href={event.href}
-      className={className}
-      style={{ animationDelay: `${delay}ms` }}
-      title={event.detail ?? undefined}
-    >
-      {body}
-    </Link>
-  );
 }
 
 /**
@@ -201,41 +158,37 @@ function DayCell({
   events: CalendarEvent[];
   index: number;
 }) {
-  const hidden = events.slice(3);
-
   return (
     <div
-      className={`animate-fade-up group relative flex min-h-[64px] flex-col overflow-hidden rounded-lg border transition-colors sm:min-h-[100px] ${
-        inMonth ? 'border-border' : 'border-transparent opacity-40'
-      } ${
-        selected
-          ? 'border-brand/60 bg-brand/15 ring-1 ring-brand/50'
-          : today
-            ? 'border-brand/30 bg-brand/10'
-            : 'bg-muted/40 hover:border-brand/30 hover:bg-muted/40'
+      className={`animate-fade-up group relative flex min-h-[64px] flex-col items-center rounded-2xl pb-1 transition-colors ${
+        inMonth ? '' : 'opacity-40'
       }`}
       style={{ animationDelay: `${Math.min(index * 8, 340)}ms` }}
     >
-      {/* Toda la casilla selecciona el día (en móvil, puntos incluidos). */}
+      {/* Día como esfera (número redondo), no como tarjeta cuadrada. */}
       <Link
         href={href}
         aria-current={selected ? 'date' : undefined}
         aria-label={`${FULL_DAY_FORMAT.format(day)}: ${events.length} event${
           events.length === 1 ? '' : 's'
         }`}
-        className="flex flex-1 flex-col rounded-lg p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:flex-none sm:p-1.5"
+        className="flex flex-col items-center gap-1 rounded-full p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span
-          className={`flex items-center gap-1 text-[11px] font-semibold ${
-            today || selected ? 'text-brand' : 'text-muted-foreground'
+          className={`flex h-9 w-9 items-center justify-center rounded-full text-[13px] font-semibold transition-all sm:text-sm ${
+            selected
+              ? 'bg-ink text-white shadow-sm ring-2 ring-brand'
+              : today
+                ? 'bg-brand/10 text-foreground ring-2 ring-brand'
+                : 'bg-card text-foreground shadow-sm ring-1 ring-border/70 group-hover:bg-muted group-hover:text-foreground'
           }`}
         >
           {day.getUTCDate()}
-          {today ? <span className="animate-pulse-dot h-1.5 w-1.5 rounded-full bg-brand" /> : null}
         </span>
 
-        {/* Móvil: puntos de actividad. */}
-        <span className="mt-1 flex flex-wrap items-center gap-0.5 sm:hidden">
+        {/* Puntos de actividad bajo la esfera (también en escritorio): los
+            eventos completos viven en “Next up” y en el detalle del día. */}
+        <span className="flex h-1.5 items-center gap-0.5">
           {events.slice(0, 5).map((event) => (
             <span key={event.id} className={`h-1.5 w-1.5 rounded-full ${DOTS[event.kind]}`} />
           ))}
@@ -246,21 +199,6 @@ function DayCell({
           ) : null}
         </span>
       </Link>
-
-      {/* Desde `sm`: fichas con título. */}
-      <div className="hidden flex-col gap-1 px-1 pb-1 sm:flex sm:px-1.5 sm:pb-1.5">
-        {events.slice(0, 3).map((event, chipIndex) => (
-          <EventChip key={event.id} event={event} delay={chipIndex * 40} />
-        ))}
-        {hidden.length > 0 ? (
-          <span
-            className="px-1 text-[10px] font-medium text-muted-foreground transition-colors group-hover:text-brand"
-            title={hidden.map((event) => event.title).join(' · ')}
-          >
-            +{hidden.length} more
-          </span>
-        ) : null}
-      </div>
     </div>
   );
 }
@@ -326,7 +264,7 @@ export async function CalendarScreen({
   })).filter((row) => row.count > 0);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-3xl">
       <PageHeader title={title} subtitle={subtitle} icon="calendar" />
 
       {/* Barra del mes: navegación a un toque, también en móvil. */}
@@ -383,32 +321,30 @@ export async function CalendarScreen({
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_17rem]">
         {/* Columna izquierda: la rejilla y, justo debajo, el detalle del día. */}
         <div className="flex min-w-0 flex-col gap-4">
-          <Card className="animate-fade-up">
-            <CardContent>
-              <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                {CALENDAR_WEEKDAY_LABELS.map((label) => (
-                  <span key={label} className="py-1">
-                    {label}
-                  </span>
-                ))}
-              </div>
+          <div className="animate-fade-up px-1">
+            <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {CALENDAR_WEEKDAY_LABELS.map((label) => (
+                <span key={label} className="py-1">
+                  {label}
+                </span>
+              ))}
+            </div>
 
-              <div className="mt-1 grid grid-cols-7 gap-1">
-                {days.map((day, index) => (
-                  <DayCell
-                    key={dayKey(day)}
-                    day={day}
-                    href={dayHref(day)}
-                    inMonth={isSameMonth(day, month)}
-                    today={isToday(day, now)}
-                    selected={isSameDay(day, selectedDay)}
-                    events={byDay.get(dayKey(day)) ?? []}
-                    index={index}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+            <div className="mt-1 grid grid-cols-7 gap-1">
+              {days.map((day, index) => (
+                <DayCell
+                  key={dayKey(day)}
+                  day={day}
+                  href={dayHref(day)}
+                  inMonth={isSameMonth(day, month)}
+                  today={isToday(day, now)}
+                  selected={isSameDay(day, selectedDay)}
+                  events={byDay.get(dayKey(day)) ?? []}
+                  index={index}
+                />
+              ))}
+            </div>
+          </div>
 
           {/* Detalle del día elegido: resuelve la falta de información en móvil. */}
           <Card

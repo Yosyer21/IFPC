@@ -17,8 +17,8 @@ export default function PlayerDocumentUploadPage() {
         </Link>
       </div>
       <p className="mb-6 text-sm text-muted-foreground">
-        Documents (passport, contract, medical certificate…) are stored locally in
-        this phase. Only you and authorized profiles in recruitment processes can view them.
+        Documents (passport, contract, medical certificate…) are stored in private
+        storage. Only you, your family and verified staff in recruitment can open them.
       </p>
       <DocumentUploadForm />
     </div>

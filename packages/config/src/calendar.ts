@@ -17,6 +17,10 @@ export const CALENDAR_EVENT_KINDS = [
   'deadline',
   'pathway',
   'goal',
+  'booking',
+  'meeting',
+  'match',
+  'training',
 ] as const;
 
 export type CalendarEventKind = (typeof CALENDAR_EVENT_KINDS)[number];
@@ -29,6 +33,10 @@ export const CALENDAR_EVENT_LABELS: Record<CalendarEventKind, string> = {
   deadline: 'Deadline',
   pathway: 'Pathway',
   goal: 'Goal',
+  booking: 'Booked session',
+  meeting: 'Meeting',
+  match: 'Match',
+  training: 'Training',
 };
 
 export function isCalendarEventKind(value: unknown): value is CalendarEventKind {

@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/player/page-header';
 import { MatchScoreBadge } from '@/components/player/match-score';
 import { TransferWindow } from '@/components/player/transfer-window';
 import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from '@/lib/matching';
-import { playerProfileChecklist } from '@/lib/player';
+import { playerProfileChecklist, nextProfileStep } from '@/lib/player';
 import {
   applicationFromRow,
   matchFromOpportunity,
@@ -28,7 +28,7 @@ export default async function PlayerOpportunitiesPage() {
     where: { userId: session.user.id },
     include: {
       user: { select: { image: true } },
-      _count: { select: { career: true, videos: true } },
+      _count: { select: { career: true, videos: true, filmClips: true } },
     },
   });
   if (!player) notFound();
@@ -36,11 +36,13 @@ export default async function PlayerOpportunitiesPage() {
   const [opportunities, applications, trials, negotiations] = await Promise.all([
     prisma.opportunity.findMany({
       where: { status: 'OPEN' },
-      include: { club: true, university: true },
+      include: { club: true, university: true, school: true, scholarship: true },
     }),
     prisma.application.findMany({
       where: { playerId: player.id },
-      include: { opportunity: { include: { club: true, university: true } } },
+      include: {
+        opportunity: { include: { club: true, university: true, school: true, scholarship: true } },
+      },
       orderBy: { createdAt: 'desc' },
     }),
     // Invitaciones a prueba: la vía real por la que un club contacta al jugador.
@@ -93,19 +95,14 @@ export default async function PlayerOpportunitiesPage() {
     image: player.user.image,
     careerCount: player._count.career,
   });
-  const nextStep = !player._count.videos
-    ? {
-        label: 'Add clip',
-        href: '/dashboard/discovery',
-        hint: 'Add a highlight clip so scouts and coaches can see how you play.',
-      }
-    : checklist.next
-      ? { label: checklist.next.label, href: checklist.next.href, hint: checklist.next.hint }
-      : {
-          label: 'View profile',
-          href: '/dashboard/player/profile',
-          hint: 'Your profile is complete. Keep your clips and stats up to date.',
-        };
+  const nextStep = nextProfileStep(
+    checklist,
+    player._count.videos + player._count.filmClips
+  ) ?? {
+    label: 'View profile',
+    href: '/dashboard/player/profile',
+    hint: 'Your profile is complete. Keep your clips and stats up to date.',
+  };
 
   const openOpportunities =
     matches.length === 0 ? (

@@ -1,0 +1,55 @@
+================================================================================
+ PENDIENTES PARA EL DESARROLLADOR  (Seccion 15 del libro)
+================================================================================
+Funciones mencionadas en los disenos pero SIN pantalla (o que necesitan decision)
+antes de construirse.
+
+ - TODOS LOS USUARIOS
+   Registro e incorporacion por rol; inicio de sesion para jugador, padre, entrenador,
+   club y colegio; menu de cuenta.
+
+ - JUGADOR
+   Reproductor de sesiones de entrenamiento; detalle del contenido de entrenamiento;
+   detalle de la oportunidad; carga de foto y publicaciones.
+
+ - PADRE / MADRE
+   Vinculacion con la cuenta del hijo y consentimiento; aprobacion de ofertas de
+   clubes y colegios; pagina de Parent guides; lector de guias.
+
+ - ENTRENADOR
+   Pantalla de revision y comentarios del Film Room; redaccion de referencias;
+   seleccion de convocatoria; carga de resultados; filtros de Session Library.
+
+ - CLUB
+   Gestion de Trials & offers; Staff & scouts; formulario para crear pruebas;
+   envio de ofertas formales.
+
+ - COLEGIO Y UNIVERSIDAD
+   Pagina de Scholarships; formulario de nueva beca.
+
+ - ESPECIALISTAS
+   Motion Lab es solo un concepto de marca (no pantalla funcional). Faltan: paginas
+   separadas de Bookings y Clients; armador de planes de alimentacion y control
+   semanal; editor de notas de sesion; armador de planes compartidos + consentimiento
+   para compartir con el entrenador; reembolsos; resenias; Apply to join y verificacion.
+
+ - ENTRENADOR PERSONAL (1 a 1)
+   Todas las pantallas excepto la ficha en The "1%" Factor.
+
+ - DOCUMENTOS LEGALES  (responsable: Tim Fuller, abogado)
+   Politica de privacidad, Terminos y Condiciones, texto de consentimiento de los
+   padres, aviso de privacidad adaptado a ninos y codigos de conducta para
+   especialistas y entrenadores. La app necesita enlaces en registro, Settings y pie
+   de pagina (pantallas sin disenar).
+
+ - LEGAL  (con Tim Fuller)
+   Confirmar (o revisar con la herramienta de eSafety) que Future Baller NO es una
+   plataforma de redes sociales con restriccion de edad; decidir como funcionan las
+   funciones sociales de Profile para <16; elegir un metodo de verificacion de edad.
+
+ - REGLAS DE NEGOCIO (por definir)
+   Puntaje de fuerza del perfil; algoritmos de % de coincidencia y % de afinidad;
+   proveedor de pagos y comision de la plataforma; politica de reembolsos y
+   cancelaciones; tamano maximo de video; que pasa cuando un jugador cumple 16;
+   proceso de deber de cuidado para psicologos.
+================================================================================

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { requireUser, badRequest, readJson, stringField } from '@/lib/api/respond';
+import { requireUser, badRequest, forbidden, isSameOrigin, readJson, stringField } from '@/lib/api/respond';
 import { createCheckoutSession } from '@/lib/payments/stripe';
+import { rateLimit } from '@/lib/security/rate-limit';
 
 /** POST /api/payments/checkout — creates a Stripe Checkout Session for a membership. */
 export async function POST(request: Request) {
@@ -8,6 +9,16 @@ export async function POST(request: Request) {
   if (!session) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
+  if (!isSameOrigin(request)) return forbidden('Cross-site request blocked');
+
+  const limited = rateLimit(`checkout:${session.user.id}`, 5, 60_000);
+  if (!limited.ok) {
+    return NextResponse.json(
+      { ok: false, error: 'Too many checkout attempts. Try again later.' },
+      { status: 429, headers: { 'Retry-After': String(limited.retryAfterSeconds) } }
+    );
+  }
+
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
 

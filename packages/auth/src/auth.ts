@@ -93,14 +93,39 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         return role ? { ...token, role } : token;
       }
 
-      if (!user?.email) return token;
+      // Alta con Google o login: resuelve id/rol reales en la base.
+      if (user?.email) {
+        const db = await prisma.user.findUnique({
+          where: { email: user.email.trim().toLowerCase() },
+          select: { id: true, role: true },
+        });
+        return db
+          ? { ...token, id: db.id, role: db.role, roleCheckedAt: Date.now() }
+          : token;
+      }
 
-      const db = await prisma.user.findUnique({
-        where: { email: user.email.trim().toLowerCase() },
-        select: { id: true, role: true },
-      });
+      // Refresco periódico del rol: una baja o degradación del admin no espera
+      // a que caduque el JWT (30 días). Cada 15 min por sesión activa.
+      if (typeof token.id === 'string' && token.id) {
+        const checkedAt = typeof token.roleCheckedAt === 'number' ? token.roleCheckedAt : 0;
+        if (Date.now() - checkedAt > 15 * 60 * 1000) {
+          try {
+            const db = await prisma.user.findUnique({
+              where: { id: token.id },
+              select: { id: true, role: true },
+            });
+            if (!db) {
+              // Usuario borrado: invalida id; middleware/requireUser fallan cerrado.
+              return { ...token, id: '', role: undefined, roleCheckedAt: Date.now() };
+            }
+            return { ...token, role: db.role, roleCheckedAt: Date.now() };
+          } catch {
+            // Si la BD falla, se conserva el token actual para no tumbar la sesión.
+          }
+        }
+      }
 
-      return db ? { ...token, id: db.id, role: db.role } : token;
+      return token;
     },
   },
 });

@@ -1,0 +1,148 @@
+================================================================================
+ JUGADOR  (Seccion 4 del libro) - etiqueta PLAYER
+================================================================================
+Ejemplo: Demo Player (delantera, U17). 15 pantallas. Todas comparten menu lateral,
+barra de busqueda, boton Alerts y boton de cuenta. A los <16 les aplica la Seccion 2.
+
+ 4.1 OVERVIEW  ("que tengo que hacer ahora?", reune lo importante de las demas paginas)
+ - Bienvenida (nombre, club, categoria, posicion).
+ - Next up: proximo evento del calendario (hora y lugar).
+ - From your coach: ultima sesion asignada, con fecha limite y boton Start.
+ - Comentarios nuevos: clips con notas nuevas del entrenador (badge NEW NOTE).
+ - Ofertas pendientes (de Transfer Window).
+ - Proxima sesion "1%": estado ("Waiting for parent" si falta aprobacion).
+ - Resumen de temporada (goles/partidos/asistencias). - Fuerza del perfil (% + consejo).
+ - Notificaciones sin leer (3 recientes).
+
+ 4.2 PLAYER ID (WebCareer) - curriculum futbolistico
+ - Tarjeta ID: escudo + dorsal, "Add your photo", linea club·categoria·posicion, nombre.
+ - Resumen de carrera: goles, partidos, asistencias, goles/partido (goles ÷ partidos).
+ - "Como anoto": goles por cabeza / pie derecho / pie izquierdo.
+ - Mi posicion: grafico de cancha. - Datos del jugador: edad, pie, estatura, posicion.
+ - Add season: club, equipo/categoria, temporada, partidos, goles, asistencias,
+   "this is my current team" (solo UNA temporada puede ser actual). Totales se recalculan.
+ - The journey: tarjetas por temporada; participacion en gol/partido =
+   (goles+asistencias) ÷ partidos. Edit / Remove season (con confirmacion).
+ - El padre lo ve como Parent ID y controla la visibilidad para clubes/colegios.
+
+ 4.3 PROFILE - perfil social publico (ver 3.1: publicaciones, clips, chat, destacados).
+ 4.4 CALENDAR - ver 3.2 (5 tipos de evento con color, panel del dia, eventos automaticos).
+
+ 4.5 MY DEVELOPMENT - como mejora en el tiempo
+ - Avance por area: Head Game, Build, On the Ball, Fuel (sesiones completadas + nivel 1-5).
+ - Tareas del entrenador (hecha / atrasada / no hecha).
+ - Linea de comentarios: todas las notas del entrenador (del Film Room).
+ - Mis objetivos: metas personales con meta numerica y avance (el entrenador comenta;
+   el psicologo puede agregar objetivos con consentimiento).
+ - Planes de especialistas: regreso al juego (fisio), semana de nutricion, programa de
+   psicologia. Solo se muestra lo que cada especialista comparte. Notas del psicologo NUNCA.
+ - Tendencia por temporada (graficos). - Vista del padre: solo lectura.
+
+ 4.6 TRANSFER WINDOW (WebTransfer) - becas, cupos escolares y pruebas
+ - Contadores: ofertas pendientes, coincidencias, postulaciones. - Fuerza del perfil (%).
+ - Pestanias: Offers for you | Open matches | My applications. Filtro: All/University/School/Trials.
+ - Tarjeta de oferta: tipo, NEW OFFER, organizacion, titulo, cita del visor, posicion,
+   lugar, fecha limite. "Accept: send to parent" -> SENT TO PARENT (<16 solo aceptada
+   cuando el padre aprueba). "Decline" -> DECLINED.
+ - Open matches: oportunidades por posicion/edad/nivel con % de coincidencia; "Apply now".
+ - My applications: seguimiento Applied > Reviewed > Shortlisted > Decision.
+
+ 4.7 SCOUTING PROFILE - pagina de reclutamiento (distinta del Profile social)
+ - Preview as a scout (como lo ve un club/colegio verificado; respeta la visibilidad del padre).
+ - Highlight reel: hasta 6 clips del Film Room, en orden.
+ - Datos clave (posicion, pie, estatura, categoria, club, resumen de carrera).
+ - Fortalezas (hasta 5 etiquetas; el entrenador puede respaldar). Que busca (pruebas,
+   cupos escolares, becas; regiones; disponible desde). Datos academicos (solo con
+   aprobacion del padre). Referencias de entrenadores. Who viewed me. Visibilidad
+   (<16: solo el padre la cambia).
+
+ 4.8 MEMBERSHIP - plan actual (renovacion e incluye), comparar planes, mejorar/cambiar
+   (<16: lo aprueba y paga el padre), cancelar, facturacion/recibos (<16 en la cuenta
+   del padre) y codigo promocional de club o colegio (opcional).
+
+ 4.9 TRAINING (WebTraining) - sesiones para juego, cuerpo y mente
+ - From your coach: sesion asignada (fecha limite, titulo, categoria, duracion,
+   n. de ejercicios, instruccion tipo "Film your last rep for feedback"). - Start session.
+ - Upload clip -> Film Room. - Pestanias: All | Head Game (mentalidad) | Build
+   (fuerza y acondicionamiento) | On the Ball (futbol) | Fuel (nutricion).
+ - Tarjetas de contenido con duracion y nivel.
+
+ 4.10 FILM ROOM (WebFilmRoom) - subir clips y recibir feedback
+ - Upload a clip (arrastrar o buscar; MP4/MOV, tamano max. por definir), titulo
+   ("What's this clip?"), categoria, y pregunta al entrenador.
+ - My clips: estado ("Waiting for feedback", "Coach replied", "Sent"). - Coach feedback
+   con notas por minuto (ej. "0:04 - ..."). - Send to coach.
+
+ 4.11 THE "1%" FACTOR (WebOnePercent) - especialistas
+ - Especialistas verificados por categoria (nutricion, psicologia, fisio, 1 a 1).
+ - Ficha del especialista + panel de reserva (tipo de sesion, horario, precio).
+ - "Request booking" -> para <16 estado "Awaiting parent" (lo aprueba y paga el padre).
+ - Tarjeta de proxima sesion. Resenias.
+
+ 4.12 MY DOCUMENTS - almacen seguro de archivos con control de con quien se comparte
+ - Carpetas, estado (Verified / Shared / Private / Expires in N days), Share with,
+   + Upload document (arrastrar, nombre, vencimiento, carpeta).
+ - Share requests to approve: el padre aprueba compartir (ej. notas con una universidad).
+
+ 4.13 LIVE SESSIONS - sesiones de video grupales de especialistas
+ - Reserve a spot (va al calendario; pagos siguen el flujo "1%" del padre). - Join
+   (sala de video poco antes). - Repeticiones. - Proteccion infantil: solo grupales,
+   chat moderado y visible para padres; nunca 1 a 1 privado con <16 salvo invitar al padre.
+
+ 4.14 NOTIFICATIONS - mas nuevas primero; filtros All/Coach/Offers/Bookings/Messages/Account;
+   marcar leida / "Mark all as read". Disparadores: tarea/nota del entrenador, oferta o
+   prueba, cambio de etapa, padre aprobo/rechazo, especialista acepto, recordatorio,
+   mensaje, documento por vencer. <16: ofertas y reservas tambien notifican al padre.
+
+ 4.15 SETTINGS - cuenta (nombre, correo, telefono, fecha de nacimiento, idioma; la fecha
+   activa reglas <16); contrasena e inicio (Google, cerrar sesion en otros dispositivos);
+   padre vinculado (<16 no se puede quitar); privacidad (<16: visibilidad del ID la
+   controla el padre, solo lectura); notificaciones (los avisos de proteccion no se
+   pueden desactivar); membresia; al cumplir 16 se liberan los controles; eliminar cuenta
+   (<16 requiere aprobacion del padre).
+
+================================================================================
+ ADDENDUM - detalles ampliados 4.9 a 4.13 (tomados del catalogo, Seccion 16)
+================================================================================
+ 4.9 TRAINING
+ - El titulo y la descripcion cambian segun la pestania (All / Head Game / Build /
+   On the Ball / Fuel). Tarjetas: "25 min · Level 2/5" (las de Fuel muestran tiempo
+   de lectura). Completar contenido actualiza My Development (4.5). Hay busqueda de
+   sesiones, ejercicios y guias. Pagina de detalle sin disenar.
+
+ 4.10 FILM ROOM
+ - Upload: arrastrar/buscar video (MP4 o MOV; tamano max. por definir) + titulo +
+   categoria + pregunta -> "Send to coach". Reproductor muestra titulo, categoria y estado.
+ - Estados de "My clips": Waiting for feedback / Coach replied.
+   Insignias: SENT / NEW NOTE / REVIEWED.
+ - Sin notas aun: "Your coach hasn't replied yet. You'll get a notification when they do."
+ - Uso en perfiles: los clips se pueden publicar en Profile o destacar en el Scouting
+   profile (propuesto; no esta en los disenos).
+
+ 4.11 THE "1%" FACTOR
+ - "Your next session" con insignia APPROVED BY PARENT.
+ - Pestanias: All | Nutritionist | Physiotherapist | Sport Psychologist | One-on-One Coaches.
+ - Tipos de sesion: Intro (30 min), Full (60 min) y paquete de 4 sesiones (4 x 60 min).
+   Intro = 60% del precio completo; paquete = 4 x precio completo menos $20.
+ - Horarios segun el calendario del especialista. Boton "Pick a time to continue" hasta
+   elegir horario. "Request booking" -> confirmacion: "Request sent! Your parent will get
+   a notification...". <16: el padre aprueba y paga (flujo 13.1). Busqueda de especialistas.
+
+ 4.12 MY DOCUMENTS
+ - Carpetas: Academic records, Identity (pasaporte, partida de nacimiento),
+   Medical & consent, References, Offers & contracts, Specialist plans.
+ - Subir PDF o foto + carpeta + titulo + vencimiento opcional.
+   <16: solo el padre sube documentos de identidad y medicos (propuesto).
+ - Compartir con club/colegio/especialista especifico; <16 requiere aprobacion del padre.
+   De aqui sale la marca "Academic records shared" del Recruitment board.
+ - "Compartido con" permite quitar acceso. Recordatorios de vencimiento (notificacion).
+   Archivado automatico: ofertas aceptadas, referencias de entrenadores y planes de
+   especialistas se archivan solos.
+
+ 4.13 LIVE SESSIONS
+ - Anfitriones: entrenadores y especialistas verificados. "Reserve a spot" lo agrega al
+   calendario; las sesiones pagadas siguen el flujo de aprobacion "1%" para <16.
+ - "Join" abre la sala de video poco antes del inicio. Repeticiones de sesiones pasadas.
+ - Proteccion infantil: solo sesiones grupales; chat moderado y visible para los padres
+   de <16; nunca video privado 1 a 1 con un <16 salvo que se invite al padre.
+================================================================================

@@ -4,6 +4,9 @@ import { auth } from '@ifpc/auth';
 import { prisma } from '@ifpc/database';
 import { COMPETITION_LEVEL_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PlayerIdView } from '@/components/preview/player-id-view';
+import { ProfileStrengthMeter } from '@/components/profile/profile-strength-meter';
+import { IdActions } from '@/components/id/id-actions';
+import { nextProfileStep, playerProfileChecklist } from '@/lib/player';
 
 export const metadata: Metadata = { title: 'Player ID' };
 
@@ -34,9 +37,23 @@ export default async function PlayerIdPage() {
 
   const player = await prisma.player.findUnique({
     where: { userId: session.user.id },
-    include: { career: { orderBy: [{ isCurrent: 'desc' }, { season: 'desc' }] } },
+    include: {
+      user: true,
+      career: { orderBy: [{ isCurrent: 'desc' }, { season: 'desc' }] },
+      _count: { select: { videos: true, filmClips: true } },
+    },
   });
   if (!player) notFound();
+
+  const checklist = playerProfileChecklist({
+    ...player,
+    image: player.user.image,
+    careerCount: player.career.length,
+  });
+  const nextStep = nextProfileStep(
+    checklist,
+    player._count.videos + player._count.filmClips
+  );
 
   const posLabel = player.position
     ? ((POSITION_LABELS as Record<string, string | undefined>)[player.position] ?? player.position)
@@ -98,6 +115,18 @@ export default async function PlayerIdPage() {
 
   return (
     <div className="mx-auto max-w-5xl">
+      <div className="mb-4 flex justify-end">
+        <IdActions title="Player ID" />
+      </div>
+      <div className="mb-4">
+        <ProfileStrengthMeter
+          state={checklist}
+          next={nextStep}
+          editHref="/dashboard/player/profile/edit"
+          orientation="horizontal"
+          delayMs={0}
+        />
+      </div>
       <PlayerIdView
         data={{
           name: `${player.firstName} ${player.lastName}`.trim(),

@@ -85,6 +85,18 @@ const AVATAR_MIME_EXT: Record<string, string> = {
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
+/** Solo avatares de Google: evita SSRF contra hosts internos. */
+function isAllowedAvatarUrl(raw: string): boolean {
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== 'https:') return false;
+    const host = url.hostname.toLowerCase();
+    return host === 'googleusercontent.com' || host.endsWith('.googleusercontent.com');
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Se trae a disco la foto que devuelve un proveedor externo (Google) para poder
  * servirla como el resto de fotos locales (`PlayerAvatar` solo pinta rutas
@@ -92,11 +104,17 @@ const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
  * iniciales y puede subir una foto desde Ajustes.
  */
 export async function downloadRemoteAvatar(url: string | null | undefined): Promise<string | null> {
-  if (!url?.startsWith('https://')) return null;
+  if (!url || !isAllowedAvatarUrl(url)) return null;
 
   try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    const response = await fetch(url, {
+      signal: AbortSignal.timeout(5000),
+      redirect: 'error',
+    });
     if (!response.ok) return null;
+
+    const declared = Number(response.headers.get('content-length') ?? 0);
+    if (declared > MAX_AVATAR_BYTES) return null;
 
     const mime = (response.headers.get('content-type') ?? '').split(';')[0]?.trim() ?? '';
     const ext = AVATAR_MIME_EXT[mime];

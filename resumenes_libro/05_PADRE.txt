@@ -1,0 +1,60 @@
+================================================================================
+ PADRE / MADRE / TUTOR  (Seccion 5 del libro) - etiqueta FOR PARENTS
+================================================================================
+Ejemplo: Demo Parent (madre de Mia U17 y Noah U14).
+Menu: The Sideline | Parent ID | Profile | Calendar | My development | Scouting profile
+| The "1%" Factor (contador de solicitudes) | Parent guides | My documents |
+Membership & payments | Notifications | Settings.
+El padre es la pieza clave de la proteccion de <16: aprueba reservas y ofertas y
+controla la visibilidad del ID.
+
+ 5.1 THE SIDELINE (inicio del padre)
+ - Semana del hijo: tarjeta resumen (equipo y club, sesiones hechas p. ej. 3/4, clips
+   enviados y proximo partido). Selector de hijo si tiene varios.
+ - Lo ultimo del entrenador: la nota mas reciente sobre el hijo. "Reply to coach".
+ - Proximos eventos (entrenamiento, partido con hora de llegada y sede, sesiones en casa).
+ - Apoyando a su jugador: guias para padres con filtros All / Mindset / Fuel / Wellbeing /
+   Pathways (cada una con etiqueta, titulo, descripcion y tiempo de lectura).
+
+ 5.2 PARENT ID (ID del hijo)
+ - Selector de hijo (Mia U17 / Noah U14).
+ - Tarjeta ID del hijo: dorsal, nombre, club, categoria, posicion, insignias
+   PARENT MANAGED y VERIFIED PLAYER, estadisticas, datos del jugador y del tutor
+   (contacto por la app, consentimiento dado, ficha medica registrada).
+   Porteros: vallas invictas, atajadas y penales atajados en vez de goles/asistencias.
+ - Paneles: Highlights, Training & development y School (colegio, registros academicos
+   compartidos solo con aprobacion, anio de graduacion).
+ - Trayectoria (temporadas, club por club; mismos datos que el Player ID).
+ - Quien puede ver el ID: 4 interruptores (clubes verificados, colegios verificados,
+   mostrar estadisticas y jugadas, permitir invitaciones directas). Por defecto los 3
+   primeros activados e invitaciones directas desactivadas. Desactivado = toda invitacion
+   llega primero al padre.
+ - Download as PDF / Share.
+
+ 5.3 THE "1%" FACTOR (vista del padre)
+ - Requests to approve (por hijo): hijo, tipo de sesion, especialista, hora y precio.
+ - Approve & pay -> estado APPROVED & PAID; el especialista la ve como "por aceptar".
+   Decline -> DECLINED (debe notificar al hijo).
+ - Reservar y pagar directamente: "Book & pay $[precio]" (confirmacion con recibo).
+
+ 5.4 PROFILE, CALENDAR Y OFERTAS
+ - Profile privado por defecto (ver 3.1). Calendar (ver 3.2) muestra eventos de cada hijo
+   con el nombre delante y marca las sesiones pagadas como "Approved & paid".
+ - El padre recibe las ofertas que el hijo acepto en Transfer Window y debe aprobarlas
+   (pantalla de aprobacion sin disenar).
+ - Aun sin disenar: pagina separada de Parent guides, pantalla de aprobacion de oferta,
+   registro del padre y vinculacion padre-hijo.
+
+ PROTECCION (recordatorio): <16 -> el padre aprueba y paga reservas, aprueba ofertas,
+ controla visibilidad del ID, esta incluido en chats y reuniones, y gestiona membresia
+ y facturacion.
+
+--------------------------------------------------------------------------------
+ ADDENDUM (catalogo, Seccion 16)
+--------------------------------------------------------------------------------
+ - Settings - "Your children": hijos vinculados, estado del consentimiento y "+ Link a child".
+ - Membership: planes Parent Free / Family.
+ - Notifications: agrupadas Today / Earlier, filtros por categoria, "How you're notified"
+   (app / correo / push) y recordatorio de proteccion infantil a un costado.
+ - Profile del padre: PRIVADO por defecto (solo familiares y entrenadores aprobados).
+================================================================================

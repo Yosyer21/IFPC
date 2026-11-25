@@ -17,6 +17,7 @@ import { PlayerAvatar } from '@/components/player/avatar';
 import { ProfileStatsCard } from '@/components/player/profile-stats';
 import { trackProfileView } from '@/lib/profile-views';
 import { getPlayerStats } from '@/lib/player-stats';
+import { canShowStatsAndClips } from '@/lib/minor';
 
 function positionLabelOf(position: string | null): string {
   return position
@@ -39,6 +40,7 @@ const getPlayer = cache((playerId: string) =>
       evaluations: { select: { score: true } },
       career: { orderBy: [{ isCurrent: 'desc' }, { season: 'desc' }] },
       _count: { select: { videos: true } },
+      parents: { select: { showStatsAndClips: true } },
     },
   })
 );
@@ -93,6 +95,8 @@ export default async function PublicPlayerProfilePage({
   const age = player.dateOfBirth
     ? Math.floor((Date.now() - player.dateOfBirth.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
     : null;
+  // Menores de 16: el padre puede ocultar estadísticas y clips.
+  const showStats = canShowStatsAndClips(player.dateOfBirth, player.parents);
 
   return (
     <div className="min-h-screen bg-[#0a0e0c] text-white">
@@ -160,19 +164,29 @@ export default async function PublicPlayerProfilePage({
             ) : null}
             {player.clubName ? <Badge variant="outline">{player.clubName}</Badge> : null}
             {player.foot ? <Badge variant="outline">Foot: {player.foot}</Badge> : null}
-            <Badge variant="outline">{player._count.videos} videos</Badge>
-            <Badge variant="outline">{player.evaluations.length} evaluations</Badge>
+            {showStats ? (
+              <>
+                <Badge variant="outline">{player._count.videos} videos</Badge>
+                <Badge variant="outline">{player.evaluations.length} evaluations</Badge>
+              </>
+            ) : null}
           </div>
 
-          <div className="mt-6">
-            <ProfileStatsCard stats={stats} />
-          </div>
+          {showStats ? (
+            <div className="mt-6">
+              <ProfileStatsCard stats={stats} />
+            </div>
+          ) : (
+            <p className="mt-6 rounded-xl border border-border/60 p-4 text-sm text-muted-foreground">
+              Performance data and clips are hidden by the family.
+            </p>
+          )}
 
           {player.bio ? (
             <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{player.bio}</p>
           ) : null}
 
-          {player.career.length > 0 ? (
+          {showStats && player.career.length > 0 ? (
             <div className="mt-8">
               <h2 className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
                 Career history

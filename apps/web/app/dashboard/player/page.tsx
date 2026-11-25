@@ -6,12 +6,13 @@ import { prisma } from '@ifpc/database';
 import { Badge, Card, CardContent } from '@ifpc/ui';
 import { COMPETITION_LEVEL_LABELS, PLAYER_STATUS_LABELS, POSITION_LABELS } from '@ifpc/config';
 import { PlayerAvatar } from '@/components/player/avatar';
-import { DonutChart, RadarChart } from '@/components/player/charts';
+import { RadarChart } from '@/components/player/charts';
 import { CountUp } from '@/components/player/count-up';
 import { StatCard } from '@/components/player/stat-card';
+import { ProfileStrengthMeter } from '@/components/profile/profile-strength-meter';
 import { GOAL_STATUS_LABELS } from '@/lib/labels';
 import { canonicalEvaluationCategory, evaluationCategoryLabel } from '@/lib/player-development';
-import { playerProfileCompletion } from '@/lib/player';
+import { nextProfileStep, playerProfileChecklist } from '@/lib/player';
 import { PLAYER_MATCH_THRESHOLD, matchOpportunity } from '@/lib/matching';
 import {
   IconMessageCircle,
@@ -37,7 +38,10 @@ export default async function PlayerDashboardPage() {
 
   const player = await prisma.player.findUnique({
     where: { userId: session.user.id },
-    include: { user: true },
+    include: {
+      user: true,
+      _count: { select: { career: true, videos: true, filmClips: true } },
+    },
   });
   if (!player) notFound();
 
@@ -91,11 +95,15 @@ export default async function PlayerDashboardPage() {
       player.competitionLevel)
     : null;
 
-  const {
-    percent,
-    completed: completedFields,
-    total: totalFields,
-  } = playerProfileCompletion(player);
+  const checklist = playerProfileChecklist({
+    ...player,
+    image: player.user.image,
+    careerCount: player._count.career,
+  });
+  const nextStep = nextProfileStep(
+    checklist,
+    player._count.videos + player._count.filmClips
+  );
 
   // Open opportunities whose match score is good enough to apply to.
   const matchedOpportunities = openOpportunities.filter(
@@ -307,34 +315,11 @@ export default async function PlayerDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card
-          className="animate-fade-up flex flex-col items-center"
-          style={{ animationDelay: '400ms' }}
-        >
-          <CardContent className="flex w-full flex-col items-center gap-4">
-            <h2 className="self-start font-semibold">Profile complete</h2>
-            <DonutChart
-              value={percent}
-              label={`${percent}%`}
-              sublabel={`${completedFields}/${totalFields} campos`}
-            />
-            <div className="flex flex-col items-center gap-2">
-              <p className="text-center text-sm text-muted-foreground">
-                {percent === 100
-                  ? 'Profile complete! You can now appear in club and scout searches.'
-                  : 'Complete your profile to stand out to clubs and scouts.'}
-              </p>
-              {percent < 100 ? (
-                <Link
-                  href="/dashboard/player/profile/edit"
-                  className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-emerald-600"
-                >
-                  Complete profile
-                </Link>
-              ) : null}
-            </div>
-          </CardContent>
-        </Card>
+        <ProfileStrengthMeter
+          state={checklist}
+          next={nextStep}
+          editHref="/dashboard/player/profile/edit"
+        />
       </div>
 
       {/* Recent activity */}

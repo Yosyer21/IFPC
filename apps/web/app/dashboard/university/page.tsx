@@ -66,13 +66,13 @@ export default async function UniversityDashboardPage() {
       value: openOpportunities.length,
     },
     {
-      href: '/dashboard/university/opportunities',
+      href: '/dashboard/university/scholarships',
       icon: IconBook,
       label: 'Scholarships available',
       value: scholarshipCount,
     },
     {
-      href: '/dashboard/university/opportunities',
+      href: '/dashboard/university/scholarships',
       icon: IconStar,
       label: 'Applications a scholarships',
       value: scholarshipApplications,

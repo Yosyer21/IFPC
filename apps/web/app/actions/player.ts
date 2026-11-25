@@ -12,11 +12,16 @@ import {
 } from '@ifpc/config';
 import { prisma } from '@ifpc/database';
 import { careerEntrySchema, playerProfileSchema } from '@ifpc/validation';
-import { mkdir, writeFile } from 'node:fs/promises';
-import path from 'node:path';
 import type { ActionState } from './auth';
 import { notifyUser } from '@/lib/notifications/notify';
 import { isGoalStatus } from '@/lib/player-development';
+import {
+  DOCUMENT_MIME_EXT,
+  documentSignatureValid,
+  documentUploadError,
+  isDocumentFolder,
+} from '@/lib/documents';
+import { removePrivateObject, writePrivateObject } from '@/lib/storage/private';
 import { revalidatePaths } from '@/lib/revalidate';
 import { dashboardPath } from '@/lib/safe-redirect';
 import { resolveStorage } from '@/lib/storage';
@@ -212,8 +217,16 @@ export async function uploadDocumentAction(
   const file = formData.get('file');
   const title = str(formData, 'title');
   const type = str(formData, 'type') ?? 'other';
+  const folderRaw = str(formData, 'folder') ?? 'other';
+  const folder = isDocumentFolder(folderRaw) ? folderRaw : 'other';
+  const expiresAtRaw = str(formData, 'expiresAt');
+  const expiresAt = expiresAtRaw ? new Date(expiresAtRaw) : null;
   if (!(file instanceof File) || file.size === 0) {
     return { error: 'Select a file.' };
+  }
+  const uploadError = documentUploadError(file);
+  if (uploadError) {
+    return { error: uploadError };
   }
   if (!title) {
     return { error: 'Title is required.' };
@@ -224,22 +237,33 @@ export async function uploadDocumentAction(
     return { error: 'Player profile not found.' };
   }
 
-  const ext = file.name.split('.').pop() ?? 'pdf';
-  const filename = `${crypto.randomUUID()}.${ext}`;
-  const dir = path.join(process.cwd(), 'public', 'uploads', 'documents');
+  const ext = DOCUMENT_MIME_EXT[file.type];
+  if (!ext) {
+    return { error: 'Upload a PDF or image (JPG, PNG or WebP).' };
+  }
+  const documentId = crypto.randomUUID();
+  const storageKey = `documents/${player.id}/${documentId}.${ext}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  if (!documentSignatureValid(buffer, file.type)) {
+    return { error: 'The file content does not match its type.' };
+  }
   try {
-    await mkdir(dir, { recursive: true });
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(dir, filename), buffer);
+    await writePrivateObject(storageKey, buffer);
     await prisma.document.create({
       data: {
+        id: documentId,
         playerId: player.id,
         title,
-        url: `/uploads/documents/${filename}`,
+        url: `/api/documents/${documentId}/file`,
+        storageKey,
+        mimeType: file.type,
         type,
+        folder,
+        expiresAt: expiresAt && !Number.isNaN(expiresAt.getTime()) ? expiresAt : null,
       },
     });
   } catch {
+    await removePrivateObject(storageKey);
     return { error: 'The document could not be uploaded.' };
   }
 
@@ -367,6 +391,14 @@ export async function applyToOpportunityAction(
     return { error: 'Player profile not found.' };
   }
 
+  const opportunity = await prisma.opportunity.findUnique({
+    where: { id: opportunityId },
+    select: { status: true },
+  });
+  if (!opportunity || opportunity.status !== 'OPEN') {
+    return { error: 'This opportunity is not open.' };
+  }
+
   try {
     await prisma.application.upsert({
       where: {
@@ -392,7 +424,9 @@ export async function applyToOpportunityAction(
       ? (await prisma.club.findUnique({ where: { id: opportunity.clubId } }))?.userId
       : opportunity?.universityId
         ? (await prisma.university.findUnique({ where: { id: opportunity.universityId } }))?.userId
-        : null;
+        : opportunity?.schoolId
+          ? (await prisma.school.findUnique({ where: { id: opportunity.schoolId } }))?.userId
+          : null;
     if (ownerUserId && opportunity) {
       await notifyUser({
         userId: ownerUserId,
@@ -443,24 +477,31 @@ export async function requestOfferApprovalAction(
   }
 
   let organisation: string;
+  let alreadyApproved = false;
   if (kind === 'TRIAL') {
     const trial = await prisma.trial.findFirst({
-      where: { id: offerId, playerId: player.id },
+      where: { id: offerId, playerId: player.id, status: 'SCHEDULED' },
       include: { club: true },
     });
     if (!trial) {
       return { error: 'Offer not found.' };
     }
     organisation = trial.club.name;
+    alreadyApproved = trial.parentApproval === 'APPROVED';
   } else {
     const negotiation = await prisma.negotiation.findFirst({
-      where: { id: offerId, playerId: player.id },
+      where: { id: offerId, playerId: player.id, status: { in: ['OPEN', 'ONGOING'] } },
       include: { club: true },
     });
     if (!negotiation) {
       return { error: 'Offer not found.' };
     }
     organisation = negotiation.club.name;
+    alreadyApproved = negotiation.parentApproval === 'APPROVED';
+  }
+
+  if (alreadyApproved) {
+    return { success: 'Your parent has already approved this offer.' };
   }
 
   const links = await prisma.parentChild.findMany({
@@ -471,6 +512,18 @@ export async function requestOfferApprovalAction(
     return { error: 'Link a parent or guardian to your account to send the acceptance.' };
   }
 
+  if (kind === 'TRIAL') {
+    await prisma.trial.update({
+      where: { id: offerId },
+      data: { parentApproval: 'PENDING' },
+    });
+  } else {
+    await prisma.negotiation.update({
+      where: { id: offerId },
+      data: { parentApproval: 'PENDING' },
+    });
+  }
+
   const message = `${player.firstName} ${player.lastName} wants to accept the offer from ${organisation}.`;
   try {
     for (const link of links) {
@@ -479,14 +532,14 @@ export async function requestOfferApprovalAction(
         type: 'application',
         title: 'Approval needed: transfer offer',
         message,
-        link: `/dashboard/parent/children/${player.id}/opportunities`,
+        link: '/dashboard/parent/approvals',
       });
     }
   } catch {
     return { error: 'Could not notify your family. Please try again.' };
   }
 
-  revalidatePaths('/dashboard/player/opportunities', '/dashboard/parent');
+  revalidatePaths('/dashboard/player/opportunities', '/dashboard/parent', '/dashboard/parent/approvals');
   return { success: 'Sent to your parent for approval.' };
 }
 
@@ -515,14 +568,16 @@ export async function declineOfferAction(
   }
 
   if (kind === 'TRIAL') {
-    const trial = await prisma.trial.findFirst({ where: { id: offerId, playerId: player.id } });
+    const trial = await prisma.trial.findFirst({
+      where: { id: offerId, playerId: player.id, status: 'SCHEDULED' },
+    });
     if (!trial) {
       return { error: 'Offer not found.' };
     }
     await prisma.trial.update({ where: { id: trial.id }, data: { status: 'CANCELLED' } });
   } else {
     const negotiation = await prisma.negotiation.findFirst({
-      where: { id: offerId, playerId: player.id },
+      where: { id: offerId, playerId: player.id, status: { in: ['OPEN', 'ONGOING'] } },
     });
     if (!negotiation) {
       return { error: 'Offer not found.' };

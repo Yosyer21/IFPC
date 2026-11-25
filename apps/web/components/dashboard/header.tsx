@@ -18,6 +18,7 @@ const ROLE_LABELS: Record<string, string> = {
   university: 'University',
   school: 'School',
   admin: 'Admin',
+  health_agent: 'Health agent',
 };
 
 const PROFILE_PATHS: Record<string, string> = {
@@ -31,6 +32,7 @@ const SETTINGS_PATHS: Record<string, string> = {
   player: '/dashboard/player/settings',
   parent: '/dashboard/parent/settings',
   admin: '/dashboard/admin/settings',
+  health_agent: '/dashboard/health-agent/settings',
 };
 
 const itemClass =
@@ -114,7 +116,7 @@ export function DashboardHeader({
           <p className="text-xs text-muted-foreground">{roleLabel}</p>
         </div>
         <div className="my-1 h-px bg-border" />
-        <Link href={`/dashboard/${role}`} className={itemClass}>
+        <Link href={`/dashboard/${role.replace(/_/g, '-')}`} className={itemClass}>
           Overview
         </Link>
         {profileHref ? (

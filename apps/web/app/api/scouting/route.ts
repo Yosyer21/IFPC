@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import {
@@ -24,7 +25,7 @@ export async function GET() {
     if (!scout) return NextResponse.json({ ok: true, reports: [] });
     const reports = await prisma.scoutingReport.findMany({
       where: { scoutId: scout.id },
-      include: { player: { include: { user: true } } },
+      include: { player: { include: { user: { select: publicUserSelect } } } },
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json({ ok: true, reports });
@@ -34,7 +35,7 @@ export async function GET() {
     return NextResponse.json({ ok: false, error: 'Access denied' }, { status: 403 });
   }
   const reports = await prisma.scoutingReport.findMany({
-    include: { player: { include: { user: true } }, scout: { include: { user: true } } },
+    include: { player: { include: { user: { select: publicUserSelect } } }, scout: { include: { user: { select: publicUserSelect } } } },
     orderBy: { createdAt: 'desc' },
     take: 200,
   });

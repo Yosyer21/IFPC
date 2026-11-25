@@ -42,6 +42,24 @@ export async function POST(request: Request) {
       const paymentIntent =
         typeof object.payment_intent === 'string' ? object.payment_intent : null;
 
+      // Stripe reintenta el mismo evento: el `paymentIntentId` es único y evita
+      // duplicar el pago o extender la membresía dos veces.
+      if (paymentIntent) {
+        const existing = await prisma.payment.findUnique({
+          where: { stripePaymentIntentId: paymentIntent },
+          select: { id: true },
+        });
+        if (existing) {
+          return NextResponse.json({ ok: true, received: true, duplicate: true });
+        }
+      }
+
+      // `checkout.session.completed` también llega en métodos de pago diferido;
+      // solo se activa la membresía cuando Stripe confirma el cobro.
+      if (typeof object.payment_status === 'string' && object.payment_status !== 'paid') {
+        return NextResponse.json({ ok: true, received: true, pending: true });
+      }
+
       await prisma.$transaction([
         prisma.payment.create({
           data: {

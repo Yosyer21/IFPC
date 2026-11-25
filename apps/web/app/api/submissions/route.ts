@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
@@ -19,7 +20,7 @@ export async function GET() {
     if (!agent) return NextResponse.json({ ok: true, submissions: [] });
     const submissions = await prisma.submission.findMany({
       where: { agentId: agent.id },
-      include: { player: { include: { user: true } }, club: true },
+      include: { player: { include: { user: { select: publicUserSelect } } }, club: true },
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json({ ok: true, submissions });
@@ -30,7 +31,7 @@ export async function GET() {
     if (!club) return NextResponse.json({ ok: true, submissions: [] });
     const submissions = await prisma.submission.findMany({
       where: { clubId: club.id },
-      include: { player: { include: { user: true } }, agent: { include: { user: true } } },
+      include: { player: { include: { user: { select: publicUserSelect } } }, agent: { include: { user: { select: publicUserSelect } } } },
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json({ ok: true, submissions });
@@ -39,9 +40,9 @@ export async function GET() {
   if (session.user.role !== 'ADMIN') return forbidden();
   const submissions = await prisma.submission.findMany({
     include: {
-      player: { include: { user: true } },
+      player: { include: { user: { select: publicUserSelect } } },
       club: true,
-      agent: { include: { user: true } },
+      agent: { include: { user: { select: publicUserSelect } } },
     },
     orderBy: { createdAt: 'desc' },
     take: 200,

@@ -5,6 +5,7 @@ import { Badge } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
+import { scholarshipSummary } from '@/lib/scholarships';
 
 export const metadata: Metadata = {
   title: 'Opportunities — Future Baller',
@@ -14,14 +15,16 @@ export const metadata: Metadata = {
 export default async function PublicOpportunitiesPage() {
   const opportunities = await prisma.opportunity.findMany({
     where: { status: 'OPEN' },
-    include: { club: true, university: true },
+    include: { club: true, university: true, school: true, scholarship: true },
     orderBy: { createdAt: 'desc' },
     take: 100,
   });
 
   const scholarships = opportunities.filter((o) => o.type === 'SCHOLARSHIP').length;
   const countries = new Set(
-    opportunities.map((o) => o.club?.country ?? o.university?.country).filter(Boolean)
+    opportunities
+      .map((o) => o.club?.country ?? o.university?.country ?? o.school?.country)
+      .filter(Boolean)
   ).size;
 
   return (
@@ -75,8 +78,16 @@ export default async function PublicOpportunitiesPage() {
                     {opportunity.title}
                   </h2>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    {opportunity.club?.name ?? opportunity.university?.name ?? '—'}
+                    {opportunity.club?.name ??
+                      opportunity.university?.name ??
+                      opportunity.school?.name ??
+                      '—'}
                   </p>
+                  {opportunity.scholarship ? (
+                    <p className="mt-1 text-xs font-semibold text-emerald-400">
+                      {scholarshipSummary(opportunity.scholarship)}
+                    </p>
+                  ) : null}
                   <div className="mt-4 flex flex-wrap gap-2 text-xs">
                     {opportunity.position ? (
                       <Badge variant="outline">{opportunity.position}</Badge>

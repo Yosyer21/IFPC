@@ -8,6 +8,7 @@ export const ROLES = [
   'UNIVERSITY',
   'SCHOOL',
   'ADMIN',
+  'HEALTH_AGENT',
 ] as const;
 
 export type Role = (typeof ROLES)[number];

@@ -15,7 +15,7 @@ export default async function SchoolOpportunitiesPage() {
 
   const opportunities = await prisma.opportunity.findMany({
     where: { status: 'OPEN' },
-    include: { club: true, university: true },
+    include: { club: true, university: true, school: true, scholarship: true },
     orderBy: { createdAt: 'desc' },
     take: 50,
   });
@@ -42,7 +42,10 @@ export default async function SchoolOpportunitiesPage() {
                 <div className="min-w-0">
                   <p className="font-semibold">{opportunity.title}</p>
                   <p className="text-xs text-muted-foreground">
-                    {opportunity.club?.name ?? opportunity.university?.name ?? 'Future Baller'}
+                    {opportunity.club?.name ??
+                      opportunity.university?.name ??
+                      opportunity.school?.name ??
+                      'Future Baller'}
                     {opportunity.location ? ` · ${opportunity.location}` : ''}
                     {opportunity.closesAt
                       ? ` · Cierra ${opportunity.closesAt.toLocaleDateString('en-GB')}`

@@ -1,0 +1,70 @@
+================================================================================
+ MODULOS COMPARTIDOS  (Seccion 3 del libro)
+================================================================================
+Aparecen para varios roles con el mismo comportamiento. Cada rol solo cambia
+detalles. Lo usan jugador, padre, entrenador, club, colegio, nutricionista,
+psicologo y fisioterapeuta (salvo donde se indique).
+
+--------------------------------------------------------------------------------
+ 3.1 PROFILE (perfil social, estilo Instagram)
+--------------------------------------------------------------------------------
+ - Encabezado: avatar con iniciales, usuario, insignia VERIFIED, insignia de rol,
+   numero de publicaciones, seguidores, seguidos, nombre, linea de rol, biografia
+   y enlace (futureballer.app/usuario). >1.000 seguidores -> "1.2K".
+   Los perfiles de padres son PRIVADOS (solo familiares y entrenadores aprobados).
+ - "View as visitor": alterna vista de duenio / visitante (solo el duenio).
+ - Edit profile / Share profile (solo el duenio).
+ - "+ New post": agrega publicacion a la cuadricula (cuenta sube en 1).
+ - Follow / Following y Message (solo en vista de visitante). Aplican reglas <16.
+ - Fila de destacados circulares tipo historias (Goals, Training, Match day,
+   Trials, Awards...) + "New".
+ - Pestanias Posts / Clips / Tagged (todas, solo videos, o donde etiquetaron).
+   Clips con icono de reproducir; publicaciones nuevas con etiqueta NEW.
+ - Chat: lista de conversaciones (preview + no leido), hilo, cuadro de texto y
+   Send (no vacio). Hilos con <16 muestran aviso de proteccion arriba.
+
+--------------------------------------------------------------------------------
+ 3.2 CALENDAR
+--------------------------------------------------------------------------------
+ - Cuadricula mensual (lunes primero). Hoy con contorno. Hasta 3 puntos de color
+   por dia. Dias de otros meses en gris (no seleccionables).
+ - 5 tipos de evento con color:
+     Training (verde) | Match (negro) | Booked session (morado) |
+     Meeting (azul) | Trial / visit (naranja)
+ - Panel del dia: dia de la semana, fecha, numero de eventos y cada evento por
+   hora (horario, titulo, con quien, etiqueta de tipo).
+   Vacio: "Nothing planned. Tap + to set up a meeting."
+ - "+" Programar reunion: "What is it?", "Time", "With" -> "Add to calendar"
+   (guarda como Meeting). Titulo obligatorio; sin hora = "All day". Debe enviar
+   invitacion a las personas indicadas.
+ - Aviso de proteccion: a <16 se les invita al padre automaticamente (en servidor).
+ - Eventos automaticos: sesiones reservadas en The "1%" Factor y pruebas
+   aceptadas en Transfer Window aparecen solas; ademas entrenamientos/partidos
+   recurrentes del equipo.
+
+--------------------------------------------------------------------------------
+ 3.3 PAGINA ID (curriculum imprimible)
+--------------------------------------------------------------------------------
+ La usan: jugador (Player ID propio), padre (ID del hijo), entrenador, club,
+ colegio, nutricionista, psicologo y fisioterapeuta.
+ - Tarjeta ID: escudo (circulo/escudo) con iniciales o dorsal, linea superior,
+   nombre, 2 insignias, resumen de 4 numeros y 2 paneles de detalle.
+ - Paneles de detalle: 3 paneles con puntos y una linea corta cada uno
+   (ej. Licences & qualifications, Coaching style, Highlights). Los edita el duenio.
+ - Linea de tiempo vertical (roles, clubes, temporadas o logros). Actual = CURRENT.
+ - "Download as PDF": el PDF debe coincidir con la tarjeta en pantalla.
+ - "Share ID": boton contextual ("Share Coach ID", "Share Club ID"...).
+
+--------------------------------------------------------------------------------
+ 3.4 INICIO DE SESION DE ESPECIALISTAS
+--------------------------------------------------------------------------------
+ Solo nutricionista, psicologo y fisioterapeuta tienen pantalla de login en disenio.
+ - Formulario: correo de trabajo + contrasena, "Keep me signed in",
+   "Forgot password?", boton Sign in.
+   Errores: "Enter your work email." (sin @) y "Enter your password." (vacia).
+ - "Continue with Google" (requiere SSO).
+ - Sesion iniciada: "Signed in as [practica]" + enlace "Go to your portal".
+ - "Apply to join": para postularse como nuevo especialista (flujo sin disenar).
+ - Panel informativo: explica reservas aprobadas/pagadas por padres, planes
+   compartidos, insignia de verificado.
+================================================================================

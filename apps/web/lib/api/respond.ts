@@ -20,6 +20,24 @@ export function methodNotAllowed(): NextResponse {
   return NextResponse.json({ ok: false, error: 'Method not allowed' }, { status: 405 });
 }
 
+/**
+ * Comprueba que una mutación venga del mismo origen. Las rutas API con cookie
+ * de sesión no tienen la protección CSRF de las server actions, así que se
+ * valida `Origin` contra `Host` (los clientes no-navegador sin `Origin` siguen
+ * funcionando; no pueden adjuntar la cookie de otro dominio).
+ */
+export function isSameOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin');
+  if (!origin) return true;
+  const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host');
+  if (!host) return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 /** Reads the JSON body, returning `null` if it is not valid. */
 export async function readJson(request: Request): Promise<Record<string, unknown> | null> {
   try {

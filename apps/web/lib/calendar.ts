@@ -8,6 +8,7 @@ import {
 } from '@/lib/labels';
 import { ACTIVE_CONTRACT_STATUSES } from '@/lib/training';
 import { clubCoachIds, coachClubIds } from '@/lib/live-sessions';
+import { BOOKING_SESSION_LABELS } from '@/lib/bookings';
 
 /**
  * Calendario del sistema (solo lectura).
@@ -200,10 +201,13 @@ export function eventKindLabel(kind: CalendarEventKind): string {
 
 interface CalendarContext {
   role: string;
+  viewerId: string;
   playerId: string | null;
   coachId: string | null;
   clubId: string | null;
   universityId: string | null;
+  /** Especialista (The "1%" Factor) cuando el espectador es un health agent. */
+  healthAgentId: string | null;
   /** Jugadores cuyos eventos ve (uno mismo, o los hijos de un familiar). */
   playerIds: string[];
   /** Coaches cuyos eventos ve. */
@@ -227,19 +231,22 @@ function uniq(values: readonly string[]): string[] {
  */
 export async function loadCalendarContext(viewer: CalendarViewer): Promise<CalendarContext> {
   const role = viewer.role.toUpperCase();
-  const [player, coach, club, university] = await Promise.all([
+  const [player, coach, club, university, healthAgent] = await Promise.all([
     prisma.player.findUnique({ where: { userId: viewer.id }, select: { id: true } }),
     prisma.coach.findUnique({ where: { userId: viewer.id }, select: { id: true } }),
     prisma.club.findUnique({ where: { userId: viewer.id }, select: { id: true } }),
     prisma.university.findUnique({ where: { userId: viewer.id }, select: { id: true } }),
+    prisma.healthAgent.findUnique({ where: { userId: viewer.id }, select: { id: true } }),
   ]);
 
   const context: CalendarContext = {
     role,
+    viewerId: viewer.id,
     playerId: player?.id ?? null,
     coachId: coach?.id ?? null,
     clubId: club?.id ?? null,
     universityId: university?.id ?? null,
+    healthAgentId: healthAgent?.id ?? null,
     playerIds: player ? [player.id] : [],
     coachIds: [],
     clubIds: [],
@@ -386,13 +393,21 @@ function trialWhere(
   const inRange: Prisma.TrialWhereInput = { startsAt: { gte: range.from, lt: range.to } };
   if (context.role === 'ADMIN') return inRange;
   if (context.role === 'CLUB' && context.clubId) {
-    return { AND: [inRange, { clubId: context.clubId }] };
+    return { AND: [inRange, { clubId: context.clubId }, { status: { not: 'CANCELLED' } }] };
   }
+  // El jugador (y su padre) solo ven pruebas confirmadas: las pendientes de
+  // aprobación viven en `/dashboard/parent/approvals`.
+  const confirmed: Prisma.TrialWhereInput = {
+    parentApproval: { in: ['NOT_REQUIRED', 'APPROVED'] },
+    status: { not: 'CANCELLED' },
+  };
   if (context.representedPlayerIds.length > 0) {
-    return { AND: [inRange, { playerId: { in: context.representedPlayerIds } }] };
+    return {
+      AND: [inRange, { playerId: { in: context.representedPlayerIds } }, confirmed],
+    };
   }
   if (context.playerIds.length > 0) {
-    return { AND: [inRange, { playerId: { in: context.playerIds } }] };
+    return { AND: [inRange, { playerId: { in: context.playerIds } }, confirmed] };
   }
   return null;
 }
@@ -705,6 +720,130 @@ async function developmentEvents(
   return events;
 }
 
+/** Reservas de The "1%" Factor visibles para el espectador. */
+async function bookingEvents(
+  context: CalendarContext,
+  range: CalendarRange
+): Promise<CalendarEvent[]> {
+  const or: Prisma.BookingWhereInput[] = [];
+  if (context.playerIds.length > 0) or.push({ playerId: { in: context.playerIds } });
+  if (context.healthAgentId) or.push({ healthAgentId: context.healthAgentId });
+  if (or.length === 0) return [];
+
+  const rows = await prisma.booking.findMany({
+    where: {
+      AND: [
+        { OR: or },
+        { startsAt: { gte: range.from, lt: range.to } },
+        { status: { in: ['AWAITING_PARENT', 'AWAITING_SPECIALIST', 'CONFIRMED'] } },
+      ],
+    },
+    include: {
+      player: { select: { firstName: true, lastName: true } },
+      healthAgent: { select: { practiceName: true } },
+    },
+    orderBy: { startsAt: 'asc' },
+    take: SOURCE_LIMIT,
+  });
+
+  const isAgent = context.role === 'HEALTH_AGENT';
+  return rows.map((row) => ({
+    id: `booking-${row.id}`,
+    kind: 'booking' as const,
+    title: `Session · ${row.healthAgent.practiceName}`,
+    detail: `${row.player.firstName} ${row.player.lastName} · ${BOOKING_SESSION_LABELS[row.sessionType]}`,
+    at: row.startsAt,
+    endAt: null,
+    href: isAgent ? '/dashboard/health-agent/bookings' : '/dashboard/player/one-percent',
+  }));
+}
+
+/** Reuniones creadas por el espectador desde el calendario. */
+async function meetingEvents(
+  context: CalendarContext,
+  range: CalendarRange
+): Promise<CalendarEvent[]> {
+  const rows = await prisma.meeting.findMany({
+    where: { ownerId: context.viewerId, startsAt: { gte: range.from, lt: range.to } },
+    orderBy: { startsAt: 'asc' },
+    take: SOURCE_LIMIT,
+  });
+  return rows.map((row) => ({
+    id: `meeting-${row.id}`,
+    kind: 'meeting' as const,
+    title: row.title,
+    detail: row.withWhom ? `With ${row.withWhom}` : null,
+    at: row.startsAt,
+    endAt: new Date(row.startsAt.getTime() + row.durationMinutes * 60_000),
+    href: null,
+  }));
+}
+
+/** Partidos visibles para el espectador (coach, club o jugador de ese coach). */
+async function matchEvents(
+  context: CalendarContext,
+  range: CalendarRange
+): Promise<CalendarEvent[]> {
+  const or: Prisma.MatchWhereInput[] = [];
+  if (context.coachId) or.push({ coachId: context.coachId });
+  if (context.clubId) or.push({ clubId: context.clubId });
+  if (context.coachIds.length > 0) or.push({ coachId: { in: context.coachIds } });
+  if (context.clubIds.length > 0) or.push({ clubId: { in: context.clubIds } });
+  if (or.length === 0) return [];
+
+  const rows = await prisma.match.findMany({
+    where: {
+      AND: [{ OR: or }, { startsAt: { gte: range.from, lt: range.to } }],
+    },
+    orderBy: { startsAt: 'asc' },
+    take: SOURCE_LIMIT,
+  });
+
+  return rows.map((row) => ({
+    id: `match-${row.id}`,
+    kind: 'match' as const,
+    title: `${row.home ? 'vs' : '@'} ${row.opponent}`,
+    detail:
+      row.ourScore != null && row.opponentScore != null
+        ? `${row.ourScore}-${row.opponentScore}${row.venue ? ` · ${row.venue}` : ''}`
+        : (row.venue ?? null),
+    at: row.startsAt,
+    endAt: null,
+    href: null,
+  }));
+}
+
+/** Entrenamientos fechados visibles para el espectador. */
+async function trainingEventEvents(
+  context: CalendarContext,
+  range: CalendarRange
+): Promise<CalendarEvent[]> {
+  const or: Prisma.TrainingEventWhereInput[] = [];
+  if (context.coachId) or.push({ coachId: context.coachId });
+  if (context.clubId) or.push({ clubId: context.clubId });
+  if (context.coachIds.length > 0) or.push({ coachId: { in: context.coachIds } });
+  if (context.clubIds.length > 0) or.push({ clubId: { in: context.clubIds } });
+  if (or.length === 0) return [];
+
+  const rows = await prisma.trainingEvent.findMany({
+    where: {
+      AND: [{ OR: or }, { startsAt: { gte: range.from, lt: range.to } }],
+    },
+    orderBy: { startsAt: 'asc' },
+    take: SOURCE_LIMIT,
+  });
+
+  return rows.map((row) => ({
+    id: `training-${row.id}`,
+    kind: 'training' as const,
+    title: row.title,
+    detail: row.location ?? null,
+    at: row.startsAt,
+    endAt: new Date(row.startsAt.getTime() + row.durationMinutes * 60_000),
+    href: null,
+  }));
+}
+
 /**
  * Todos los eventos del rango, agregando las fuentes en paralelo y ordenando por
  * fecha. Es la única entrada que usa la página.
@@ -721,6 +860,10 @@ export async function listCalendarEvents(
     campEvents(context, range),
     deadlineEvents(context, range),
     developmentEvents(context, range),
+    bookingEvents(context, range),
+    meetingEvents(context, range),
+    matchEvents(context, range),
+    trainingEventEvents(context, range),
   ]);
 
   return groups.flat().sort((a, b) => a.at.getTime() - b.at.getTime());

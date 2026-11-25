@@ -1,0 +1,68 @@
+================================================================================
+ GLOSARIO DE PRODUCTO  (conceptos propios de Future Baller)
+================================================================================
+Los nombres de pantallas/botones se mantienen en INGLES (como en la app).
+
+ - THE "1%" FACTOR
+   Marketplace de ESPECIALISTAS: nutricion, psicologia deportiva, fisioterapia y
+   entrenamiento 1 a 1. El jugador solicita, el PADRE aprueba y paga (en <16), y el
+   especialista acepta. "El 1% que marca la diferencia".
+
+ - TRANSFER WINDOW
+   Oportunidades y ofertas de clubes, colegios y universidades (becas, cupos,
+   pruebas). Incluye: Offers for you, Open matches, My applications.
+
+ - FILM ROOM
+   Subida de CLIPS de video con una pregunta al entrenador; el entrenador responde
+   con notas por minuto (marca de tiempo). Estados: Waiting for feedback / Coach replied.
+
+ - MY DEVELOPMENT
+   Progreso del jugador en las CUATRO areas/pilares del plan:
+     * HEAD GAME  -> mentalidad
+     * BUILD      -> fuerza y acondicionamiento
+     * ON THE BALL-> futbol / tecnica
+     * FUEL       -> nutricion
+   Cada area con nivel 1-5, sesiones completadas, tareas del entrenador y objetivos.
+
+ - PLAYER ID / COACH ID / CLUB ID / SCHOOL ID
+   "Curriculum" publico e imprimible (tarjeta tipo CV + linea de tiempo), con
+   Download as PDF y Share ID. El contenido cambia por rol.
+
+ - PROFILE (social)  vs  SCOUTING PROFILE
+   * Profile: red social estilo Instagram (posts, clips, destacados, chat).
+   * Scouting profile: pagina de RECLUTAMIENTO (highlight reel de hasta 6 clips,
+     fortalezas, que busca, datos academicos con aprobacion, referencias, quien me vio).
+
+ - THE SIDELINE
+   Pantalla de inicio del PADRE: la semana del hijo, lo ultimo del entrenador,
+   proximos eventos y guias para padres.
+
+ - SESSION LIBRARY
+   Biblioteca + armador de sesiones del ENTRENADOR (Pre-Season Build-Up,
+   In-Season Engine, Drill Bank). Envia sesiones a grupos; opcion "Film one rep".
+
+ - MY SQUAD
+   Plantel del equipo del ENTRENADOR (Squad / Matches / Stats, codigo de equipo).
+
+ - RECRUITMENT BOARD
+   Tablero del COLEGIO/UNIVERSIDAD (Applied > Reviewing > Shortlisted > Offer sent)
+   con verificaciones: video de jugadas, registros academicos, referencia del entrenador.
+
+ - TIPOS DE EVENTO DEL CALENDARIO
+   Training (verde), Match (negro), Booked session (morado), Meeting (azul),
+   Trial / visit (naranja).
+
+ - ESTADOS CLAVE
+   * Reserva: solicitada -> aprobada y pagada por el padre -> aceptada / rechazada / reembolsada.
+   * Oferta: sent to parent -> aprobada/del padre -> aceptada / declined.
+   * Postulacion: Applied -> Reviewed -> Shortlisted -> Decision.
+   * Clip: Waiting for feedback -> Coach replied.
+
+ - HIGHLIGHT REEL / AFFINITY %
+   Reel = hasta 6 clips elegidos por el jugador. Affinity % = coincidencia jugador
+   con lo que busca un club/colegio (algoritmo por definir).
+
+ - MENORES DE 16 (<16)
+   Regla transversal: padre vinculado, aprobacion parental, visibilidad controlada
+   por el padre. Ver 02_REGLAS_PLATAFORMA.txt.
+================================================================================

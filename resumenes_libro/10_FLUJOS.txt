@@ -1,0 +1,56 @@
+================================================================================
+ FLUJOS ENTRE USUARIOS  (Seccion 13 del libro)
+================================================================================
+Flujos que pasan entre 2 o mas usuarios. Cada paso indica quien actua y que hace
+el sistema.
+
+ 13.1 RESERVAR UN ESPECIALISTA (jugador <16)
+  1) El jugador abre un especialista en The "1%" Factor, elige sesion y horario y
+     pulsa "Request booking" -> estado "Awaiting parent". Notifica al padre.
+  2) El padre la ve en "Requests to approve" y pulsa "Approve & pay" (o Decline).
+     Cobra el pago, guarda recibo y pasa a "Paid". Notifica al especialista
+     (si rechaza, notifica al jugador).
+  3) El especialista la ve en Booking requests ("Parent approved & paid") y pulsa
+     Accept (o Decline). Si acepta: la sesion va a los calendarios del jugador, padre
+     y especialista. Si rechaza: reembolsa al padre.
+  4) Se realiza la sesion (aparece en "Your next session"). Resena despues (sin disenar).
+  Nota: un padre puede reservar directamente (el flujo empieza en el paso 2).
+  Los jugadores de 16+ deberian poder reservar y pagar solos (sin disenar).
+
+ 13.2 OFERTA DE UN CLUB O COLEGIO
+  1) El club invita a una prueba desde Find players, o el colegio envia una oferta
+     desde el Recruitment board. Si las invitaciones directas estan off o el jugador
+     es <16, notifica primero al padre. Aparece en Transfer Window (Offers) con fecha limite.
+  2) El jugador pulsa "Accept: send to parent" (o Decline) -> estado "Sent to parent",
+     notifica al padre.
+  3) El padre aprueba o rechaza. Si aprueba: oferta aceptada; la prueba o visita se
+     agrega a los calendarios; se notifica al club/colegio. (Pantalla de aprobacion sin disenar.)
+
+ 13.3 POSTULARSE A UNA OPORTUNIDAD
+  1) El jugador pulsa "Apply now" en una oportunidad abierta de Transfer Window ->
+     postulacion en etapa "Applied" (se ve en My applications).
+  2) El club/colegio la mueve por Reviewing y Shortlisted; el seguimiento del jugador
+     se actualiza (Applied, Reviewed, Shortlisted, Decision).
+  3) El club/colegio envia una oferta -> continua como el flujo 13.2 desde el paso 1.
+
+ 13.4 SESION DEL ENTRENADOR Y COMENTARIOS EN EL FILM ROOM
+  1) El entrenador arma una sesion en Session Library y la envia a uno o mas grupos
+     (opcionalmente pide filmar una repeticion). El jugador la ve en "From your coach"
+     dentro de Training, con fecha limite. Notifica al jugador y aparece en The Sideline del padre.
+  2) El jugador sube un clip al Film Room con una pregunta -> estado del clip
+     "Waiting for feedback" (badge SENT). Notifica al entrenador.
+  3) El entrenador lo revisa y agrega notas con marca de tiempo. (Lado entrenador sin disenar.)
+
+ 13.5 UNIRSE A UN EQUIPO
+  1) El entrenador agrega un jugador por nombre o comparte el codigo del equipo ->
+     crea un cupo pendiente en el plantel.
+  2) El jugador ingresa el codigo -> se une al plantel, al chat del equipo y a los
+     eventos del calendario del equipo. Si es <16, pide consentimiento al padre.
+  3) El padre da su consentimiento.
+
+ 13.6 REFERENCIA DEL ENTRENADOR
+  1) El club o colegio pide al entrenador del jugador una referencia (por mensaje).
+  2) El entrenador envia la referencia. La tarjeta del Recruitment board marca
+     "Coach reference" y el Parent ID muestra que hay referencia disponible.
+     (Pantalla de referencias sin disenar.)
+================================================================================

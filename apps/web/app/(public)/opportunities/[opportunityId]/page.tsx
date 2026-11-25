@@ -6,6 +6,7 @@ import { Badge } from '@ifpc/ui';
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
 import { Navbar } from '@/components/landing/navbar';
 import { Footer } from '@/components/landing/footer';
+import { scholarshipCoverageLabel } from '@/lib/scholarships';
 
 export const metadata: Metadata = { title: 'Opportunity — Future Baller' };
 
@@ -18,14 +19,16 @@ export default async function PublicOpportunityDetailPage({
 
   const opportunity = await prisma.opportunity.findUnique({
     where: { id: opportunityId },
-    include: { club: true, university: true },
+    include: { club: true, university: true, school: true, scholarship: true },
   });
   if (!opportunity || opportunity.status !== 'OPEN') notFound();
 
   const creator =
     opportunity.creatorType === 'UNIVERSITY'
       ? opportunity.university?.name
-      : opportunity.club?.name;
+      : opportunity.creatorType === 'SCHOOL'
+        ? opportunity.school?.name
+        : opportunity.club?.name;
   const creatorHref =
     opportunity.creatorType === 'UNIVERSITY'
       ? null
@@ -82,6 +85,28 @@ export default async function PublicOpportunityDetailPage({
             ) : null}
             {opportunity.location ? (
               <Badge variant="outline">Location: {opportunity.location}</Badge>
+            ) : null}
+            {opportunity.scholarship ? (
+              <>
+                <Badge variant="outline">
+                  {scholarshipCoverageLabel(opportunity.scholarship.coverage)}
+                </Badge>
+                <Badge variant="outline">
+                  {opportunity.scholarship.spots} spot
+                  {opportunity.scholarship.spots === 1 ? '' : 's'}
+                </Badge>
+                {opportunity.scholarship.amount ? (
+                  <Badge variant="outline">{opportunity.scholarship.amount}</Badge>
+                ) : null}
+                {opportunity.scholarship.minGpa !== null ? (
+                  <Badge variant="outline">
+                    Min GPA {opportunity.scholarship.minGpa.toFixed(1)}
+                  </Badge>
+                ) : null}
+                {opportunity.scholarship.intakeYear ? (
+                  <Badge variant="outline">Intake {opportunity.scholarship.intakeYear}</Badge>
+                ) : null}
+              </>
             ) : null}
           </div>
 

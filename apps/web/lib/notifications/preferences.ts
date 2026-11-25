@@ -29,6 +29,13 @@ export const NOTIFICATION_CATEGORIES = [
     description: 'Reminders, invitations and new content in the Football Center.',
     types: ['training'],
   },
+  {
+    id: 'documents',
+    label: 'Documents',
+    description:
+      'Expiry reminders for passports, medicals, contracts and academic records.',
+    types: ['document'],
+  },
 ] as const;
 
 export type NotificationCategoryId = (typeof NOTIFICATION_CATEGORIES)[number]['id'];
@@ -45,6 +52,7 @@ export const DEFAULT_PREFERENCES: NotificationPreferences = {
   social: { inApp: true, email: false },
   opportunities: { inApp: true, email: false },
   training: { inApp: true, email: false },
+  documents: { inApp: true, email: false },
 };
 
 /** ¿Es una categoría configurable? (las guardadas podrían venir de otra versión). */

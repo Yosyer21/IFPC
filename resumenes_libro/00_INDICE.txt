@@ -1,0 +1,71 @@
+================================================================================
+ FUTURE BALLER - ESPECIFICACION FUNCIONAL DE LA APP WEB  (libro.txt)
+ Resumen general / indice
+================================================================================
+
+FUENTE:      libro.txt  (133 KB, ~20.613 palabras, 16 secciones)
+VERSION:     v1.0 - noviembre 2026
+BASE:        Lienzo de diseno "Future Baller Screens" (86 mesas de trabajo)
+PARA QUIEN:  desarrollador del sitio web
+QUE ES:      Describe QUE HACE cada pantalla y cada funcion, para cada usuario.
+             Los nombres de pantallas/botones se dejan en INGLES (igual que la app).
+             Lo que va entre [corchetes] es contenido de ejemplo (nombres, precios...).
+
+NOTA: este mismo documento es la fuente del "nuevo diseno" (preview) del proyecto:
+      Player ID, My Development, Transfer Window, Training, Film Room, The "1%" Factor,
+      School ID, etc. coinciden con las capturas de la carpeta "nuevo diseno".
+
+--------------------------------------------------------------------------------
+ ARCHIVOS DE RESUMEN (en esta carpeta)
+--------------------------------------------------------------------------------
+ 00_INDICE.txt ................ Este archivo (panorama general)
+ 01_ROLES_Y_MENUS.txt ......... Los 9 perfiles y el menu de cada uno
+ 02_REGLAS_PLATAFORMA.txt ..... Proteccion de menores, verificacion, privacidad, legal
+ 03_MODULOS_COMPARTIDOS.txt ... Profile social, Calendar, Pagina ID (PDF), login especialistas
+ 04_JUGADOR.txt ............... Las 15 pantallas del jugador
+ 05_PADRE.txt ................. The Sideline, Parent ID, aprobaciones
+ 06_ENTRENADOR.txt ............ My Squad, Session Library, Film Room, referencias
+ 07_CLUB.txt .................. Find players (visoria), Trials & offers, Staff & scouts
+ 08_ESPECIALISTAS.txt ......... Nutricionista, Psicologo, Fisioterapeuta, Entrenador 1 a 1
+ 09_COLEGIO_UNIVERSIDAD.txt ... Recruitment board, Scholarships, School ID
+ 10_FLUJOS.txt ................ Flujos entre usuarios (paso a paso)
+ 11_MODELO_DATOS.txt .......... Entidades y campos a guardar (base de datos)
+ 12_PENDIENTES.txt ............ Lo que aun no tiene pantalla / falta decidir
+ 13_GLOSARIO.txt .............. Conceptos propios del producto
+ 14_BRECHA_VS_CODIGO.txt ...... Que hay y que falta respecto al codigo actual
+ 15_CATALOGO_PANTALLAS.txt .... Catalogo completo: cada pantalla + su archivo de diseno
+ 16_QUE_FALTA.txt ............. Lista priorizada de lo que falta en la plataforma
+
+--------------------------------------------------------------------------------
+ MAPA DE LAS 16 SECCIONES DEL LIBRO
+--------------------------------------------------------------------------------
+  1  Como usar este documento (tabla de roles)
+  2  Reglas para toda la plataforma
+  3  Modulos compartidos
+  4  Jugador
+  5  Padre / madre / tutor
+  6  Entrenador (de equipo)
+  7  Club
+  8  Nutricionista
+  9  Psicologo deportivo
+ 10  Fisioterapeuta
+ 11  Entrenador personal (1 a 1)
+ 12  Colegio y universidad
+ 13  Flujos entre usuarios
+ 14  Datos que el sistema debe guardar
+ 15  Pendientes para el desarrollador
+ 16  Catalogo de pantallas (cada pantalla + su archivo HTML de diseno)
+
+--------------------------------------------------------------------------------
+ CIFRAS CLAVE
+--------------------------------------------------------------------------------
+ - 9 roles/perfiles de usuario.
+ - 86 mesas de trabajo (artboards) en el lienzo de diseno de origen.
+ - 15 pantallas solo para el jugador.
+ - 5 tipos de evento en el calendario (Training, Match, Booked session, Meeting,
+   Trial / visit).
+ - 4 areas de desarrollo: Head Game, Build, On the Ball, Fuel.
+ - Regla central: proteccion especial de jugadores MENORES DE 16 anios.
+
+Como leer los resumenes: cada archivo es autocontenido y usa vinetas " - ".
+================================================================================

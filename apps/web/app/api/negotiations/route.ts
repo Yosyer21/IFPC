@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { requireUser, forbidden, methodNotAllowed } from '@/lib/api/respond';
@@ -14,7 +15,7 @@ export async function GET() {
     if (!club) return NextResponse.json({ ok: true, negotiations: [] });
     const negotiations = await prisma.negotiation.findMany({
       where: { clubId: club.id },
-      include: { player: { include: { user: true } } },
+      include: { player: { include: { user: { select: publicUserSelect } } } },
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json({ ok: true, negotiations });
@@ -22,7 +23,7 @@ export async function GET() {
 
   if (session.user.role !== 'ADMIN') return forbidden();
   const negotiations = await prisma.negotiation.findMany({
-    include: { player: { include: { user: true } }, club: true },
+    include: { player: { include: { user: { select: publicUserSelect } } }, club: true },
     orderBy: { createdAt: 'desc' },
     take: 200,
   });

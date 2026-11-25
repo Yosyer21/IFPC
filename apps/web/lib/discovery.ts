@@ -63,6 +63,7 @@ export async function listFeed(input: {
     ...(filters.role ? { author: { role: filters.role } } : {}),
     ...(filters.tab === 'announcements' ? { type: 'ANNOUNCEMENT' as const } : {}),
     ...(filters.tab === 'videos' ? { type: 'VIDEO' as const } : {}),
+    ...(filters.tab === 'filmroom' ? { filmClip: { isNot: null } } : {}),
     ...(filters.tab === 'following' && viewerId ? { OR: await followingFilter(viewerId) } : {}),
     // La búsqueda se añade con AND: combina con la pestaña en vez de sustituirla.
     ...(filters.q

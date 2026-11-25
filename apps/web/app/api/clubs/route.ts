@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import {
@@ -23,14 +24,14 @@ export async function GET() {
   if (session.user.role === 'CLUB') {
     const club = await prisma.club.findUnique({
       where: { userId: session.user.id },
-      include: { user: true },
+      include: { user: { select: publicUserSelect } },
     });
     return NextResponse.json({ ok: true, club });
   }
 
   const clubs = await prisma.club.findMany({
     where: session.user.role === 'ADMIN' ? undefined : { verified: true },
-    include: { user: true },
+    include: { user: { select: publicUserSelect } },
     orderBy: { name: 'asc' },
     take: 200,
   });

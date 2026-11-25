@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import {
@@ -27,7 +28,7 @@ export async function GET() {
         ? undefined
         : { status: { in: ['OPEN', 'FULL'] } },
     include: {
-      coach: { include: { user: true } },
+      coach: { include: { user: { select: publicUserSelect } } },
       club: true,
       _count: { select: { registrations: true } },
     },

@@ -18,6 +18,7 @@ const ROLE_AREAS = new Set([
   'university',
   'school',
   'admin',
+  'health-agent',
 ]);
 
 function isActiveHref(pathname: string, href: string) {

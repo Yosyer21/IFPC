@@ -1,9 +1,11 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import {
   requireUser,
   forbidden,
   badRequest,
+  isSameOrigin,
   readJson,
   stringField,
 } from '@/lib/api/respond';
@@ -27,6 +29,7 @@ export async function GET() {
       where: { playerId: player.id },
       include: { opportunity: { include: { club: true, university: true } } },
       orderBy: { createdAt: 'desc' },
+      take: 100,
     });
     return NextResponse.json({ ok: true, applications });
   }
@@ -36,15 +39,16 @@ export async function GET() {
     if (!club) return NextResponse.json({ ok: true, applications: [] });
     const applications = await prisma.application.findMany({
       where: { opportunity: { clubId: club.id } },
-      include: { player: { include: { user: true } }, opportunity: true },
+      include: { player: { include: { user: { select: publicUserSelect } } }, opportunity: true },
       orderBy: { createdAt: 'desc' },
+      take: 100,
     });
     return NextResponse.json({ ok: true, applications });
   }
 
   if (session.user.role !== 'ADMIN') return forbidden();
   const applications = await prisma.application.findMany({
-    include: { player: { include: { user: true } }, opportunity: true },
+    include: { player: { include: { user: { select: publicUserSelect } } }, opportunity: true },
     orderBy: { createdAt: 'desc' },
     take: 200,
   });
@@ -57,11 +61,21 @@ export async function POST(request: Request) {
   if (!session) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
+  if (!isSameOrigin(request)) return forbidden('Cross-site request blocked');
+  if (session.user.role !== 'PLAYER') return forbidden('Only players can apply');
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
 
   const opportunityId = stringField(body, 'opportunityId');
   if (!opportunityId) return badRequest('opportunityId is required');
+
+  const opportunity = await prisma.opportunity.findUnique({
+    where: { id: opportunityId },
+    select: { status: true },
+  });
+  if (!opportunity || opportunity.status !== 'OPEN') {
+    return badRequest('Opportunity is not open');
+  }
 
   const player = await prisma.player.findUnique({ where: { userId: session.user.id } });
   if (!player) return forbidden('Player profile not found');

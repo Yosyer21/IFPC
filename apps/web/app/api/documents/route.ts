@@ -20,6 +20,7 @@ export async function GET() {
     const documents = await prisma.document.findMany({
       where: { playerId: player.id },
       orderBy: { createdAt: 'desc' },
+      take: 200,
     });
     return NextResponse.json({ ok: true, documents });
   }

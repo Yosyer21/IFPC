@@ -1,0 +1,48 @@
+================================================================================
+ COLEGIO Y UNIVERSIDAD  (Seccion 12 del libro) - etiqueta SCHOOLS & UNIVERSITIES
+================================================================================
+Ejemplo: Demo University Football. (No estaba en la lista original de usuarios,
+pero esta completo en los disenos).
+Menu: Overview | School ID | Profile | Calendar | Recruitment board | Scholarships |
+Find players | My documents | Membership | Notifications | Settings.
+
+ 12.1 RECRUITMENT BOARD (tablero de reclutamiento)
+ - Pestanias de programa: cambia entre programas (ej. "University scholarship (intake
+   2027)" y "Boarding school place (years 9-12)"). Cada programa tiene su n. de cupos.
+ - Contadores: postulantes, cupos y ofertas enviadas del programa elegido.
+ - Columnas del tablero (4 etapas): Applied | Reviewing | Shortlisted | Offer sent,
+   cada una con su contador.
+ - Tarjeta del postulante: nombre, posicion, categoria, generacion, estadisticas clave,
+   GPA y 3 verificaciones: video de jugadas, registros academicos compartidos y
+   referencia del entrenador. Los registros academicos solo se ven si la familia los comparte.
+ - Cambiar de etapa: "Start review", "Shortlist", "Send offer" (el seguimiento del
+   jugador se actualiza igual: Applied > Reviewed > Shortlisted > Decision).
+   Las ofertas para <16 muestran "Waiting for parent approval".
+ - "+ New scholarship": crea beca o programa nuevo (formulario sin disenar).
+
+ 12.2 FIND PLAYERS, SCHOOL ID, PROFILE Y CALENDAR
+ - Find players: misma pantalla que el club (7.1), limitada a jugadores visibles para
+   COLEGIOS verificados.
+ - School ID: escudo; becas por anio, jugadores, tasa de graduacion y titulos de
+   conferencia; datos del programa (division, entrenador principal, ingreso, GPA minimo);
+   becas (completa, parcial, fecha limite); y paneles de academicos, programa de futbol
+   y vida en el campus.
+ - Profile y Calendar como en la Seccion 3.
+ - Pagina de Scholarships: HECHA en universidad y colegio (alta, plazas, cobertura,
+   financiacion, GPA minimo, deadline y postulantes). Sigue sin disenar el registro del
+   colegio y el pipeline formal de ofertas.
+--------------------------------------------------------------------------------
+ NOTA: el "School ID" es exactamente la pantalla que aparece en la captura
+ "DEMO UNIVERSITY" de la carpeta "nuevo diseno" (Verified School, Safeguarding Policy,
+ Program Details, Academics, Football program, Campus life, Download as PDF, Share School ID).
+
+--------------------------------------------------------------------------------
+ ADDENDUM (catalogo, Seccion 16)
+--------------------------------------------------------------------------------
+ - Overview: tarjeta del ingreso de becas (Open recruitment board), 4 numeros principales,
+   Next up, To do (registros faltantes, decisiones de preseleccion, visitas al campus).
+ - My Documents (carpetas): Shared by families, Scholarship terms, Admissions forms,
+   Offer letters. Los registros academicos solo aparecen cuando la familia los comparte y
+   la familia puede retirarlos.
+ - Settings: Verification del programa.
+================================================================================

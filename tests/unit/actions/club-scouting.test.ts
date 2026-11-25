@@ -38,7 +38,14 @@ function form(fields: Record<string, string>): FormData {
   return formData;
 }
 
-const CLUB = { id: 'club-1', name: 'Demo Club', city: 'Valencia', country: 'Spain' };
+const CLUB = {
+  id: 'club-1',
+  name: 'Demo Club',
+  city: 'Valencia',
+  country: 'Spain',
+  verified: true,
+  backgroundChecked: true,
+};
 const BACK = '/dashboard/club/players?position=forwards';
 
 beforeEach(() => {
@@ -136,14 +143,16 @@ describe('invitePlayerToTrialAction', () => {
     });
     expect(data.startsAt).toBeInstanceOf(Date);
     const days = (data.startsAt.getTime() - before) / 86_400_000;
-    expect(days).toBeGreaterThan(6.9);
-    expect(days).toBeLessThan(8.1);
+    // `startsAt` cae a las 10:00 UTC dentro de ~7 días, así que el delta depende
+    // de la hora actual (entre 6 y 7 días). El rango debe ser robusto a la hora.
+    expect(days).toBeGreaterThan(5.9);
+    expect(days).toBeLessThan(7.1);
 
     expect(mocks.notifyUser).toHaveBeenCalledTimes(3);
     expect(mocks.notifyUser.mock.calls[0]![0]).toMatchObject({
       userId: 'user-player',
       title: 'Trial invitation',
-      link: '/dashboard/player/calendar',
+      link: '/dashboard/player/opportunities',
     });
     expect(mocks.notifyUser.mock.calls[1]![0]).toMatchObject({
       userId: 'user-parent-1',
@@ -152,8 +161,39 @@ describe('invitePlayerToTrialAction', () => {
     expect(mocks.revalidatePaths).toHaveBeenCalledWith(
       '/dashboard/club/players',
       '/dashboard/player/calendar',
-      '/dashboard/calendar'
+      '/dashboard/calendar',
+      '/dashboard/parent/approvals',
+      '/dashboard/parent'
     );
+  });
+
+  it('deja la invitación pendiente del padre si el jugador es menor de 16', async () => {
+    mocks.playerFindUnique.mockResolvedValue({
+      id: 'player-1',
+      firstName: 'Demo',
+      lastName: 'Player',
+      userId: 'user-player',
+      dateOfBirth: new Date('2012-01-01'),
+      parents: [{ idVisibleToClubs: true, parent: { userId: 'user-parent-1' } }],
+    });
+
+    await captureRedirect(() =>
+      invitePlayerToTrialAction(form({ playerId: 'player-1', returnTo: BACK }))
+    );
+
+    expect(mocks.trialCreate.mock.calls[0]![0].data).toMatchObject({
+      status: 'SCHEDULED',
+      parentApproval: 'PENDING',
+    });
+    expect(mocks.notifyUser.mock.calls[0]![0]).toMatchObject({
+      userId: 'user-player',
+      title: 'Trial invitation — waiting for your parent',
+      link: '/dashboard/player/opportunities',
+    });
+    expect(mocks.notifyUser.mock.calls[1]![0]).toMatchObject({
+      userId: 'user-parent-1',
+      link: '/dashboard/parent/approvals',
+    });
   });
 
   it('es idempotente si ya hay una prueba programada', async () => {
@@ -172,6 +212,17 @@ describe('invitePlayerToTrialAction', () => {
     const target = await captureRedirect(() =>
       invitePlayerToTrialAction(form({ playerId: 'missing', returnTo: BACK }))
     );
+    expect(target).toBe(BACK);
+    expect(mocks.trialCreate).not.toHaveBeenCalled();
+  });
+
+  it('no invita si el club no está verificado o sin antecedentes', async () => {
+    mocks.clubFindUnique.mockResolvedValue({ ...CLUB, verified: false });
+
+    const target = await captureRedirect(() =>
+      invitePlayerToTrialAction(form({ playerId: 'player-1', returnTo: BACK }))
+    );
+
     expect(target).toBe(BACK);
     expect(mocks.trialCreate).not.toHaveBeenCalled();
   });

@@ -9,6 +9,7 @@ export const ROLE_LABELS: Record<string, string> = {
   UNIVERSITY: 'Universities',
   SCHOOL: 'Schools / Community',
   ADMIN: 'Admins',
+  HEALTH_AGENT: 'Health agents',
 };
 
 /**

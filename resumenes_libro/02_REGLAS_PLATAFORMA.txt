@@ -1,0 +1,63 @@
+================================================================================
+ REGLAS PARA TODA LA PLATAFORMA  (Seccion 2 del libro)
+================================================================================
+IMPORTANTE: estas reglas "deben aplicarse en el SERVIDOR, no solo en la interfaz".
+
+--------------------------------------------------------------------------------
+ A) PROTECCION DE JUGADORES MENORES DE 16 anios
+--------------------------------------------------------------------------------
+ Por que 16: ley australiana Online Safety Amendment (Social Media Minimum Age)
+ Act 2024, vigente desde el 10 de diciembre de 2025. Los <16 no pueden tener
+ cuentas en redes sociales con restriccion de edad, ni con permiso de los padres.
+ Future Baller debe disenarse para NO ser una de esas plataformas (sin feed
+ social, publicaciones ni seguidores para <16) y confirmarlo con revision legal.
+
+ - Cada jugador <16 debe tener vinculada la cuenta de un padre/madre/tutor.
+ - Los <16 solo pueden unirse a un equipo cuando el padre da consentimiento.
+ - Mensajes entre un <16 y entrenador/club/colegio/especialista incluyen
+   automaticamente al padre (aviso visible en el chat).
+ - Los padres pueden ver los chats de equipo que incluyen a <16.
+ - Reuniones con un <16 invitan automaticamente tambien al padre.
+ - Toda oferta (prueba, cupo escolar o beca) para un <16 debe ser aprobada por
+   el padre antes de contar como aceptada.
+ - Reservas con especialistas para un <16: las aprueba y paga el padre. El
+   especialista solo ve la solicitud cuando el padre ya aprobo y pago.
+ - El padre controla la visibilidad del ID del hijo (4 interruptores):
+     * visible para clubes verificados
+     * visible para colegios verificados
+     * mostrar estadisticas y jugadas
+     * permitir invitaciones directas
+   Si "invitaciones directas" esta desactivado, toda invitacion llega primero
+   al padre.
+ - Documentos academicos: solo visibles para un colegio si la familia los comparte.
+ - Cuando el jugador cumple 16 se liberan los controles del padre (regla por confirmar).
+
+--------------------------------------------------------------------------------
+ B) LEY DE PRIVACIDAD / LEGAL
+--------------------------------------------------------------------------------
+ - Politica de Privacidad y Terminos y Condiciones: los prepara Tim Fuller (abogado).
+   El registro debe obligar a aceptarlos; los padres los aceptan por los <16.
+ - Codigo de Privacidad en Linea para Ninos de Australia (OAIC), vigente para
+   dic-2026: exige configuraciones de alta privacidad por defecto para ninos.
+
+--------------------------------------------------------------------------------
+ C) VERIFICACION (badges)
+--------------------------------------------------------------------------------
+ - Entrenadores, clubes, colegios y especialistas pueden tener insignia VERIFIED.
+ - El personal de clubes necesita verificacion de antecedentes aprobada antes de
+   contactar jugadores.
+ - Especialistas se revisan antes de publicarse: titulos/registro profesional,
+   seguro y antecedentes para trabajar con menores. Se postulan con "Apply to join".
+ - ID de entrenador: insignias "Verified coach" y "Background checked".
+ - ID de club/colegio: "Verified" y "Safeguarding policy".
+
+--------------------------------------------------------------------------------
+ D) PRIVACIDAD DE REGISTROS DE ESPECIALISTAS
+--------------------------------------------------------------------------------
+ - Notas de sesion del psicologo: PRIVADAS, nunca se comparten sin consentimiento.
+   Los padres solo ven asistencia y objetivos.
+ - Planes de regreso al juego del fisio: se comparten con jugador, padre y (con
+   consentimiento) el entrenador del club; el entrenador ve avance, no detalle clinico.
+ - Nutricionista: sin pesajes para jovenes; el entrenador solo ve resumen (con
+   consentimiento).
+================================================================================

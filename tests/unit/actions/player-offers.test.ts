@@ -91,11 +91,16 @@ describe('requestOfferApprovalAction', () => {
       type: 'application',
       title: 'Approval needed: transfer offer',
       message: 'Demo Player wants to accept the offer from Demo Club.',
-      link: '/dashboard/parent/children/player-1/opportunities',
+      link: '/dashboard/parent/approvals',
+    });
+    expect(mocks.trialUpdate).toHaveBeenCalledWith({
+      where: { id: 'trial-1' },
+      data: { parentApproval: 'PENDING' },
     });
     expect(mocks.revalidatePaths).toHaveBeenCalledWith(
       '/dashboard/player/opportunities',
-      '/dashboard/parent'
+      '/dashboard/parent',
+      '/dashboard/parent/approvals'
     );
   });
 
@@ -127,7 +132,7 @@ describe('requestOfferApprovalAction', () => {
 
     expect(result).toEqual({ success: 'Sent to your parent for approval.' });
     expect(mocks.negotiationFindFirst).toHaveBeenCalledWith({
-      where: { id: 'neg-1', playerId: 'player-1' },
+      where: { id: 'neg-1', playerId: 'player-1', status: { in: ['OPEN', 'ONGOING'] } },
       include: { club: true },
     });
     expect(mocks.notifyUser.mock.calls[0][0].message).toBe(

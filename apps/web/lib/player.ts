@@ -1,6 +1,7 @@
 import {
   profileChecklistScore,
   profileCompletionPercentage,
+  type ProfileChecklistItem,
   type ProfileChecklistState,
 } from '@ifpc/config';
 import type { Player } from '@ifpc/types';
@@ -90,4 +91,31 @@ export function playerProfileChecklist(
     headline: Boolean(player.headline),
     career: (player.careerCount ?? 0) > 0,
   });
+}
+
+export interface ProfileNextStep {
+  label: string;
+  href: string;
+  hint: string;
+}
+
+/**
+ * «Mejor siguiente paso» del medidor de perfil. Si todavía no hay clips, ese es
+ * siempre el primero (el libro lo pone como ejemplo): un clip vale más que
+ * cualquier campo suelto. Con clips, el pendiente de más peso de la checklist.
+ */
+export function nextProfileStep(
+  checklist: ProfileChecklistState,
+  highlightCount: number
+): ProfileNextStep | null {
+  if (highlightCount <= 0) {
+    return {
+      label: 'Add a highlight clip',
+      href: '/dashboard/player/film-room',
+      hint: 'Scouts decide faster when they can see you play. One clip is enough to start.',
+    };
+  }
+
+  const next: ProfileChecklistItem | null = checklist.next;
+  return next ? { label: next.label, href: next.href, hint: next.hint } : null;
 }

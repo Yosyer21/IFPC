@@ -19,7 +19,8 @@
 
 ## Types and categories
 
-Tipos reales: `post_like`, `post_mention`, `new_follower`, `application`, `training`.
+Tipos reales: `post_like`, `post_mention`, `new_follower`, `application`, `training`,
+`document`.
 
 Se agrupan en categorías configurables (`apps/web/lib/notifications/preferences.ts`):
 
@@ -28,6 +29,11 @@ Se agrupan en categorías configurables (`apps/web/lib/notifications/preferences
 | `social`        | `post_like`, `post_mention`, `new_follower` |
 | `opportunities` | `application`                               |
 | `training`      | `training`                                  |
+| `documents`     | `document`                                  |
+
+Los filtros de la bandeja (`apps/web/lib/notifications/feed.ts`) usan una agrupación visual
+más amplia (`offers`, `coach`, `social`, `documents`, `payments`, `messages`, `account`,
+`system`) para que los tipos nuevos aparezcan en un sitio sensato sin migración.
 
 Añadir un tipo nuevo solo requiere meterlo en una categoría: la tabla de preferencias está indexada
 por categoría, así que **no necesita migración**.
@@ -47,13 +53,30 @@ semana desde cron (p. ej. `0 9 * * 1`).
   `--user email` (forzar un destinatario para probar).
 - Con PGlite hay que parar `pnpm dev` antes: la base embebida no admite dos procesos.
 
+## Document reminders
+
+`pnpm scripts:document-reminders` recorre los documentos con `expiresAt` y crea un aviso de
+tipo `document` para el jugador:
+
+- ventana de antelación de **30 días** (`--days 45` para cambiarla);
+- los ya vencidos se recuerdan hasta **14 días** después;
+- un aviso como máximo **por documento y día** (evita duplicados si corre varias veces);
+- respeta las preferencias: si el jugador silenció `documents`, no se crea nada;
+- sin `--apply` solo informa; `--apply` crea los avisos.
+
+En producción va con cron una vez al día (p. ej. `0 8 * * *`). Con PGlite hay que parar
+`pnpm dev` antes: la base embebida no admite dos procesos.
+
 ## UI
 
-- `/dashboard/player/notifications` muestra la lista con marca de no leídas y
-  `markNotificationsReadAction`.
+- Bandeja unificada (`components/notifications/notifications-view.tsx`):
+  `/dashboard/{player,parent,coach,club,health-agent}/notifications`.
+  Agrupa por **Today / Earlier**, filtra por categoría y por no leídos, y permite
+  marcar un aviso (`markNotificationReadAction`) o todos (`markAllNotificationsReadAction`).
 - `/dashboard/player/settings/notifications` configura los canales por categoría (matriz
   «In the app» / «Email»). La columna de email queda deshabilitada mientras el email no esté
   verificado.
+- El grupo «Documents» de la bandeja muestra los recordatorios creados por el script.
 
 ## Email
 

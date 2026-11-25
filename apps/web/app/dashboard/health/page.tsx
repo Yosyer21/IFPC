@@ -14,14 +14,14 @@ import {
   weekPlan,
 } from '@/lib/health';
 
-export const metadata: Metadata = { title: 'Health — The “1%” Factor' };
+export const metadata: Metadata = { title: 'Health' };
 
-/** El «1 %» compuesto a un año: lo que hace visible el nombre del hub. */
+/** El «1 %» compuesto a un año: contexto del hub. */
 const BETTER_YEAR = formatGain(compoundGain(1, 365));
 const WORSE_YEAR = formatGain(compoundGain(-1, 365));
 
 /**
- * THE "1%" FACTOR — portada del hub de salud.
+ * Health — portada del hub de salud.
  *
  * La rejilla se genera desde `HEALTH_FACTORS` (`lib/health.ts`): añadir un factor
  * nuevo es añadir una entrada, sin tocar esta página.
@@ -37,8 +37,8 @@ export default function HealthHubPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <PageHeader
-        title="THE “1%” FACTOR"
-        subtitle="The small things that separate good from excellent — done on ordinary days"
+        title="Health"
+        subtitle="Sleep, nutrition, recovery and the daily habits that keep you ready"
         icon="health"
       />
 

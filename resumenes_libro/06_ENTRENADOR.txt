@@ -1,0 +1,58 @@
+================================================================================
+ ENTRENADOR (de equipo)  (Seccion 6 del libro) - etiqueta COACH HUB
+================================================================================
+Ejemplo: Coach Sam (entrenador principal U14 y U16 Girls en Future Baller Academy).
+Menu: Overview | Coach ID | Profile | Calendar | My Squad | Session Library |
+Film Room | Live sessions | My documents | Membership | Notifications | Settings.
+
+ 6.1 MY SQUAD (plantel)
+ - Encabezado del equipo: nombre, club, liga, temporada y 5 datos (posicion en liga,
+   tamano del plantel, record G-E-P, edad promedio, formacion).
+ - Pestanias Squad | Matches | Stats.
+ - Lista del plantel: porteros, defensas, mediocampistas, delanteros; ordenados por
+   numero (numero, iniciales, nombre y rol; la capitana con insignia C).
+ - "+ Add player": nombre, dorsal y posicion (GK, DEF, MID, FWD) -> "Add to squad".
+ - Codigo del equipo (ej. FB-U16-4821): los jugadores se unen solos; los <16 solo con
+   consentimiento del padre.
+ - "Edit squad": boton de quitar por jugador (cambia a "Done"; pedir confirmacion).
+ - Pestania Matches: resultados (G/E/P, rival, fecha, local/visitante, marcador).
+ - Pestania Stats: goleadores, info del equipo (cuerpo tecnico, capitana, horarios,
+   cancha), estadisticas de los ultimos 10 partidos, % de victorias y forma reciente.
+ - Proximo partido + "Pick team & send to parents" (envia convocatoria; pantalla sin disenar).
+
+ 6.2 SESSION LIBRARY (biblioteca y armador de sesiones)
+ - Pestanias: Pre-Season Build-Up | In-Season Engine | Drill Bank.
+ - Filtros: edad, tamano del grupo y duracion.
+ - Tarjeta de ejercicio: etiqueta, titulo, detalles (duracion, jugadores, area).
+   "+ Add to session" (cambia a "Added to session"; se puede quitar).
+ - Armador de sesion: nombre, fecha, hora, cancha + lista numerada de ejercicios
+   (seccion y minutos) + tiempo total. Vacio: "Add drills from the library to start building."
+ - "Send to": elegir uno o mas grupos (ej. U14 Girls, U16 Girls, Keepers only).
+   Boton: "Choose who gets this session" -> "Send session to [n] groups".
+ - "Film one rep": casilla "Ask players to film one rep for the Film Room". Los
+   jugadores lo ven en "From your coach" dentro de Training.
+
+ 6.3 COACH ID, PROFILE Y CALENDAR
+ - Coach ID (ver 3.3): insignias "Verified coach" y "Background checked"; anios como
+   entrenador, equipos dirigidos, jugadores que pasaron a universidad y % de victorias;
+   licencia, categorias, formacion, idiomas, ciudad, club, disponibilidad (1 a 1) y viajes;
+   paneles de licencias, estilo de entrenamiento y logros; y trayectoria.
+ - Profile y Calendar como en la Seccion 3.
+ - Los entrenadores escriben REFERENCIAS para jugadores cuando un club/colegio las pide.
+ - Aun sin disenar: el lado del entrenador en el Film Room (revisar clips y agregar
+   notas con marca de tiempo), el flujo de solicitud/escritura de referencias, y el
+   registro e inicio de sesion del entrenador.
+
+--------------------------------------------------------------------------------
+ ADDENDUM (catalogo, Seccion 16)
+--------------------------------------------------------------------------------
+ - Overview: tarjeta con el proximo partido (Pick team + Build a session), 4 numeros
+   principales, Next up (eventos), To do (clips por revisar, solicitudes de referencia,
+   renovaciones), actividad reciente y accesos rapidos.
+ - My Documents (carpetas): Licences, Background check, References written, Team forms,
+   Session plans. Los documentos por vencer (certificado de proteccion infantil) se marcan
+   para mantener la verificacion.
+ - Membership: Coach Free / Coach Pro / Club staff (incluido en el plan del club).
+ - Settings: Verification (licencia, antecedentes, certificado de proteccion infantil,
+   primeros auxilios) + "Teams & clubs" (+ Join a club).
+================================================================================

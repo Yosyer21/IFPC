@@ -67,14 +67,56 @@ export async function main() {
       passwordHash: coachHash,
     },
   });
-  await prisma.coach.upsert({
+  const teamCoach = await prisma.coach.upsert({
     where: { userId: coachUser.id },
     update: {},
     create: {
       userId: coachUser.id,
       clubName: 'Demo Academy',
+      verified: true,
+      backgroundChecked: true,
+      safeguardingCertified: true,
     },
   });
+
+  // Eventos de equipo de demo: un entrenamiento y un partido en los próximos días.
+  if (teamCoach) {
+    const trainingAt = new Date();
+    trainingAt.setUTCDate(trainingAt.getUTCDate() + 1);
+    trainingAt.setUTCHours(17, 0, 0, 0);
+    const existingTraining = await prisma.trainingEvent.findFirst({
+      where: { coachId: teamCoach.id, title: 'U16 Girls — pressing' },
+    });
+    if (!existingTraining) {
+      await prisma.trainingEvent.create({
+        data: {
+          coachId: teamCoach.id,
+          title: 'U16 Girls — pressing',
+          startsAt: trainingAt,
+          durationMinutes: 90,
+          location: 'Main pitch',
+        },
+      });
+    }
+
+    const matchAt = new Date();
+    matchAt.setUTCDate(matchAt.getUTCDate() + 3);
+    matchAt.setUTCHours(15, 0, 0, 0);
+    const existingMatch = await prisma.match.findFirst({
+      where: { coachId: teamCoach.id, opponent: 'Riverside FC' },
+    });
+    if (!existingMatch) {
+      await prisma.match.create({
+        data: {
+          coachId: teamCoach.id,
+          opponent: 'Riverside FC',
+          startsAt: matchAt,
+          venue: 'Main pitch',
+          home: true,
+        },
+      });
+    }
+  }
 
   const universityHash = await bcrypt.hash('university123', 10);
   const universityUser = await prisma.user.upsert({
@@ -95,6 +137,8 @@ export async function main() {
       name: 'Demo University',
       country: 'Spain',
       city: 'Valencia',
+      verified: true,
+      safeguardingPolicy: true,
     },
   });
 
@@ -119,6 +163,8 @@ export async function main() {
       country: 'Australia',
       city: 'Ballarat',
       contactName: 'Sports Department',
+      verified: true,
+      safeguardingPolicy: true,
     },
   });
 
@@ -150,8 +196,71 @@ export async function main() {
       foundedYear: 1998,
       tags: ['RECRUITING', 'YOUTH'],
       accentColor: 'cyan',
+      verified: true,
+      safeguardingPolicy: true,
+      backgroundChecked: true,
     },
   });
+
+  const healthAgentHash = await bcrypt.hash('health123', 10);
+  const healthAgentUser = await prisma.user.upsert({
+    where: { email: 'health@demo.com' },
+    update: {},
+    create: {
+      email: 'health@demo.com',
+      name: 'Demo Health Agent',
+      role: 'HEALTH_AGENT',
+      passwordHash: healthAgentHash,
+    },
+  });
+  const healthAgentProfile = await prisma.healthAgent.upsert({
+    where: { userId: healthAgentUser.id },
+    update: {},
+    create: {
+      userId: healthAgentUser.id,
+      practiceName: 'Fuel Lab Sports Nutrition',
+      headline: 'Nutrition, sport psychology & physio for young athletes',
+      about:
+        'A unified health team supporting players on and off the pitch: fuelling, mindset and return to play.',
+      specialties: ['NUTRITION', 'PSYCHOLOGY', 'PHYSIOTHERAPY'],
+      services: ['Match-day fuel plans', 'Confidence & focus programmes', 'Return-to-play plans'],
+      approach: ['Food first', 'No weigh-ins for young players', 'Parents involved'],
+      registrationNumber: 'HA-2026-001',
+      insuranceProvider: 'SportSafe',
+      insuranceExpiresAt: new Date(new Date().getFullYear() + 1, 0, 1),
+      priceFrom: 60,
+      currency: 'EUR',
+      format: 'BOTH',
+      sessionsOnline: true,
+      languages: ['English', 'Spanish'],
+      city: 'Valencia',
+      country: 'Spain',
+      website: 'https://example.com',
+      yearsExperience: 8,
+      clientsServed: 120,
+      availabilityNote: 'Weekdays after school; online worldwide.',
+      verified: true,
+      backgroundChecked: true,
+      ratingAvg: 4.9,
+      reviewCount: 24,
+    },
+  });
+
+  // Huecos de disponibilidad de ejemplo (próximos días a las 16:00 UTC).
+  if (healthAgentProfile) {
+    for (let day = 2; day <= 5; day += 1) {
+      const startsAt = new Date();
+      startsAt.setUTCDate(startsAt.getUTCDate() + day);
+      startsAt.setUTCHours(16, 0, 0, 0);
+      await prisma.availabilitySlot.upsert({
+        where: {
+          healthAgentId_startsAt: { healthAgentId: healthAgentProfile.id, startsAt },
+        },
+        update: {},
+        create: { healthAgentId: healthAgentProfile.id, startsAt, durationMinutes: 60 },
+      });
+    }
+  }
 
   const playerProfile = await prisma.player.findUnique({ where: { userId: playerUser.id } });
 
@@ -1090,7 +1199,7 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
 
     await prisma.trial.upsert({
       where: { id: 'trial-player-1' },
-      update: {},
+      update: { parentApproval: 'PENDING' },
       create: {
         id: 'trial-player-1',
         submissionId: 'sub-player-1',
@@ -1100,6 +1209,24 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
         endsAt: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000),
         location: 'Ciudad Deportiva Demo',
         status: 'SCHEDULED',
+        // Demo de la bandeja de aprobación del padre.
+        parentApproval: 'PENDING',
+      },
+    });
+
+    await prisma.negotiation.upsert({
+      where: { id: 'neg-parent-1' },
+      update: { parentApproval: 'PENDING' },
+      create: {
+        id: 'neg-parent-1',
+        clubId: club.id,
+        playerId: playerProfile.id,
+        status: 'OPEN',
+        parentApproval: 'PENDING',
+        offerAmount: 500000,
+        currency: 'EUR',
+        notes:
+          'Youth contract offer for the 2026/27 season. Waiting for the family decision.',
       },
     });
   }
@@ -1239,6 +1366,112 @@ Improved when the eccentric lowering is controlled, eccentric strength increases
         description:
           'Academic-sports scholarship for strikers. University degree + competitive football in the national collegiate category.',
         closesAt: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    await prisma.scholarship.upsert({
+      where: { opportunityId: 'opp-uni-1' },
+      update: {},
+      create: {
+        opportunityId: 'opp-uni-1',
+        universityId: universityProfile.id,
+        coverage: 'FULL',
+        spots: 2,
+        amount: '100% tuition',
+        minGpa: 3.2,
+        intakeYear: 2027,
+      },
+    });
+
+    // Segundo programa: beca parcial (para ver varios cupos por curso).
+    await prisma.opportunity.upsert({
+      where: { id: 'opp-uni-2' },
+      update: {},
+      create: {
+        id: 'opp-uni-2',
+        universityId: universityProfile.id,
+        creatorType: 'UNIVERSITY',
+        title: 'Women’s football scholarship (partial)',
+        type: 'SCHOLARSHIP',
+        status: 'OPEN',
+        ageMin: 17,
+        ageMax: 21,
+        location: 'Valencia',
+        description:
+          'Partial academic-sports scholarship for the women’s football programme. Degree + collegiate competition.',
+        closesAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    await prisma.scholarship.upsert({
+      where: { opportunityId: 'opp-uni-2' },
+      update: {},
+      create: {
+        opportunityId: 'opp-uni-2',
+        universityId: universityProfile.id,
+        coverage: 'PARTIAL',
+        spots: 4,
+        amount: '50% tuition',
+        minGpa: 2.8,
+        intakeYear: 2026,
+      },
+    });
+
+    if (playerProfile) {
+      await prisma.application.upsert({
+        where: {
+          playerId_opportunityId: {
+            playerId: playerProfile.id,
+            opportunityId: 'opp-uni-1',
+          },
+        },
+        update: { status: 'PENDING', parentApproval: 'PENDING' },
+        create: {
+          playerId: playerProfile.id,
+          opportunityId: 'opp-uni-1',
+          status: 'PENDING',
+          // Demo: la universidad ofreció la beca y falta la aprobación familiar.
+          parentApproval: 'PENDING',
+          message:
+            'I would like to combine my degree with the university football programme. My highlight reel is in the Film Room.',
+        },
+      });
+    }
+  }
+
+  // ─── School / boarding scholarship demo ───────────────────────
+  const schoolProfile = await prisma.school.findUnique({ where: { userId: schoolUser.id } });
+  if (schoolProfile) {
+    await prisma.opportunity.upsert({
+      where: { id: 'opp-school-1' },
+      update: {},
+      create: {
+        id: 'opp-school-1',
+        schoolId: schoolProfile.id,
+        creatorType: 'SCHOOL',
+        title: 'Boarding scholarship — years 9–12',
+        type: 'SCHOLARSHIP',
+        status: 'OPEN',
+        ageMin: 13,
+        ageMax: 18,
+        location: 'Ballarat',
+        description:
+          'Boarding place plus football programme for student-athletes joining years 9–12. Academic report required.',
+        closesAt: new Date(Date.now() + 75 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    await prisma.scholarship.upsert({
+      where: { opportunityId: 'opp-school-1' },
+      update: {},
+      create: {
+        opportunityId: 'opp-school-1',
+        schoolId: schoolProfile.id,
+        coverage: 'BOARDING',
+        spots: 6,
+        amount: 'Boarding + 60% tuition',
+        minGpa: 3,
+        intakeYear: 2027,
       },
     });
   }

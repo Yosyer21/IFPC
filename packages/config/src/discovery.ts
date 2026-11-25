@@ -29,6 +29,7 @@ export const POSTING_ROLES = [
   'UNIVERSITY',
   'SCHOOL',
   'ADMIN',
+  'HEALTH_AGENT',
 ] as const;
 
 /** Pestañas del feed (`?tab=`). */
@@ -40,6 +41,7 @@ export const DISCOVERY_TABS = [
   'trending',
   'announcements',
   'videos',
+  'filmroom',
 ] as const;
 export type DiscoveryTab = (typeof DISCOVERY_TABS)[number];
 export const DEFAULT_DISCOVERY_TAB: DiscoveryTab = 'recent';
@@ -52,6 +54,7 @@ export const DISCOVERY_TAB_LABELS: Record<string, string> = {
   trending: 'Trending',
   announcements: 'Announcements',
   videos: 'Videos',
+  filmroom: 'Film Room',
 };
 
 /** Suggested profiles que se muestran en el feed. */

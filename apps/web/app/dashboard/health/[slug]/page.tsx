@@ -20,7 +20,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const factor = getHealthFactor(slug);
-  return { title: factor ? `${factor.title} — The “1%” Factor` : 'Health' };
+  return { title: factor ? `${factor.title} — Health` : 'Health' };
 }
 
 /**
@@ -52,12 +52,12 @@ export default async function HealthFactorPage({
         className="animate-fade-up mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <IconChevronDown className="h-4 w-4 rotate-90" />
-        All the 1% factors
+        All health topics
       </Link>
 
       <PageHeader title={factor.title} subtitle={factor.tagline} icon={factor.icon}>
         <span className="chip-gradient rounded-full px-3 py-1 text-xs font-semibold tabular-nums">
-          Factor {position} of {HEALTH_FACTORS.length}
+          Topic {position} of {HEALTH_FACTORS.length}
         </span>
       </PageHeader>
 

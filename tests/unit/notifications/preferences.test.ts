@@ -20,6 +20,7 @@ describe('categorías de avisos', () => {
     expect(notificationCategory('new_follower')).toBe('social');
     expect(notificationCategory('application')).toBe('opportunities');
     expect(notificationCategory('training')).toBe('training');
+    expect(notificationCategory('document')).toBe('documents');
   });
 
   it('deja fuera los tipos desconocidos', () => {

@@ -1,12 +1,16 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import {
   requireUser,
   badRequest,
+  forbidden,
+  isSameOrigin,
   readJson,
   stringField,
   intField,
 } from '@/lib/api/respond';
+import { isVisibleToClubs, isVisibleToSchools } from '@/lib/minor';
 
 /**
  * GET /api/players
@@ -23,7 +27,7 @@ export async function GET() {
   if (session.user.role === 'PLAYER') {
     const player = await prisma.player.findUnique({
       where: { userId: session.user.id },
-      include: { user: true },
+      include: { user: { select: publicUserSelect } },
     });
     return NextResponse.json({ ok: true, player });
   }
@@ -33,10 +37,26 @@ export async function GET() {
       session.user.role === 'ADMIN'
         ? undefined
         : { status: { in: ['AVAILABLE', 'ACTIVE'] } },
-    include: { user: true },
+    include: {
+      user: { select: publicUserSelect },
+      parents: { select: { idVisibleToClubs: true, idVisibleToSchools: true } },
+    },
     orderBy: { updatedAt: 'desc' },
     take: 200,
   });
+
+  // La API no puede saltarse la decisión del padre: filtra por la visibilidad
+  // que corresponde al rol (clubes/scouts vs colegios/universidades).
+  if (session.user.role !== 'ADMIN') {
+    const forSchools = session.user.role === 'UNIVERSITY' || session.user.role === 'SCHOOL';
+    const visible = players.filter((player) =>
+      forSchools
+        ? isVisibleToSchools(player.dateOfBirth, player.parents)
+        : isVisibleToClubs(player.dateOfBirth, player.parents)
+    );
+    return NextResponse.json({ ok: true, players: visible });
+  }
+
   return NextResponse.json({ ok: true, players });
 }
 
@@ -46,6 +66,8 @@ export async function POST(request: Request) {
   if (!session) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }
+  if (session.user.role !== 'PLAYER') return forbidden('Only players can edit a player profile');
+  if (!isSameOrigin(request)) return forbidden('Cross-site request blocked');
   const body = await readJson(request);
   if (!body) return badRequest('Invalid JSON body');
 

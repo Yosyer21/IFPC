@@ -9,6 +9,7 @@ import { ApplyForm } from '@/components/player/apply-form';
 import { ProfileGrid } from '@/components/profile/profile-grid';
 import { MatchBreakdown, MatchScoreBadge } from '@/components/player/match-score';
 import { matchOpportunity } from '@/lib/matching';
+import { scholarshipCoverageLabel } from '@/lib/scholarships';
 import { saveOpportunityAction, unsaveOpportunityAction } from '@/app/actions/player';
 
 export const metadata: Metadata = { title: 'Opportunity' };
@@ -28,7 +29,7 @@ export default async function PlayerOpportunityDetailPage({
   const [opportunity, existingApplication, savedOpportunity] = await Promise.all([
     prisma.opportunity.findUnique({
       where: { id: opportunityId },
-      include: { club: true, university: true },
+      include: { club: true, university: true, school: true, scholarship: true },
     }),
     prisma.application.findUnique({
       where: {
@@ -50,7 +51,10 @@ export default async function PlayerOpportunityDetailPage({
     opportunity.type;
 
   const details: [string, string][] = [
-    ['Club', opportunity.club?.name ?? opportunity.university?.name ?? '—'],
+    [
+      'Organisation',
+      opportunity.club?.name ?? opportunity.university?.name ?? opportunity.school?.name ?? '—',
+    ],
     ['Type', typeLabel],
     ['Position', opportunity.position ?? '—'],
     ['Age range', opportunity.ageMin || opportunity.ageMax ? `${opportunity.ageMin ?? '?'}–${opportunity.ageMax ?? '?'} years old` : '—'],
@@ -58,6 +62,22 @@ export default async function PlayerOpportunityDetailPage({
     ['Closes on', opportunity.closesAt ? opportunity.closesAt.toLocaleDateString('en-GB') : '—'],
     ['Published on', opportunity.createdAt.toLocaleDateString('en-GB')],
   ];
+
+  if (opportunity.scholarship) {
+    details.push(
+      ['Programme', scholarshipCoverageLabel(opportunity.scholarship.coverage)],
+      ['Spots', String(opportunity.scholarship.spots)],
+      ['Funding', opportunity.scholarship.amount ?? '—'],
+      [
+        'Minimum GPA',
+        opportunity.scholarship.minGpa !== null ? opportunity.scholarship.minGpa.toFixed(1) : '—',
+      ],
+      [
+        'Intake',
+        opportunity.scholarship.intakeYear ? String(opportunity.scholarship.intakeYear) : '—',
+      ]
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl">

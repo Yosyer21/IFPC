@@ -1,0 +1,50 @@
+================================================================================
+ CLUB  (Seccion 7 del libro) - etiqueta CLUB PORTAL
+================================================================================
+Ejemplo: Demo Club Academy (U12 a U19).
+Menu: Overview | Club ID | Profile | Calendar | Find players | Trials & offers |
+Staff & scouts | My documents | Membership | Notifications | Settings.
+
+ 7.1 FIND PLAYERS (visoria / reclutamiento)
+ - Busqueda por nombre, club o region. SOLO muestra jugadores cuyos padres permiten
+   la visibilidad para clubes verificados.
+ - Contadores: jugadores mostrados y preseleccionados.
+ - Filtros: Posicion (All, Keepers, Defenders, Midfield, Forwards) y Edad
+   (All ages, U14, U16, U17, U19+). Vacio: "No players match these filters yet...".
+ - Tarjeta del jugador: dorsal, iniciales, nombre, posicion, categoria, club, region,
+   pie habil, partidos jugados, 2 estadisticas clave (goles+asistencias, o vallas
+   invictas+atajadas en porteros), cantidad de clips destacados y un % de afinidad
+   (algoritmo por definir).
+ - Shortlist (preseleccion): agregar/quitar de la lista del club.
+ - Invite to trial: envia invitacion a prueba (etiqueta "Invite sent"). <16: llega
+   primero al padre. El jugador la ve en las ofertas de Transfer Window.
+ - Your trials: pruebas abiertas (lugar, fecha de cierre, n. de postulantes e invitados).
+   Se publican en el Transfer Window de los jugadores. "+ Post a trial" (formulario sin disenar).
+ - Aviso de contacto seguro: el contacto con <16 va primero a los padres y el personal
+   necesita verificacion de antecedentes aprobada (aplicarlo en servidor).
+
+ 7.2 CLUB ID, PROFILE Y CALENDAR
+ - Club ID: escudo; insignias "Verified club" y "Safeguarding policy"; n. de equipos,
+   jugadores de academia, egresados al profesionalismo y entrenadores; datos del club
+   (liga, categorias, colores, cancha local); datos de reclutamiento (pruebas abiertas,
+   proxima prueba, posiciones, contacto); paneles de instalaciones, camino del jugador
+   y proteccion infantil (encargado de bienestar contactable por la app); y titulos.
+ - Profile y Calendar como en la Seccion 3. El calendario incluye partidos de visoria,
+   reuniones de reclutamiento, dias de prueba abierta y videollamadas con jugadores
+   (con el padre incluido).
+ - Aun sin disenar: Trials & offers (gestionar postulantes y moverlos por
+   Applied > Reviewed > Shortlisted > Decision), Staff & scouts, el envio de una oferta
+   formal y el registro del club.
+
+--------------------------------------------------------------------------------
+ ADDENDUM (catalogo, Seccion 16)
+--------------------------------------------------------------------------------
+ - Overview: tarjeta con la proxima prueba abierta (Review applicants), 4 numeros
+   principales, Next up, To do (postulantes, padres revisando invitaciones, verificaciones
+   del personal), actividad reciente y accesos rapidos.
+ - My Documents (carpetas): Policies, Staff checks, References received, Offer letters,
+   Trial forms. El personal SIN verificacion aprobada no puede abrir documentos de jugadores.
+ - Membership: Academy Starter / Academy Pro / Elite.
+ - Settings: Verification (registro del club, politica de proteccion infantil, encargado de
+   bienestar, verificaciones del personal) + "Staff & scouts" (+ Invite staff).
+================================================================================

@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import {
@@ -11,9 +12,9 @@ import { clubCoachIds, userClubIds } from '@/lib/live-sessions';
 
 /** Campos que devuelve la API para cada sesión. */
 const SESSION_INCLUDE = {
-  coach: { include: { user: true } },
+  coach: { include: { user: { select: publicUserSelect } } },
   club: true,
-  player: { include: { user: true } },
+  player: { include: { user: { select: publicUserSelect } } },
 } as const;
 
 /**

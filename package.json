@@ -30,6 +30,8 @@
     "scripts:cleanup": "node --env-file=.env --import=tsx scripts/maintenance/cleanup.ts",
     "scripts:publish-scheduled": "node --env-file=.env --import=tsx scripts/maintenance/publish-scheduled.ts",
     "scripts:expire-memberships": "node --env-file=.env --import=tsx scripts/maintenance/expire-memberships.ts",
+    "scripts:document-reminders": "node --env-file=.env --import=tsx scripts/maintenance/document-reminders.ts",
+    "scripts:migrate-documents": "node --env-file=.env --import=tsx scripts/maintenance/migrate-private-documents.ts",
     "scripts:reports": "node --env-file=.env --import=tsx scripts/maintenance/generate-reports.ts",
     "scripts:normalize-categories": "node --env-file=.env --import=tsx scripts/maintenance/normalize-categories.ts",
     "scripts:weekly-digest": "node --env-file=.env --import=tsx scripts/maintenance/weekly-digest.ts",

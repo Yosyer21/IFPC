@@ -1,3 +1,4 @@
+import { publicUserSelect } from '@/lib/api/user-select';
 import { NextResponse } from 'next/server';
 import { prisma } from '@ifpc/database';
 import { matchScore } from '@ifpc/matching';
@@ -16,7 +17,7 @@ export async function GET() {
   }
 
   const players = await prisma.player.findMany({
-    include: { user: true },
+    include: { user: { select: publicUserSelect } },
     take: 200,
   });
   const requirements = await prisma.requirement.findMany({

@@ -1,0 +1,144 @@
+================================================================================
+ CATALOGO DE PANTALLAS  (Seccion 16 del libro) - PARTE 1/2
+================================================================================
+Cada pantalla tiene su "Archivo de pantalla" de diseno (ext .dc.html). Las pantallas
+de la MISMA plantilla (Notifications, Settings, Membership, My Documents, Live sessions,
+Profile, Calendar, ID) funcionan igual para todos los roles; solo cambian contenido y reglas.
+Las pantallas del JUGADOR se detallan en la Seccion 4 (aqui se listan con su archivo).
+
+--------------------------------------------------------------------------------
+ JUGADOR  (15 pantallas)
+--------------------------------------------------------------------------------
+  1 Overview ............ WebOverviewPlayer   (pantalla nueva)
+  2 Player ID ........... WebCareer
+  3 Profile ............. WebProfilePlayer
+  4 Calendar ............ WebCalendarPlayer
+  5 My Development ...... WebDevelopmentPlayer
+  6 Transfer Window ..... WebTransfer
+  7 Scouting profile .... WebScoutingPlayer
+  8 Membership .......... WebMembershipPlayer
+  9 Training ............ WebTraining
+ 10 Film Room ........... WebFilmRoom
+ 11 The "1%" Factor ..... WebOnePercent
+ 12 My Documents ........ WebDocumentsPlayer
+ 13 Live sessions ....... WebLivePlayer
+ 14 Notifications ....... WebNotificationsPlayer
+ 15 Settings ............ WebSettingsPlayer
+
+--------------------------------------------------------------------------------
+ PADRE / MADRE / TUTOR  (11 pantallas)
+--------------------------------------------------------------------------------
+  1 The Sideline ......... WebSideline         (inicio: semana del hijo, coach, guias)
+  2 ID ................... WebIDParent         (Parent ID: selector de hijo + 4 switches)
+  3 Profile .............. WebProfileParent    (privado por defecto)
+  4 Calendar ............. WebCalendarParent   (eventos de cada hijo; "Approved & paid")
+  5 My Development ....... WebDevelopmentParent (solo lectura del avance del hijo)
+  6 Scouting profile ..... WebScoutingParent   (preview como scout; el padre controla visibilidad)
+  7 The "1%" Factor ...... WebOnePercentParent (Requests to approve / Approve & pay)
+  8 My Documents ......... WebDocumentsParent  (carpetas Mia, Noah, Receipts, Consent forms)
+  9 Membership & payments  WebMembershipParent (Parent Free / Family + recibos)
+ 10 Notifications ........ WebNotificationsParent
+ 11 Settings ............. WebSettingsParent   (Your children: + Link a child)
+
+--------------------------------------------------------------------------------
+ ENTRENADOR  (11 pantallas)
+--------------------------------------------------------------------------------
+  1 Overview ............. WebOverviewCoach    (proximo partido, 4 numeros, To do, actividad)
+  2 ID ................... WebIDCoach          (licencias, estilo, % victorias, 1 a 1)
+  3 Profile .............. WebProfileCoach
+  4 Calendar ............. WebCalendarCoach
+  5 My Squad ............. WebSquad            (Squad / Matches / Stats, codigo de equipo)
+  6 Session Library ...... WebCoach            (Pre-Season / In-Season / Drill Bank)
+  7 Live sessions ........ WebLiveCoach        (Host a session, Go live, repeticiones)
+  8 My Documents ......... WebDocumentsCoach   (Licences, Background check, References...)
+  9 Membership ........... WebMembershipCoach  (Coach Free / Coach Pro / Club staff)
+ 10 Notifications ........ WebNotificationsCoach
+ 11 Settings ............. WebSettingsCoach    (Verification: licencia, antecedentes, etc.)
+
+================================================================================
+ CATALOGO DE PANTALLAS  (Seccion 16 del libro) - PARTE 2/2
+================================================================================
+
+--------------------------------------------------------------------------------
+ CLUB  (9 pantallas + Sign in)
+--------------------------------------------------------------------------------
+  1 Overview ............. WebOverviewClub   (proxima prueba abierta + Review applicants; To do)
+  2 ID ................... WebIDClub         (instalaciones, camino del jugador, proteccion, titulos)
+  3 Profile .............. WebProfileClub
+  4 Calendar ............. WebCalendarClub   (visoria, reclutamiento, pruebas abiertas, videollamadas)
+  5 Find players ......... WebClub           (filtrar posicion/edad; shortlist; invite to trial)
+  6 My Documents ......... WebDocumentsClub  (Policies, Staff checks, References received,
+                                             Offer letters, Trial forms; staff sin verificar no abre docs)
+  7 Membership ........... WebMembershipClub (Academy Starter / Academy Pro / Elite)
+  8 Notifications ........ WebNotificationsClub
+  9 Settings ............. WebSettingsClub   (Verification: registro, safeguarding, welfare officer,
+                                             staff checks + "Staff & scouts")
+  + Sign in (portal del club)
+
+--------------------------------------------------------------------------------
+ COLEGIO Y UNIVERSIDAD  (9 pantallas + Sign in)
+--------------------------------------------------------------------------------
+  1 Overview ............. WebOverviewSchool   (ingreso de becas + Open recruitment board; To do)
+  2 ID ................... WebIDSchool         (academicos, programa de futbol, campus, becas)
+  3 Profile .............. WebProfileSchool
+  4 Calendar ............. WebCalendarSchool   (dias de partido, comites de becas, campus)
+  5 Recruitment board ..... WebSchool          (Applied > Reviewing > Shortlisted > Offer sent)
+  6 My Documents ......... WebDocumentsSchool  (Shared by families, Scholarship terms,
+                                               Admissions forms, Offer letters)
+  7 Membership ........... WebMembershipSchool (patron comun)
+  8 Notifications ........ WebNotificationsSchool
+  9 Settings ............. WebSettingsSchool   (Verification del programa)
+  + Sign in
+
+--------------------------------------------------------------------------------
+ FISIOTERAPEUTA  (10 pantallas)
+--------------------------------------------------------------------------------
+  1 Sign in .............. WebLoginPhysio (patron 3.4)
+  2 Dashboard ............ WebSpecPhysio  (stats, booking requests, hoy, clientes + plan)
+  3 ID ................... WebIDPhysio
+  4 Profile .............. WebProfilePhysio
+  5 Calendar ............. WebCalendarPhysio (evaluaciones, regreso al juego, llamadas, equipos)
+  6 Live sessions ........ WebLivePhysio
+  7 My Documents ......... WebDocumentsPhysio (Verification, Insurance, Client consent, Templates)
+  8 Membership ........... WebMembershipPhysio (Listing Basic / Listing Pro + payouts)
+  9 Notifications ........ WebNotificationsPhysio
+ 10 Settings ............. WebSettingsPhysio (registro, seguro, antecedentes, codigo de conducta)
+
+--------------------------------------------------------------------------------
+ NUTRICIONISTA  (10 pantallas)
+--------------------------------------------------------------------------------
+  1 Sign in .............. WebLoginNutrition
+  2 Dashboard ............ WebSpecNutrition (stats, requests, hoy, clientes + plan + controles)
+  3 ID ................... WebIDNutrition
+  4 Profile .............. WebProfileNutrition
+  5 Calendar ............. WebCalendarNutrition
+  6 Live sessions ........ WebLiveNutrition
+  7 My Documents ......... WebDocumentsNutrition (patron: Verification, Insurance, consent...)
+  8 Membership ........... WebMembershipNutrition (Listing Basic / Listing Pro)
+  9 Notifications ........ WebNotificationsNutrition
+ 10 Settings ............. WebSettingsNutrition
+
+--------------------------------------------------------------------------------
+ PSICOLOGO DEPORTIVO  (10 pantallas)
+--------------------------------------------------------------------------------
+  1 Sign in .............. WebLoginPsych (patron 3.4)
+  2 Dashboard ............ WebSpecPsych  (clientes + programa/numero de sesion + %; notas privadas)
+  3 ID ................... WebIDPsych
+  4 Profile .............. WebProfilePsych
+  5 Calendar ............. WebCalendarPsych
+  6 Live sessions ........ WebLivePsych
+  7 My Documents ......... WebDocumentsPsych (las notas de sesion NUNCA se guardan aqui)
+  8 Membership ........... WebMembershipPsych (Listing Basic / Listing Pro)
+  9 Notifications ........ WebNotificationsPsych
+ 10 Settings ............. WebSettingsPsych (compartir objetivos con padres SIEMPRE activado)
+
+--------------------------------------------------------------------------------
+ RECUENTO
+--------------------------------------------------------------------------------
+ Jugador 15 + Padre 11 + Entrenador 11 + Club 9 + Colegio 9 +
+ Fisio 10 + Nutricionista 10 + Psicologo 10 = 85 pantallas
+ (+ inicios de sesion de portal) ~ las "86 mesas de trabajo" del lienzo de origen.
+
+ NOTA sobre tipografia: algunos disenos usan Archivo para titulos y DM Sans para el
+ texto (capturas de especialistas usan una fuente alternativa).
+================================================================================

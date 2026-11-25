@@ -1,4 +1,5 @@
 import { OPPORTUNITY_TYPE_LABELS } from '@ifpc/config';
+import { scholarshipSummary } from './scholarships';
 
 /**
  * Vista «Transfer window» del área del jugador.
@@ -33,6 +34,8 @@ export interface TransferOffer {
   /** Etiqueta corta de la tarjeta: TRIAL, CONTRACT… */
   tag: string;
   isNew: boolean;
+  /** `true` si el padre todavía tiene que aprobarla. */
+  approvalPending: boolean;
   title: string;
   organisation: string;
   message: string | null;
@@ -53,6 +56,8 @@ export interface TransferMatch {
   match: number;
   location: string | null;
   closesInDays: number | null;
+  /** Resumen de la beca cuando la oportunidad es SCHOLARSHIP. */
+  scholarship: string | null;
   href: string;
 }
 
@@ -63,6 +68,8 @@ export interface TransferApplication {
   type: string;
   category: ItemCategory;
   status: string;
+  /** `true` si la oferta está esperando la aprobación del padre. */
+  approvalPending: boolean;
   daysAgo: number;
   href: string;
 }
@@ -102,6 +109,7 @@ export function opportunityTypeLabel(type: string): string {
  */
 export function opportunityCategory(opportunity: OpportunityLike): ItemCategory {
   if (opportunity.universityId || opportunity.creatorType === 'UNIVERSITY') return 'UNIVERSITY';
+  if (opportunity.schoolId || opportunity.creatorType === 'SCHOOL') return 'SCHOOL';
   if (opportunity.type === 'ACADEMY') return 'SCHOOL';
   return 'TRIALS';
 }
@@ -114,9 +122,18 @@ export interface OpportunityLike {
   closesAt: Date | null;
   clubId?: string | null;
   universityId?: string | null;
+  schoolId?: string | null;
   creatorType?: string | null;
   club?: { id: string; name: string } | null;
   university?: { id: string; name: string } | null;
+  school?: { id: string; name: string } | null;
+  scholarship?: {
+    coverage: string;
+    spots: number;
+    amount?: string | null;
+    minGpa?: number | null;
+    intakeYear?: number | null;
+  } | null;
 }
 
 export interface TrialLike {
@@ -126,6 +143,7 @@ export interface TrialLike {
   endsAt: Date | null;
   location: string | null;
   notes: string | null;
+  parentApproval?: string | null;
   club: { id: string; name: string };
   submission?: { notes: string | null } | null;
 }
@@ -134,18 +152,25 @@ export interface NegotiationLike {
   id: string;
   createdAt: Date;
   notes: string | null;
+  parentApproval?: string | null;
   club: { id: string; name: string };
 }
 
 export interface ApplicationLike {
   id: string;
   status: string;
+  parentApproval?: string | null;
   createdAt: Date;
   opportunity: OpportunityLike;
 }
 
 function organisationOf(opportunity: OpportunityLike): string {
-  return opportunity.club?.name ?? opportunity.university?.name ?? '—';
+  return (
+    opportunity.club?.name ??
+    opportunity.university?.name ??
+    opportunity.school?.name ??
+    '—'
+  );
 }
 
 /** Invitación a prueba enviada por un club. */
@@ -155,6 +180,7 @@ export function offerFromTrial(trial: TrialLike, now: Date = new Date()): Transf
     kind: 'TRIAL',
     tag: 'TRIAL',
     isNew: isNewOffer(trial.createdAt, now),
+    approvalPending: trial.parentApproval === 'PENDING',
     title: `${trial.club.name} trial invitation`,
     organisation: trial.club.name,
     message: trial.submission?.notes?.trim() || trial.notes?.trim() || null,
@@ -175,6 +201,7 @@ export function offerFromNegotiation(
     kind: 'NEGOTIATION',
     tag: 'CONTRACT',
     isNew: isNewOffer(negotiation.createdAt, now),
+    approvalPending: negotiation.parentApproval === 'PENDING',
     title: `${negotiation.club.name} contract offer`,
     organisation: negotiation.club.name,
     message: negotiation.notes?.trim() || null,
@@ -200,6 +227,7 @@ export function matchFromOpportunity(
     match,
     location: opportunity.location,
     closesInDays: opportunity.closesAt ? daysUntil(opportunity.closesAt, now) : null,
+    scholarship: scholarshipSummary(opportunity.scholarship ?? null),
     href: `/dashboard/player/opportunities/${opportunity.id}`,
   };
 }
@@ -216,6 +244,7 @@ export function applicationFromRow(
     type: opportunityTypeLabel(application.opportunity.type),
     category: opportunityCategory(application.opportunity),
     status: application.status,
+    approvalPending: application.parentApproval === 'PENDING',
     daysAgo: daysSince(application.createdAt, now),
     href: `/dashboard/player/opportunities/${application.opportunity.id}`,
   };

@@ -1,0 +1,87 @@
+================================================================================
+ DATOS QUE EL SISTEMA DEBE GUARDAR  (Seccion 14 del libro)
+================================================================================
+Lista inicial de registros y campos principales (el desarrollador debe convertirla
+en el diseno de base de datos).
+
+ - CUENTA DE USUARIO
+   rol (jugador, padre, entrenador, club, colegio, nutricionista, psicologo,
+   fisioterapeuta, entrenador 1 a 1), nombre, correo, contrasena o login con Google,
+   estado de verificacion y estado de verificacion de antecedentes.
+   Una persona puede tener MAS DE UN rol (ej. entrenador que tambien es padre).
+
+ - JUGADOR
+   fecha de nacimiento (para reglas <16), posicion, pie habil, estatura, dorsal, foto,
+   club y equipo actual, colegio, anio de graduacion, GPA. Vinculado a una o mas
+   cuentas de padre.
+
+ - VINCULO CON EL PADRE
+   padre, hijo, consentimiento dado (si/no + fecha), informacion medica registrada,
+   interruptores de visibilidad del ID (4).
+
+ - TEMPORADA
+   jugador, club, equipo, temporada, partidos, goles, asistencias, equipo actual (si/no).
+   Desglose por tipo de gol (cabeza, derecha, izquierda). Alimenta los totales del Player ID.
+
+ - PERFIL SOCIAL
+   usuario, biografia, enlace, destacados, publicaciones (foto o clip + etiquetas),
+   seguidores y seguidos.
+
+ - CONVERSACION Y MENSAJE
+   participantes, padres incluidos automaticamente, grupal o directa, mensajes con
+   remitente y hora, estado de no leido. Inclusion del padre aplicada en el servidor.
+
+ - EVENTO DE CALENDARIO
+   duenio(s), fecha, inicio y fin, titulo, tipo (entrenamiento, partido, sesion
+   reservada, reunion, prueba/visita), con quien, origen (manual, reserva, prueba,
+   calendario del equipo). Invitaciones a <16 tambien invitan al padre.
+
+ - EQUIPO Y PLANTEL
+   club, nombre, liga, temporada, entrenadores, capitan, horarios de entrenamiento,
+   cancha local, codigo de ingreso, jugadores con numero y posicion.
+
+ - PARTIDO
+   equipo, rival, fecha, sede, local o visitante, marcador, resultado, goleadores.
+   Alimenta estadisticas y forma del plantel.
+
+ - CONTENIDO DE ENTRENAMIENTO
+   categoria (Head Game, Build, On the Ball, Fuel), titulo, descripcion, duracion, nivel.
+   Tambien los ejercicios del entrenador: biblioteca, etiqueta, minutos, jugadores, area.
+
+ - SESION DEL ENTRENADOR
+   entrenador, nombre, fecha, hora, cancha, ejercicios en orden, grupos a los que se
+   envio, indicador de filmar repeticion, fecha limite.
+
+ - CLIP
+   jugador, archivo de video, titulo, categoria, pregunta al entrenador, estado,
+   notas del entrenador con marca de tiempo.
+
+ - OPORTUNIDAD
+   organizacion, tipo (universidad, colegio, prueba), titulo, posicion, lugar,
+   fecha de cierre, cantidad de cupos.
+
+ - OFERTA
+   oportunidad, jugador, nota del visor o entrenador, fecha limite de respuesta,
+   respuesta del jugador, aprobacion del padre.
+
+ - POSTULACION
+   oportunidad, jugador, fecha, etapa (postulado, revisado, preseleccionado, decision),
+   verificaciones (video de jugadas, registros academicos, referencia del entrenador).
+
+ - FICHA DE ESPECIALISTA
+   practica, categoria, especialidad, acerca de, credenciales, precio, formato,
+   calificacion, cantidad de resenias, horarios disponibles.
+
+ - RESERVA
+   jugador, padre, especialista, tipo de sesion, horario, precio, estado (solicitada,
+   aprobada y pagada por el padre, aceptada, rechazada, reembolsada), recibo.
+
+ - PLAN DEL CLIENTE
+   especialista, cliente, tipo de plan, semana o sesion actual, total, % completado,
+   consentimiento para compartir (ej. el entrenador ve el avance). Las notas del
+   psicologo son PRIVADAS y se guardan por separado.
+
+ - CONTENIDO DE LA PAGINA ID
+   por rol: estadisticas, filas de detalle, paneles y entradas de trayectoria.
+   Se usa para el ID en pantalla y la descarga en PDF.
+================================================================================

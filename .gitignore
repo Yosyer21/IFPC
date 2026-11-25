@@ -40,6 +40,12 @@ nohup.out
 packages/database/prisma/dev.db
 packages/database/prisma/dev.db-journal
 
+# Documentos privados (nunca se sirven desde public/)
+.private-uploads/
+
+# Documento fuente del libro (spec local; no se publica en el repo)
+libro.txt
+
 # Logs
 *.log
 npm-debug.log*

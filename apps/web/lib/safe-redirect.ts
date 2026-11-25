@@ -7,9 +7,16 @@ export function dashboardPath(value: unknown): string {
   const target = typeof value === 'string' ? value.trim() : '';
   if (!target.startsWith('/dashboard/')) return '/dashboard';
 
-  // Sin protocolos, rutas absolutas ni escapes de directorio.
+  // Sin protocolos, rutas absolutas ni escapes de directorio (incluidos los
+  // percent-encoded: `%2e%2e` se decodifica a `..` al navegar).
   const rest = target.slice('/dashboard'.length);
-  if (rest.includes('//') || rest.includes('..') || rest.includes(':') || rest.includes('\\')) {
+  if (
+    rest.includes('//') ||
+    rest.includes('..') ||
+    rest.includes(':') ||
+    rest.includes('\\') ||
+    /%2e|%2f|%5c|%00/i.test(target)
+  ) {
     return '/dashboard';
   }
   return target;

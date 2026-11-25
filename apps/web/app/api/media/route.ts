@@ -19,6 +19,7 @@ export async function GET() {
     const media = await prisma.video.findMany({
       where: { playerId: player.id },
       orderBy: { createdAt: 'desc' },
+      take: 200,
     });
     return NextResponse.json({ ok: true, media });
   }

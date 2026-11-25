@@ -136,6 +136,11 @@ function OfferCard({ offer }: { offer: TransferOffer }) {
                 New offer
               </span>
             ) : null}
+            {offer.approvalPending ? (
+              <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                Waiting for parent
+              </span>
+            ) : null}
           </div>
           {deadline ? (
             <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
@@ -187,6 +192,9 @@ function MatchCard({ match }: { match: TransferMatch }) {
           {match.organisation}
           {match.location ? ` · ${match.location}` : ''}
         </p>
+        {match.scholarship ? (
+          <p className="text-xs font-semibold text-[#4f6b0a]">{match.scholarship}</p>
+        ) : null}
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           {closes ? <span>{closes}</span> : null}
           <Link href={match.href} className="font-semibold text-[#4f6b0a] hover:underline">
@@ -207,6 +215,11 @@ function ApplicationCard({ application }: { application: TransferApplication }) 
             {application.type}
           </span>
           <StatusBadge status={application.status} />
+          {application.approvalPending ? (
+            <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600">
+              Waiting for parent
+            </span>
+          ) : null}
         </div>
         <h3 className="font-semibold leading-tight">{application.title}</h3>
         <p className="text-xs text-muted-foreground">{application.organisation}</p>
